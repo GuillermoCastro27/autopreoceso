@@ -310,20 +310,20 @@ function seleccionModelos(id,modelo_nom){
 }
 
 
-function grabar(){
+function grabar() {
     var endpoint = "items/create";
     var metodo = "POST";
-    if($("#txtOperacion").val()==2){
-        endpoint = "items/update/"+$("#id").val();
+    if($("#txtOperacion").val() == 2){
+        endpoint = "items/update/" + $("#id").val();
         metodo = "PUT";
     }
-    if($("#txtOperacion").val()==3){
-        endpoint = "items/delete/"+$("#id").val();
+    if($("#txtOperacion").val() == 3){
+        endpoint = "items/delete/" + $("#id").val();
         metodo = "DELETE";
     }
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/"+endpoint,
-        method:metodo,
+        url: "http://127.0.0.1:8000/Proyecto_tp/" + endpoint,
+        method: metodo,
         dataType: "json",
         data: { 
             'id': $("#id").val(), 
@@ -335,22 +335,34 @@ function grabar(){
             'marca_id': $("#marca_id").val(),
             'modelo_id': $("#modelo_id").val()
         }
-
     })
-    .done(function(resultado){
+    .done(function(resultado) {
         swal({
-            title:"Respuesta",
+            title: "Respuesta",
             text: resultado.mensaje,
             type: resultado.tipo
-        },
-        function(){
-            if(resultado.tipo == "success"){
+        }, function() {
+            if(resultado.tipo == "success") {
                 location.reload(true);
             }
         });
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
-    })
+    .fail(function(jqXHR) {
+        if (jqXHR.status === 422) { // Código de error para validaciones
+            var errors = jqXHR.responseJSON.errors;
+            var errorMessage = "";
+
+            if (errors.item_costo) {
+                errorMessage += "Costo: " + errors.item_costo[0] + "\n";
+            }
+            if (errors.item_precio) {
+                errorMessage += "Precio: " + errors.item_precio[0] + "\n";
+            }
+
+            swal("Errores en el formulario", errorMessage, "error");
+        } else {
+            // Si el error no es de validación
+            alert("Error: " + jqXHR.responseText);
+        }
+    });
 }
