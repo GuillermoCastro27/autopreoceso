@@ -133,11 +133,11 @@ function confirmarOperacion() {
         pregunta = "¿DESEA EDITAR EL REGISTRO SELECCIONADO?";
     }
     if(oper===3){
-        titulo = "ELIMINAR";
-        pregunta = "¿DESEA ELIMINAR EL REGISTRO SELECCIONADO?";
+        titulo = "ANULAR";
+        pregunta = "¿DESEA ANULAR EL REGISTRO SELECCIONADO?";
     }
     if(oper===4){
-        titulo = "CONFIMRAR";
+        titulo = "CONFIRMAR";
         pregunta = "¿DESEA CONFIRMAR EL REGISTRO SELECCIONADO?";
     }
     swal({
@@ -169,7 +169,7 @@ function listar() {
     .done(function(resultado) {
         var lista = "";
         for (rs of resultado) {
-            lista += "<tr class=\"item-list\" onclick=\"seleccionOrdenCompra(" + rs.id + "," + rs.empresa_id + "," + rs.sucursal_id + "," + rs.presupuesto_id + ",'" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.presupuesto + "','" + rs.ord_comp_intervalo_fecha_vence + "','" + rs.ord_comp_fecha + "','" + rs.ord_comp_estado + "','" + rs.ord_comp_cant_cuota + "','" + rs.encargado + "','" + rs.prov_razonsocial + "','" + rs.prov_ruc + "','" + rs.prov_telefono + "','" + rs.prov_correo + "');\">";
+            lista += "<tr class=\"item-list\" onclick=\"seleccionOrdenCompra(" + rs.id + "," + rs.proveedor_id + "," + rs.empresa_id + "," + rs.sucursal_id + "," + rs.presupuesto_id + ",'" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.presupuesto + "','" + rs.ord_comp_intervalo_fecha_vence + "','" + rs.ord_comp_fecha + "','" + rs.ord_comp_estado + "','" + rs.ord_comp_cant_cuota + "','" + rs.encargado + "','" + rs.prov_razonsocial + "','" + rs.prov_ruc + "','" + rs.prov_telefono + "','" + rs.prov_correo + "');\">";
             lista += "<td>" + rs.id + "</td>";  // Código de la orden de compra
             lista += "<td>" + rs.ord_comp_intervalo_fecha_vence + "</td>";  // Intervalo de fecha de vencimiento
             lista += "<td>" + rs.ord_comp_fecha + "</td>";  // Fecha
@@ -189,11 +189,12 @@ function listar() {
 }
 
 // Rellena el formulario con los datos de un pedido seleccionado.
-function seleccionOrdenCompra(id_orde_compra_cab, empresa_id, sucursal_id, presupuesto_id, emp_razon_social, suc_razon_social, presupuesto, ord_comp_intervalo_fecha_vence, ord_comp_fecha, ord_comp_estado, ord_comp_cant_cuota, encargado, prov_razonsocial, prov_ruc, prov_telefono, prov_correo) {
+function seleccionOrdenCompra(id_orde_compra_cab, proveedor_id,empresa_id, sucursal_id, presupuesto_id, emp_razon_social, suc_razon_social, presupuesto, ord_comp_intervalo_fecha_vence, ord_comp_fecha, ord_comp_estado, ord_comp_cant_cuota, encargado, prov_razonsocial, prov_ruc, prov_telefono, prov_correo) {
     $("#id").val(id_orde_compra_cab);
     $("#empresa_id").val(empresa_id);
     $("#sucursal_id").val(sucursal_id);
     $("#presupuesto_id").val(presupuesto_id);
+    $("#proveedor_id").val(proveedor_id);
     $("#ord_comp_intervalo_fecha_vence").val(ord_comp_intervalo_fecha_vence);
     $("#ord_comp_fecha").val(ord_comp_fecha);
     $("#ord_comp_cant_cuota").val(ord_comp_cant_cuota);
