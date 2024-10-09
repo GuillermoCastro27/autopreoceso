@@ -63,6 +63,7 @@ function agregar(){
     $("#emp_razon_social").removeAttr("disabled");
     $("#condicion_pago").removeAttr("disabled");
     $("#suc_razon_social").removeAttr("disabled");
+    buscarEmpresas();
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -123,6 +124,35 @@ function confirmar(){
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
 }
+function rechazar(){
+    $("#txtOperacion").val(5);
+
+    $("#btnAgregar").attr("disabled","true");
+    $("#btnEditar").attr("disabled","true");
+    $("#btnEliminar").attr("disabled","true");
+    $("#btnConfirmar").attr("disabled","true");
+    $("#btnRechazar").attr("disabled","true");
+    $("#btnAprobar").attr("disabled","true");
+
+
+    $("#btnGrabar").removeAttr("disabled");
+    $("#btnCancelar").removeAttr("disabled");
+}
+
+// Prepara el formulario para aprobar un presupuesto.
+function aprobar(){
+    $("#txtOperacion").val(6);
+
+    $("#btnAgregar").attr("disabled","true");
+    $("#btnEditar").attr("disabled","true");
+    $("#btnEliminar").attr("disabled","true");
+    $("#btnConfirmar").attr("disabled","true");
+    $("#btnRechazar").attr("disabled","true");
+    $("#btnAprobar").attr("disabled","true");
+
+    $("#btnGrabar").removeAttr("disabled");
+    $("#btnCancelar").removeAttr("disabled");                              
+}
 
 // Muestra un cuadro de diálogo para confirmar la operación antes de realizarla.
 function confirmarOperacion() {
@@ -141,6 +171,14 @@ function confirmarOperacion() {
     if(oper===4){
         titulo = "CONFIRMAR";
         pregunta = "¿DESEA CONFIRMAR EL REGISTRO SELECCIONADO?";
+    }
+    if(oper===5){
+        titulo = "RECHAZAR";
+        pregunta = "¿DESEA RECHAZAR EL PRESUPUESTO SELECCIONADO?";
+    }
+    if(oper===6){
+        titulo = "APROBAR";
+        pregunta = "¿DESEA APROBAR EL PRESUPUESTO SELECCIONADO?";
     }
     swal({
         title: titulo,
@@ -235,7 +273,21 @@ function seleccionOrdenCompra(id_orde_compra_cab, proveedor_id,empresa_id, sucur
         $("#formDetalles").attr("style","display:block;");
     }
 
+    if(ord_comp_estado === "CONFIRMADO"){
+        $("#btnAgregar").attr("disabled","true");
+        $("#btnGrabar").attr("disabled","true");
+
+        $("#btnRechazar").removeAttr("disabled");
+        $("#btnAprobar").removeAttr("disabled");
+    }
+
     $(".form-line").attr("class","form-line focused");
+    
+}
+function formatDate(dateString) {
+    if (!dateString) return null;
+    var parts = dateString.split("/");
+    return parts[2] + "-" + parts[1] + "-" + parts[0]; // Formato 'YYYY-MM-DD'
 }
 
 // Realiza operaciones de creación, edición, anulacion y confirmación de un pedido
@@ -256,7 +308,19 @@ function grabar() {
         endpoint = "ordencompracab/confirmar/" + $("#id").val();
         metodo = "PUT";
         estado = "CONFIRMADO";
+    }else if($("#txtOperacion").val()==5){
+        endpoint = "ordencompracab/rechazar/"+$("#id").val();
+        metodo = "PUT";
+        estado = "RECHAZADO";
+    }else if($("#txtOperacion").val()==6){
+        endpoint = "ordencompracab/aprobar/"+$("#id").val();
+        metodo = "PUT";
+        estado = "APROBADO";
     }
+    
+
+    // Obtener el valor de condicion_pago
+    var condicionPago = $("#condicion_pago").val();
 
     // Verificación del valor de presupuesto_id
     var presupuestoId = $("#presupuesto_id").val();
@@ -275,8 +339,15 @@ function grabar() {
         alert("El ID del proveedor es obligatorio.");
         return; // Detener el envío si el proveedor_id no es válido
     }
+
+    // Obtener y formatear la fecha de vencimiento
     var intervaloFechaVence = $("#ord_comp_intervalo_fecha_vence").val();
-    var formattedIntervaloFechaVence = $("#ord_comp_intervalo_fecha_vence").is(':disabled') ? null : formatDate(intervaloFechaVence);
+    var formattedIntervaloFechaVence = $("#ord_comp_intervalo_fecha_vence").is(':disabled') ? null : intervaloFechaVence;
+
+    // Si la condición de pago es CONTADO, se envía null en lugar de una fecha
+    if (condicionPago === 'CONTADO') {
+        formattedIntervaloFechaVence = null;
+    }
 
     $.ajax({
         url: getUrl() + endpoint,
@@ -286,13 +357,13 @@ function grabar() {
             'id': $("#id").val(), 
             'ord_comp_intervalo_fecha_vence': formattedIntervaloFechaVence, 
             'ord_comp_fecha': $("#ord_comp_fecha").val(), 
-            'ord_comp_cant_cuota': $("#ord_comp_cant_cuota").val(), 
+            'ord_comp_cant_cuota': condicionPago === 'CONTADO' ? null : $("#ord_comp_cant_cuota").val(),
             'user_id': $("#user_id").val(), 
             'presupuesto_id': presupuestoId, 
-            'proveedor_id': proveedorId, // Asegúrate de que se esté enviando correctamente
+            'proveedor_id': proveedorId, 
             'empresa_id': $("#empresa_id").val(),
             'sucursal_id': $("#sucursal_id").val(),
-            'condicion_pago': $("#condicion_pago").val(),
+            'condicion_pago': condicionPago, // Asegúrate de enviar la condición de pago
             'ord_comp_estado': estado,
             'operacion': $("#txtOperacion").val()
         }
@@ -320,8 +391,6 @@ function grabar() {
 }
 
 
-
-
 // Configura el formato de fecha en ciertos campos usando BootstrapMaterialDatePicker.
 function campoFecha(){
     $('.datetimepicker').bootstrapMaterialDatePicker({
@@ -330,13 +399,13 @@ function campoFecha(){
         weekStart: 1
     });
 }
-
 // Prepara el formulario para agregar un nuevo detalle al pedido
 function agregarDetalle(){
     $("#txtOperacionDetalle").val(1);
     $("#item_decripcion").removeAttr("disabled");
     $("#orden_compra_det_cantidad").removeAttr("disabled");
     $("#tip_imp_nom").removeAttr("disabled");
+    $("#item_costo").removeAttr("disabled"); // Habilitar el campo de costo
     $("#btnAgregarDetalle").attr("style","display:none");
     $("#btnEditarDetalle").attr("style","display:none");
     $("#btnEliminarDetalle").attr("style","display:none");
@@ -349,6 +418,7 @@ function editarDetalle(){
     $("#item_decripcion").removeAttr("disabled");
     $("#orden_compra_det_cantidad").removeAttr("disabled");
     $("#tip_imp_nom").removeAttr("disabled");
+    $("#item_costo").removeAttr("disabled"); // Habilitar el campo de costo
     $("#btnAgregarDetalle").attr("style","display:none");
     $("#btnEditarDetalle").attr("style","display:none");
     $("#btnEliminarDetalle").attr("style","display:none");
@@ -358,6 +428,7 @@ function editarDetalle(){
 // Prepara el formulario para eliminar un detalle del pedido.
 function eliminarDetalle(){
     $("#txtOperacionDetalle").val(3);
+    $("#item_costo").attr("disabled", "disabled"); // Deshabilitar el campo de costo
     $("#btnAgregarDetalle").attr("style","display:none");
     $("#btnEditarDetalle").attr("style","display:none");
     $("#btnEliminarDetalle").attr("style","display:none");
@@ -365,48 +436,83 @@ function eliminarDetalle(){
 }
 
 // Realiza operaciones de creación, edición o eliminación de detalles del pedido.
-function grabarDetalle(){
+function grabarDetalle() {
+    // Obtener valores y eliminar espacios en blanco
+    const cantidad = $.trim($("#orden_compra_det_cantidad").val());
+    const costo = $.trim($("#item_costo").val());
+    const itemId = $.trim($("#item_id").val());
+
+    // Validación simple
+    if (!cantidad || !costo || !itemId) {
+        alert("Por favor, complete todos los campos requeridos.");
+        return;
+    }
+
+    // Validar que cantidad y costo sean números
+    if (isNaN(cantidad) || isNaN(costo)) {
+        alert("La cantidad y el costo deben ser números válidos.");
+        return;
+    }
+
     var endpoint = "ordencompradet/create";
     var metodo = "POST";
-    
-    if($("#txtOperacionDetalle").val()==2){
-        endpoint = "ordencompradet/update/"+$("#id").val()+"/"+$("#item_id").val();
+
+    if ($("#txtOperacionDetalle").val() == 2) {
+        endpoint = "ordencompradet/update/" + $("#id").val() + "/" + itemId;
         metodo = "PUT";
     }
-    if($("#txtOperacionDetalle").val()==3){
-        endpoint = "ordencompradet/delete/"+$("#id").val()+"/"+$("#item_id").val();
+    if ($("#txtOperacionDetalle").val() == 3) {
+        endpoint = "ordencompradet/delete/" + $("#id").val() + "/" + itemId;
         metodo = "DELETE";
     }
 
+    console.log("URL: " + getUrl() + endpoint); // Verificar la URL
+    console.log("Item ID: " + itemId + ", Costo: " + costo); // Verificar item ID y costo
+
+    if (!costo) {
+        console.log("Costo no definido para el item_id " + itemId);
+        alert("El costo no puede estar vacío.");
+        return; // Detener la ejecución si no hay costo definido
+    }
+
     $.ajax({
-        url:getUrl()+endpoint,
+        url: getUrl() + endpoint,
         method: metodo,
         dataType: "json",
         data: {
-            "orden_compra_cab_id":$("#id").val(),
-            "item_id":$("#item_id").val(),
-            "tipo_impuesto_id":$("#tipo_impuesto_id").val(),
-            "orden_compra_det_cantidad":$("#orden_compra_det_cantidad").val()
+            "orden_compra_cab_id": $("#id").val(),
+            "item_id": itemId,
+            "tipo_impuesto_id": $("#tipo_impuesto_id").val(),
+            "orden_compra_det_cantidad": cantidad,
+            "orden_compra_det_costo": costo // Asegúrate de enviar el costo aquí
         }
     })
-    .done(function(respuesta){
-        listarDetalles();
+    .done(function(respuesta) {
+        alert("Detalle agregado exitosamente.");
+        listarDetalles(); // Listar los detalles después de agregar
     })
-    .fail(function(a,b,c){
-        alert(c);
+    .fail(function(a, b, c) {
+        alert("Error al agregar el detalle: " + c);
         console.log(a.responseText);
-    })
-    
-    $("#btnAgregarDetalle").attr("style","display:inline");
-    $("#btnEditarDetalle").attr("style","display:inline");
-    $("#btnEliminarDetalle").attr("style","display:inline");
-    $("#btnGrabarDetalle").attr("style","display:none");
+    });
 
+    // Mostrar y ocultar botones según corresponda
+    $("#btnAgregarDetalle").show();
+    $("#btnEditarDetalle").show();
+    $("#btnEliminarDetalle").show();
+    $("#btnGrabarDetalle").hide();
+
+    // Limpiar campos
     $("#txtOperacionDetalle").val(1);
     $("#item_decripcion").val("");
     $("#orden_compra_det_cantidad").val("");
     $("#tip_imp_nom").val("");
+    $("#item_costo").val(""); // Limpiar el campo costo después de grabar
+    $("#tipo_impuesto_id").val(""); // Limpiar ID de tipo de impuesto si es necesario
+    $("#subtotal").val("");    // Limpiar subtotal
+    $("#total_con_impuesto").val(""); // Limpiar total con impuesto
 }
+
 
 // Realiza una búsqueda de productos y muestra los resultados.
 function buscarProductos(){
@@ -414,36 +520,57 @@ function buscarProductos(){
         url: getUrl()+"items/buscar",
         method: "POST",
         dataType: "json",
-        data:{
-            "item_decripcion":$("#item_decripcion").val(),
-            "tipo_descripcion":"PRODUCTO"
+        data: {
+            "item_decripcion": $("#item_decripcion").val(),
+            "tipo_descripcion": "PRODUCTO"
         }
     })
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
-        for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto("+rs.item_id+",'"+rs.item_decripcion+"')\">"+rs.item_decripcion+"</li>";   
+        for (let rs of resultado) {
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto("+rs.item_id+",'"+rs.item_decripcion+"',"+rs.tipo_impuesto_id+",'"+rs.item_costo+"','"+rs.tip_imp_nom+"',"+rs.tipo_imp_tasa+")\">"+rs.item_decripcion+"</li>";   
         }
         lista += "</ul>";
         $("#listaProductos").html(lista);
         $("#listaProductos").attr("style","display:block; position: absolute; z-index: 2000;");
     })
-    .fail(function(a,b,c){
+    .fail(function(a, b, c){
         alert(c);
         console.log(a.responseText);
     });
 }
 
 // Rellena el campo de producto seleccionado.
-function seleccionProducto(item_id, item_decripcion){
+function seleccionProducto(item_id, item_decripcion, tipo_impuesto_id, item_costo, tip_imp_nom, tipo_imp_tasa){
     $("#item_id").val(item_id);
     $("#item_decripcion").val(item_decripcion);
+    $("#item_costo").val(item_costo); // Asegúrate de que este campo exista en tu HTML y que esté habilitado
 
+    // Guardar el ID y el nombre del tipo de impuesto
+    $("#tipo_impuesto_id").val(tipo_impuesto_id);
+    $("#tip_imp_nom").val(tip_imp_nom);
+
+    // Convertir a números para cálculos
+    const cantidad = parseFloat($("#orden_compra_det_cantidad").val()) || 0; // Convertir a número
+    const costo = parseFloat(item_costo) || 0; // Convertir a número
+    const tasaImpuesto = parseFloat(tipo_imp_tasa) || 0; // Convertir la tasa a número
+
+    // Calcular subtotal y total con impuesto
+    const subtotal = cantidad * costo;
+    const totalConImpuesto = subtotal + (subtotal * (tasaImpuesto / 100)); // Calcular el impuesto correctamente
+
+    // Actualizar los campos de subtotal y total con impuesto
+    $("#subtotal").val(subtotal); // Asegúrate de que exista el campo 'subtotal' en tu HTML
+    $("#totalConImpuesto").val(totalConImpuesto); // Asegúrate de que exista el campo 'totalConImpuesto'
+
+    // Limpiar la lista de productos
     $("#listaProductos").html("");
     $("#listaProductos").attr("style","display:none;");
 
+    // Asegúrate de que las líneas del formulario estén enfocadas correctamente
     $(".form-line").attr("class","form-line focused");
 }
+
 
 function buscarTipoImpuestos(){
     $.ajax({
@@ -476,49 +603,94 @@ function seleccionTipoImpuestos(id,tip_imp_nom,tipo_imp_tasa){
 }
 
 // Realiza una búsqueda de productos mediante una solicitud AJAX
-function listarDetalles(){
+function listarDetalles() {
     var cantidadDetalle = 0;
+    var TotalGral = 0;
+    var TotalConImpuesto = 0; // Variable para total con impuestos
+
     $.ajax({
-        url:getUrl()+"ordencompradet/read/"+$("#id").val(),
-        method:"GET",
+        url: getUrl() + "ordencompradet/read/" + $("#id").val(),
+        method: "GET",
         dataType: "json"
     })
-    .done(function(resultado){
+    .done(function(resultado) {
+        console.log(resultado); // Depuración: Verificar qué datos llegan del servidor
         var lista = "";
-        for(let rs of resultado){  // Asegúrate de usar "let" en lugar de "var" o simplemente "rs"
-            lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle("+rs.item_id+","+rs.tipo_impuesto_id+",'"+rs.item_decripcion+"','"+rs.tip_imp_nom+"',"+rs.orden_compra_det_cantidad+");\">"; 
-                lista += "<td>" + rs.item_id + "</td>";
-                lista += "<td>" + rs.item_decripcion + "</td>";
-                lista += "<td>" + rs.tip_imp_nom + "</td>";
-                lista += "<td>" + rs.orden_compra_det_cantidad + "</td>";
+        for (let rs of resultado) {
+            const cantidad = rs.orden_compra_det_cantidad || 0; // Valor de cantidad, por defecto 0
+            const costo = rs.item_costo || 0; // Valor de costo, por defecto 0
+
+            // Depuración: verificar si `item_costo` está bien definido
+            console.log(`Item ID: ${rs.item_id}, Costo: ${rs.item_costo}`);
+
+            // Validar el costo y mostrar advertencia si es 0
+            if (costo === 0 || costo === undefined) {
+                console.warn(`Costo no definido para el item_id ${rs.item_id}`);
+            }
+
+            const tasaImpuesto = parseFloat(rs.tipo_imp_tasa) || 0; // Tasa de impuesto como porcentaje
+            const subtotal = cantidad * costo; // Cálculo del subtotal
+            const totalImpuesto = subtotal * (tasaImpuesto / 100); // Cálculo del impuesto basado en la tasa
+            const totalConImpuesto = subtotal + totalImpuesto; // Cálculo del total con impuestos
+
+            lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" + rs.item_id + "," + rs.tipo_impuesto_id + ",'" + rs.item_decripcion + "','" + (rs.tip_imp_nom || 'No definido') + "'," + cantidad + ", " + costo + ", " + subtotal.toFixed(2) + ", " + totalConImpuesto.toFixed(2) + ");\">";
+            lista += "<td>" + rs.item_id + "</td>";
+            lista += "<td>" + rs.item_decripcion + "</td>";
+            lista += "<td>" + cantidad + "</td>";
+            lista += "<td class='text-right'>" + (costo ? costo.toFixed(2) : 'No definido') + "</td>";
+            lista += "<td>" + (rs.tip_imp_nom || 'No definido') + "</td>"; // Manejar caso donde no se defina el tipo de impuesto
+            lista += "<td class='text-right'>" + subtotal.toFixed(2) + "</td>"; // Mostrar subtotal
+            lista += "<td class='text-right'>" + totalConImpuesto.toFixed(2) + "</td>"; // Mostrar total con impuestos
             lista += "</tr>";
+
             cantidadDetalle++;
+            TotalGral += subtotal; // Sumar al total general
+            TotalConImpuesto += totalConImpuesto; // Sumar al total con impuestos
         }
         $("#tableDetalle").html(lista);
-        if($("#ord_comp_estado").val() === "PENDIENTE" && cantidadDetalle > 0) {
+        $("#txtTotalGral").text(TotalGral.toFixed(2)); // Mostrar total general
+        $("#txtTotalConImpuesto").text(TotalConImpuesto.toFixed(2)); // Mostrar total con impuestos
+
+        if ($("#ord_comp_estado").val() === "PENDIENTE" && cantidadDetalle > 0) {
             $("#btnConfirmar").removeAttr("disabled");
         } else {
-            $("#btnConfirmar").attr("style","display:none");
+            $("#btnConfirmar").attr("style", "display:none");
         }
     })
-    .fail(function(a,b,c){
+    .fail(function(a, b, c) {
         alert(c);
         console.log(a.responseText);
     });
 }
 
-
 // Selecciona un detalle de un pedido y actualiza el formulario
-function seleccionDetalle(item_id, tipo_impuesto_id, item_decripcion, tip_imp_nom, orden_compra_det_cantidad){
+function seleccionDetalle(item_id, tipo_impuesto_id, item_decripcion, tip_imp_nom, orden_compra_det_cantidad, costo, subtotal, totalConImpuesto) {
     $("#item_id").val(item_id);
     $("#tipo_impuesto_id").val(tipo_impuesto_id);
     $("#item_decripcion").val(item_decripcion);
     $("#tip_imp_nom").val(tip_imp_nom);
     $("#orden_compra_det_cantidad").val(orden_compra_det_cantidad);
+    
+    // Rellenar los campos de costo, subtotal y total con impuesto
+    $("#item_costo").val(costo); // Asegúrate de que este sea el ID del campo de costo
+    $("#subtotal").val(subtotal); // Asegúrate de que este sea el ID del campo de subtotal
+    $("#total_con_impuesto").val(totalConImpuesto); // Asegúrate de que este sea el ID del campo de total con impuesto
 
     $("#listaProductos").html("");
-    $("#listaProductos").attr("style","display:none;");
-    $(".form-line").attr("class","form-line focused");
+    $("#listaProductos").attr("style", "display:none;");
+    $(".form-line").attr("class", "form-line focused");
+}
+function actualizarTotales() {
+    const cantidad = parseFloat($("#orden_compra_det_cantidad").val()) || 0;
+    const costo = parseFloat($("#item_costo").val()) || 0;
+    const tasaImpuesto = parseFloat($("#tipo_impuesto_id").val()) || 0; // Asegúrate de obtener correctamente la tasa de impuesto
+
+    const subtotal = cantidad * costo;
+    const totalImpuesto = subtotal * (tasaImpuesto / 100);
+    const totalConImpuesto = subtotal + totalImpuesto;
+
+    $("#subtotal").val(subtotal.toFixed(2)); // Mostrar subtotal
+    $("#totalConImpuesto").val(totalConImpuesto.toFixed(2)); // Mostrar total con impuestos
 }
 
 function buscarPresupuesto(){
@@ -560,28 +732,37 @@ function seleccionPresupuesto(presupuesto_id, presupuesto, proveedor_id, prov_ra
     $(".form-line").attr("class", "form-line focused");
 }
 
-function buscarEmpresas(){
+function buscarEmpresas() {
     $.ajax({
         url:"http://127.0.0.1:8000/Proyecto_tp/empresa/read",
         method:"GET",
         dataType: "json"
     })
-    .done(function(resultado){
+    .done(function(resultado) {
         var lista = "<ul class=\"list-group\">";
-        for(rs of resultado){
+        
+        // Comprobar si hay empresas en el resultado
+        if (resultado.length > 0) {
+            // Seleccionar automáticamente la primera empresa
+            var primeraEmpresa = resultado[0];
+            seleccionEmpresa(primeraEmpresa.id, primeraEmpresa.emp_razon_social, primeraEmpresa.emp_direccion, primeraEmpresa.emp_telefono, primeraEmpresa.emp_correo);
+        }
+
+        // Construir la lista de empresas para seleccionar manualmente si es necesario
+        for (rs of resultado) {
             lista += "<li class=\"list-group-item\" onclick=\"seleccionEmpresa("+rs.id+",'"+rs.emp_razon_social+"','"+rs.emp_direccion+"','"+rs.emp_telefono+"','"+rs.emp_correo+"');\">"+rs.emp_razon_social+"</li>";
         }
         lista += "</ul>";
         $("#listaEmpresa").html(lista);
-        $("#listaEmpresa").attr("style","display:block; position:absolute; z-index:2000;");
+        $("#listaEmpresa").attr("style", "display:block; position:absolute; z-index:2000;");
     })
-    .fail(function(a,b,c){
+    .fail(function(a,b,c) {
         alert(c);
         console.log(a.responseText);
-    })
+    });
 }
 
-function seleccionEmpresa(id,emp_razon_social,emp_direccion,emp_telefono,emp_correo){
+function seleccionEmpresa(id, emp_razon_social, emp_direccion, emp_telefono, emp_correo) {
     $("#empresa_id").val(id);
     $("#emp_razon_social").val(emp_razon_social);
     $("#emp_direccion").val(emp_direccion);
@@ -589,8 +770,9 @@ function seleccionEmpresa(id,emp_razon_social,emp_direccion,emp_telefono,emp_cor
     $("#emp_correo").val(emp_correo);
 
     $("#listaEmpresa").html("");
-    $("#listaEmpresa").attr("style","display:none;");
+    $("#listaEmpresa").attr("style", "display:none;");
 }
+
 function buscarSucursal(){
     $.ajax({
         url:"http://127.0.0.1:8000/Proyecto_tp/sucursal/read",

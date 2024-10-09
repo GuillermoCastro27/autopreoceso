@@ -56,7 +56,7 @@
                             <div class="row clearfix">
                                 <input type="hidden" value="0" id="txtOperacion"/>
                                 <input type="hidden" value="1" id="user_id"/>
-                                <inpit type="hidden" value="PENDIENTE" id="ord_comp_estado"/>
+                                <input type="hidden" value="PENDIENTE" id="ord_comp_estado"/>
                                 <!-- CAMPO PARA CODIGO CON 1 COLUMNAS -->
                                 <div class="col-sm-1">
                                     <div class="form-group form-float">
@@ -70,7 +70,7 @@
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <!-- Campo de texto para la ciudad, habilitado -->
-                                            <input type="text" id="emp_razon_social" class="form-control" disabled onkeyup="buscarEmpresas();">
+                                            <input type="text" id="emp_razon_social" class="form-control" disabled>
                                             <label class="form-label">Empresa</label>
                                         </div>
 
@@ -217,6 +217,8 @@
                                 <button type="button" id="btnEditar" class="btn btn-primary waves-effect" onclick="editar();" disabled>EDITAR</button>
                                 <button type="button" id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();"disabled>ANULAR</button>
                                 <button type="button" id="btnConfirmar" class="btn btn-success waves-effect" onclick="confirmar();"disabled>CONFIRMAR</button>
+                                <button type="button" id="btnRechazar" class="btn btn-danger waves-effect" onclick="rechazar();"disabled>RECHAZAR</button>
+                                <button type="button" id="btnAprobar" class="btn btn-success waves-effect" onclick="aprobar();"disabled>APROBAR</button>
                                 <button type="button" id="btnGrabar" class="btn btn-default waves-effect" disabled onclick="confirmarOperacion();">GRABAR</button>
                                 <button type="button" id="btnCancelar" class="btn btn-warning waves-effect" onclick="cancelar();" disabled>CANCELAR</button>  
                             </div>
@@ -267,8 +269,32 @@
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="orden_compra_det_cantidad" class="form-control" disabled>
+                                        <input type="text" id="orden_compra_det_cantidad" class="form-control" oninput="actualizarTotales();">
                                             <label class="form-label">Cantidad</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                        <input type="text" id="item_costo" name="item_costo" class="form-control" oninput="actualizarTotales();">
+                                            <label class="form-label">Costo</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="subtotal" class="form-control" disabled>
+                                            <label class="form-label">Sub Total</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="totalConImpuesto" class="form-control" disabled>
+                                            <label class="form-label">Total con Impuesto</label>
                                         </div>
                                     </div>
                                 </div>
@@ -290,26 +316,31 @@
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable ">
+                                <table class="table table-bordered table-striped table-hover dataTable">
                                     <thead>
                                         <tr>
                                             <th>Código</th>
                                             <th>Producto</th>
-                                            <th>Tipo impuesto</th>
                                             <th>Cantidad</th>
+                                            <th>Costo</th>
+                                            <th>Tipo impuesto</th>
+                                            <th>Sub Total</th>
+                                            <th>Total con Impuesto</th> <!-- Agregado para mostrar el total con impuesto -->
                                         </tr>
                                     </thead>
                                     <tbody id="tableDetalle">
-                                        
+                                        <!-- Aquí se llenarán los detalles de los productos -->
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th>Código</th>
-                                            <th>Producto</th>
-                                            <th>Tipo impuesto</th>
-                                            <th>Cantidad</th>
+                                            <th colspan="5" class="text-right">Total General</th>
+                                            <th class="text-right" id="txtTotalGral">0</th> <!-- Total sin impuestos -->
                                         </tr>
-                                    </tfoot>    
+                                        <tr>
+                                            <th colspan="5" class="text-right">Total con Impuesto</th>
+                                            <th class="text-right" id="txtTotalConImpuesto">0</th> <!-- Total con impuestos -->
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
