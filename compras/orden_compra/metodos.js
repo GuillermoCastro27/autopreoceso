@@ -56,11 +56,12 @@ function cancelar(){
 function agregar(){
     $("#txtOperacion").val(1);
     $("#id").val(0);
-    $("#ord_comp_intervalo_fecha_vence").removeAttr("disabled");
+    $("#ord_comp_intervalo_fecha_vence").attr("disabled","true");
     $("#ord_comp_fecha").removeAttr("disabled");
-    $("#ord_comp_cant_cuota").removeAttr("disabled");
+    $("#ord_comp_cant_cuota").attr("disabled","true");
     $("#presupuestos").removeAttr("disabled");
     $("#emp_razon_social").removeAttr("disabled");
+    $("#condicion_pago").removeAttr("disabled");
     $("#suc_razon_social").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
@@ -78,11 +79,12 @@ function agregar(){
 // Prepara el formulario para editar un presupuesto existente.
 function editar(){
     $("#txtOperacion").val(2);
-    $("#ord_comp_intervalo_fecha_vence").removeAttr("disabled");
+    $("#ord_comp_intervalo_fecha_vence").attr("disabled","true");
     $("#ord_comp_fecha").removeAttr("disabled");
-    $("#ord_comp_cant_cuota").removeAttr("disabled");
+    $("#ord_comp_cant_cuota").attr("disabled","true");
     $("#presupuestos").removeAttr("disabled");
     $("#emp_razon_social").removeAttr("disabled");
+    $("#condicion_pago").removeAttr("disabled");
     $("#suc_razon_social").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
@@ -273,6 +275,8 @@ function grabar() {
         alert("El ID del proveedor es obligatorio.");
         return; // Detener el envío si el proveedor_id no es válido
     }
+    var intervaloFechaVence = $("#ord_comp_intervalo_fecha_vence").val();
+    var formattedIntervaloFechaVence = $("#ord_comp_intervalo_fecha_vence").is(':disabled') ? null : formatDate(intervaloFechaVence);
 
     $.ajax({
         url: getUrl() + endpoint,
@@ -280,7 +284,7 @@ function grabar() {
         dataType: "json",
         data: { 
             'id': $("#id").val(), 
-            'ord_comp_intervalo_fecha_vence': $("#ord_comp_intervalo_fecha_vence").val(), 
+            'ord_comp_intervalo_fecha_vence': formattedIntervaloFechaVence, 
             'ord_comp_fecha': $("#ord_comp_fecha").val(), 
             'ord_comp_cant_cuota': $("#ord_comp_cant_cuota").val(), 
             'user_id': $("#user_id").val(), 
@@ -288,6 +292,7 @@ function grabar() {
             'proveedor_id': proveedorId, // Asegúrate de que se esté enviando correctamente
             'empresa_id': $("#empresa_id").val(),
             'sucursal_id': $("#sucursal_id").val(),
+            'condicion_pago': $("#condicion_pago").val(),
             'ord_comp_estado': estado,
             'operacion': $("#txtOperacion").val()
         }

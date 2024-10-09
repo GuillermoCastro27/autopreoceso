@@ -96,6 +96,40 @@
                                         <div id="listaSucursal" style="display:none;"></div>
                                     </div>
                                 </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <select id="condicion_pago" class="form-control" disabled onchange="controlarCamposPago();">
+                                                <option value="CONTADO">Al contado</option>
+                                                <option value="CREDITO">A crédito</option>
+                                            </select>
+                                            <label class="form-label">Condición de Pago</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <script>
+                                // Función para habilitar/deshabilitar campos según la condición de pago seleccionada
+                                function controlarCamposPago() {
+                                    var condicion = document.getElementById('condicion_pago').value;
+                                    var cuota = document.getElementById('ord_comp_cant_cuota');
+                                    var intervaloFechaVence = document.getElementById('ord_comp_intervalo_fecha_vence');
+
+                                    if (condicion === 'CONTADO') {
+                                        cuota.disabled = true;
+                                        intervaloFechaVence.disabled = true;
+                                        intervaloFechaVence.value = ''; // Asegúrate de limpiar el valor
+                                    } else {
+                                        cuota.disabled = false;
+                                        intervaloFechaVence.disabled = false;
+                                    }
+                                }
+
+                                // Llamar a la función cuando se carga la página para que establezca el estado inicial
+                                window.onload = function() {
+                                    controlarCamposPago();
+                                };
+                                </script>
                                 <!-- CAMPO PARA FECHA DE VENCIMIENTO CON 3 COLUMNAS -->
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
