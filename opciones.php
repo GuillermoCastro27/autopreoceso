@@ -339,6 +339,7 @@
                 <li><a href="/taller_front/compras/pedido"><span>Pedidos</span></a></li>
                 <li><a href="/taller_front/compras/presupuesto"><span>Presupuestos</span></a></li>
                 <li><a href="/taller_front/compras/orden_compra"><span>Ordenes de Compra</span></a></li>
+                <li><a href="/taller_front/compras/Reg_compras"><span>Registrar Compras</span></a></li>
             </ul>
         </li>
         <li>
