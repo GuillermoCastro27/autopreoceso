@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>GUI PRESUPUESTO</title>
+    <title>GUI ORDENES DE COMPRAS</title>
     <!-- Favicon-->
     <link rel="icon" href="../../images.ico" type="image/x-icon">
 
@@ -42,81 +42,129 @@
     <?php require_once('../../opciones.php'); ?>
 
     <section class="content">
-    <div class="container-fluid">
+        <div class="container-fluid">
 
-        <div class="row clearfix">
+            <div class="row clearfix">
 
-            <div class="col-md-12">
+                <div class="col-md-12">
+                    
+                    <div class="card">
+                        <div class="header">
+                            <h2>Gestionar Compras <small>CRUD de Compras y su detalle</small> </h2>
+                        </div>
+                        <div class="body">
+                            <div class="row clearfix">
+                                <input type="hidden" value="0" id="txtOperacion"/>
+                                <input type="hidden" value="1" id="user_id"/>
+                                <input type="hidden" value="PENDIENTE" id="comp_estado"/>
+                                <!-- CAMPO PARA CODIGO CON 1 COLUMNAS -->
+                                <div class="col-sm-1">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="id" class="form-control" disabled>
+                                            <label class="form-label">Código</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <!-- Campo de texto para la ciudad, habilitado -->
+                                            <input type="text" id="emp_razon_social" class="form-control" disabled>
+                                            <label class="form-label">Empresa</label>
+                                        </div>
 
-                <div class="card">
-                    <div class="header">
-                        <h2>Gestionar Presupuestos de Compras <small>CRUD de Presupuestos y su detalle</small> </h2>
-                    </div>
-                    <div class="body">
-                        <div class="row clearfix">
-                            <input type="hidden" value="0" id="txtOperacion"/>
-                            <input type="hidden" value="1" id="user_id"/>
-                            <input type="hidden" value="PENDIENTE" id="comp_estado"/>
+                                        <!-- Campo oculto para almacenar el ID de la ciudad -->
+                                        <input type="hidden" id="empresa_id" name="empresa_id">
+
+                                        <!-- Contenedor para la lista de ciudades -->
+                                        <div id="listaEmpresa" style="display:none;"></div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <!-- Campo de texto para la ciudad, habilitado -->
+                                            <input type="text" id="suc_razon_social" class="form-control" disabled onkeyup="buscarSucursal();">
+                                            <label class="form-label">Sucursal</label>
+                                        </div>
+
+                                        <!-- Campo oculto para almacenar el ID de la ciudad -->
+                                        <input type="hidden" id="sucursal_id" name="sucursal_id">
+
+                                        <!-- Contenedor para la lista de ciudades -->
+                                        <div id="listaSucursal" style="display:none;"></div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <select id="condicion_pago" class="form-control" disabled onchange="controlarCamposPago();">
+                                                <option value="CONTADO">Al contado</option>
+                                                <option value="CREDITO">A crédito</option>
+                                            </select>
+                                            <label class="form-label">Condición de Pago</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <script>
+                                // Función para habilitar/deshabilitar campos según la condición de pago seleccionada
+                                function controlarCamposPago() {
+                                    var condicion = document.getElementById('condicion_pago').value;
+                                    var cuota = document.getElementById('ord_comp_cant_cuota');
+                                    var intervaloFechaVence = document.getElementById('ord_comp_intervalo_fecha_vence');
+
+                                    if (condicion === 'CONTADO') {
+                                        cuota.disabled = true;
+                                        intervaloFechaVence.disabled = true;
+                                        intervaloFechaVence.value = ''; // Asegúrate de limpiar el valor
+                                    } else {
+                                        cuota.disabled = false;
+                                        intervaloFechaVence.disabled = false;
+                                    }
+                                }
+
+                                // Llamar a la función cuando se carga la página para que establezca el estado inicial
+                                window.onload = function() {
+                                    controlarCamposPago();
+                                };
+                                </script>
+                                <!-- CAMPO PARA FECHA DE VENCIMIENTO CON 3 COLUMNAS -->
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="comp_intervalo_fecha_vence" class="datetimepicker form-control" disabled>
+                                            <label class="form-label">Intervalo de fecha Vencimiento</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- CAMPO PARA FECHA DE VENCIMIENTO CON 3 COLUMNAS -->
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="comp_fecha" class="datetimepicker form-control" disabled>
+                                            <label class="form-label">Fecha</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- CAMPO PARA OBSERVACIONES CON 5 COLUMNAS -->
+                                <div class="col-sm-1">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="comp_cant_cuota" class="form-control" disabled>
+                                            <label class="form-label">Cuota</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             
-                            <!-- CAMPO PARA CODIGO CON 3 COLUMNAS -->
-                            <div class="col-sm-1">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="id" class="form-control" disabled>
-                                        <label class="form-label">Código</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- CAMPO PARA FECHA DE VENCIMIENTO CON 5 COLUMNAS -->
-                            <div class="col-sm-3">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="comp_intervalo_fecha_vence" class="datetimepicker form-control" disabled>
-                                        <label class="form-label">Vencimiento</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- CAMPO PARA FECHA CON 5 COLUMNAS -->
-                            <div class="col-sm-3">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="comp_fecha" class="datetimepicker form-control" disabled>
-                                        <label class="form-label">Fecha</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- CAMPO PARA CANTIDAD DE CUOTAS CON 2 COLUMNAS -->
-                            <div class="col-sm-2">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="comp_cant_cuota" class="form-control" disabled>
-                                        <label class="form-label">Cantidad de Cuota</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- CAMPO PARA CONDICION DE PAGO CON 2 COLUMNAS -->
-                            <div class="col-sm-2">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <select id="condicion_pago" class="form-control" disabled>
-                                            <option value="">Seleccione</option>
-                                            <option value="al contado">Al Contado</option>
-                                            <option value="a crédito">A Crédito</option>
-                                        </select>
-                                        <label class="form-label">Condición de Pago</label>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-sm-12">
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <!-- Campo de texto para la ciudad, habilitado -->
-                                            <input type="text" id="orden_compra" class="form-control" disabled onkeyup="buscarPresupuesto();">
-                                            <label class="form-label">Orden Compra</label>
+                                            <input type="text" id="ordencompra" class="form-control" disabled onkeyup="buscarOrdenCompra();">
+                                            <label class="form-label">Ordenes de compra</label>
                                         </div>
 
                                         <!-- Campo oculto para almacenar el ID de la ciudad -->
@@ -126,144 +174,219 @@
                                         <div id="listaOrdenCompra" style="display:none;"></div>
                                     </div>
                                 </div>
+                                <div class="col-sm-4"> 
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="hidden" id="proveedor_id" value="0"> <!-- Este campo se actualizará dinámicamente -->
+                                            <input type="text" id="prov_razonsocial" class="form-control" disabled>
+                                            <label class="form-label">Proveedor</label>
+                                        </div>
+                                    </div>
+                                </div>
 
-                            <!-- Resto de campos -->
+                                <!-- CAMPO PARA RUC DEL PROVEEDOR -->
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="prov_ruc" class=" form-control" disabled>
+                                            <label class="form-label">RUC</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- CAMPO PARA TELEFONO DEL PROVEEDOR -->
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="prov_telefono" class=" form-control" disabled>
+                                            <label class="form-label">Telefono</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- CAMPO PARA CORREO DEL PROVEEDOR -->
+                                <div class="col-sm-4">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="prov_correo" class=" form-control" disabled>
+                                            <label class="form-label">Correo</label>
+                                        </div>
+                                    </div>
+                                </div>
                             
                             <div class="button-demo">
                                 <button type="button" id="btnAgregar" class="btn btn-success waves-effect" onclick="agregar();">AGREGAR</button>
                                 <button type="button" id="btnEditar" class="btn btn-primary waves-effect" onclick="editar();" disabled>EDITAR</button>
-                                <button type="button" id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();" disabled>ANULAR</button>
-                                <button type="button" id="btnConfirmar" class="btn btn-success waves-effect" onclick="confirmar();" disabled>CONFIRMAR</button>
-                                <button type="button" id="btnRechazar" class="btn btn-danger waves-effect" onclick="rechazar();" disabled>RECHAZAR</button>
-                                <button type="button" id="btnAprobar" class="btn btn-success waves-effect" onclick="aprobar();" disabled>APROBAR</button>
+                                <button type="button" id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();"disabled>ANULAR</button>
+                                <button type="button" id="btnConfirmar" class="btn btn-success waves-effect" onclick="confirmar();"disabled>CONFIRMAR</button>
+                                <button type="button" id="btnRechazar" class="btn btn-danger waves-effect" onclick="rechazar();"disabled>RECHAZAR</button>
+                                <button type="button" id="btnAprobar" class="btn btn-success waves-effect" onclick="aprobar();"disabled>APROBAR</button>
                                 <button type="button" id="btnGrabar" class="btn btn-default waves-effect" disabled onclick="confirmarOperacion();">GRABAR</button>
-                                <button type="button" id="btnCancelar" class="btn btn-warning waves-effect" onclick="cancelar();" disabled>CANCELAR</button>
+                                <button type="button" id="btnCancelar" class="btn btn-warning waves-effect" onclick="cancelar();" disabled>CANCELAR</button>  
                             </div>
                         </div>
                     </div>
+
+                    <div class="card" id="detalle" style="display:none">
+                        <div class="header">
+                            <h2>Detalles del Orden de compras</h2>
+                        </div>
+                        <div class="body">
+                            <div class="row clearfix" id="formDetalles">
+                                <input type="hidden" value="0" id="txtOperacionDetalle"/>
+                                <!-- CAMPO PARA CODIGO CON 3 COLUMNAS -->
+                                <div class="col-sm-1">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="item_id" class="form-control" disabled>
+                                            <label class="form-label">Código</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- CAMPO PARA FECHA DE VENCIMIENTO CON 5 COLUMNAS -->
+                                <div class="col-sm-6">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();">
+                                            <label class="form-label">Producto</label>
+                                        </div>
+                                        <div id="listaProductos" style="display:none;"></div>
+                                    </div>
+                                </div>
+                                <!-- CAMPO PARA DESCRIPCION CON 4 COLUMNAS -->
+                                <div class="col-sm-4">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_im_nom" class="form-control" disabled onkeyup="buscarTipoImpuestos();">
+                                            <label class="form-label">Tipo Impuesto</label>
+                                        </div>
+                                        <!-- Campo oculto para almacenar el ID de la nacionalidad -->
+                                        <input type="hidden" id="tipo_impuesto_id" name="tipo_impuesto_id">
+
+                                        <!-- Contenedor para mostrar las nacionalidades -->
+                                        <div id="listaTipoImpuestos" style="display:none;"></div>
+                                    </div>
+                                </div>
+                                <!-- CAMPO PARA OBSERVACIONES CON 5 COLUMNAS -->
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                        <input type="text" id="orden_compra_det_cantidad" class="form-control" oninput="actualizarTotales();">
+                                            <label class="form-label">Cantidad</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                        <input type="text" id="item_costo" name="item_costo" class="form-control" oninput="actualizarTotales();">
+                                            <label class="form-label">Costo</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="subtotal" class="form-control" disabled>
+                                            <label class="form-label">Sub Total</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="totalConImpuesto" class="form-control" disabled>
+                                            <label class="form-label">Total con Impuesto</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="icon-button-demo">
+                                        <button type="button" id="btnAgregarDetalle" class="btn btn-success waves-effect" onclick="agregarDetalle();">
+                                            <i class="material-icons">add</i>
+                                        </button>
+                                        <button type="button" id="btnEditarDetalle" class="btn btn-warning waves-effect" onclick="editarDetalle();">
+                                            <i class="material-icons">mode_edit</i>
+                                        </button>
+                                        <button type="button" id="btnEliminarDetalle" class="btn btn-danger waves-effect" onclick="eliminarDetalle();">
+                                            <i class="material-icons">clear</i>
+                                        </button>
+                                        <button type="button" id="btnGrabarDetalle" class="btn btn-default waves-effect" style="display:none;" onclick="grabarDetalle();">
+                                            <i class="material-icons">save</i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Producto</th>
+                                            <th>Cantidad</th>
+                                            <th>Costo</th>
+                                            <th>Tipo impuesto</th>
+                                            <th>Sub Total</th>
+                                            <th>Total con Impuesto</th> <!-- Agregado para mostrar el total con impuesto -->
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableDetalle">
+                                        <!-- Aquí se llenarán los detalles de los productos -->
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="5" class="text-right">Total General</th>
+                                            <th class="text-right" id="txtTotalGral">0</th> <!-- Total sin impuestos -->
+                                        </tr>
+                                        <tr>
+                                            <th colspan="5" class="text-right">Total con Impuesto</th>
+                                            <th class="text-right" id="txtTotalConImpuesto">0</th> <!-- Total con impuestos -->
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" id="registros">
+                        <div class="header">
+                            <h2>Registros de Compra</h2>
+                        </div>
+                        <div class="body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                    <thead>
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Intervalo de fecha Vencimiento</th>
+                                            <th>Fecha</th>
+                                            <th>Ordenes de compra</th>
+                                            <th>Encargado</th>
+                                            <th>Cantidad de cuota</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableBody">
+                                        
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Intervalo de fecha Vencimiento</th>
+                                            <th>Fecha</th>
+                                            <th>Ordenes de compra</th>
+                                            <th>Encargado</th>
+                                            <th>Cantidad de cuota</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </tfoot>    
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-
-                <div class="card" id="detalle" style="display:none">
-                    <div class="header">
-                        <h2>Detalles del Presupuestos</h2>
-                    </div>
-                    <div class="body">
-                        <div class="row clearfix" id="formDetalles">
-                            <input type="hidden" value="0" id="txtOperacionDetalle"/>
-                            <!-- CAMPO PARA CODIGO CON 2 COLUMNAS -->
-                            <div class="col-sm-2">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="item_id" class="form-control" disabled>
-                                        <label class="form-label">Código</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- CAMPO PARA BUSCAR PRODUCTOS CON 4 COLUMNAS -->
-                            <div class="col-sm-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();">
-                                        <label class="form-label">Producto</label>
-                                    </div>
-                                    <div id="listaProductos" style="display:none;"></div>
-                                </div>
-                            </div>
-
-                            <!-- CAMPO PARA CANTIDAD 2 COLUMNAS -->
-                            <div class="col-sm-2">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="det_cantidad" class="form-control" disabled>
-                                        <label class="form-label">Cantidad</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- CAMPO PARA COSTO CON 2 COLUMNAS -->
-                            <div class="col-sm-2">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="det_costo" class="form-control" disabled>
-                                        <label class="form-label">Costo</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="icon-button-demo">
-                                    <button type="button" id="btnAgregarDetalle" class="btn btn-success waves-effect" onclick="agregarDetalle();">
-                                        <i class="material-icons">add</i>
-                                    </button>
-                                    <button type="button" id="btnEditarDetalle" class="btn btn-warning waves-effect" onclick="editarDetalle();">
-                                        <i class="material-icons">mode_edit</i>
-                                    </button>
-                                    <button type="button" id="btnEliminarDetalle" class="btn btn-danger waves-effect" onclick="eliminarDetalle();">
-                                        <i class="material-icons">clear</i>
-                                    </button>
-                                    <button type="button" id="btnGrabarDetalle" class="btn btn-default waves-effect" style="display:none;" onclick="grabarDetalle();">
-                                        <i class="material-icons">save</i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable ">
-                                <thead>
-                                    <tr>
-                                        <th>Código</th>
-                                        <th>Producto</th>
-                                        <th>Cantidad</th>
-                                        <th>Costo</th>
-                                        <th>Sub Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tableDetalle">
-                                    
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th colspan="4">Total General</th>
-                                        <th class="text-right" id="txtTotalGral">0</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="header">
-                        <h2>Listado de Presupuestos</h2>
-                    </div>
-                    <div class="body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable" id="tablePresupuesto">
-                                <thead>
-                                    <tr>
-                                        <th>Código</th>
-                                        <th>Vencimiento</th>
-                                        <th>Observaciones</th>
-                                        <th>Proveedor</th>
-                                        <th>Estado</th>
-                                        <th>Usuario</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tablePresupuestos">
-                                    
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
+                
             </div>
         </div>
-
-    </div>
-</section>
-
+    </section>
 
     <!-- Jquery Core Js -->
     <script src="../../plugins/jquery/jquery.min.js"></script>

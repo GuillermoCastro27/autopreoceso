@@ -53,22 +53,22 @@ function cancelar(){
 }
 
 // Prepara el formulario para agregar un nuevo presupuesto.
-function agregar(){
+function agregar() {
     $("#txtOperacion").val(1);
     $("#id").val(0);
-    $("#ord_comp_intervalo_fecha_vence").attr("disabled","true");
+    $("#ord_comp_intervalo_fecha_vence").attr("disabled", "true");
     $("#ord_comp_fecha").removeAttr("disabled");
-    $("#ord_comp_cant_cuota").attr("disabled","true");
+    $("#ord_comp_cant_cuota").attr("disabled", "true");
     $("#presupuestos").removeAttr("disabled");
     $("#emp_razon_social").removeAttr("disabled");
-    $("#condicion_pago").removeAttr("disabled");
+    $("#condicion_pago").removeAttr("disabled"); // Habilitar condición de pago
     $("#suc_razon_social").removeAttr("disabled");
     buscarEmpresas();
 
-    $("#btnAgregar").attr("disabled","true");
-    $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
-    $("#btnConfirmar").attr("disabled","true");
+    $("#btnAgregar").attr("disabled", "true");
+    $("#btnEditar").attr("disabled", "true");
+    $("#btnEliminar").attr("disabled", "true");
+    $("#btnConfirmar").attr("disabled", "true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -77,12 +77,14 @@ function agregar(){
     $("#registros").attr("style","display:none;");
 }
 
-// Prepara el formulario para editar un presupuesto existente.
 function editar(){
     $("#txtOperacion").val(2);
-    $("#ord_comp_intervalo_fecha_vence").attr("disabled","true");
+    
+    // Permitir editar el intervalo de fecha de vencimiento y la cantidad de cuotas
+    $("#ord_comp_intervalo_fecha_vence").removeAttr("disabled");
+    $("#ord_comp_cant_cuota").removeAttr("disabled");
+    
     $("#ord_comp_fecha").removeAttr("disabled");
-    $("#ord_comp_cant_cuota").attr("disabled","true");
     $("#presupuestos").removeAttr("disabled");
     $("#emp_razon_social").removeAttr("disabled");
     $("#condicion_pago").removeAttr("disabled");
@@ -174,11 +176,11 @@ function confirmarOperacion() {
     }
     if(oper===5){
         titulo = "RECHAZAR";
-        pregunta = "¿DESEA RECHAZAR EL PRESUPUESTO SELECCIONADO?";
+        pregunta = "¿DESEA RECHAZAR EL REGISTRO SELECCIONADO?";
     }
     if(oper===6){
         titulo = "APROBAR";
-        pregunta = "¿DESEA APROBAR EL PRESUPUESTO SELECCIONADO?";
+        pregunta = "¿DESEA APROBAR EL REGISTRO SELECCIONADO?";
     }
     swal({
         title: titulo,
@@ -207,9 +209,10 @@ function listar() {
         dataType: "json"
     })
     .done(function(resultado) {
+        console.log(resultado); // Verifica el contenido de la respuesta
         var lista = "";
         for (rs of resultado) {
-            lista += "<tr class=\"item-list\" onclick=\"seleccionOrdenCompra(" + rs.id + "," + rs.proveedor_id + "," + rs.empresa_id + "," + rs.sucursal_id + "," + rs.presupuesto_id + ",'" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.presupuesto + "','" + rs.ord_comp_intervalo_fecha_vence + "','" + rs.ord_comp_fecha + "','" + rs.ord_comp_estado + "','" + rs.ord_comp_cant_cuota + "','" + rs.encargado + "','" + rs.prov_razonsocial + "','" + rs.prov_ruc + "','" + rs.prov_telefono + "','" + rs.prov_correo + "');\">";
+            lista += "<tr class=\"item-list\" onclick=\"seleccionOrdenCompra(" + rs.id + "," + rs.proveedor_id + "," + rs.empresa_id + "," + rs.sucursal_id + "," + rs.presupuesto_id + ",'" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.presupuesto + "','" + rs.ord_comp_intervalo_fecha_vence + "','" + rs.ord_comp_fecha + "','" + rs.ord_comp_estado + "','" + rs.ord_comp_cant_cuota + "','" + rs.encargado + "','" + rs.prov_razonsocial + "','" + rs.prov_ruc + "','" + rs.prov_telefono + "','" + rs.prov_correo + "','" + rs.condicion_pago + "');\">";
             lista += "<td>" + rs.id + "</td>";  // Código de la orden de compra
             lista += "<td>" + rs.ord_comp_intervalo_fecha_vence + "</td>";  // Intervalo de fecha de vencimiento
             lista += "<td>" + rs.ord_comp_fecha + "</td>";  // Fecha
@@ -221,7 +224,7 @@ function listar() {
         }
         $("#tableBody").html(lista);
         formatoTabla();
-    })
+    })    
     .fail(function(xhr, status, error) {
         alert("Error: " + error);
         console.error(xhr.responseText);
@@ -229,7 +232,10 @@ function listar() {
 }
 
 // Rellena el formulario con los datos de un pedido seleccionado.
-function seleccionOrdenCompra(id_orde_compra_cab, proveedor_id,empresa_id, sucursal_id, presupuesto_id, emp_razon_social, suc_razon_social, presupuesto, ord_comp_intervalo_fecha_vence, ord_comp_fecha, ord_comp_estado, ord_comp_cant_cuota, encargado, prov_razonsocial, prov_ruc, prov_telefono, prov_correo) {
+function seleccionOrdenCompra(id_orde_compra_cab, proveedor_id, empresa_id, sucursal_id, presupuesto_id, emp_razon_social, suc_razon_social, presupuestos, ord_comp_intervalo_fecha_vence, ord_comp_fecha, ord_comp_estado, ord_comp_cant_cuota, encargado, prov_razonsocial, prov_ruc, prov_telefono, prov_correo, condicion_pago) {
+    console.log("Condición de pago: " + condicion_pago);  // Verifica el valor de la condición de pago
+    
+    // Asigna los valores al formulario
     $("#id").val(id_orde_compra_cab);
     $("#empresa_id").val(empresa_id);
     $("#sucursal_id").val(sucursal_id);
@@ -240,15 +246,18 @@ function seleccionOrdenCompra(id_orde_compra_cab, proveedor_id,empresa_id, sucur
     $("#ord_comp_cant_cuota").val(ord_comp_cant_cuota);
     $("#emp_razon_social").val(emp_razon_social);
     $("#suc_razon_social").val(suc_razon_social);
-    $("#presupuestos").val(presupuesto);
+    $("#presupuestos").val(presupuestos);
     $("#ord_comp_estado").val(ord_comp_estado);
     $("#prov_razonsocial").val(prov_razonsocial);
     $("#prov_ruc").val(prov_ruc);
     $("#prov_telefono").val(prov_telefono);
     $("#prov_correo").val(prov_correo);
-    $("#encargado").val(encargado);  // Aquí autocompletas el encargado
-    
-    // Mostrar y ocultar secciones según sea necesario
+    $("#encargado").val(encargado);
+
+    // Asignar la condición de pago (CONTADO o CRÉDITO)
+    $("#condicion_pago").val(condicion_pago);
+
+    // Mostrar/ocultar secciones según sea necesario
     $("#registros").attr("style", "display:none;");
     $("#detalle").attr("style", "display:block;");
     $("#formDetalles").attr("style", "display:none;");
@@ -260,7 +269,7 @@ function seleccionOrdenCompra(id_orde_compra_cab, proveedor_id,empresa_id, sucur
     $("#btnCancelar").attr("disabled","true");
     $("#btnEliminar").attr("disabled","true");
     $("#btnConfirmar").attr("disabled","true");
-    
+
     $("#btnCancelar").removeAttr("disabled");
 
     if(ord_comp_estado === "PENDIENTE"){
@@ -283,12 +292,21 @@ function seleccionOrdenCompra(id_orde_compra_cab, proveedor_id,empresa_id, sucur
     }
 
     $(".form-line").attr("class","form-line focused");
-    
 }
 function formatDate(dateString) {
     if (!dateString) return null;
     var parts = dateString.split("/");
     return parts[2] + "-" + parts[1] + "-" + parts[0]; // Formato 'YYYY-MM-DD'
+}
+function formatDateToYMD(dateString) {
+    if (!dateString) return null;
+
+    var dateParts = dateString.split(" ")[0].split("/"); // Dividimos la parte de la fecha
+    var day = dateParts[0];
+    var month = dateParts[1];
+    var year = dateParts[2];
+
+    return [year, month, day].join('-'); // Retorna el formato YYYY-MM-DD
 }
 
 // Realiza operaciones de creación, edición, anulacion y confirmación de un pedido
@@ -331,6 +349,7 @@ function grabar() {
         alert("El ID del presupuesto es obligatorio.");
         return; // Detener el envío si el presupuesto_id no es válido
     }
+    var ordCompFecha = formatDateToYMD($("#ord_comp_fecha").val());
 
     // Verificar el valor del proveedor_id antes de enviar
     var proveedorId = $("#proveedor_id").val();
@@ -375,11 +394,13 @@ function grabar() {
             text: resultado.mensaje,
             type: resultado.tipo
         },
-        function() {
-            if (resultado.tipo == "success") {
+        function(){
+            if(resultado.tipo == "success"){
+                //location.reload(true);
                 $("#id").val(resultado.registro.id);
-                $("#detalle").attr("style", "display:block;");
-                if (resultado.registro.ord_comp_estado != "PENDIENTE") {
+                $("#detalle").attr("style","display:block;");
+                listarDetalles();
+                if(resultado.registro.ord_comp_estado!="PENDIENTE"){
                     location.reload(true);
                 }
             }
@@ -393,9 +414,9 @@ function grabar() {
 
 
 // Configura el formato de fecha en ciertos campos usando BootstrapMaterialDatePicker.
-function campoFecha(){
+function campoFecha() {
     $('.datetimepicker').bootstrapMaterialDatePicker({
-        format: 'DD/MM/YYYY HH:mm:ss',
+        format: 'YYYY-MM-DD HH:mm:ss', // Formato compatible con timestamp en Laravel
         clearButton: true,
         weekStart: 1
     });
@@ -610,6 +631,7 @@ function listarDetalles() {
     var TotalConImpuesto = 0; // Variable para total con impuestos
 
     const ordenCompraId = $("#id").val(); // Obtener el ID de la orden de compra
+    const estadoOrden = $("#ord_comp_estado").val(); // Obtener el estado de la orden (asegúrate de tener este campo en tu HTML)
 
     // Comprobar si el ID de la orden de compra es válido
     if (!ordenCompraId) {
@@ -668,11 +690,11 @@ function listarDetalles() {
         $("#txtTotalGral").text(TotalGral.toFixed(2)); // Mostrar total general
         $("#txtTotalConImpuesto").text(TotalConImpuesto.toFixed(2)); // Mostrar total con impuestos
 
-        // Habilitar el botón Confirmar si hay detalles
+        // Habilitar el botón Confirmar si hay detalles y la orden está pendiente
         if (estadoOrden === "PENDIENTE" && cantidadDetalle > 0) {
             $("#btnConfirmar").removeAttr("disabled");
         } else {
-            $("#btnConfirmar").attr("disabled","true"); // Deshabilitar si no hay detalles
+            $("#btnConfirmar").attr("disabled", "true"); // Deshabilitar si no hay detalles o la orden no está pendiente
         }
     })
     .fail(function(a, b, c) {

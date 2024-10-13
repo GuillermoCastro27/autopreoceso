@@ -107,29 +107,28 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <script>
-                                // Función para habilitar/deshabilitar campos según la condición de pago seleccionada
-                                function controlarCamposPago() {
-                                    var condicion = document.getElementById('condicion_pago').value;
-                                    var cuota = document.getElementById('ord_comp_cant_cuota');
-                                    var intervaloFechaVence = document.getElementById('ord_comp_intervalo_fecha_vence');
+                                    function controlarCamposPago() {
+                                        console.log("controlarCamposPago se ha llamado"); // Para depuración
+                                        var condicion = document.getElementById('condicion_pago').value;
+                                        var cuota = document.getElementById('ord_comp_cant_cuota');
+                                        var intervaloFechaVence = document.getElementById('ord_comp_intervalo_fecha_vence');
 
-                                    if (condicion === 'CONTADO') {
-                                        cuota.disabled = true;
-                                        intervaloFechaVence.disabled = true;
-                                        intervaloFechaVence.value = ''; // Asegúrate de limpiar el valor
-                                    } else {
-                                        cuota.disabled = false;
-                                        intervaloFechaVence.disabled = false;
+                                        if (condicion === 'CONTADO') {
+                                            cuota.disabled = true;
+                                            intervaloFechaVence.disabled = true;
+                                            intervaloFechaVence.value = ''; // Limpia el valor si está en contado
+                                        } else {
+                                            cuota.disabled = false;
+                                            intervaloFechaVence.disabled = false;
+                                        }
                                     }
-                                }
-
-                                // Llamar a la función cuando se carga la página para que establezca el estado inicial
-                                window.onload = function() {
-                                    controlarCamposPago();
-                                };
+                                    // Llamar a la función cuando se carga la página
+                                    window.onload = function() {
+                                        controlarCamposPago(); // Llama a la función para establecer el estado inicial
+                                    };
                                 </script>
+
                                 <!-- CAMPO PARA FECHA DE VENCIMIENTO CON 3 COLUMNAS -->
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
@@ -143,7 +142,7 @@
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="ord_comp_fecha" class="datetimepicker form-control" disabled>
+                                        <input type="text" id="ord_comp_fecha" class="datetimepicker form-control" readonly>
                                             <label class="form-label">Fecha</label>
                                         </div>
                                     </div>
