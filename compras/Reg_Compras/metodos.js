@@ -56,10 +56,10 @@ function cancelar() {
 function agregar() {
     $("#txtOperacion").val(1); // Indica operación de agregar
     $("#id").val(0); // Resetea el campo ID
-    $("#comp_intervalo_fecha_vence").removeAttr("disabled");
+    $("#comp_intervalo_fecha_vence").attr("disabled", "true");
     $("#comp_fecha").removeAttr("disabled");
     $("#comp_estado").removeAttr("disabled");
-    $("#comp_cant_cuota").removeAttr("disabled");
+    $("#comp_cant_cuota").attr("disabled", "true");
     $("#ordencompra").removeAttr("disabled");
     $("#condicion_pago").removeAttr("disabled");
     $("#emp_razon_social").removeAttr("disabled");
@@ -210,7 +210,7 @@ function listar() {
     .done(function(resultado) {
         var lista = "";
         for (rs of resultado) {
-            lista += "<tr class=\"item-list\" onclick=\"seleccionOrdenCompra(" + rs.id + "," + rs.proveedor_id + "," + rs.empresa_id + "," + rs.sucursal_id + "," + rs.orden_compra_cab_id + ",'" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.ordencompra + "','" + rs.comp_intervalo_fecha_vence + "','" + rs.comp_fecha + "','" + rs.comp_estado + "','" + rs.comp_cant_cuota + "','" + rs.encargado + "','" + rs.prov_razonsocial + "','" + rs.prov_ruc + "','" + rs.prov_telefono + "','" + rs.prov_correo + "');\">";
+            lista += "<tr class=\"item-list\" onclick=\"seleccionCompra(" + rs.id + "," + rs.proveedor_id + "," + rs.empresa_id + "," + rs.sucursal_id + "," + rs.orden_compra_cab_id + ",'" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.ordencompra + "','" + rs.comp_intervalo_fecha_vence + "','" + rs.comp_fecha + "','" + rs.comp_estado + "','" + rs.comp_cant_cuota + "','" + rs.encargado + "','" + rs.prov_razonsocial + "','" + rs.prov_ruc + "','" + rs.prov_telefono + "','" + rs.prov_correo + "');\">";
             lista += "<td>" + rs.id + "</td>";  // Código de la orden de compra
             lista += "<td>" + rs.comp_intervalo_fecha_vence + "</td>";  // Intervalo de fecha de vencimiento
             lista += "<td>" + rs.comp_fecha + "</td>";  // Fecha
@@ -230,7 +230,7 @@ function listar() {
 }
 
 // Rellena el formulario con los datos de un pedido seleccionado.
-function seleccionOrdenCompra(id_compra_cab, proveedor_id,empresa_id, sucursal_id, orden_compra_cab_id, emp_razon_social, suc_razon_social, ordencompra, comp_intervalo_fecha_vence, ocomp_fecha, comp_estado, comp_cant_cuota, encargado, prov_razonsocial, prov_ruc, prov_telefono, prov_correo) {
+function seleccionCompra(id_compra_cab, proveedor_id,empresa_id, sucursal_id, orden_compra_cab_id, emp_razon_social, suc_razon_social, ordencompra, comp_intervalo_fecha_vence, comp_fecha, comp_estado, comp_cant_cuota, encargado, prov_razonsocial, prov_ruc, prov_telefono, prov_correo) {
     $("#id").val(id_compra_cab);
     $("#empresa_id").val(empresa_id);
     $("#sucursal_id").val(sucursal_id);
@@ -251,9 +251,6 @@ function seleccionOrdenCompra(id_compra_cab, proveedor_id,empresa_id, sucursal_i
     
     // Mostrar y ocultar secciones según sea necesario
     $("#registros").attr("style", "display:none;");
-    $("#detalle").attr("style", "display:block;");
-    $("#formDetalles").attr("style", "display:none;");
-    listarDetalles();
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -314,8 +311,8 @@ function seleccionOrdenCompra(orden_compra_cab_id, empresa_id, sucursal_id, orde
     // Asigna valores a los campos correspondientes
     $("#orden_compra_cab_id").val(orden_compra_cab_id);
     $("#ordencompra").val(ordencompra);
-    $("#ord_comp_intervalo_fecha_vence").val(ord_comp_intervalo_fecha_vence);
-    $("#ord_comp_cant_cuota").val(ord_comp_cant_cuota);
+    $("#comp_intervalo_fecha_vence").val(ord_comp_intervalo_fecha_vence);
+    $("#comp_cant_cuota").val(ord_comp_cant_cuota);
     $("#condicion_pago").val(condicion_pago);
 
     // Autocompletar los campos del proveedor
@@ -378,17 +375,25 @@ function grabar() {
             'sucursal_id': $("#sucursal_id").val()
         }
     })
-    .done(function(respuesta) {
-        if (respuesta.tipo === "success") {
-            mensajeOperacion("Éxito", respuesta.mensaje, "success");
-            listar();
-            cancelar();
-        } else {
-            mensajeOperacion("Error", respuesta.mensaje, "error");
-        }
+    .done(function(resultado) {
+        swal({
+            title: "Respuesta",
+            text: resultado.mensaje,
+            type: resultado.tipo
+        },
+        function(){
+            if(resultado.tipo == "success"){
+                //location.reload(true);
+                $("#id").val(resultado.registro.id);
+                if(resultado.registro.comp_estado!="PENDIENTE"){
+                    location.reload(true);
+                }
+            }
+        });
     })
-    .fail(function(xhr, status, error) {
-        mensajeOperacion("Error", "Error al procesar la solicitud: " + xhr.responseText, "error");
+    .fail(function(a, b, c) {
+        alert(c);
+        console.log(a.responseText); // Mostrar error en la consola
     });
 }
 function buscarEmpresas() {
@@ -406,14 +411,6 @@ function buscarEmpresas() {
             var primeraEmpresa = resultado[0];
             seleccionEmpresa(primeraEmpresa.id, primeraEmpresa.emp_razon_social, primeraEmpresa.emp_direccion, primeraEmpresa.emp_telefono, primeraEmpresa.emp_correo);
         }
-
-        // Construir la lista de empresas para seleccionar manualmente si es necesario
-        for (rs of resultado) {
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionEmpresa("+rs.id+",'"+rs.emp_razon_social+"','"+rs.emp_direccion+"','"+rs.emp_telefono+"','"+rs.emp_correo+"');\">"+rs.emp_razon_social+"</li>";
-        }
-        lista += "</ul>";
-        $("#listaEmpresa").html(lista);
-        $("#listaEmpresa").attr("style", "display:block; position:absolute; z-index:2000;");
     })
     .fail(function(a,b,c) {
         alert(c);

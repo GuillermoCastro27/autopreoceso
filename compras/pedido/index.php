@@ -6,7 +6,7 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title>GUI PEDIDOS</title>
     <!-- Favicon-->
-    <link rel="icon" href="../../images.ico" type="image/x-icon">
+    <link rel="icon" href="../../icono.ico" type="image/x-icon">
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
@@ -56,9 +56,10 @@
                             <div class="row clearfix">
                                 <input type="hidden" value="0" id="txtOperacion"/>
                                 <input type="hidden" value="1" id="user_id"/>
-                                <inpit type="hidden" value="PENDIENTE" id="ped_estado"/>
-                                <!-- CAMPO PARA CODIGO CON 1 COLUMNAS -->
-                                <div class="col-sm-1">
+                                <input type="hidden" value="PENDIENTE" id="ped_estado"/>
+                                
+                                <!-- CAMPO PARA CODIGO CON 2 COLUMNAS -->
+                                <div class="col-sm-2">
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" id="id" class="form-control" disabled>
@@ -66,17 +67,53 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- CAMPO PARA FECHA DE VENCIMIENTO CON 3 COLUMNAS -->
+                                
+                                <!-- CAMPO PARA EMPRESA CON 2 COLUMNAS -->
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="emp_razon_social" class="form-control" disabled>
+                                            <label class="form-label">Empresa</label>
+                                        </div>
+                                        <input type="hidden" id="empresa_id" name="empresa_id">
+                                        <div id="listaEmpresa" style="display:none;"></div>
+                                    </div>
+                                </div>
+                                
+                                <!-- CAMPO PARA SUCURSAL CON 2 COLUMNAS -->
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="suc_razon_social" class="form-control" disabled onkeyup="buscarSucursal();">
+                                            <label class="form-label">Sucursal</label>
+                                        </div>
+                                        <input type="hidden" id="sucursal_id" name="sucursal_id">
+                                        <div id="listaSucursal" style="display:none;"></div>
+                                    </div>
+                                </div>
+                                
+                                <!-- CAMPO PARA FECHA CON 3 COLUMNAS -->
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="ped_vence" class="datetimepicker form-control" disabled>
+                                            <input type="text" id="ped_fecha" class="datetimepicker form-control" disabled>
                                             <label class="form-label">Fecha</label>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- CAMPO PARA OBSERVACIONES CON 8 COLUMNAS -->
-                                <div class="col-sm-8">
+                                
+                                <!-- CAMPO PARA VENCIMIENTO CON 3 COLUMNAS -->
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="ped_vence" class="datetimepicker form-control" disabled>
+                                            <label class="form-label">Vencimiento</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- CAMPO PARA OBSERVACIONES CON 6 COLUMNAS -->
+                                <div class="col-sm-6">
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" id="ped_pbservaciones" class="form-control" disabled>
@@ -85,6 +122,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             
                             <div class="button-demo">
                                 <button type="button" id="btnAgregar" class="btn btn-success waves-effect" onclick="agregar();">AGREGAR</button>
@@ -92,7 +130,7 @@
                                 <button type="button" id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();"disabled>ANULAR</button>
                                 <button type="button" id="btnConfirmar" class="btn btn-success waves-effect" onclick="confirmar();"disabled>CONFIRMAR</button>
                                 <button type="button" id="btnGrabar" class="btn btn-default waves-effect" disabled onclick="confirmarOperacion();">GRABAR</button>
-                                <button type="button" id="btnCancelar" class="btn btn-warning waves-effect" onclick="cancelar();" disabled>CANCELAR</button>  
+                                <button type="button" id="btnCancelar" class="btn btn-warning waves-effect" onclick="cancelar();" disabled>CANCELAR</button> 
                             </div>
                         </div>
                     </div>
@@ -182,7 +220,10 @@
                                     <thead>
                                         <tr>
                                             <th>Código</th>
+                                            <th>Empresa</th>
+                                            <th>Sucursal</th>
                                             <th>Fecha</th>
+                                            <th>Vencimiento</th>
                                             <th>Observaciones</th>
                                             <th>Encargado</th>
                                             <th>Estado</th>
@@ -194,7 +235,10 @@
                                     <tfoot>
                                         <tr>
                                             <th>Código</th>
+                                            <th>Empresa</th>
+                                            <th>Sucursal</th>
                                             <th>Fecha</th>
+                                            <th>Vencimiento</th>
                                             <th>Observaciones</th>
                                             <th>Encargado</th>
                                             <th>Estado</th>

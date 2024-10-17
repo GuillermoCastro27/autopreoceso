@@ -37,12 +37,12 @@
                 <div class="input-group">
                     <span class="input-group-addon">
                         <i class="material-icons">person</i>
-                        </span>
+                    </span>
                     <div class="form-line">
                         <input type="text" class="form-control" id="login" placeholder="Username" required autofocus>
-                        </div>
+                    </div>
                 </div>
-                    <div class="input-group">
+                <div class="input-group">
                     <span class="input-group-addon">
                         <i class="material-icons">lock</i>
                     </span>
@@ -55,17 +55,67 @@
                         <input type="checkbox" name="rememberme" id="rememberme" class="filled-in chk-col-pink">
                         <label for="rememberme">Remember Me</label>
                     </div>
-                <div class="col-xs-5">
+                    <div class="col-xs-5">
                         <button class="btn btn-block bg-pink waves-effect" type="button" onclick="validarUsuario();">INICIAR SESION</button>
                     </div>
                 </div>
                 <div class="row m-t-15 m-b--20">
                     <div class="col-xs-6">
-                        <a href="estamos-trabajando3.jpg">Registrate</a>
+                        <a href="#" data-toggle="modal" data-target="#registerModal">Registrate</a>
                     </div>
                     <div class="col-xs-6 align-right">
                         <a href="estamos-trabajando3.jpg">¿Olvidaste La Contraseña?</a>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Registro -->
+    <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Registro de Cuenta</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="msg">Regístrate para empezar</div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">person</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="text" class="form-control" id="name" placeholder="Nombre" required autofocus>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">email</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="email" class="form-control" id="email" placeholder="Correo Electrónico" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">lock</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="password" class="form-control" id="password1" placeholder="Contraseña" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">person</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="text" class="form-control" id="login1" placeholder="Usuario" required>
+                        </div>
+                    </div>
+                    <button class="btn btn-block bg-black waves-effect" type="button" onclick="registrarUsuario();">REGISTRAR</button>
                 </div>
             </div>
         </div>
@@ -83,17 +133,19 @@
     <!-- Validation Plugin Js -->
     <script src="plugins/jquery-validation/jquery.validate.js"></script>
 
+    <!-- SweetAlert Plugin Js -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
     <!-- Custom Js -->
     <script src="js/admin.js"></script>
     <script src="js/pages/examples/sign-in.js"></script>
     <script src="js/ruta.js"></script>
     <script>
         sessionStorage.removeItem('datosSesion');
-        // Valida las credenciales del usuario mediante una solicitud AJAX al servidor
+        
+        // Función para validar el usuario
         function validarUsuario(){
-            // Elimina los datos de sesión existentes
             sessionStorage.removeItem('datosSesion');
-            // Realiza una solicitud AJAX para autenticar al usuario
             $.ajax({
                 url:getUrl()+"login",
                 method:"POST",
@@ -104,19 +156,58 @@
                 }
             })
             .done(function(resultado){
-                // Almacena los datos de sesión en el almacenamiento local
                 sessionStorage.setItem('datosSesion',JSON.stringify(resultado));
-                // Imprime los datos de sesión en la consola (para depuración)
                 console.log(sessionStorage.getItem('datosSesion'));
-                // Redirige al usuario a la página del menú después de iniciar sesión exitosamente
                 window.location = 'menu.php';
             })
             .fail(function(a,b,c){
-                // En caso de error, muestra un mensaje de alerta con el mensaje de error
                 var error = JSON.parse(a.responseText);
                 alert(error.message);
                 console.log(a.responseText);
             })
+        }
+
+        // Función para registrar el usuario
+        function registrarUsuario() {
+            $.ajax({
+                url: getUrl() + "registrarse",
+                method: "POST",
+                dataType: "json",
+                data: {
+                    "name": $("#name").val(),
+                    "email": $("#email").val(),
+                    "password": $("#password1").val(),
+                    "login": $("#login1").val()
+                },
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Registro exitoso',
+                        text: 'Por favor, inicia sesión',
+                        icon: 'success',
+                        confirmButtonText: 'Aceptar'
+                    }).then(() => {
+                        window.location = 'index.html';
+                    });
+                },
+                error: function(xhr) {
+                    if (xhr.status == 404) {
+                        var errors = JSON.parse(xhr.responseText);
+                        Swal.fire({
+                            title: 'Error',
+                            text: Object.values(errors).join('\n'),
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Ocurrió un error inesperado. Intenta nuevamente.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    }
+                }
+            });
         }
     </script>
 </body>

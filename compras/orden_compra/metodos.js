@@ -126,35 +126,6 @@ function confirmar(){
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
 }
-function rechazar(){
-    $("#txtOperacion").val(5);
-
-    $("#btnAgregar").attr("disabled","true");
-    $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
-    $("#btnConfirmar").attr("disabled","true");
-    $("#btnRechazar").attr("disabled","true");
-    $("#btnAprobar").attr("disabled","true");
-
-
-    $("#btnGrabar").removeAttr("disabled");
-    $("#btnCancelar").removeAttr("disabled");
-}
-
-// Prepara el formulario para aprobar un presupuesto.
-function aprobar(){
-    $("#txtOperacion").val(6);
-
-    $("#btnAgregar").attr("disabled","true");
-    $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
-    $("#btnConfirmar").attr("disabled","true");
-    $("#btnRechazar").attr("disabled","true");
-    $("#btnAprobar").attr("disabled","true");
-
-    $("#btnGrabar").removeAttr("disabled");
-    $("#btnCancelar").removeAttr("disabled");                              
-}
 
 // Muestra un cuadro de diálogo para confirmar la operación antes de realizarla.
 function confirmarOperacion() {
@@ -173,14 +144,6 @@ function confirmarOperacion() {
     if(oper===4){
         titulo = "CONFIRMAR";
         pregunta = "¿DESEA CONFIRMAR EL REGISTRO SELECCIONADO?";
-    }
-    if(oper===5){
-        titulo = "RECHAZAR";
-        pregunta = "¿DESEA RECHAZAR EL REGISTRO SELECCIONADO?";
-    }
-    if(oper===6){
-        titulo = "APROBAR";
-        pregunta = "¿DESEA APROBAR EL REGISTRO SELECCIONADO?";
     }
     swal({
         title: titulo,
@@ -327,17 +290,7 @@ function grabar() {
         endpoint = "ordencompracab/confirmar/" + $("#id").val();
         metodo = "PUT";
         estado = "CONFIRMADO";
-    }else if($("#txtOperacion").val()==5){
-        endpoint = "ordencompracab/rechazar/"+$("#id").val();
-        metodo = "PUT";
-        estado = "RECHAZADO";
-    }else if($("#txtOperacion").val()==6){
-        endpoint = "ordencompracab/aprobar/"+$("#id").val();
-        metodo = "PUT";
-        estado = "APROBADO";
     }
-    
-
     // Obtener el valor de condicion_pago
     var condicionPago = $("#condicion_pago").val();
 
@@ -790,14 +743,6 @@ function buscarEmpresas() {
             var primeraEmpresa = resultado[0];
             seleccionEmpresa(primeraEmpresa.id, primeraEmpresa.emp_razon_social, primeraEmpresa.emp_direccion, primeraEmpresa.emp_telefono, primeraEmpresa.emp_correo);
         }
-
-        // Construir la lista de empresas para seleccionar manualmente si es necesario
-        for (rs of resultado) {
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionEmpresa("+rs.id+",'"+rs.emp_razon_social+"','"+rs.emp_direccion+"','"+rs.emp_telefono+"','"+rs.emp_correo+"');\">"+rs.emp_razon_social+"</li>";
-        }
-        lista += "</ul>";
-        $("#listaEmpresa").html(lista);
-        $("#listaEmpresa").attr("style", "display:block; position:absolute; z-index:2000;");
     })
     .fail(function(a,b,c) {
         alert(c);

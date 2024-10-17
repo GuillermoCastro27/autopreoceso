@@ -66,6 +66,36 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <!-- Campo de texto para la ciudad, habilitado -->
+                                            <input type="text" id="emp_razon_social" class="form-control" disabled>
+                                            <label class="form-label">Empresa</label>
+                                        </div>
+
+                                        <!-- Campo oculto para almacenar el ID de la ciudad -->
+                                        <input type="hidden" id="empresa_id" name="empresa_id">
+
+                                        <!-- Contenedor para la lista de ciudades -->
+                                        <div id="listaEmpresa" style="display:none;"></div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <!-- Campo de texto para la ciudad, habilitado -->
+                                            <input type="text" id="suc_razon_social" class="form-control" disabled onkeyup="buscarSucursal();">
+                                            <label class="form-label">Sucursal</label>
+                                        </div>
+
+                                        <!-- Campo oculto para almacenar el ID de la ciudad -->
+                                        <input type="hidden" id="sucursal_id" name="sucursal_id">
+
+                                        <!-- Contenedor para la lista de ciudades -->
+                                        <div id="listaSucursal" style="display:none;"></div>
+                                    </div>
+                                </div>
                                 <!-- CAMPO PARA FECHA DE VENCIMIENTO CON 5 COLUMNAS -->
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
@@ -140,8 +170,6 @@
                                 <button type="button" id="btnEditar" class="btn btn-primary waves-effect" onclick="editar();" disabled>EDITAR</button>
                                 <button type="button" id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();"disabled>ANULAR</button>
                                 <button type="button" id="btnConfirmar" class="btn btn-success waves-effect" onclick="confirmar();"disabled>CONFIRMAR</button>
-                                <button type="button" id="btnRechazar" class="btn btn-danger waves-effect" onclick="rechazar();"disabled>RECHAZAR</button>
-                                <button type="button" id="btnAprobar" class="btn btn-success waves-effect" onclick="aprobar();"disabled>APROBAR</button>
                                 <button type="button" id="btnGrabar" class="btn btn-default waves-effect" disabled onclick="confirmarOperacion();">GRABAR</button>
                                 <button type="button" id="btnCancelar" class="btn btn-warning waves-effect" onclick="cancelar();" disabled>CANCELAR</button> 
                             </div>

@@ -112,8 +112,8 @@
                                 // Función para habilitar/deshabilitar campos según la condición de pago seleccionada
                                 function controlarCamposPago() {
                                     var condicion = document.getElementById('condicion_pago').value;
-                                    var cuota = document.getElementById('ord_comp_cant_cuota');
-                                    var intervaloFechaVence = document.getElementById('ord_comp_intervalo_fecha_vence');
+                                    var cuota = document.getElementById('comp_cant_cuota');
+                                    var intervaloFechaVence = document.getElementById('comp_intervalo_fecha_vence');
 
                                     if (condicion === 'CONTADO') {
                                         cuota.disabled = true;
@@ -255,7 +255,7 @@
                                 <div class="col-sm-4">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="tip_im_nom" class="form-control" disabled onkeyup="buscarTipoImpuestos();">
+                                            <input type="text" id="tip_imp_nom" class="form-control" disabled onkeyup="buscarTipoImpuestos();">
                                             <label class="form-label">Tipo Impuesto</label>
                                         </div>
                                         <!-- Campo oculto para almacenar el ID de la nacionalidad -->

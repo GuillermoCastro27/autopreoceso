@@ -61,8 +61,10 @@ function agregar(){
     $("#pre_observaciones").removeAttr("disabled");
     $("#prov_razonsocial").removeAttr("disabled");
     $("#pedido").removeAttr("disabled");
-
-
+    $("#emp_razon_social").removeAttr("disabled");
+    $("#suc_razon_social").removeAttr("disabled");
+    buscarEmpresas();
+    
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
     $("#btnEliminar").attr("disabled","true");
@@ -75,15 +77,17 @@ function agregar(){
 
     $(".form-line").attr("class","form-line focused");
     $("#registros").attr("style","display:none;");
-
-
 }
 
 // Prepara el formulario para editar un presupuesto existente.
 function editar(){
     $("#txtOperacion").val(2);
     $("#pre_vence").removeAttr("disabled");
-    $("#ped_pbservaciones").removeAttr("disabled");
+    $("#pre_observaciones").removeAttr("disabled");
+    $("#prov_razonsocial").removeAttr("disabled");
+    $("#pedido").removeAttr("disabled");
+    $("#emp_razon_social").attr("disabled","true");
+    $("#suc_razon_social").attr("disabled","true")
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -122,37 +126,6 @@ function confirmar(){
     $("#btnCancelar").removeAttr("disabled");
 }
 
-// Prepara el formulario para rechazar un presupuesto.
-function rechazar(){
-    $("#txtOperacion").val(5);
-
-    $("#btnAgregar").attr("disabled","true");
-    $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
-    $("#btnConfirmar").attr("disabled","true");
-    $("#btnRechazar").attr("disabled","true");
-    $("#btnAprobar").attr("disabled","true");
-
-
-    $("#btnGrabar").removeAttr("disabled");
-    $("#btnCancelar").removeAttr("disabled");
-}
-
-// Prepara el formulario para aprobar un presupuesto.
-function aprobar(){
-    $("#txtOperacion").val(6);
-
-    $("#btnAgregar").attr("disabled","true");
-    $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
-    $("#btnConfirmar").attr("disabled","true");
-    $("#btnRechazar").attr("disabled","true");
-    $("#btnAprobar").attr("disabled","true");
-
-    $("#btnGrabar").removeAttr("disabled");
-    $("#btnCancelar").removeAttr("disabled");                              
-}
-
 // Muestra un cuadro de diálogo para confirmar la operación antes de realizarla.
 function confirmarOperacion() {
     var oper = parseInt($("#txtOperacion").val());
@@ -170,14 +143,6 @@ function confirmarOperacion() {
     if(oper===4){
         titulo = "CONFIMRAR";
         pregunta = "¿DESEA CONFIRMAR EL REGISTRO SELECCIONADO?";
-    }
-    if(oper===5){
-        titulo = "RECHAZAR";
-        pregunta = "¿DESEA RECHAZAR EL PRESUPUESTO SELECCIONADO?";
-    }
-    if(oper===6){
-        titulo = "APROBAR";
-        pregunta = "¿DESEA APROBAR EL PRESUPUESTO SELECCIONADO?";
     }
     swal({
         title: titulo,
@@ -207,7 +172,7 @@ function listar(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionPresupuesto("+rs.id+",'"+rs.pre_vence+"','"+rs.pre_observaciones+"','"+rs.pre_estado+"',"+rs.proveedor_id+",'"+rs.prov_razonsocial+"','"+rs.prov_ruc+"','"+rs.prov_telefono+"','"+rs.prov_correo+"',"+rs.pedido_id+",'"+rs.pedido+"');\">";
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionPresupuesto("+rs.id+","+rs.empresa_id+","+rs.sucursal_id+",'"+rs.emp_razon_social+"','"+rs.suc_razon_social+"','"+rs.pre_vence+"','"+rs.pre_observaciones+"','"+rs.pre_estado+"',"+rs.proveedor_id+",'"+rs.prov_razonsocial+"','"+rs.prov_ruc+"','"+rs.prov_telefono+"','"+rs.prov_correo+"',"+rs.pedido_id+",'"+rs.pedido+"');\">";
                 lista = lista + "<td>";
                 lista = lista + rs.id;
                 lista = lista +"</td>";
@@ -238,8 +203,12 @@ function listar(){
 }
 
 // Rellena el formulario con los datos de un presupuesto seleccionado.
-function seleccionPresupuesto(id,pre_vence,pre_observaciones,pre_estado,proveedor_id,prov_razonsocial,prov_ruc,prov_telefono,prov_correo,pedido_id,pedido){
+function seleccionPresupuesto(id, empresa_id, sucursal_id, emp_razon_social, suc_razon_social, pre_vence,pre_observaciones,pre_estado,proveedor_id,prov_razonsocial,prov_ruc,prov_telefono,prov_correo,pedido_id,pedido){
     $("#id").val(id);
+    $("#empresa_id").val(empresa_id);
+    $("#sucursal_id").val(sucursal_id);
+    $("#emp_razon_social").val(emp_razon_social);
+    $("#suc_razon_social").val(suc_razon_social);
     $("#pre_observaciones").val(pre_observaciones);
     $("#pre_estado").val(pre_estado);
     $("#pre_vence").val(pre_vence);
@@ -282,9 +251,9 @@ function seleccionPresupuesto(id,pre_vence,pre_observaciones,pre_estado,proveedo
     if(pre_estado === "CONFIRMADO"){
         $("#btnAgregar").attr("disabled","true");
         $("#btnGrabar").attr("disabled","true");
+        $("#btnEditar").attr("disabled","true");
 
-        $("#btnRechazar").removeAttr("disabled");
-        $("#btnAprobar").removeAttr("disabled");
+        $("#btnEliminar").removeAttr("disabled");
     }
 
     $(".form-line").attr("class","form-line focused");
@@ -310,16 +279,6 @@ function grabar(){
         metodo = "PUT";
         estado = "CONFIRMADO";
     }
-    if($("#txtOperacion").val()==5){
-        endpoint = "presupuesto/rechazar/"+$("#id").val();
-        metodo = "PUT";
-        estado = "RECHAZADO";
-    }
-    if($("#txtOperacion").val()==6){
-        endpoint = "presupuesto/aprobar/"+$("#id").val();
-        metodo = "PUT";
-        estado = "APROBADO";
-    }
     $.ajax({
         url:getUrl()+endpoint,
         method:metodo,
@@ -332,6 +291,8 @@ function grabar(){
             'proveedor_id': $("#proveedor_id").val(),  
             'pedido_id': $("#pedido_id").val(),
             'pre_estado': estado,
+            'empresa_id': $("#empresa_id").val(),
+            'sucursal_id': $("#sucursal_id").val(),
             'operacion': $("#txtOperacion").val()
         }
 
@@ -588,7 +549,7 @@ function buscarPedidos(){
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionPedido("+rs.pedido_id+",'"+rs.pedido+"')\">"+rs.pedido+"</li>";   
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionPedido("+rs.pedido_id+","+rs.empresa_id+","+rs.sucursal_id+",'"+rs.emp_razon_social+"','"+rs.suc_razon_social+"','"+rs.pedido+"')\">"+rs.pedido+"</li>";   
         }
         lista += "</ul>";
         $("#listaPedidos").html(lista);
@@ -601,12 +562,80 @@ function buscarPedidos(){
 }
 
 // Rellena el formulario con los datos de un pedido seleccionado.
-function seleccionPedido(pedido_id,pedido){
+function seleccionPedido(pedido_id,empresa_id,sucursal_id,emp_razon_social,suc_razon_social,pedido){
     $("#pedido_id").val(pedido_id);
+    $("#empresa_id").val(empresa_id);
+    $("#sucursal_id").val(sucursal_id);
     $("#pedido").val(pedido);
+    $("#emp_razon_social").val(emp_razon_social);
+    $("#suc_razon_social").val(suc_razon_social);
 
     $("#listaPedidos").html("");
     $("#listaPedidos").attr("style","display:none;");
 
     $(".form-line").attr("class","form-line focused");
+}
+function buscarEmpresas() {
+    $.ajax({
+        url:"http://127.0.0.1:8000/Proyecto_tp/empresa/read",
+        method:"GET",
+        dataType: "json"
+    })
+    .done(function(resultado) {
+        var lista = "<ul class=\"list-group\">";
+        
+        // Comprobar si hay empresas en el resultado
+        if (resultado.length > 0) {
+            // Seleccionar automáticamente la primera empresa
+            var primeraEmpresa = resultado[0];
+            seleccionEmpresa(primeraEmpresa.id, primeraEmpresa.emp_razon_social, primeraEmpresa.emp_direccion, primeraEmpresa.emp_telef, primeraEmpresa.emp_correo);
+        }
+    })
+    .fail(function(a,b,c) {
+        alert(c);
+        console.log(a.responseText);
+    });
+}
+
+function seleccionEmpresa(id, emp_razon_social, emp_direccion, emp_telef, emp_correo) {
+    $("#empresa_id").val(id);
+    $("#emp_razon_social").val(emp_razon_social);
+    $("#emp_direccion").val(emp_direccion);
+    $("#emp_telef").val(emp_telef);
+    $("#emp_correo").val(emp_correo);
+
+    $("#listaEmpresa").html("");
+    $("#listaEmpresa").attr("style", "display:none;");
+}
+
+function buscarSucursal(){
+    $.ajax({
+        url:"http://127.0.0.1:8000/Proyecto_tp/sucursal/read",
+        method:"GET",
+        dataType: "json"
+    })
+    .done(function(resultado){
+        var lista = "<ul class=\"list-group\">";
+        for(rs of resultado){
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.empresa_id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
+        }
+        lista += "</ul>";
+        $("#listaSucursal").html(lista);
+        $("#listaSucursal").attr("style","display:block; position:absolute; z-index:2000;");
+    })
+    .fail(function(a,b,c){
+        alert(c);
+        console.log(a.responseText);
+    })
+}
+
+function seleccionSucursal(empresa_id,suc_razon_social,suc_direccion,suc_telefono,suc_correo){
+    $("#sucursal_id").val(empresa_id);
+    $("#suc_razon_social").val(suc_razon_social);
+    $("#suc_direccion").val(suc_direccion);
+    $("#suc_telefono").val(suc_telefono);
+    $("#suc_correo").val(suc_correo);
+
+    $("#listaSucursal").html("");
+    $("#listaSucursal").attr("style","display:none;");
 }
