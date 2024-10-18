@@ -60,10 +60,9 @@ function agregar() {
     $("#ord_comp_fecha").removeAttr("disabled");
     $("#ord_comp_cant_cuota").attr("disabled", "true");
     $("#presupuestos").removeAttr("disabled");
-    $("#emp_razon_social").removeAttr("disabled");
-    $("#condicion_pago").removeAttr("disabled"); // Habilitar condición de pago
-    $("#suc_razon_social").removeAttr("disabled");
-    buscarEmpresas();
+    $("#emp_razon_social").attr("disabled", "true");
+    $("#condicion_pago").removeAttr("disabled");
+    $("#suc_razon_social").attr("disabled", "true");
 
     $("#btnAgregar").attr("disabled", "true");
     $("#btnEditar").attr("disabled", "true");
@@ -80,15 +79,13 @@ function agregar() {
 function editar(){
     $("#txtOperacion").val(2);
     
-    // Permitir editar el intervalo de fecha de vencimiento y la cantidad de cuotas
-    $("#ord_comp_intervalo_fecha_vence").removeAttr("disabled");
-    $("#ord_comp_cant_cuota").removeAttr("disabled");
-    
+    $("#ord_comp_intervalo_fecha_vence").attr("disabled", "true");
     $("#ord_comp_fecha").removeAttr("disabled");
+    $("#ord_comp_cant_cuota").attr("disabled", "true");
     $("#presupuestos").removeAttr("disabled");
-    $("#emp_razon_social").removeAttr("disabled");
+    $("#emp_razon_social").attr("disabled", "true");
     $("#condicion_pago").removeAttr("disabled");
-    $("#suc_razon_social").removeAttr("disabled");
+    $("#suc_razon_social").attr("disabled", "true");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -689,43 +686,60 @@ function actualizarTotales() {
     $("#totalConImpuesto").val(totalConImpuesto.toFixed(2)); // Mostrar total con impuestos
 }
 
-function buscarPresupuesto(){
+function buscarPresupuesto() {
     $.ajax({
-        url: getUrl()+"presupuesto/buscar",
+        url: getUrl() + "presupuesto/buscar",
         method: "POST",
         dataType: "json",
-        data:{
-            "user_id":$("#user_id").val(),
-            "name":$("#presupuesto").val()
+        data: {
+            "user_id": $("#user_id").val(),
+            "name": $("#presupuesto").val()
         }
     })
     .done(function(resultado) {
         console.log("Resultados encontrados:", resultado);
         var lista = "<ul class=\"list-group\">";
+        
         for (var rs of resultado) {
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionPresupuesto("+rs.presupuesto_id+", '"+rs.presupuesto+"', "+rs.proveedor_id+", '"+rs.prov_razonsocial+"', '"+rs.prov_ruc+"', '"+rs.prov_telefono+"', '"+rs.prov_correo+"')\">"+rs.presupuesto+"</li>";   
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionPresupuesto("
+                + rs.presupuesto_id + "," 
+                + rs.empresa_id + "," 
+                + rs.sucursal_id + ", '"
+                + rs.presupuesto + "', "
+                + rs.proveedor_id + ", '"
+                + rs.emp_razon_social + "','"
+                + rs.suc_razon_social + "','"
+                + rs.prov_razonsocial + "', '"
+                + rs.prov_ruc + "', '"
+                + rs.prov_telefono + "', '"
+                + rs.prov_correo + "')\">"
+                + rs.presupuesto + "</li>";   
         }
+
         lista += "</ul>";
         $("#listaPresupuesto").html(lista);
         $("#listaPresupuesto").attr("style", "display:block; position: absolute; z-index: 2000;");
-    })    
+    });
 }
 
-function seleccionPresupuesto(presupuesto_id, presupuesto, proveedor_id, prov_razonsocial, prov_ruc, prov_telefono, prov_correo) {
+function seleccionPresupuesto(presupuesto_id, empresa_id, sucursal_id, presupuesto, proveedor_id, emp_razon_social, suc_razon_social, prov_razonsocial, prov_ruc, prov_telefono, prov_correo) {
     $("#presupuesto_id").val(presupuesto_id);
+    $("#empresa_id").val(empresa_id);
+    $("#emp_razon_social").val(emp_razon_social);
+    $("#sucursal_id").val(sucursal_id);
+    $("#suc_razon_social").val(suc_razon_social);
     $("#presupuestos").val(presupuesto);
 
     // Autocompletar el proveedor
     $("#proveedor_id").val(proveedor_id);
-    $("#prov_razonsocial").val(prov_razonsocial); // Aquí debe ir la razón social
-    $("#prov_ruc").val(prov_ruc); // Aquí debe ir el RUC
-    $("#prov_telefono").val(prov_telefono); // Aquí debe ir el teléfono
-    $("#prov_correo").val(prov_correo); // Aquí debe ir el correo
+    $("#prov_razonsocial").val(prov_razonsocial);
+    $("#prov_ruc").val(prov_ruc);
+    $("#prov_telefono").val(prov_telefono);
+    $("#prov_correo").val(prov_correo);
 
     $("#listaPresupuesto").html("");
     $("#listaPresupuesto").attr("style", "display:none;");
-
-    $(".form-line").attr("class", "form-line focused");
+    $(".form-line").addClass("focused");
 }
 
 function buscarEmpresas() {

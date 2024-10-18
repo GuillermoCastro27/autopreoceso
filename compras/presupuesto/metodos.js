@@ -57,13 +57,13 @@ function cancelar(){
 function agregar(){
     $("#txtOperacion").val(1);
     $("#id").val(0);
-    $("#pre_vence").removeAttr("disabled");
+    $("#pre_fecha").removeAttr("disabled");
+    $("#pre_vence").attr("disabled","true");
     $("#pre_observaciones").removeAttr("disabled");
     $("#prov_razonsocial").removeAttr("disabled");
     $("#pedido").removeAttr("disabled");
-    $("#emp_razon_social").removeAttr("disabled");
-    $("#suc_razon_social").removeAttr("disabled");
-    buscarEmpresas();
+    $("#emp_razon_social").attr("disabled","true");
+    $("#suc_razon_social").attr("disabled","true");
     
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -82,12 +82,13 @@ function agregar(){
 // Prepara el formulario para editar un presupuesto existente.
 function editar(){
     $("#txtOperacion").val(2);
-    $("#pre_vence").removeAttr("disabled");
+    $("#pre_fecha").removeAttr("disabled");
+    $("#pre_vence").attr("disabled","true");
     $("#pre_observaciones").removeAttr("disabled");
     $("#prov_razonsocial").removeAttr("disabled");
     $("#pedido").removeAttr("disabled");
     $("#emp_razon_social").attr("disabled","true");
-    $("#suc_razon_social").attr("disabled","true")
+    $("#suc_razon_social").attr("disabled","true");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -172,9 +173,12 @@ function listar(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionPresupuesto("+rs.id+","+rs.empresa_id+","+rs.sucursal_id+",'"+rs.emp_razon_social+"','"+rs.suc_razon_social+"','"+rs.pre_vence+"','"+rs.pre_observaciones+"','"+rs.pre_estado+"',"+rs.proveedor_id+",'"+rs.prov_razonsocial+"','"+rs.prov_ruc+"','"+rs.prov_telefono+"','"+rs.prov_correo+"',"+rs.pedido_id+",'"+rs.pedido+"');\">";
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionPresupuesto("+rs.id+","+rs.empresa_id+","+rs.sucursal_id+",'"+rs.emp_razon_social+"','"+rs.suc_razon_social+"','"+rs.pre_fecha+"','"+rs.pre_vence+"','"+rs.pre_observaciones+"','"+rs.pre_estado+"',"+rs.proveedor_id+",'"+rs.prov_razonsocial+"','"+rs.prov_ruc+"','"+rs.prov_telefono+"','"+rs.prov_correo+"',"+rs.pedido_id+",'"+rs.pedido+"');\">";
                 lista = lista + "<td>";
                 lista = lista + rs.id;
+                lista = lista +"</td>";
+                lista = lista + "<td>";
+                lista = lista + rs.pre_fecha;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
                 lista = lista + rs.pre_vence;
@@ -203,7 +207,7 @@ function listar(){
 }
 
 // Rellena el formulario con los datos de un presupuesto seleccionado.
-function seleccionPresupuesto(id, empresa_id, sucursal_id, emp_razon_social, suc_razon_social, pre_vence,pre_observaciones,pre_estado,proveedor_id,prov_razonsocial,prov_ruc,prov_telefono,prov_correo,pedido_id,pedido){
+function seleccionPresupuesto(id, empresa_id, sucursal_id, emp_razon_social, suc_razon_social, pre_fecha, pre_vence,pre_observaciones,pre_estado,proveedor_id,prov_razonsocial,prov_ruc,prov_telefono,prov_correo,pedido_id,pedido){
     $("#id").val(id);
     $("#empresa_id").val(empresa_id);
     $("#sucursal_id").val(sucursal_id);
@@ -211,6 +215,7 @@ function seleccionPresupuesto(id, empresa_id, sucursal_id, emp_razon_social, suc
     $("#suc_razon_social").val(suc_razon_social);
     $("#pre_observaciones").val(pre_observaciones);
     $("#pre_estado").val(pre_estado);
+    $("#pre_fecha").val(pre_fecha);
     $("#pre_vence").val(pre_vence);
     $("#proveedor_id").val(proveedor_id);
     $("#prov_razonsocial").val(prov_razonsocial);
@@ -285,6 +290,7 @@ function grabar(){
         dataType: "json",
         data: { 
             'id': $("#id").val(), 
+            'pre_fecha': $("#pre_fecha").val(),
             'pre_vence': $("#pre_vence").val(), 
             'pre_observaciones': $("#pre_observaciones").val(), 
             'user_id': $("#user_id").val(),  
@@ -392,8 +398,6 @@ function grabarDetalle(){
         console.log(a.responseText);
     })
 
-    window.location.reload();
-
     $("#btnAgregarDetalle").attr("style","display:inline");
     $("#btnEditarDetalle").attr("style","display:inline");
     $("#btnEliminarDetalle").attr("style","display:inline");
@@ -477,9 +481,9 @@ function listarDetalles(){
         $("#tableDetalle").html(lista);
         $("#txtTotalGral").text(TotalGral);
         if($("#pre_estado").val()=== "PENDIENTE" && cantidadDetalle>0){
-            $("#btnConfirmar").removeAttr("disabled",);
+            $("#btnConfirmar").removeAttr("disabled","true");
         }else{
-            $("#btnConfirmar").attr("disabled","true");
+            $("#btnConfirmar").attr("disabled");
         }
     })
     .fail(function(a,b,c){
@@ -549,7 +553,7 @@ function buscarPedidos(){
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionPedido("+rs.pedido_id+","+rs.empresa_id+","+rs.sucursal_id+",'"+rs.emp_razon_social+"','"+rs.suc_razon_social+"','"+rs.pedido+"')\">"+rs.pedido+"</li>";   
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionPedido("+rs.pedido_id+","+rs.empresa_id+","+rs.sucursal_id+",'"+rs.emp_razon_social+"','"+rs.suc_razon_social+"','"+rs.ped_vence+"','"+rs.pedido+"')\">"+rs.pedido+"</li>";   
         }
         lista += "</ul>";
         $("#listaPedidos").html(lista);
@@ -562,11 +566,12 @@ function buscarPedidos(){
 }
 
 // Rellena el formulario con los datos de un pedido seleccionado.
-function seleccionPedido(pedido_id,empresa_id,sucursal_id,emp_razon_social,suc_razon_social,pedido){
+function seleccionPedido(pedido_id,empresa_id,sucursal_id,emp_razon_social,suc_razon_social,ped_vence,pedido){
     $("#pedido_id").val(pedido_id);
     $("#empresa_id").val(empresa_id);
     $("#sucursal_id").val(sucursal_id);
     $("#pedido").val(pedido);
+    $("#pre_vence").val(ped_vence);
     $("#emp_razon_social").val(emp_razon_social);
     $("#suc_razon_social").val(suc_razon_social);
 

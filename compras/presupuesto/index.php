@@ -100,6 +100,15 @@
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
+                                            <input type="text" id="pre_fecha" class="datetimepicker form-control" disabled>
+                                            <label class="form-label">Fecha</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- CAMPO PARA FECHA DE VENCIMIENTO CON 5 COLUMNAS -->
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
                                             <input type="text" id="pre_vence" class="datetimepicker form-control" disabled>
                                             <label class="form-label">Vencimiento</label>
                                         </div>
@@ -112,6 +121,17 @@
                                             <input type="text" id="pre_observaciones" class="form-control" disabled>
                                             <label class="form-label">Observaciones</label>
                                         </div>
+                                    </div>
+                                </div>
+                                 <!-- CAMPO PARA BUSCAR PEDIDOS -->
+                                 <div class="col-sm-6">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type ="hidden" id="pedido_id" value="0"/>
+                                            <input type="text" id="pedido" class=" form-control" disabled onkeyup="buscarPedidos();">
+                                            <label class="form-label">Pedidos</label>
+                                        </div>
+                                        <div id="listaPedidos" style="display:none;"></div>
                                     </div>
                                 </div>
                                 <!-- CAMPO PARA BUSCAR PROVEEDORES -->
@@ -144,23 +164,12 @@
                                     </div>
                                 </div>
                                 <!-- CAMPO PARA CORREO DEL PROVEEDOR -->
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" id="prov_correo" class=" form-control" disabled>
                                             <label class="form-label">Correo</label>
                                         </div>
-                                    </div>
-                                </div>
-                                <!-- CAMPO PARA BUSCAR PEDIDOS -->
-                                <div class="col-sm-12">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type ="hidden" id="pedido_id" value="0"/>
-                                            <input type="text" id="pedido" class=" form-control" disabled onkeyup="buscarPedidos();">
-                                            <label class="form-label">Pedidos</label>
-                                        </div>
-                                        <div id="listaPedidos" style="display:none;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -222,14 +231,8 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="icon-button-demo">
-                                        <button type="button" id="btnAgregarDetalle" class="btn btn-success waves-effect" onclick="agregarDetalle();">
-                                            <i class="material-icons">add</i>
-                                        </button>
                                         <button type="button" id="btnEditarDetalle" class="btn btn-warning waves-effect" onclick="editarDetalle();">
                                             <i class="material-icons">mode_edit</i>
-                                        </button>
-                                        <button type="button" id="btnEliminarDetalle" class="btn btn-danger waves-effect" onclick="eliminarDetalle();">
-                                            <i class="material-icons">clear</i>
                                         </button>
                                         <button type="button" id="btnGrabarDetalle" class="btn btn-default waves-effect" style="display:none;" onclick="grabarDetalle();">
                                             <i class="material-icons">save</i>
@@ -271,6 +274,7 @@
                                     <thead>
                                         <tr>
                                             <th>Código</th>
+                                            <th>Fecha</th>
                                             <th>Vencimiento</th>
                                             <th>Observaciones</th>
                                             <th>Encargado</th>
@@ -284,6 +288,7 @@
                                     <tfoot>
                                         <tr>
                                             <th>Código</th>
+                                            <th>Fecha</th>
                                             <th>Vencimiento</th>
                                             <th>Observaciones</th>
                                             <th>Encargado</th>
