@@ -245,28 +245,12 @@ function seleccionOrdenCompra(id_orde_compra_cab, proveedor_id, empresa_id, sucu
     if(ord_comp_estado === "CONFIRMADO"){
         $("#btnAgregar").attr("disabled","true");
         $("#btnGrabar").attr("disabled","true");
-        $("#btnConfirmar").attr("disabled","true");
+        $("#btnEditar").attr("disabled","true");
 
-        $("#btnRechazar").removeAttr("disabled");
-        $("#btnAprobar").removeAttr("disabled");
+        $("#btnEliminar").removeAttr("disabled");
     }
 
     $(".form-line").attr("class","form-line focused");
-}
-function formatDate(dateString) {
-    if (!dateString) return null;
-    var parts = dateString.split("/");
-    return parts[2] + "-" + parts[1] + "-" + parts[0]; // Formato 'YYYY-MM-DD'
-}
-function formatDateToYMD(dateString) {
-    if (!dateString) return null;
-
-    var dateParts = dateString.split(" ")[0].split("/"); // Dividimos la parte de la fecha
-    var day = dateParts[0];
-    var month = dateParts[1];
-    var year = dateParts[2];
-
-    return [year, month, day].join('-'); // Retorna el formato YYYY-MM-DD
 }
 
 // Realiza operaciones de creación, edición, anulacion y confirmación de un pedido
@@ -299,7 +283,6 @@ function grabar() {
         alert("El ID del presupuesto es obligatorio.");
         return; // Detener el envío si el presupuesto_id no es válido
     }
-    var ordCompFecha = formatDateToYMD($("#ord_comp_fecha").val());
 
     // Verificar el valor del proveedor_id antes de enviar
     var proveedorId = $("#proveedor_id").val();

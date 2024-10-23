@@ -214,11 +214,9 @@
                             
                             <div class="button-demo">
                                 <button type="button" id="btnAgregar" class="btn btn-success waves-effect" onclick="agregar();">AGREGAR</button>
-                                <button type="button" id="btnEditar" class="btn btn-primary waves-effect" onclick="editar();" disabled>EDITAR</button>
+                                <button type="button" id="btnEditar" class="btn btn-primary waves-effect" onclick="editar();" disabled>MODIFICAR</button>
                                 <button type="button" id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();"disabled>ANULAR</button>
-                                <button type="button" id="btnConfirmar" class="btn btn-success waves-effect" onclick="confirmar();"disabled>CONFIRMAR</button>
-                                <button type="button" id="btnRechazar" class="btn btn-danger waves-effect" onclick="rechazar();"disabled>RECHAZAR</button>
-                                <button type="button" id="btnAprobar" class="btn btn-success waves-effect" onclick="aprobar();"disabled>APROBAR</button>
+                                <button type="button" id="btnConfirmar" class="btn btn-success waves-effect" onclick="confirmar();"disabled>RECIBIDO</button>
                                 <button type="button" id="btnGrabar" class="btn btn-default waves-effect" disabled onclick="confirmarOperacion();">GRABAR</button>
                                 <button type="button" id="btnCancelar" class="btn btn-warning waves-effect" onclick="cancelar();" disabled>CANCELAR</button>  
                             </div>
@@ -227,94 +225,10 @@
 
                     <div class="card" id="detalle" style="display:none">
                         <div class="header">
-                            <h2>Detalles del Orden de compras</h2>
+                            <h2>Detalles de Compras</h2>
                         </div>
                         <div class="body">
-                            <div class="row clearfix" id="formDetalles">
-                                <input type="hidden" value="0" id="txtOperacionDetalle"/>
-                                <!-- CAMPO PARA CODIGO CON 3 COLUMNAS -->
-                                <div class="col-sm-1">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="item_id" class="form-control" disabled>
-                                            <label class="form-label">Código</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- CAMPO PARA FECHA DE VENCIMIENTO CON 5 COLUMNAS -->
-                                <div class="col-sm-6">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();">
-                                            <label class="form-label">Producto</label>
-                                        </div>
-                                        <div id="listaProductos" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                <!-- CAMPO PARA DESCRIPCION CON 4 COLUMNAS -->
-                                <div class="col-sm-4">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="tip_imp_nom" class="form-control" disabled onkeyup="buscarTipoImpuestos();">
-                                            <label class="form-label">Tipo Impuesto</label>
-                                        </div>
-                                        <!-- Campo oculto para almacenar el ID de la nacionalidad -->
-                                        <input type="hidden" id="tipo_impuesto_id" name="tipo_impuesto_id">
-
-                                        <!-- Contenedor para mostrar las nacionalidades -->
-                                        <div id="listaTipoImpuestos" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                <!-- CAMPO PARA OBSERVACIONES CON 5 COLUMNAS -->
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                        <input type="text" id="orden_compra_det_cantidad" class="form-control" oninput="actualizarTotales();">
-                                            <label class="form-label">Cantidad</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                        <input type="text" id="item_costo" name="item_costo" class="form-control" oninput="actualizarTotales();">
-                                            <label class="form-label">Costo</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="subtotal" class="form-control" disabled>
-                                            <label class="form-label">Sub Total</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="totalConImpuesto" class="form-control" disabled>
-                                            <label class="form-label">Total con Impuesto</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="icon-button-demo">
-                                        <button type="button" id="btnAgregarDetalle" class="btn btn-success waves-effect" onclick="agregarDetalle();">
-                                            <i class="material-icons">add</i>
-                                        </button>
-                                        <button type="button" id="btnEditarDetalle" class="btn btn-warning waves-effect" onclick="editarDetalle();">
-                                            <i class="material-icons">mode_edit</i>
-                                        </button>
-                                        <button type="button" id="btnEliminarDetalle" class="btn btn-danger waves-effect" onclick="eliminarDetalle();">
-                                            <i class="material-icons">clear</i>
-                                        </button>
-                                        <button type="button" id="btnGrabarDetalle" class="btn btn-default waves-effect" style="display:none;" onclick="grabarDetalle();">
-                                            <i class="material-icons">save</i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                            <div class="row clearfix" id="formDetalles"></div>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover dataTable">
                                     <thead>
