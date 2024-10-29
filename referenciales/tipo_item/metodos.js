@@ -213,6 +213,26 @@ function seleccionTipo(codigo, tipo_descripcion,tipo_objeto){
 }
 
 function grabar(){
+    var descripcion = $("#tipo_descripcion").val().trim();
+    var objeto = $("#tipo_objeto").val().trim();
+
+    // Validar que el campo descripción no esté vacío
+    if (descripcion === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return; 
+    }
+    if (objeto === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return; 
+    }
     var endpoint = "tipo/create";
     var metodo = "POST";
     if($("#txtOperacion").val()==2){

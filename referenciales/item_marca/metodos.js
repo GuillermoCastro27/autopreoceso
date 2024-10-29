@@ -231,6 +231,35 @@ function seleccionMarca(id, nombre) {
     $("#listaMarcas").attr("style", "display:none;");
 }
 function grabar() {
+    var descripcion = $("#item_marca_descrip").val().trim();
+    var producto = $("#item_decripcion").val().trim();
+    var marca = $("#marc_nom").val().trim();
+
+    // Validar que el campo descripción no esté vacío
+    if (descripcion === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return; 
+    }
+    if (producto === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return; 
+    }
+    if (marca === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return; 
+    }
     var endpoint = "item-marca/create"; // Esto es para agregar
     var metodo = "POST";
     

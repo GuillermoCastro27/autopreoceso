@@ -56,7 +56,7 @@
                             <div class="row clearfix">
                                 <input type="hidden" value="0" id="txtOperacion"/>
                                 <input type="hidden" value="1" id="user_id"/>
-                                <inpit type="hidden" value="PENDIENTE" id="pre_estado"/>
+                                <input type="hidden" value="PENDIENTE" id="pre_estado"/>
                                 <!-- CAMPO PARA CODIGO CON 3 COLUMNAS -->
                                 <div class="col-sm-1">
                                     <div class="form-group form-float">
@@ -110,7 +110,7 @@
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" id="pre_vence" class="datetimepicker form-control" disabled>
-                                            <label class="form-label">Vencimiento</label>
+                                            <label class="form-label">Plazo de Entrega</label>
                                         </div>
                                     </div>
                                 </div>
@@ -275,7 +275,7 @@
                                         <tr>
                                             <th>Código</th>
                                             <th>Fecha</th>
-                                            <th>Vencimiento</th>
+                                            <th>Plazo de Entrega</th>
                                             <th>Observaciones</th>
                                             <th>Encargado</th>
                                             <th>Estado</th>
@@ -289,7 +289,7 @@
                                         <tr>
                                             <th>Código</th>
                                             <th>Fecha</th>
-                                            <th>Vencimiento</th>
+                                            <th>Plazo de Entrega</th>
                                             <th>Observaciones</th>
                                             <th>Encargado</th>
                                             <th>Estado</th>

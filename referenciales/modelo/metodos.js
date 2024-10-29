@@ -207,6 +207,17 @@ function seleccionModelo(codigo, modelo_nom){
 }
 
 function grabar(){
+    var descripcion = $("#txtNom").val().trim();
+
+    // Validar que el campo descripción no esté vacío
+    if (descripcion === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return;  // Salir de la función si la validación falla
+    }
     var endpoint = "modelo/create";
     var metodo = "POST";
     if($("#txtOperacion").val()==2){

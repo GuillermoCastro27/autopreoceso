@@ -172,6 +172,35 @@ function seleccionItemModelo(modelo_id,modelo_nom,item_id, item_decripcion, item
 }
 
 function grabar() {
+    var descripcion = $("#item_modelo_descrip").val().trim();
+    var producto = $("#item_decripcion").val().trim();
+    var modelo = $("#modelo_nom").val().trim();
+
+    // Validar que el campo descripción no esté vacío
+    if (descripcion === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return; 
+    }
+    if (producto === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return; 
+    }
+    if (modelo === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return; 
+    }
     console.log({
         id: $("#id").val(),
         item_id: $("#item_id").val(),

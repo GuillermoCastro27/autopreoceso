@@ -447,49 +447,68 @@ function seleccionProducto(item_id, item_decripcion){
 }
 
 // Obtiene y muestra la lista de detalles de un presupuesto mediante una solicitud AJAX.
-function listarDetalles(){
+function listarDetalles() {
     var cantidadDetalle = 0;
-    var TotalGral=0;
+    var TotalGral = 0;
+
+    const presupuestoId = $("#id").val(); // Obtener el ID del presupuesto
+    const estadoPresupuesto = $("#pre_estado").val(); // Obtener el estado del presupuesto
+
+    // Verificar si el ID del presupuesto es válido
+    if (!presupuestoId) {
+        alert("No se ha definido el ID del presupuesto.");
+        return;
+    }
+
     $.ajax({
-        url:getUrl()+"presupuestos-detalles/read/"+$("#id").val(),
-        method:"GET",
+        url: getUrl() + "presupuestos-detalles/read/" + presupuestoId,
+        method: "GET",
         dataType: "json"
     })
-    .done(function(resultado){
+    .done(function(resultado) {
         var lista = "";
-        for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionDetalle("+rs.item_id+",'"+rs.item_decripcion+"',"+rs.det_cantidad+","+rs.det_costo+");\">";
-                lista = lista + "<td>";
-                lista = lista + rs.item_id;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.item_decripcion;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.det_cantidad;
-                lista = lista +"</td>";
-                lista = lista + "<td class='text-right'>";
-                lista = lista + rs.det_costo;
-                lista = lista +"</td>";
-                lista = lista + "<td class='text-right'>";
-                lista = lista + (rs.det_cantidad*rs.det_costo);
-                lista = lista +"</td>";
-            lista = lista + "</tr>";
-            cantidadDetalle++;
-            TotalGral+= (rs.det_cantidad*rs.det_costo);
+        if (resultado && resultado.length > 0) {
+            // Iterar sobre los detalles si existen
+            for (let rs of resultado) {
+                const cantidad = rs.det_cantidad || 0; // Valor de cantidad, por defecto 0
+                const costo = rs.det_costo || 0; // Valor de costo, por defecto 0
+                const subtotal = cantidad * costo; // Calcular el subtotal
+
+                lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" 
+                    + rs.item_id + ", '" + rs.item_decripcion + "', " 
+                    + cantidad + ", " + costo + ");\">";
+                lista += "<td>" + rs.item_id + "</td>";
+                lista += "<td>" + rs.item_decripcion + "</td>";
+                lista += "<td>" + cantidad + "</td>";
+                lista += "<td class='text-right'>" + costo.toFixed(2) + "</td>";
+                lista += "<td class='text-right'>" + subtotal.toFixed(2) + "</td>";
+                lista += "</tr>";
+
+                cantidadDetalle++;
+                TotalGral += subtotal; // Acumular el total general
+            }
+
+            // Actualizar la tabla con los detalles generados
+            $("#tableDetalle").html(lista);
+        } else {
+            // Si no hay detalles, mostrar un mensaje en la tabla
+            $("#tableDetalle").html("<tr><td colspan='5' class='text-center'>No se encontraron detalles para este presupuesto.</td></tr>");
         }
-        $("#tableDetalle").html(lista);
-        $("#txtTotalGral").text(TotalGral);
-        if($("#pre_estado").val()=== "PENDIENTE" && cantidadDetalle>0){
-            $("#btnConfirmar").removeAttr("disabled","true");
-        }else{
-            $("#btnConfirmar").attr("disabled");
+
+        // Mostrar el total general
+        $("#txtTotalGral").text(TotalGral.toFixed(2));
+
+        // Habilitar el botón Confirmar si hay detalles y el presupuesto está pendiente
+        if (estadoPresupuesto === "PENDIENTE" && cantidadDetalle > 0) {
+            $("#btnConfirmar").removeAttr("disabled");
+        } else {
+            $("#btnConfirmar").attr("disabled","true"); // Deshabilitar si no hay detalles o el presupuesto no está pendiente
         }
     })
-    .fail(function(a,b,c){
-        alert(c);
+    .fail(function(a, b, c) {
+        alert("Error al obtener detalles: " + c);
         console.log(a.responseText);
-    })
+    });
 }
 
 // Rellena el formulario con los datos de un detalle seleccionado.

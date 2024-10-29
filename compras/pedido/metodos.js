@@ -232,6 +232,44 @@ function seleccionPedido(id_pedido,empresa_id, sucursal_id,emp_razon_social,suc_
     $(".form-line").attr("class","form-line focused");
 }
 function grabar(){
+    var observaciones = $("#ped_pbservaciones").val().trim();
+    var fecha = $("#ped_fecha").val().trim();
+    var plazo = $("#ped_vence").val().trim();
+    var sucursal = $("#suc_razon_social").val().trim();
+
+    // Validar que el campo descripción no esté vacío
+    if (observaciones === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return; 
+    }
+    if (fecha === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return; 
+    }
+    if (plazo === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return; 
+    }
+    if (sucursal === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return; 
+    }
     var endpoint = "pedidos/create";
     var metodo = "POST";
     var estado = "PENDIENTE";
@@ -358,6 +396,26 @@ function eliminarDetalle(){
     $("#btnGrabarDetalle").attr("style","display:inline");
 }
 function grabarDetalle(){
+    var descripcion = $("#item_decripcion").val().trim();
+    var cantidad = $("#det_cantidad").val().trim();
+
+    // Validar que el campo descripción no esté vacío
+    if (descripcion === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return; 
+    }
+    if (cantidad === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return; 
+    }
     var endpoint = "pedidos-detalles/create";
     var metodo = "POST";
     
@@ -458,9 +516,9 @@ function listarDetalles(){
         }
         $("#tableDetalle").html(lista);
         if($("#ped_estado").val()=== "PENDIENTE" && cantidadDetalle>0){
-            $("#btnConfirmar").removeAttr("disabled","true");
+            $("#btnConfirmar").removeAttr("disabled");
         }else{
-            $("#btnConfirmar").attr("disabled");
+            $("#btnConfirmar").attr("disabled","true");
         }
     })
     .fail(function(xhr, status, error) {

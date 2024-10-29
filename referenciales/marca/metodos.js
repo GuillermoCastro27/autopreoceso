@@ -207,6 +207,17 @@ function seleccionMarca(codigo, marc_nom){
 }
 
 function grabar(){
+    var descripcion = $("#txtNom").val().trim();
+
+    // Validar que el campo descripción no esté vacío
+    if (descripcion === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return; 
+    }
     var endpoint = "marca/create";
     var metodo = "POST";
     if($("#txtOperacion").val()==2){

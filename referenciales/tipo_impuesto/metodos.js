@@ -214,9 +214,18 @@ function seleccionTipoImpuestos(codigo, tip_imp_nom,tipo_imp_tasa){
 
 function grabar(){
     var descripcion = $("#tip_imp_nom").val().trim();
+    var tasa = $("#tipo_imp_tasa").val().trim();
 
     // Validar que el campo descripción no esté vacío
     if (descripcion === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return;  // Salir de la función si la validación falla
+    }
+    if (tasa === "") {
         swal({
             title: "Error",
             text: "El campo no debe estar vacío.",

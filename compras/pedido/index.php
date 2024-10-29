@@ -107,7 +107,7 @@
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" id="ped_vence" class="datetimepicker form-control" disabled>
-                                            <label class="form-label">Vencimiento</label>
+                                            <label class="form-label">Plazo de Entrega</label>
                                         </div>
                                     </div>
                                 </div>
@@ -223,7 +223,7 @@
                                             <th>Empresa</th>
                                             <th>Sucursal</th>
                                             <th>Fecha</th>
-                                            <th>Vencimiento</th>
+                                            <th>Plazo de Entrega</th>
                                             <th>Observaciones</th>
                                             <th>Encargado</th>
                                             <th>Estado</th>
@@ -238,7 +238,7 @@
                                             <th>Empresa</th>
                                             <th>Sucursal</th>
                                             <th>Fecha</th>
-                                            <th>Vencimiento</th>
+                                            <th>Plazo de Entrega</th>
                                             <th>Observaciones</th>
                                             <th>Encargado</th>
                                             <th>Estado</th>
