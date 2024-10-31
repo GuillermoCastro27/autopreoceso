@@ -266,6 +266,44 @@ function seleccionPresupuesto(id, empresa_id, sucursal_id, emp_razon_social, suc
 
 // Realiza operaciones de creación, edición, eliminación, confirmación, rechazo o aprobación de un presupuesto.
 function grabar(){
+    var observaciones = $("#pre_observaciones").val().trim();
+    var fecha = $("#pre_fecha").val().trim();
+    var proveedor = $("#prov_razonsocial").val().trim();
+    var pedido = $("#pedido").val().trim();
+
+    // Validar que el campo descripción no esté vacío
+    if (observaciones === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return; 
+    }
+    if (fecha === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return; 
+    }
+    if (proveedor === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return; 
+    }
+    if (pedido === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return; 
+    }
     var endpoint = "presupuesto/create";
     var metodo = "POST";
     var estado = "PENDIENTE";

@@ -321,6 +321,7 @@ function grabar() {
         endpoint = "items/delete/" + $("#id").val();
         metodo = "DELETE";
     }
+    
     $.ajax({
         url: "http://127.0.0.1:8000/Proyecto_tp/" + endpoint,
         method: metodo,
@@ -340,15 +341,16 @@ function grabar() {
         swal({
             title: "Respuesta",
             text: resultado.mensaje,
-            type: resultado.tipo
-        }, function() {
-            if(resultado.tipo == "success") {
+            icon: resultado.tipo,
+        }).then(function() {
+            if(resultado.tipo === "success") {
                 location.reload(true);
             }
         });
     })
     .fail(function(jqXHR) {
-        if (jqXHR.status === 422) { // Código de error para validaciones
+        if (jqXHR.status === 422) {
+            // Errores de validación
             var errors = jqXHR.responseJSON.errors;
             var errorMessage = "";
 
@@ -360,9 +362,13 @@ function grabar() {
             }
 
             swal("Errores en el formulario", errorMessage, "error");
+        } else if (jqXHR.status === 500 && jqXHR.responseText.includes("SQLSTATE[23503]")) {
+            // Error de llave foránea (registro en uso en otra tabla)
+            swal("Error", "No se puede eliminar el registro porque está siendo utilizado en otra parte del sistema.", "error");
         } else {
-            // Si el error no es de validación
-            alert("Error: " + jqXHR.responseText);
+            // Otros errores no manejados
+            swal("Error", "Ocurrió un error inesperado. Intenta nuevamente.", "error");
         }
     });
 }
+

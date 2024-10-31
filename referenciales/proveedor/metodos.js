@@ -248,14 +248,14 @@ function seleccionNacionalidad(id,nacio_descripcion){
     $("#listaNacionalidades").attr("style","display:none;");
 }
 
-function grabar(){
+function grabar() {
     var endpoint = "proveedores/create";
     var metodo = "POST";
-    if($("#txtOperacion").val() == 2){
+    if($("#txtOperacion").val() == 2) {
         endpoint = "proveedores/update/" + $("#id").val();
         metodo = "PUT";
     }
-    if($("#txtOperacion").val() == 3){
+    if($("#txtOperacion").val() == 3) {
         endpoint = "proveedores/delete/" + $("#id").val();
         metodo = "DELETE";
     }
@@ -275,18 +275,18 @@ function grabar(){
             'nacionalidad_id': $("#nacionalidad_id").val()
         }
     })
-    .done(function(resultado){
+    .done(function(resultado) {
         swal({
             title: "Respuesta",
             text: resultado.mensaje,
             type: resultado.tipo
-        }, function(){
-            if(resultado.tipo == "success"){
+        }, function() {
+            if(resultado.tipo == "success") {
                 location.reload(true);
             }
         });
     })
-    .fail(function(xhr, status, error){
+    .fail(function(xhr) {
         var respuesta = xhr.responseJSON;
 
         // Verificar si es un error de validación o duplicado
@@ -299,7 +299,7 @@ function grabar(){
         } else if (xhr.status === 422) {
             // Errores de validación
             let errores = "";
-            $.each(respuesta.errors, function(key, value){
+            $.each(respuesta.errors, function(key, value) {
                 errores += value + "\n";
             });
             swal({
@@ -307,13 +307,21 @@ function grabar(){
                 text: errores,
                 type: "error"
             });
+        } else if (xhr.status === 500 && xhr.responseText.includes("SQLSTATE[23503]")) {
+            // Error de llave foránea (proveedor en uso en otra tabla)
+            swal({
+                title: "Error",
+                text: "No se puede eliminar el proveedor porque está siendo utilizado en otra parte del sistema.",
+                type: "error"
+            });
         } else {
             swal({
                 title: "Error",
-                text: "El RUC ya existe",
+                text: "El RUC ya existe.",
                 type: "error"
             });
         }
         console.log(xhr.responseText);
     });
 }
+

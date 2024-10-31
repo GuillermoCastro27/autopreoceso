@@ -206,7 +206,7 @@ function seleccionMarca(codigo, marc_nom){
     $(".form-line").attr("class","form-line focused");
 }
 
-function grabar(){
+function grabar() {
     var descripcion = $("#txtNom").val().trim();
 
     // Validar que el campo descripción no esté vacío
@@ -218,40 +218,73 @@ function grabar(){
         });
         return; 
     }
+
     var endpoint = "marca/create";
     var metodo = "POST";
-    if($("#txtOperacion").val()==2){
-        endpoint = "marca/update/"+$("#txtCodigo").val();
+    if ($("#txtOperacion").val() == 2) {
+        endpoint = "marca/update/" + $("#txtCodigo").val();
         metodo = "PUT";
     }
-    if($("#txtOperacion").val()==3){
-        endpoint = "marca/delete/"+$("#txtCodigo").val();
+    if ($("#txtOperacion").val() == 3) {
+        endpoint = "marca/delete/" + $("#txtCodigo").val();
         metodo = "DELETE";
     }
+
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/"+endpoint,
-        method:metodo,
+        url: "http://127.0.0.1:8000/Proyecto_tp/" + endpoint,
+        method: metodo,
         dataType: "json",
         data: { 
             'id': $("#txtCodigo").val(), 
-            'marc_nom': $("#txtNom").val()
+            'marc_nom': descripcion
         }
-
     })
-    .done(function(resultado){
+    .done(function(resultado) {
         swal({
-            title:"Respuesta",
+            title: "Respuesta",
             text: resultado.mensaje,
             type: resultado.tipo
-        },
-        function(){
-            if(resultado.tipo == "success"){
+        }, function() {
+            if (resultado.tipo == "success") {
                 location.reload(true);
             }
         });
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
-    })
+    .fail(function(xhr) {
+        var respuesta = xhr.responseJSON;
+
+        // Manejo de errores
+        if (xhr.status === 400) {
+            swal({
+                title: "Error",
+                text: respuesta.mensaje,
+                type: "error"
+            });
+        } else if (xhr.status === 422) {
+            // Errores de validación
+            let errores = "";
+            $.each(respuesta.errors, function(key, value) {
+                errores += value + "\n";
+            });
+            swal({
+                title: "Error de validación",
+                text: errores,
+                type: "error"
+            });
+        } else if (xhr.status === 500 && xhr.responseText.includes("SQLSTATE[23503]")) {
+            // Error de llave foránea (marca en uso en otra tabla)
+            swal({
+                title: "Error",
+                text: "No se puede eliminar la marca porque está siendo utilizada en otra parte del sistema.",
+                type: "error"
+            });
+        } else {
+            swal({
+                title: "Error",
+                text: "Ocurrió un error inesperado.",
+                type: "error"
+            });
+        }
+        console.log(xhr.responseText);
+    });
 }

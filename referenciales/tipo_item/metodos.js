@@ -212,7 +212,7 @@ function seleccionTipo(codigo, tipo_descripcion,tipo_objeto){
     $(".form-line").attr("class","form-line focused");
 }
 
-function grabar(){
+function grabar() {
     var descripcion = $("#tipo_descripcion").val().trim();
     var objeto = $("#tipo_objeto").val().trim();
 
@@ -233,41 +233,74 @@ function grabar(){
         });
         return; 
     }
+
     var endpoint = "tipo/create";
     var metodo = "POST";
-    if($("#txtOperacion").val()==2){
-        endpoint = "tipo/update/"+$("#txtCodigo").val();
+    if($("#txtOperacion").val() == 2) {
+        endpoint = "tipo/update/" + $("#txtCodigo").val();
         metodo = "PUT";
     }
-    if($("#txtOperacion").val()==3){
-        endpoint = "tipo/delete/"+$("#txtCodigo").val();
+    if($("#txtOperacion").val() == 3) {
+        endpoint = "tipo/delete/" + $("#txtCodigo").val();
         metodo = "DELETE";
     }
+
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/"+endpoint,
-        method:metodo,
+        url: "http://127.0.0.1:8000/Proyecto_tp/" + endpoint,
+        method: metodo,
         dataType: "json",
         data: { 
             'id': $("#txtCodigo").val(), 
-            'tipo_descripcion': $("#tipo_descripcion").val(), 
-            'tipo_objeto': $("#tipo_objeto").val()
+            'tipo_descripcion': descripcion, 
+            'tipo_objeto': objeto
         }
-
     })
-    .done(function(resultado){
+    .done(function(resultado) {
         swal({
-            title:"Respuesta",
+            title: "Respuesta",
             text: resultado.mensaje,
             type: resultado.tipo
-        },
-        function(){
-            if(resultado.tipo == "success"){
+        }, function() {
+            if(resultado.tipo == "success") {
                 location.reload(true);
             }
         });
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
-    })
+    .fail(function(xhr) {
+        var respuesta = xhr.responseJSON;
+
+        // Manejo de errores
+        if (xhr.status === 400) {
+            swal({
+                title: "Error",
+                text: respuesta.mensaje,
+                type: "error"
+            });
+        } else if (xhr.status === 422) {
+            // Errores de validación
+            let errores = "";
+            $.each(respuesta.errors, function(key, value) {
+                errores += value + "\n";
+            });
+            swal({
+                title: "Error de validación",
+                text: errores,
+                type: "error"
+            });
+        } else if (xhr.status === 500 && xhr.responseText.includes("SQLSTATE[23503]")) {
+            // Error de llave foránea (tipo en uso en otra tabla)
+            swal({
+                title: "Error",
+                text: "No se puede eliminar el tipo de ítem porque está siendo utilizado en otra parte del sistema.",
+                type: "error"
+            });
+        } else {
+            swal({
+                title: "Error",
+                text: "Ocurrió un error inesperado.",
+                type: "error"
+            });
+        }
+        console.log(xhr.responseText);
+    });
 }
