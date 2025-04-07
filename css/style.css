@@ -37,7 +37,14 @@
       font-size: 26px; }
   .navbar .navbar-collapse.in {
     overflow: visible; }
-
+  .navbar, .navbar-header {
+      background-color: #cc4008 !important; /* Reemplaza con el color que desees */
+  }
+  
+  /* Opcional: Cambia el color del texto a blanco para mejor contraste */
+  .navbar .navbar-brand {
+      color: #ffffff !important;
+  }
 .ls-closed .sidebar {
   margin-left: -300px; }
 
@@ -275,13 +282,13 @@
   background-color: rgba(0, 0, 0, 0.05); }
 
 .col-blue .navbar .nav > li > a {
-  color: #fff; }
+  color: #ffffff; }
 
 .col-blue .navbar .bars {
   float: left;
   padding: 10px 20px;
   font-size: 22px;
-  color: #fff;
+  color: #ffffff;
   margin-right: 10px;
   margin-left: -10px;
   margin-top: 4px; }
@@ -1830,21 +1837,30 @@
 .font-overline {
   text-decoration: overline; }
 
-.block-header {
-  margin-bottom: 15px; }
-  .block-header h2 {
-    margin: 0 !important;
-    color: #666 !important;
-    font-weight: normal;
-    font-size: 16px; }
-    .block-header h2 small {
-      display: block;
-      font-size: 12px;
-      margin-top: 8px;
-      color: #888; }
-      .block-header h2 small a {
-        font-weight: bold;
-        color: #777; }
+  .block-header {
+    text-align: center; /* Centra el texto */
+    margin-bottom: 15px;
+    background-image: url('../images/fondo.jpg'); /* Ruta de la imagen */
+    background-size: cover; /* Ajusta la imagen para cubrir todo el espacio */
+    background-position: center; /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    height: 550px;
+    padding: 50px 0; /* Espaciado para que se vea mejor */
+}
+
+.block-header h2 {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 100px;
+    text-align: center;
+    color: #cc4008;
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 10px; /* Bordes redondeados */
+    text-shadow: 8px 8px 8px rgba(0.5, 0.5, 0.5, 0.5); /* Sombra negra suave */
+    -webkit-text-stroke: 2px black; /* Contorno negro alrededor del texto */
+}
+
+
 
 .bg-red {
   background-color: #F44336 !important;
@@ -2363,7 +2379,7 @@
 
 /* General ===================================== */
 body {
-  background-color: #e9e9e9;
+  background-color: #cc4008;
   -moz-transition: all 0.5s;
   -o-transition: all 0.5s;
   -webkit-transition: all 0.5s;
@@ -7559,10 +7575,11 @@ fieldset[disabled] .form-control {
     white-space: nowrap;
     position: relative;
     border-bottom: 1px solid #e9e9e9;
-    background: url("../images/user-img-background.jpg") no-repeat no-repeat;
-    height: 135px; }
+    background: url("../images/taller.jpg") no-repeat no-repeat;
+    background-size: cover;
+    height: 200px; }
     .sidebar .user-info .image {
-      margin-right: 12px;
+      margin-right: 20px;
       display: inline-block; }
       .sidebar .user-info .image img {
         -webkit-border-radius: 50%;

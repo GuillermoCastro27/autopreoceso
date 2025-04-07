@@ -40,9 +40,6 @@
 
     <section class="content">
         <div class="container-fluid">
-            <div class="block-header">
-                <h2>MANTENER TIPO DE IMPUESTOS</h2>
-            </div>
 
             <div class="row clearfix">
 

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>GUI PEDIDOS</title>
+    <title>GUI NOTA DE REMISIÓN COMP</title>
     <!-- Favicon-->
     <link rel="icon" href="../../icono.ico" type="image/x-icon">
 
@@ -50,13 +50,13 @@
                     
                     <div class="card">
                         <div class="header">
-                            <h2>Gestionar Pedidos de Compras <small>CRUD de Pedidos y su detalle</small> </h2>
+                            <h2>Gestionar Notas de Remisión de Compras <small>CRUD de Nota de remision y su detalle</small> </h2>
                         </div>
                         <div class="body">
                             <div class="row clearfix">
                                 <input type="hidden" value="0" id="txtOperacion"/>
                                 <input type="hidden" value="1" id="user_id"/>
-                                <input type="hidden" value="PENDIENTE" id="ped_estado"/>
+                                <input type="hidden" value="PENDIENTE" id="nota_remi_estado"/>
                                 
                                 <!-- CAMPO PARA CODIGO CON 2 COLUMNAS -->
                                 <div class="col-sm-2">
@@ -96,27 +96,16 @@
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="ped_fecha" class="datetimepicker form-control" disabled>
+                                            <input type="text" id="nota_remi_fecha" class="datetimepicker form-control" disabled>
                                             <label class="form-label">Fecha</label>
                                         </div>
                                     </div>
                                 </div>
-                                
-                                <!-- CAMPO PARA VENCIMIENTO CON 3 COLUMNAS -->
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="ped_vence" class="datetimepicker form-control" disabled>
-                                            <label class="form-label">Plazo de Entrega</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                
                                 <!-- CAMPO PARA OBSERVACIONES CON 6 COLUMNAS -->
                                 <div class="col-sm-6">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="ped_pbservaciones" class="form-control" disabled>
+                                            <input type="text" id="nota_remi_observaciones" class="form-control" disabled>
                                             <label class="form-label">Observaciones</label>
                                         </div>
                                     </div>
@@ -135,7 +124,7 @@
 
                     <div class="card" id="detalle" style="display:none">
                         <div class="header">
-                            <h2>Detalles del Pedido</h2>
+                            <h2>Detalles de la nota de remisión</h2>
                         </div>
                         <div class="body">
                             <div class="row clearfix" id="formDetalles">
@@ -160,20 +149,11 @@
                                     </div>
                                 </div>
                                 <!-- CAMPO PARA CANTIDAD DISPONIBLE -->
-                               <!-- Mostrar la cantidad disponible -->
-                               <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="cantidad_stock" class="form-control" disabled>
-                                            <label class="form-label">Cantidad disponible</label>
-                                        </div>
-                                    </div>
-                                </div>
                                 <!-- CAMPO PARA OBSERVACIONES CON 5 COLUMNAS -->
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="det_cantidad" class="form-control" disabled>
+                                            <input type="text" id="nota_remi_com_det_cantidad" class="form-control" disabled>
                                             <label class="form-label">Cantidad</label>
                                         </div>
                                     </div>
@@ -202,7 +182,6 @@
                                             <th>Código</th>
                                             <th>Producto</th>
                                             <th>Cantidad</th>
-                                            <th>Cantidad Disponible</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableDetalle">
@@ -213,7 +192,6 @@
                                             <th>Código</th>
                                             <th>Producto</th>
                                             <th>Cantidad</th>
-                                            <th>Cantidad Disponible</th>
                                         </tr>
                                     </tfoot>    
                                 </table>
@@ -222,7 +200,7 @@
                     </div>
                     <div class="card" id="registros">
                         <div class="header">
-                            <h2>Registros de Pedidos de Compras</h2>
+                            <h2>Registros de Notas de remisión</h2>
                         </div>
                         <div class="body">
                             <div class="table-responsive">
@@ -233,7 +211,6 @@
                                             <th>Empresa</th>
                                             <th>Sucursal</th>
                                             <th>Fecha</th>
-                                            <th>Plazo de Entrega</th>
                                             <th>Observaciones</th>
                                             <th>Encargado</th>
                                             <th>Estado</th>
@@ -248,7 +225,6 @@
                                             <th>Empresa</th>
                                             <th>Sucursal</th>
                                             <th>Fecha</th>
-                                            <th>Plazo de Entrega</th>
                                             <th>Observaciones</th>
                                             <th>Encargado</th>
                                             <th>Estado</th>

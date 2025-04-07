@@ -40,14 +40,8 @@
 
     <section class="content">
         <div class="container-fluid">
-            <div class="block-header">
-                <h2>MANTENER PROVEEDORES</h2>
-            </div>
-
             <div class="row clearfix">
-
                 <div class="col-md-12">
-                    
                     <div class="card">
                         <div class="header">
                             <h2>Mantener datos de Proveedores <small>CRUD de Proveedores</small> </h2>
@@ -113,7 +107,7 @@
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <!-- Campo de texto para la ciudad, habilitado -->
-                                            <input type="text" id="ciu_descripcion" class="form-control" onkeyup="buscarCiudades();">
+                                            <input type="text" id="ciu_descripcion" class="form-control" disabled onkeyup="buscarCiudades();">
                                             <label class="form-label">Ciudad</label>
                                         </div>
 
@@ -128,7 +122,7 @@
                                 <div class="col-sm-4">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="nacio_descripcion" class="form-control" onkeyup="buscarNacionalidades();">
+                                            <input type="text" id="nacio_descripcion" class="form-control" disabled onkeyup="buscarNacionalidades();">
                                             <label class="form-label">Nacionalidad</label>
                                         </div>
                                         <!-- Campo oculto para almacenar el ID de la nacionalidad -->

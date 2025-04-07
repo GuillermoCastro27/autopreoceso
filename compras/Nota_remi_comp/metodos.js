@@ -52,9 +52,8 @@ function cancelar(){
 function agregar(){
     $("#txtOperacion").val(1);
     $("#id").val(0);
-    $("#ped_vence").removeAttr("disabled");
-    $("#ped_fecha").removeAttr("disabled");
-    $("#ped_pbservaciones").removeAttr("disabled");
+    $("#nota_remi_fecha").removeAttr("disabled");
+    $("#nota_remi_observaciones").removeAttr("disabled");
     $("#emp_razon_social").attr("disabled","true");
     $("#suc_razon_social").removeAttr("disabled");
     buscarEmpresas();
@@ -75,9 +74,8 @@ function agregar(){
 
 function editar(){
     $("#txtOperacion").val(2);
-    $("#ped_vence").removeAttr("disabled");
-    $("#ped_fecha").removeAttr("disabled");
-    $("#ped_pbservaciones").removeAttr("disabled");
+    $("#nota_remi_fecha").removeAttr("disabled");
+    $("#nota_remi_observaciones").removeAttr("disabled");
     $("#emp_razon_social").removeAttr("disabled");
     $("#suc_razon_social").removeAttr("disabled");
     buscarEmpresas();
@@ -156,33 +154,31 @@ function mensajeOperacion(titulo,mensaje,tipo) {
 
 function listar(){
     $.ajax({
-        url: getUrl() + "pedidos/read",
+        url: getUrl() + "notaremicomp/read",
         method: "GET",
         dataType: "json"
     })
     .done(function(resultado){
         var lista = "";
         for (let rs of resultado) {
-            lista += "<tr class=\"item-list\" onclick=\"seleccionPedido("
+            lista += "<tr class=\"item-list\" onclick=\"seleccionNotaRemi("
                 + rs.id + ", " 
                 + rs.empresa_id + ", "
                 + rs.sucursal_id + ", '"
                 + rs.emp_razon_social + "', '"
                 + rs.suc_razon_social + "', '"
-                + rs.ped_fecha + "', '"
-                + rs.ped_vence + "', '"
-                + rs.ped_pbservaciones + "', '"
-                + rs.ped_estado + "', '"
+                + rs.nota_remi_fecha + "', '"
+                + rs.nota_remi_observaciones + "', '"
+                + rs.nota_remi_estado + "', '"
                 + rs.name + "');\">";
             
             lista += "<td>" + rs.id + "</td>";
             lista += "<td>" + rs.emp_razon_social + "</td>";
             lista += "<td>" + rs.suc_razon_social + "</td>";
-            lista += "<td>" + rs.ped_fecha + "</td>";
-            lista += "<td>" + rs.ped_vence + "</td>";
-            lista += "<td>" + rs.ped_pbservaciones + "</td>";
+            lista += "<td>" + rs.nota_remi_fecha + "</td>";
+            lista += "<td>" + rs.nota_remi_observaciones + "</td>";
             lista += "<td>" + rs.name + "</td>";
-            lista += "<td>" + rs.ped_estado + "</td>";
+            lista += "<td>" + rs.nota_remi_estado + "</td>";
             lista += "</tr>";
         }
         $("#tableBody").html(lista);
@@ -193,16 +189,15 @@ function listar(){
         console.error(xhr.responseText);
     });
 }
-function seleccionPedido(id_pedido,empresa_id, sucursal_id,emp_razon_social,suc_razon_social, ped_fecha, ped_vence, ped_pbservaciones, ped_estado){
-    $("#id").val(id_pedido);
+function seleccionNotaRemi(id_nota,empresa_id, sucursal_id,emp_razon_social,suc_razon_social, nota_remi_fecha, nota_remi_observaciones, nota_remi_estado){
+    $("#id").val(id_nota);
     $("#empresa_id").val(empresa_id);
     $("#sucursal_id").val(sucursal_id);
     $("#emp_razon_social").val(emp_razon_social);
     $("#suc_razon_social").val(suc_razon_social);
-    $("#ped_fecha").val(ped_fecha);
-    $("#ped_vence").val(ped_vence);
-    $("#ped_pbservaciones").val(ped_pbservaciones);
-    $("#ped_estado").val(ped_estado);
+    $("#nota_remi_fecha").val(nota_remi_fecha);
+    $("#nota_remi_observaciones").val(nota_remi_observaciones);
+    $("#nota_remi_estado").val(nota_remi_estado);
 
     
     $("#registros").attr("style","display:none;");
@@ -220,7 +215,7 @@ function seleccionPedido(id_pedido,empresa_id, sucursal_id,emp_razon_social,suc_
     
     $("#btnCancelar").removeAttr("disabled");
 
-    if(ped_estado === "PENDIENTE"){
+    if(nota_remi_estado === "PENDIENTE"){
     $("#btnAgregar").attr("disabled","true");
     $("#btnGrabar").attr("disabled","true");
     
@@ -232,9 +227,8 @@ function seleccionPedido(id_pedido,empresa_id, sucursal_id,emp_razon_social,suc_
     $(".form-line").attr("class","form-line focused");
 }
 function grabar(){
-    var observaciones = $("#ped_pbservaciones").val().trim();
-    var fecha = $("#ped_fecha").val().trim();
-    var plazo = $("#ped_vence").val().trim();
+    var observaciones = $("#nota_remi_observaciones").val().trim();
+    var fecha = $("#nota_remi_fecha").val().trim();
     var sucursal = $("#suc_razon_social").val().trim();
 
     // Validar que el campo descripción no esté vacío
@@ -254,14 +248,6 @@ function grabar(){
         });
         return; 
     }
-    if (plazo === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return; 
-    }
     if (sucursal === "") {
         swal({
             title: "Error",
@@ -270,21 +256,21 @@ function grabar(){
         });
         return; 
     }
-    var endpoint = "pedidos/create";
+    var endpoint = "notaremicomp/create";
     var metodo = "POST";
     var estado = "PENDIENTE";
     
     if($("#txtOperacion").val()==2){
-        endpoint = "pedidos/update/"+$("#id").val();
+        endpoint = "notaremicomp/update/"+$("#id").val();
         metodo = "PUT";
     }
     if($("#txtOperacion").val()==3){
-        endpoint = "pedidos/anular/"+$("#id").val();
+        endpoint = "notaremicomp/anular/"+$("#id").val();
         metodo = "PUT";
         estado = "ANULADO";
     }
     if($("#txtOperacion").val()==4){
-        endpoint = "pedidos/confirmar/"+$("#id").val();
+        endpoint = "notaremicomp/confirmar/"+$("#id").val();
         metodo = "PUT";
         estado = "CONFIRMADO";
     }
@@ -294,11 +280,10 @@ function grabar(){
         dataType: "json",
         data: { 
             'id': $("#id").val(), 
-            'ped_fecha': $("#ped_fecha").val(), 
-            'ped_vence': $("#ped_vence").val(), 
-            'ped_pbservaciones': $("#ped_pbservaciones").val(), 
+            'nota_remi_fecha': $("#nota_remi_fecha").val(),
+            'nota_remi_observaciones': $("#nota_remi_observaciones").val(), 
             'user_id': $("#user_id").val(), 
-            'ped_estado': estado,
+            'nota_remi_estado': estado,
             'empresa_id': $("#empresa_id").val(),
             'sucursal_id': $("#sucursal_id").val(),
             'operacion': $("#txtOperacion").val()
@@ -316,7 +301,7 @@ function grabar(){
                 //location.reload(true);
                 $("#id").val(resultado.registro.id);
                 $("#detalle").attr("style","display:block;");
-                if(resultado.registro.ped_estado!="PENDIENTE"){
+                if(resultado.registro.nota_remi_estado!="PENDIENTE"){
                     location.reload(true);
                 }
             }
@@ -338,9 +323,8 @@ function campoFecha(){
 function agregarDetalle() {
     $("#txtOperacionDetalle").val(1);
     $("#item_decripcion").removeAttr("disabled");
-    $("#det_cantidad").removeAttr("disabled");
-    $("#cantidad_stock").val(""); // Limpiar la cantidad de stock al agregar un nuevo detalle
-
+    $("#nota_remi_com_det_cantidad").removeAttr("disabled");
+   
     $("#btnAgregarDetalle").attr("style", "display:none");
     $("#btnEditarDetalle").attr("style", "display:none");
     $("#btnEliminarDetalle").attr("style", "display:none");
@@ -350,7 +334,7 @@ function agregarDetalle() {
 function editarDetalle() {
     $("#txtOperacionDetalle").val(2);
     $("#item_decripcion").removeAttr("disabled");
-    $("#det_cantidad").removeAttr("disabled");
+    $("#nota_remi_com_det_cantidad").removeAttr("disabled");
 
     $("#btnAgregarDetalle").attr("style", "display:none");
     $("#btnEditarDetalle").attr("style", "display:none");
@@ -367,15 +351,15 @@ function eliminarDetalle(){
 }
 function grabarDetalle(){
 
-    var endpoint = "pedidos-detalles/create";
+    var endpoint = "notaremicomdet/create";
     var metodo = "POST";
 
 if($("#txtOperacionDetalle").val()==2){
-    endpoint = "pedidos-detalles/update/"+$("#id").val();
+    endpoint = "notaremicomdet/update/"+$("#id").val();
     metodo = "PUT";
 }
 if($("#txtOperacionDetalle").val()==3){
-    endpoint = "pedidos-detalles/delete/"+$("#id").val()+"/"+$("#item_id").val();
+    endpoint = "notaremicomdet/delete/"+$("#id").val()+"/"+$("#item_id").val();
     metodo = "DELETE";
 
 }
@@ -385,10 +369,9 @@ $.ajax({
     method: metodo,
     dataType: "json",
     data: {
-        "pedidos_id":$("#id").val(),
+        "nota_remi_comp_id":$("#id").val(),
         "item_id":$("#item_id").val(),
-        "det_cantidad":$("#det_cantidad").val(),
-        "cantidad_stock":$("#cantidad_stock").val()
+        "nota_remi_com_det_cantidad":$("#nota_remi_com_det_cantidad").val()
     }
 })
 
@@ -408,8 +391,7 @@ $("#btnGrabarDetalle").attr("style","display:none");
 $("#txtOperacionDetalle").val(1);
 
 $("#item_decripcion").val("");
-$("#det_cantidad").val("");
-$("#cantidad_stock").val("");
+$("#nota_remi_com_det_cantidad").val("");
 }
 
 function buscarProductos() {
@@ -426,8 +408,7 @@ function buscarProductos() {
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
             lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto("+rs.item_id+",'"+rs.item_decripcion+"', "+rs.cantidad_disponible+")\">"+
-                        rs.item_decripcion + " <span class='badge badge-primary'>Disponible: " + rs.cantidad_disponible + "</span>" +
-                      "</li>";   
+                        rs.item_decripcion +"</li>";   
         }
         lista += "</ul>";
         $("#listaProductos").html(lista);
@@ -438,40 +419,36 @@ function buscarProductos() {
         console.error(xhr.responseText);
     });
 }
-function seleccionProducto(item_id, item_decripcion, cantidad_disponible){
+function seleccionProducto(item_id, item_decripcion){
     $("#item_id").val(item_id);
     $("#item_decripcion").val(item_decripcion);
-    
-    // Mostrar cantidad disponible en el campo correcto
-    $("#cantidad_stock").val(cantidad_disponible);
 
-    // Limpiar la lista de productos
-    $("#listaProductos").html("").hide();
+    $("#listaProductos").html("");
+    $("#listaProductos").attr("style", "display:none;");
 
-    $(".form-line").addClass("focused");
+    $(".form-line").attr("class", "form-line focused");
 }
 
 function listarDetalles(){
     var cantidadDetalle = 0;
     $.ajax({
-        url:getUrl()+"pedidos-detalles/read/"+$("#id").val(),
+        url:getUrl()+"notaremicomdet/read/"+$("#id").val(),
         method:"GET",
         dataType: "json"
     })
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionDetalle("+rs.item_id+",'"+rs.item_decripcion+"',"+rs.det_cantidad+","+rs.cantidad_stock+");\">";
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionDetalle("+rs.item_id+",'"+rs.item_decripcion+"',"+rs.nota_remi_com_det_cantidad+");\">";
                 lista = lista + "<td>" + rs.item_id + "</td>";
                 lista = lista + "<td>" + rs.item_decripcion + "</td>";
-                lista = lista + "<td>" + rs.det_cantidad + "</td>";
-                lista = lista + "<td>" + rs.cantidad_stock + "</td>";
+                lista = lista + "<td>" + rs.nota_remi_com_det_cantidad + "</td>";
             lista = lista + "</tr>";
             cantidadDetalle++;
         }
         $("#tableDetalle").html(lista);
 
-        if($("#ped_estado").val() === "PENDIENTE" && cantidadDetalle > 0){
+        if($("#nota_remi_estado").val() === "PENDIENTE" && cantidadDetalle > 0){
             $("#btnConfirmar").removeAttr("disabled");
         } else {
             $("#btnConfirmar").attr("disabled","true");
@@ -482,13 +459,14 @@ function listarDetalles(){
         console.error(xhr.responseText);
     })
 }
-function seleccionDetalle(item_id, item_decripcion, det_cantidad, cantidad_stock) {
-    console.log("Seleccionado item_id:", item_id);
-    $("#original_item_id").val(item_id); // Guarda el item_id original
+function seleccionDetalle(item_id, item_decripcion, nota_remi_com_det_cantidad) {
     $("#item_id").val(item_id);
     $("#item_decripcion").val(item_decripcion);
-    $("#det_cantidad").val(det_cantidad);
-    $("#cantidad_stock").val(cantidad_stock);
+    $("#nota_remi_com_det_cantidad").val(nota_remi_com_det_cantidad);
+
+    $("#listaProductos").html("");
+    $("#listaProductos").attr("style","display:none;");
+    $(".form-line").attr("class","form-line focused");
 }
 
 function buscarEmpresas() {

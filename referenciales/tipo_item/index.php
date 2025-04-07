@@ -40,10 +40,6 @@
 
     <section class="content">
         <div class="container-fluid">
-            <div class="block-header">
-                <h2>MANTENER TIPO ITEMS</h2>
-            </div>
-
             <div class="row clearfix">
 
                 <div class="col-md-12">

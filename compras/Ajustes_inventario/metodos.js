@@ -10,25 +10,25 @@ function formatoTabla(){
                 extend:'copy',
                 text:'COPIAR',
                 className:'btn btn-primary waves-effect',
-                title:'Listado de Pedidos'
+                title:'Listado de Ajustes'
             },
             {
                 extend:'excel',
                 text:'EXCEL',
                 className:'btn btn-success waves-effect',
-                title:'Listado de Pedidos'
+                title:'Listado de Ajustes'
             },
             {
                 extend:'pdf',
                 text:'PDF',
                 className:'btn btn-danger waves-effect',
-                title:'Listado de Pedidos'
+                title:'Listado de Ajustes'
             },
             {
                 extend:'print',
                 text:'IMPRIMIR',
                 className:'btn btn-warning waves-effect',
-                title:'Listado de Pedidos'
+                title:'Listado de Ajustes'
             }
         ],
         iDisplayLength:3,
@@ -52,9 +52,9 @@ function cancelar(){
 function agregar(){
     $("#txtOperacion").val(1);
     $("#id").val(0);
-    $("#ped_vence").removeAttr("disabled");
-    $("#ped_fecha").removeAttr("disabled");
-    $("#ped_pbservaciones").removeAttr("disabled");
+    $("#ajus_cab_fecha").removeAttr("disabled");
+    $("#descripcion").removeAttr("disabled");
+    $("#tipo_ajuste").val("");
     $("#emp_razon_social").attr("disabled","true");
     $("#suc_razon_social").removeAttr("disabled");
     buscarEmpresas();
@@ -75,10 +75,9 @@ function agregar(){
 
 function editar(){
     $("#txtOperacion").val(2);
-    $("#ped_vence").removeAttr("disabled");
-    $("#ped_fecha").removeAttr("disabled");
-    $("#ped_pbservaciones").removeAttr("disabled");
-    $("#emp_razon_social").removeAttr("disabled");
+    $("#ajus_cab_fecha").removeAttr("disabled");
+    $("#descripcion").removeAttr("disabled");
+    $("#emp_razon_social").attr("disabled","true");
     $("#suc_razon_social").removeAttr("disabled");
     buscarEmpresas();
 
@@ -156,33 +155,34 @@ function mensajeOperacion(titulo,mensaje,tipo) {
 
 function listar(){
     $.ajax({
-        url: getUrl() + "pedidos/read",
+        url: getUrl() + "ajus_cab/read",
         method: "GET",
         dataType: "json"
     })
     .done(function(resultado){
         var lista = "";
         for (let rs of resultado) {
-            lista += "<tr class=\"item-list\" onclick=\"seleccionPedido("
+            lista += "<tr class=\"item-list\" onclick=\"seleccionAjuste("
                 + rs.id + ", " 
                 + rs.empresa_id + ", "
                 + rs.sucursal_id + ", '"
                 + rs.emp_razon_social + "', '"
                 + rs.suc_razon_social + "', '"
-                + rs.ped_fecha + "', '"
-                + rs.ped_vence + "', '"
-                + rs.ped_pbservaciones + "', '"
-                + rs.ped_estado + "', '"
+                + rs.ajus_cab_fecha + "', '"
+                + rs.motivo_ajuste_id + "', '"
+                + rs.descripcion + "', '"
+                + rs.tipo_ajuste + "', '"
+                + rs.ajus_cab_estado + "', '"
                 + rs.name + "');\">";
             
             lista += "<td>" + rs.id + "</td>";
             lista += "<td>" + rs.emp_razon_social + "</td>";
             lista += "<td>" + rs.suc_razon_social + "</td>";
-            lista += "<td>" + rs.ped_fecha + "</td>";
-            lista += "<td>" + rs.ped_vence + "</td>";
-            lista += "<td>" + rs.ped_pbservaciones + "</td>";
+            lista += "<td>" + rs.ajus_cab_fecha + "</td>";
+            lista += "<td>" + rs.descripcion + "</td>";
+            lista += "<td>" + rs.tipo_ajuste + "</td>";
             lista += "<td>" + rs.name + "</td>";
-            lista += "<td>" + rs.ped_estado + "</td>";
+            lista += "<td>" + rs.ajus_cab_estado + "</td>";
             lista += "</tr>";
         }
         $("#tableBody").html(lista);
@@ -193,16 +193,17 @@ function listar(){
         console.error(xhr.responseText);
     });
 }
-function seleccionPedido(id_pedido,empresa_id, sucursal_id,emp_razon_social,suc_razon_social, ped_fecha, ped_vence, ped_pbservaciones, ped_estado){
-    $("#id").val(id_pedido);
+function seleccionAjuste(ajuste_id,empresa_id, sucursal_id,emp_razon_social,suc_razon_social, ajus_cab_fecha, motivo_ajuste_id, descripcion,tipo_ajuste, ajus_cab_estado){
+    $("#id").val(ajuste_id);
     $("#empresa_id").val(empresa_id);
     $("#sucursal_id").val(sucursal_id);
     $("#emp_razon_social").val(emp_razon_social);
     $("#suc_razon_social").val(suc_razon_social);
-    $("#ped_fecha").val(ped_fecha);
-    $("#ped_vence").val(ped_vence);
-    $("#ped_pbservaciones").val(ped_pbservaciones);
-    $("#ped_estado").val(ped_estado);
+    $("#ajus_cab_fecha").val(ajus_cab_fecha);
+    $("#motivo_ajuste_id").val(motivo_ajuste_id);
+    $("#descripcion").val(descripcion);
+    $("#tipo_ajuste").val(tipo_ajuste);
+    $("#ajus_cab_estado").val(ajus_cab_estado);
 
     
     $("#registros").attr("style","display:none;");
@@ -220,7 +221,7 @@ function seleccionPedido(id_pedido,empresa_id, sucursal_id,emp_razon_social,suc_
     
     $("#btnCancelar").removeAttr("disabled");
 
-    if(ped_estado === "PENDIENTE"){
+    if(ajus_cab_estado === "PENDIENTE"){
     $("#btnAgregar").attr("disabled","true");
     $("#btnGrabar").attr("disabled","true");
     
@@ -232,13 +233,12 @@ function seleccionPedido(id_pedido,empresa_id, sucursal_id,emp_razon_social,suc_
     $(".form-line").attr("class","form-line focused");
 }
 function grabar(){
-    var observaciones = $("#ped_pbservaciones").val().trim();
-    var fecha = $("#ped_fecha").val().trim();
-    var plazo = $("#ped_vence").val().trim();
+    var descripcion = $("#descripcion").val().trim();
+    var fecha = $("#ajus_cab_fecha").val().trim();
     var sucursal = $("#suc_razon_social").val().trim();
 
     // Validar que el campo descripción no esté vacío
-    if (observaciones === "") {
+    if (descripcion === "") {
         swal({
             title: "Error",
             text: "El campo no debe estar vacío.",
@@ -254,14 +254,6 @@ function grabar(){
         });
         return; 
     }
-    if (plazo === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return; 
-    }
     if (sucursal === "") {
         swal({
             title: "Error",
@@ -270,21 +262,21 @@ function grabar(){
         });
         return; 
     }
-    var endpoint = "pedidos/create";
+    var endpoint = "ajus_cab/create";
     var metodo = "POST";
     var estado = "PENDIENTE";
     
     if($("#txtOperacion").val()==2){
-        endpoint = "pedidos/update/"+$("#id").val();
+        endpoint = "ajus_cab/update/"+$("#id").val();
         metodo = "PUT";
     }
     if($("#txtOperacion").val()==3){
-        endpoint = "pedidos/anular/"+$("#id").val();
+        endpoint = "ajus_cab/anular/"+$("#id").val();
         metodo = "PUT";
         estado = "ANULADO";
     }
     if($("#txtOperacion").val()==4){
-        endpoint = "pedidos/confirmar/"+$("#id").val();
+        endpoint = "ajus_cab/confirmar/"+$("#id").val();
         metodo = "PUT";
         estado = "CONFIRMADO";
     }
@@ -294,14 +286,13 @@ function grabar(){
         dataType: "json",
         data: { 
             'id': $("#id").val(), 
-            'ped_fecha': $("#ped_fecha").val(), 
-            'ped_vence': $("#ped_vence").val(), 
-            'ped_pbservaciones': $("#ped_pbservaciones").val(), 
+            'ajus_cab_fecha': $("#ajus_cab_fecha").val(), 
+            'motivo_ajuste_id': $("#motivo_ajuste_id").val(),  
+            'tipo_ajuste': $("#tipo_ajuste").val(),
             'user_id': $("#user_id").val(), 
-            'ped_estado': estado,
+            'ajus_cab_estado': estado,
             'empresa_id': $("#empresa_id").val(),
-            'sucursal_id': $("#sucursal_id").val(),
-            'operacion': $("#txtOperacion").val()
+            'sucursal_id': $("#sucursal_id").val()
         }
 
     })
@@ -316,7 +307,7 @@ function grabar(){
                 //location.reload(true);
                 $("#id").val(resultado.registro.id);
                 $("#detalle").attr("style","display:block;");
-                if(resultado.registro.ped_estado!="PENDIENTE"){
+                if(resultado.registro.ajus_cab_estado!="PENDIENTE"){
                     location.reload(true);
                 }
             }
@@ -338,9 +329,9 @@ function campoFecha(){
 function agregarDetalle() {
     $("#txtOperacionDetalle").val(1);
     $("#item_decripcion").removeAttr("disabled");
-    $("#det_cantidad").removeAttr("disabled");
+    $("#ajus_det_cantidad").removeAttr("disabled");
     $("#cantidad_stock").val(""); // Limpiar la cantidad de stock al agregar un nuevo detalle
-
+    
     $("#btnAgregarDetalle").attr("style", "display:none");
     $("#btnEditarDetalle").attr("style", "display:none");
     $("#btnEliminarDetalle").attr("style", "display:none");
@@ -350,7 +341,7 @@ function agregarDetalle() {
 function editarDetalle() {
     $("#txtOperacionDetalle").val(2);
     $("#item_decripcion").removeAttr("disabled");
-    $("#det_cantidad").removeAttr("disabled");
+    $("#ajus_det_cantidad").removeAttr("disabled");
 
     $("#btnAgregarDetalle").attr("style", "display:none");
     $("#btnEditarDetalle").attr("style", "display:none");
@@ -367,15 +358,15 @@ function eliminarDetalle(){
 }
 function grabarDetalle(){
 
-    var endpoint = "pedidos-detalles/create";
+    var endpoint = "ajus_det/create";
     var metodo = "POST";
 
 if($("#txtOperacionDetalle").val()==2){
-    endpoint = "pedidos-detalles/update/"+$("#id").val();
+    endpoint = "ajus_det/update/"+$("#id").val();
     metodo = "PUT";
 }
 if($("#txtOperacionDetalle").val()==3){
-    endpoint = "pedidos-detalles/delete/"+$("#id").val()+"/"+$("#item_id").val();
+    endpoint = "ajus_det/delete/"+$("#id").val()+"/"+$("#item_id").val();
     metodo = "DELETE";
 
 }
@@ -385,9 +376,9 @@ $.ajax({
     method: metodo,
     dataType: "json",
     data: {
-        "pedidos_id":$("#id").val(),
+        "ajuste_cab_id":$("#id").val(),
         "item_id":$("#item_id").val(),
-        "det_cantidad":$("#det_cantidad").val(),
+        "ajus_det_cantidad":$("#ajus_det_cantidad").val(),
         "cantidad_stock":$("#cantidad_stock").val()
     }
 })
@@ -408,7 +399,7 @@ $("#btnGrabarDetalle").attr("style","display:none");
 $("#txtOperacionDetalle").val(1);
 
 $("#item_decripcion").val("");
-$("#det_cantidad").val("");
+$("#ajus_det_cantidad").val("");
 $("#cantidad_stock").val("");
 }
 
@@ -454,17 +445,17 @@ function seleccionProducto(item_id, item_decripcion, cantidad_disponible){
 function listarDetalles(){
     var cantidadDetalle = 0;
     $.ajax({
-        url:getUrl()+"pedidos-detalles/read/"+$("#id").val(),
+        url:getUrl()+"ajus_det/read/"+$("#id").val(),
         method:"GET",
         dataType: "json"
     })
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionDetalle("+rs.item_id+",'"+rs.item_decripcion+"',"+rs.det_cantidad+","+rs.cantidad_stock+");\">";
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionDetalle("+rs.item_id+",'"+rs.item_decripcion+"',"+rs.ajus_det_cantidad+","+rs.cantidad_stock+");\">";
                 lista = lista + "<td>" + rs.item_id + "</td>";
                 lista = lista + "<td>" + rs.item_decripcion + "</td>";
-                lista = lista + "<td>" + rs.det_cantidad + "</td>";
+                lista = lista + "<td>" + rs.ajus_det_cantidad + "</td>";
                 lista = lista + "<td>" + rs.cantidad_stock + "</td>";
             lista = lista + "</tr>";
             cantidadDetalle++;
@@ -482,12 +473,12 @@ function listarDetalles(){
         console.error(xhr.responseText);
     })
 }
-function seleccionDetalle(item_id, item_decripcion, det_cantidad, cantidad_stock) {
+function seleccionDetalle(item_id, item_decripcion, ajus_det_cantidad, cantidad_stock) {
     console.log("Seleccionado item_id:", item_id);
     $("#original_item_id").val(item_id); // Guarda el item_id original
     $("#item_id").val(item_id);
     $("#item_decripcion").val(item_decripcion);
-    $("#det_cantidad").val(det_cantidad);
+    $("#ajus_det_cantidad").val(ajus_det_cantidad);
     $("#cantidad_stock").val(cantidad_stock);
 }
 
@@ -554,4 +545,34 @@ function seleccionSucursal(empresa_id,suc_razon_social,suc_direccion,suc_telefon
 
     $("#listaSucursal").html("");
     $("#listaSucursal").attr("style","display:none;");
+}
+function buscarMotivoAjuste() {
+    $.ajax({
+        url: "http://127.0.0.1:8000/Proyecto_tp/motivo_ajuste/read",
+        method: "GET",
+        dataType: "json"
+    })
+    .done(function(resultado) {
+        var lista = "<ul class=\"list-group\">";
+        for (let rs of resultado) {
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionMotivoAjuste("+rs.id+", '"+rs.descripcion+"', '"+rs.tipo_ajuste+"');\">" + 
+                     rs.descripcion + " (" + rs.tipo_ajuste + ")</li>";
+        }
+        lista += "</ul>";
+        $("#listaMotivoajuste").html(lista);
+        $("#listaMotivoajuste").attr("style", "display:block; position:absolute; z-index:2000;");
+    })
+    .fail(function(a, b, c) {
+        alert("Error al obtener los motivos de ajuste: " + c);
+        console.log(a.responseText);
+    });
+}
+
+function seleccionMotivoAjuste(id, descripcion, tipo_ajuste) {
+    $("#motivo_ajuste_id").val(id);
+    $("#descripcion").val(descripcion);
+    $("#tipo_ajuste").val(tipo_ajuste);
+
+    $("#listaMotivoajuste").html("");
+    $("#listaMotivoajuste").attr("style", "display:none;");
 }

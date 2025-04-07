@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>GUI PEDIDOS</title>
+    <title>GUI AJUSTES DE INVENTARIO </title>
     <!-- Favicon-->
     <link rel="icon" href="../../icono.ico" type="image/x-icon">
 
@@ -50,13 +50,13 @@
                     
                     <div class="card">
                         <div class="header">
-                            <h2>Gestionar Pedidos de Compras <small>CRUD de Pedidos y su detalle</small> </h2>
+                            <h2>Gestionar Ajustes de inventario <small>CRUD de Ajustes y su detalle</small> </h2>
                         </div>
                         <div class="body">
                             <div class="row clearfix">
                                 <input type="hidden" value="0" id="txtOperacion"/>
                                 <input type="hidden" value="1" id="user_id"/>
-                                <input type="hidden" value="PENDIENTE" id="ped_estado"/>
+                                <input type="hidden" value="PENDIENTE" id="ajus_cab_estado"/>
                                 
                                 <!-- CAMPO PARA CODIGO CON 2 COLUMNAS -->
                                 <div class="col-sm-2">
@@ -96,28 +96,28 @@
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="ped_fecha" class="datetimepicker form-control" disabled>
+                                            <input type="text" id="ajus_cab_fecha" class="datetimepicker form-control" disabled>
                                             <label class="form-label">Fecha</label>
                                         </div>
                                     </div>
                                 </div>
-                                
-                                <!-- CAMPO PARA VENCIMIENTO CON 3 COLUMNAS -->
+                                <!-- CAMPO PARA OBSERVACIONES CON 6 COLUMNAS -->
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="descripcion" class="form-control" disabled onkeyup="buscarMotivoAjuste();">
+                                            <label class="form-label">Motivo Ajuste</label>
+                                        </div>
+                                        <input type="hidden" id="motivo_ajuste_id" name="motivo_ajuste_id">
+                                        <div id="listaMotivoajuste" style="display:none;"></div>
+                                    </div>
+                                </div>
+                                <!-- CAMPO PARA TIPO AJUSTE -->
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="ped_vence" class="datetimepicker form-control" disabled>
-                                            <label class="form-label">Plazo de Entrega</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- CAMPO PARA OBSERVACIONES CON 6 COLUMNAS -->
-                                <div class="col-sm-6">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="ped_pbservaciones" class="form-control" disabled>
-                                            <label class="form-label">Observaciones</label>
+                                            <input type="text" id="tipo_ajuste" class="form-control" disabled>
+                                            <label class="form-label">Tipo ajuste</label>
                                         </div>
                                     </div>
                                 </div>
@@ -135,7 +135,7 @@
 
                     <div class="card" id="detalle" style="display:none">
                         <div class="header">
-                            <h2>Detalles del Pedido</h2>
+                            <h2>Detalles de Ajustes</h2>
                         </div>
                         <div class="body">
                             <div class="row clearfix" id="formDetalles">
@@ -150,7 +150,7 @@
                                     </div>
                                 </div>
                                 <!-- CAMPO PARA FECHA DE VENCIMIENTO CON 5 COLUMNAS -->
-                                <div class="col-sm-6">
+                                <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();">
@@ -160,7 +160,6 @@
                                     </div>
                                 </div>
                                 <!-- CAMPO PARA CANTIDAD DISPONIBLE -->
-                               <!-- Mostrar la cantidad disponible -->
                                <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
@@ -173,7 +172,7 @@
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="det_cantidad" class="form-control" disabled>
+                                            <input type="text" id="ajus_det_cantidad" class="form-control" disabled>
                                             <label class="form-label">Cantidad</label>
                                         </div>
                                     </div>
@@ -201,8 +200,8 @@
                                         <tr>
                                             <th>Código</th>
                                             <th>Producto</th>
-                                            <th>Cantidad</th>
                                             <th>Cantidad Disponible</th>
+                                            <th>Cantidad</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableDetalle">
@@ -212,8 +211,8 @@
                                         <tr>
                                             <th>Código</th>
                                             <th>Producto</th>
-                                            <th>Cantidad</th>
                                             <th>Cantidad Disponible</th>
+                                            <th>Cantidad</th>
                                         </tr>
                                     </tfoot>    
                                 </table>
@@ -222,7 +221,7 @@
                     </div>
                     <div class="card" id="registros">
                         <div class="header">
-                            <h2>Registros de Pedidos de Compras</h2>
+                            <h2>Registros de Ajustes de inventario</h2>
                         </div>
                         <div class="body">
                             <div class="table-responsive">
@@ -233,8 +232,8 @@
                                             <th>Empresa</th>
                                             <th>Sucursal</th>
                                             <th>Fecha</th>
-                                            <th>Plazo de Entrega</th>
-                                            <th>Observaciones</th>
+                                            <th>Motivo Ajustes</th>
+                                            <th>Tipo ajuste</th>
                                             <th>Encargado</th>
                                             <th>Estado</th>
                                         </tr>
@@ -248,8 +247,8 @@
                                             <th>Empresa</th>
                                             <th>Sucursal</th>
                                             <th>Fecha</th>
-                                            <th>Plazo de Entrega</th>
-                                            <th>Observaciones</th>
+                                            <th>Motivo Ajustes</th>
+                                            <th>Tipo ajuste</th>
                                             <th>Encargado</th>
                                             <th>Estado</th>
                                         </tr>
