@@ -462,7 +462,7 @@ function listarDetalles(){
         }
         $("#tableDetalle").html(lista);
 
-        if($("#ped_estado").val() === "PENDIENTE" && cantidadDetalle > 0){
+        if($("#ajus_cab_estado").val() === "PENDIENTE" && cantidadDetalle > 0){
             $("#btnConfirmar").removeAttr("disabled");
         } else {
             $("#btnConfirmar").attr("disabled","true");
