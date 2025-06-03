@@ -200,8 +200,8 @@
                                         <tr>
                                             <th>Código</th>
                                             <th>Producto</th>
-                                            <th>Cantidad Disponible</th>
                                             <th>Cantidad</th>
+                                            <th>Cantidad Disponible</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableDetalle">
@@ -211,8 +211,8 @@
                                         <tr>
                                             <th>Código</th>
                                             <th>Producto</th>
-                                            <th>Cantidad Disponible</th>
                                             <th>Cantidad</th>
+                                            <th>Cantidad Disponible</th>
                                         </tr>
                                     </tfoot>    
                                 </table>

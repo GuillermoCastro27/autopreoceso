@@ -238,6 +238,7 @@
                 <li><a href="/taller_front/compras/Reg_compras"><span>Registrar Compras</span></a></li>
                 <li><a href="/taller_front/compras/Nota_remi_comp"><span>Registrar Nota de Remisión</span></a></li>
                 <li><a href="/taller_front/compras/Ajustes_inventario"><span>Registrar Ajustes</span></a></li>
+                <li><a href="/taller_front/compras/notas_cred_deb"><span>Registrar Notas de Compra</span></a></li>
             </ul>
         </li>
         <li>

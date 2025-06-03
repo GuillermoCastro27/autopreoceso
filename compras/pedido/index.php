@@ -159,7 +159,6 @@
                                         <div id="listaProductos" style="display:none;"></div>
                                     </div>
                                 </div>
-                                <!-- CAMPO PARA CANTIDAD DISPONIBLE -->
                                <!-- Mostrar la cantidad disponible -->
                                <div class="col-sm-3">
                                     <div class="form-group form-float">

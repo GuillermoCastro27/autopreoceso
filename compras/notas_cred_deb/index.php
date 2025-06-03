@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>GUI ORDENES DE COMPRAS</title>
+    <title>GUI NOTAS DE COMPRAS</title>
     <!-- Favicon-->
     <link rel="icon" href="../../images.ico" type="image/x-icon">
 
@@ -50,13 +50,13 @@
                     
                     <div class="card">
                         <div class="header">
-                            <h2>Gestionar Ordenes de Compras <small>CRUD de Ordenes de compras y su detalle</small> </h2>
+                            <h2>Gestionar Notas de Compras <small>CRUD de Notas de compras y su detalle</small> </h2>
                         </div>
                         <div class="body">
                             <div class="row clearfix">
                                 <input type="hidden" value="0" id="txtOperacion"/>
                                 <input type="hidden" value="1" id="user_id"/>
-                                <input type="hidden" value="PENDIENTE" id="ord_comp_estado"/>
+                                <input type="hidden" value="PENDIENTE" id="nota_comp_estado"/>
                                 <!-- CAMPO PARA CODIGO CON 1 COLUMNAS -->
                                 <div class="col-sm-1">
                                     <div class="form-group form-float">
@@ -99,7 +99,7 @@
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <select id="condicion_pago" class="form-control" disabled onchange="controlarCamposPago();">
+                                            <select id="nota_comp_condicion_pago" class="form-control" disabled onchange="controlarCamposPago();">
                                                 <option value="CONTADO">Al contado</option>
                                                 <option value="CREDITO">A crédito</option>
                                             </select>
@@ -110,9 +110,9 @@
                                 <script>
                                     function controlarCamposPago() {
                                         console.log("controlarCamposPago se ha llamado"); // Para depuración
-                                        var condicion = document.getElementById('condicion_pago').value;
-                                        var cuota = document.getElementById('ord_comp_cant_cuota');
-                                        var intervaloFechaVence = document.getElementById('ord_comp_intervalo_fecha_vence');
+                                        var condicion = document.getElementById('nota_comp_condicion_pago').value;
+                                        var cuota = document.getElementById('nota_comp_cant_cuota');
+                                        var intervaloFechaVence = document.getElementById('nota_comp_intervalo_fecha_vence');
 
                                         if (condicion === 'CONTADO') {
                                             cuota.disabled = true;
@@ -133,7 +133,7 @@
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="ord_comp_intervalo_fecha_vence" class="datetimepicker form-control" disabled>
+                                            <input type="text" id="nota_comp_intervalo_fecha_vence" class="datetimepicker form-control" disabled>
                                             <label class="form-label">Intervalo de fecha Vencimiento</label>
                                         </div>
                                     </div>
@@ -142,7 +142,7 @@
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                        <input type="text" id="ord_comp_fecha" class="datetimepicker form-control" readonly>
+                                        <input type="text" id="nota_comp_fecha" class="datetimepicker form-control" readonly>
                                             <label class="form-label">Fecha</label>
                                         </div>
                                     </div>
@@ -151,8 +151,27 @@
                                 <div class="col-sm-1">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="ord_comp_cant_cuota" class="form-control" disabled>
+                                            <input type="text" id="nota_comp_cant_cuota" class="form-control" disabled>
                                             <label class="form-label">Cuota</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <select id="nota_comp_tipo" class="form-control" disabled>
+                                                <option >Crédito</option>
+                                                <option >Debito</option>
+                                            </select>
+                                            <label class="form-label">Tipo de Nota</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="nota_comp_observaciones" class="form-control" disabled>
+                                            <label class="form-label">Observaciones</label>
                                         </div>
                                     </div>
                                 </div>
@@ -162,15 +181,15 @@
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <!-- Campo de texto para la ciudad, habilitado -->
-                                            <input type="text" id="presupuestos" class="form-control" disabled onkeyup="buscarPresupuesto();">
-                                            <label class="form-label">Presupuesto</label>
+                                            <input type="text" id="compra_cab" class="form-control" disabled onkeyup="buscarCompra();">
+                                            <label class="form-label">Compra</label>
                                         </div>
 
                                         <!-- Campo oculto para almacenar el ID de la ciudad -->
-                                        <input type="hidden" id="presupuesto_id" name="presupuesto_id" value="0">
+                                        <input type="hidden" id="compra_cab_id" name="compra_cab_id" value="0">
 
                                         <!-- Contenedor para la lista de ciudades -->
-                                        <div id="listaPresupuesto" style="display:none;"></div>
+                                        <div id="listaCompra" style="display:none;"></div>
                                     </div>
                                 </div>
                                 <div class="col-sm-4"> 
@@ -224,7 +243,7 @@
 
                     <div class="card" id="detalle" style="display:none">
                         <div class="header">
-                            <h2>Detalles de Orden de compras</h2>
+                            <h2>Detalles de Notas de Compra</h2>
                         </div>
                         <div class="body">
                             <div class="row clearfix" id="formDetalles"></div>
@@ -260,7 +279,7 @@
                     </div>
                     <div class="card" id="registros">
                         <div class="header">
-                            <h2>Registros de Ordenes de Compra</h2>
+                            <h2>Registros de Notas de Compra</h2>
                         </div>
                         <div class="body">
                             <div class="table-responsive">
@@ -270,9 +289,11 @@
                                             <th>Código</th>
                                             <th>Intervalo de fecha Vencimiento</th>
                                             <th>Fecha</th>
-                                            <th>Presupuesto</th>
+                                            <th>Compra</th>
                                             <th>Encargado</th>
                                             <th>Cantidad de cuota</th>
+                                            <th>Tipo de Nota</th>
+                                            <th>Observaciones</th>
                                             <th>Estado</th>
                                         </tr>
                                     </thead>
@@ -284,9 +305,11 @@
                                             <th>Código</th>
                                             <th>Intervalo de fecha Vencimiento</th>
                                             <th>Fecha</th>
-                                            <th>Presupuesto</th>
+                                            <th>Compra</th>
                                             <th>Encargado</th>
                                             <th>Cantidad de cuota</th>
+                                            <th>Tipo de Nota</th>
+                                            <th>Observaciones</th>
                                             <th>Estado</th>
                                         </tr>
                                     </tfoot>    
