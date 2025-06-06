@@ -84,7 +84,7 @@ function editar(){
     $("#nota_comp_intervalo_fecha_vence").attr("disabled", "true");
     $("#nota_comp_fecha").removeAttr("disabled");
     $("#nota_comp_cant_cuota").attr("disabled", "true");
-    $("#compra").removeAttr("disabled");
+    $("#compra_cab").removeAttr("disabled");
     $("#emp_razon_social").attr("disabled", "true");
     $("#nota_comp_condicion_pago").removeAttr("disabled");
     $("#suc_razon_social").attr("disabled", "true");
