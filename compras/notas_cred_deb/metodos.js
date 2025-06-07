@@ -346,18 +346,14 @@ function campoFecha() {
         weekStart: 1
     });
 }
-// Prepara el formulario para agregar un nuevo detalle al pedido
-function agregarDetalle(){
-    $("#txtOperacionDetalle").val(1);
-    $("#item_decripcion").removeAttr("disabled");
-    $("#notas_comp_det_cantidad").removeAttr("disabled");
-    $("#tip_imp_nom").removeAttr("disabled");
-    $("#item_costo").removeAttr("disabled"); // Habilitar el campo de costo
-    $("#btnAgregarDetalle").attr("style","display:none");
-    $("#btnEditarDetalle").attr("style","display:none");
-    $("#btnEliminarDetalle").attr("style","display:none");
-    $("#btnGrabarDetalle").attr("style","display:inline");
+function formatearNumero(numero) {
+    if (isNaN(numero)) return '0,00';
+    return Number(numero).toLocaleString('es-PY', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
 }
+
 
 // Prepara el formulario para editar un detalle existente del pedido
 function editarDetalle(){
@@ -366,16 +362,6 @@ function editarDetalle(){
     $("#notas_comp_det_cantidad").removeAttr("disabled");
     $("#tip_imp_nom").removeAttr("disabled");
     $("#item_costo").removeAttr("disabled"); // Habilitar el campo de costo
-    $("#btnAgregarDetalle").attr("style","display:none");
-    $("#btnEditarDetalle").attr("style","display:none");
-    $("#btnEliminarDetalle").attr("style","display:none");
-    $("#btnGrabarDetalle").attr("style","display:inline");
-}
-
-// Prepara el formulario para eliminar un detalle del pedido.
-function eliminarDetalle(){
-    $("#txtOperacionDetalle").val(3);
-    $("#item_costo").attr("disabled", "disabled"); // Deshabilitar el campo de costo
     $("#btnAgregarDetalle").attr("style","display:none");
     $("#btnEditarDetalle").attr("style","display:none");
     $("#btnEliminarDetalle").attr("style","display:none");
@@ -589,14 +575,15 @@ function listarDetalles() {
                     totalConImpuesto = subtotal / 21; // Dividimos por 21 para IVA5
                 }
 
-                lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" + rs.item_id + "," + rs.tipo_impuesto_id + ",'" + rs.item_decripcion + "','" + (rs.tip_imp_nom || 'No definido') + "'," + cantidad + ", " + costo + ", " + subtotal.toFixed(2) + ", " + totalConImpuesto.toFixed(2) + ");\">";
+                // Usar la función formatearNumero para formatear los valores
+                lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" + rs.item_id + "," + rs.tipo_impuesto_id + ",'" + rs.item_decripcion + "','" + (rs.tip_imp_nom || 'No definido') + "'," + cantidad + ", " + costo + ", '" + formatearNumero(subtotal) + "', '" + formatearNumero(totalConImpuesto) + "');\">";
                 lista += "<td>" + rs.item_id + "</td>";
                 lista += "<td>" + rs.item_decripcion + "</td>";
                 lista += "<td>" + cantidad + "</td>";
-                lista += "<td class='text-right'>" + (costo ? costo.toFixed(2) : 'No definido') + "</td>";
+                lista += "<td class='text-right'>" + (costo ? formatearNumero(costo) : 'No definido') + "</td>";
                 lista += "<td>" + (rs.tip_imp_nom || 'No definido') + "</td>"; // Manejar caso donde no se defina el tipo de impuesto
-                lista += "<td class='text-right'>" + subtotal.toFixed(2) + "</td>"; // Mostrar subtotal
-                lista += "<td class='text-right'>" + totalConImpuesto.toFixed(2) + "</td>"; // Mostrar total con impuestos
+                lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>"; // Mostrar subtotal
+                lista += "<td class='text-right'>" + formatearNumero(totalConImpuesto) + "</td>"; // Mostrar total con impuestos
                 lista += "</tr>";
 
                 cantidadDetalle++;
@@ -612,8 +599,8 @@ function listarDetalles() {
         }
 
         // Mostrar los totales en la pantalla
-        $("#txtTotalGral").text(TotalGral.toFixed(2)); // Mostrar total general
-        $("#txtTotalConImpuesto").text(TotalConImpuesto.toFixed(2)); // Mostrar total con impuestos
+        $("#txtTotalGral").text(formatearNumero(TotalGral)); // Mostrar total general
+        $("#txtTotalConImpuesto").text(formatearNumero(TotalConImpuesto)); // Mostrar total con impuestos
 
         // Habilitar el botón Confirmar si hay detalles y la orden está pendiente
         if (estadoNotas === "PENDIENTE" && cantidadDetalle > 0) {
@@ -627,8 +614,6 @@ function listarDetalles() {
         console.log(a.responseText);
     });
 }
-
-
 
 // Selecciona un detalle de un pedido y actualiza el formulario
 function seleccionDetalle(item_id, tipo_impuesto_id, item_decripcion, tip_imp_nom, notas_comp_det_cantidad, costo, subtotal, totalConImpuesto) {

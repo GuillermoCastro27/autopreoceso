@@ -483,6 +483,13 @@ function seleccionProducto(item_id, item_decripcion){
 
     $(".form-line").attr("class","form-line focused");
 }
+function formatearNumero(numero) {
+    if (isNaN(numero)) return '0,00';
+    return Number(numero).toLocaleString('es-PY', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
 
 // Obtiene y muestra la lista de detalles de un presupuesto mediante una solicitud AJAX.
 function listarDetalles() {
@@ -518,8 +525,8 @@ function listarDetalles() {
                 lista += "<td>" + rs.item_id + "</td>";
                 lista += "<td>" + rs.item_decripcion + "</td>";
                 lista += "<td>" + cantidad + "</td>";
-                lista += "<td class='text-right'>" + costo.toFixed(2) + "</td>";
-                lista += "<td class='text-right'>" + subtotal.toFixed(2) + "</td>";
+                lista += "<td class='text-right'>" + formatearNumero(costo) + "</td>"; // Formatear costo
+                lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>"; // Formatear subtotal
                 lista += "</tr>";
 
                 cantidadDetalle++;
@@ -533,8 +540,8 @@ function listarDetalles() {
             $("#tableDetalle").html("<tr><td colspan='5' class='text-center'>No se encontraron detalles para este presupuesto.</td></tr>");
         }
 
-        // Mostrar el total general
-        $("#txtTotalGral").text(TotalGral.toFixed(2));
+        // Mostrar el total general con formato
+        $("#txtTotalGral").text(formatearNumero(TotalGral)); // Formatear TotalGral
 
         // Habilitar el botón Confirmar si hay detalles y el presupuesto está pendiente
         if (estadoPresupuesto === "PENDIENTE" && cantidadDetalle > 0) {
@@ -550,11 +557,11 @@ function listarDetalles() {
 }
 
 // Rellena el formulario con los datos de un detalle seleccionado.
-function seleccionDetalle(item_id,item_decripcion,det_cantidad,det_costo){
+function seleccionDetalle(item_id, item_decripcion, det_cantidad, det_costo) {
     $("#item_id").val(item_id);
     $("#item_decripcion").val(item_decripcion);
     $("#det_cantidad").val(det_cantidad);
-    $("#det_costo").val(det_costo);
+    $("#det_costo").val(formatearNumero(det_costo)); // Formatear costo
 }
 
 // Realiza una búsqueda de proveedores y muestra los resultados.

@@ -246,7 +246,60 @@
                             <h2>Detalles de Notas de Compra</h2>
                         </div>
                         <div class="body">
-                            <div class="row clearfix" id="formDetalles"></div>
+                            <div class="row clearfix" id="formDetalles">
+                            <!-- CAMPO PARA CODIGO CON 2 COLUMNAS -->
+                            <div class="col-sm-2">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <input type="text" id="item_id" class="form-control" disabled>
+                                        <label class="form-label">Código</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- CAMPO PARA BUSCAR PRODUCTOS CON 4 COLUMNAS -->
+                            <div class="col-sm-4">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();">
+                                        <label class="form-label">Producto</label>
+                                    </div>
+                                    <div id="listaProductos" style="display:none;"></div>
+                                </div>
+                            </div>
+                            <!-- CAMPO PARA CANTIDAD 2 COLUMNAS -->
+                            <div class="col-sm-2">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <input type="text" id="notas_comp_det_cantidad" class="form-control" disabled>
+                                        <label class="form-label">Cantidad</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- CAMPO PARA COSTO CON 2 COLUMNAS -->
+                            <div class="col-sm-2">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <input type="text" id="item_costo" class="form-control" disabled>
+                                        <label class="form-label">Costo</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- BOTONES -->
+                            <div class="col-sm-2">
+                                <div class="icon-button-demo">
+                                    <button type="button" id="btnEditarDetalle" class="btn btn-warning waves-effect" onclick="editarDetalle();">
+                                        <i class="material-icons">mode_edit</i>
+                                    </button>
+                                    <button type="button" id="btnGrabarDetalle" class="btn btn-default waves-effect" style="display:none;" onclick="grabarDetalle();">
+                                        <i class="material-icons">save</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div> <!-- fin de row -->
+
+                        <!-- Campos ocultos adicionales -->
+                        <input type="hidden" value="0" id="txtOperacionDetalle"/>
+                        <input type="hidden" id="tipo_impuesto_id"/>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover dataTable">
                                     <thead>
@@ -257,7 +310,7 @@
                                             <th>Costo</th>
                                             <th>Tipo impuesto</th>
                                             <th>Sub Total</th>
-                                            <th>Total con Impuesto</th> <!-- Agregado para mostrar el total con impuesto -->
+                                            <th>Total con Impuesto</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableDetalle">
@@ -266,11 +319,11 @@
                                     <tfoot>
                                         <tr>
                                             <th colspan="5" class="text-right">Total General</th>
-                                            <th class="text-right" id="txtTotalGral">0</th> <!-- Total sin impuestos -->
+                                            <th class="text-right" id="txtTotalGral">0</th>
                                         </tr>
                                         <tr>
                                             <th colspan="5" class="text-right">Total con Impuesto</th>
-                                            <th class="text-right" id="txtTotalConImpuesto">0</th> <!-- Total con impuestos -->
+                                            <th class="text-right" id="txtTotalConImpuesto">0</th>
                                         </tr>
                                     </tfoot>
                                 </table>

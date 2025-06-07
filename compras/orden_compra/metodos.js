@@ -556,6 +556,13 @@ function seleccionTipoImpuestos(id,tip_imp_nom,tipo_imp_tasa){
     $("#listaTipoImpuestos").html("");
     $("#listaTipoImpuestos").attr("style","display:none;");
 }
+function formatearNumero(numero) {
+    if (isNaN(numero)) return '0,00';
+    return Number(numero).toLocaleString('es-PY', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
 
 // Realiza una búsqueda de productos mediante una solicitud AJAX
 function listarDetalles() {
@@ -597,14 +604,15 @@ function listarDetalles() {
                     totalConImpuesto = subtotal / 21; // Dividimos por 21 para IVA5
                 }
 
-                lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" + rs.item_id + "," + rs.tipo_impuesto_id + ",'" + rs.item_decripcion + "','" + (rs.tip_imp_nom || 'No definido') + "'," + cantidad + ", " + costo + ", " + subtotal.toFixed(2) + ", " + totalConImpuesto.toFixed(2) + ");\">";
+                // Usar la función formatearNumero para formatear los valores
+                lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" + rs.item_id + "," + rs.tipo_impuesto_id + ",'" + rs.item_decripcion + "','" + (rs.tip_imp_nom || 'No definido') + "'," + cantidad + ", " + costo + ", '" + formatearNumero(subtotal) + "', '" + formatearNumero(totalConImpuesto) + "');\">";
                 lista += "<td>" + rs.item_id + "</td>";
                 lista += "<td>" + rs.item_decripcion + "</td>";
                 lista += "<td>" + cantidad + "</td>";
-                lista += "<td class='text-right'>" + (costo ? costo.toFixed(2) : 'No definido') + "</td>";
+                lista += "<td class='text-right'>" + (costo ? formatearNumero(costo) : 'No definido') + "</td>";
                 lista += "<td>" + (rs.tip_imp_nom || 'No definido') + "</td>"; // Manejar caso donde no se defina el tipo de impuesto
-                lista += "<td class='text-right'>" + subtotal.toFixed(2) + "</td>"; // Mostrar subtotal
-                lista += "<td class='text-right'>" + totalConImpuesto.toFixed(2) + "</td>"; // Mostrar total con impuestos
+                lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>"; // Mostrar subtotal
+                lista += "<td class='text-right'>" + formatearNumero(totalConImpuesto) + "</td>"; // Mostrar total con impuestos
                 lista += "</tr>";
 
                 cantidadDetalle++;
@@ -620,8 +628,8 @@ function listarDetalles() {
         }
 
         // Mostrar los totales en la pantalla
-        $("#txtTotalGral").text(TotalGral.toFixed(2)); // Mostrar total general
-        $("#txtTotalConImpuesto").text(TotalConImpuesto.toFixed(2)); // Mostrar total con impuestos
+        $("#txtTotalGral").text(formatearNumero(TotalGral)); // Mostrar total general
+        $("#txtTotalConImpuesto").text(formatearNumero(TotalConImpuesto)); // Mostrar total con impuestos
 
         // Habilitar el botón Confirmar si hay detalles y la orden está pendiente
         if (estadoOrden === "PENDIENTE" && cantidadDetalle > 0) {
@@ -636,8 +644,6 @@ function listarDetalles() {
     });
 }
 
-
-
 // Selecciona un detalle de un pedido y actualiza el formulario
 function seleccionDetalle(item_id, tipo_impuesto_id, item_decripcion, tip_imp_nom, orden_compra_det_cantidad, costo, subtotal, totalConImpuesto) {
     $("#item_id").val(item_id);
@@ -647,9 +653,9 @@ function seleccionDetalle(item_id, tipo_impuesto_id, item_decripcion, tip_imp_no
     $("#orden_compra_det_cantidad").val(orden_compra_det_cantidad);
     
     // Rellenar los campos de costo, subtotal y total con impuesto
-    $("#item_costo").val(costo); // Asegúrate de que este sea el ID del campo de costo
-    $("#subtotal").val(subtotal); // Asegúrate de que este sea el ID del campo de subtotal
-    $("#total_con_impuesto").val(totalConImpuesto); // Asegúrate de que este sea el ID del campo de total con impuesto
+    $("#item_costo").val(formatearNumero(costo)); // Asegúrate de que este sea el ID del campo de costo
+    $("#subtotal").val(formatearNumero(subtotal)); // Asegúrate de que este sea el ID del campo de subtotal
+    $("#total_con_impuesto").val(formatearNumero(totalConImpuesto)); // Asegúrate de que este sea el ID del campo de total con impuesto
 
     $("#listaProductos").html("");
     $("#listaProductos").attr("style", "display:none;");
