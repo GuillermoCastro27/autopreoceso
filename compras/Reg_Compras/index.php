@@ -239,7 +239,7 @@
                                             <th>Costo</th>
                                             <th>Tipo impuesto</th>
                                             <th>Sub Total</th>
-                                            <th>Total con Impuesto</th> <!-- Agregado para mostrar el total con impuesto -->
+                                            <th>IVA</th> <!-- Agregado para mostrar el total con impuesto -->
                                         </tr>
                                     </thead>
                                     <tbody id="tableDetalle">
@@ -247,11 +247,11 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="5" class="text-right">Total General</th>
+                                            <th colspan="5" class="text-right">Total Comprobante</th>
                                             <th class="text-right" id="txtTotalGral">0</th> <!-- Total sin impuestos -->
                                         </tr>
                                         <tr>
-                                            <th colspan="5" class="text-right">Total con Impuesto</th>
+                                            <th colspan="5" class="text-right">Total IVA</th>
                                             <th class="text-right" id="txtTotalConImpuesto">0</th> <!-- Total con impuestos -->
                                         </tr>
                                     </tfoot>
