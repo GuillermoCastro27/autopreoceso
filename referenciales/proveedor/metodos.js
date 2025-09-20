@@ -56,6 +56,7 @@ function agregar(){
     $("#prov_telefono").removeAttr("disabled");
     $("#prov_direccion").removeAttr("disabled");
     $("#prov_correo").removeAttr("disabled");
+    $("#pais_descrpcion").removeAttr("disabled");
     $("#ciu_descripcion").removeAttr("disabled");
     $("#nacio_descripcion").removeAttr("disabled");
 
@@ -76,6 +77,7 @@ function editar(){
     $("#prov_telefono").removeAttr("disabled");
     $("#prov_direccion").removeAttr("disabled");
     $("#prov_correo").removeAttr("disabled");
+    $("#pais_descrpcion").removeAttr("disabled");
     $("#ciu_descripcion").removeAttr("disabled");
     $("#nacio_descripcion").removeAttr("disabled");
 
@@ -142,13 +144,14 @@ function listar(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionProveedor(" + rs.id + "," + rs.ciudad_id + "," + rs.nacionalidad_id + ",'" + rs.prov_razonsocial + "','" + rs.prov_ruc + "','" + rs.prov_telefono + "','" + rs.prov_direccion + "','" + rs.prov_correo + "','" + rs.ciu_descripcion + "','" + rs.nacio_descripcion + "');\">";
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionProveedor(" + rs.id + "," + rs.pais_id + "," + rs.ciudad_id + "," + rs.nacionalidad_id + ",'" + rs.prov_razonsocial + "','" + rs.prov_ruc + "','" + rs.prov_telefono + "','" + rs.prov_direccion + "','" + rs.prov_correo + "','" + rs.pais_descrpcion + "','" + rs.ciu_descripcion + "','" + rs.nacio_descripcion + "');\">";
                 lista = lista + "<td>" + rs.id + "</td>";
                 lista = lista + "<td>" + rs.prov_razonsocial + "</td>";
                 lista = lista + "<td>" + rs.prov_ruc + "</td>";
                 lista = lista + "<td>" + rs.prov_telefono + "</td>";
                 lista = lista + "<td>" + rs.prov_direccion + "</td>";
                 lista = lista + "<td>" + rs.prov_correo + "</td>";
+                lista = lista + "<td>" + rs.pais_descrpcion + "</td>";
                 lista = lista + "<td>" + rs.ciu_descripcion + "</td>";
                 lista = lista + "<td>" + rs.nacio_descripcion + "</td>";
             lista = lista + "</tr>";
@@ -161,7 +164,7 @@ function listar(){
     });
 }
 
-function seleccionProveedor(id, ciudad_id, nacionalidad_id, prov_razonsocial, prov_ruc, prov_telefono, prov_direccion, prov_correo, ciu_descripcion, nacio_descripcion) {
+function seleccionProveedor(id,pais_id, ciudad_id, nacionalidad_id, prov_razonsocial, prov_ruc, prov_telefono, prov_direccion, prov_correo,pais_descrpcion, ciu_descripcion, nacio_descripcion) {
     // Asignar los valores a los campos correspondientes
     $("#id").val(id);
     $("#prov_razonsocial").val(prov_razonsocial);
@@ -171,8 +174,10 @@ function seleccionProveedor(id, ciudad_id, nacionalidad_id, prov_razonsocial, pr
     $("#prov_correo").val(prov_correo);
     
     // Aquí estás asignando ciudad y nacionalidad correctamente
+    $("#pais_descrpcion").val(pais_descrpcion);
     $("#ciu_descripcion").val(ciu_descripcion); // Campo visible de la ciudad
     $("#nacio_descripcion").val(nacio_descripcion); // Campo visible de la nacionalidad
+    $("#pais_id").val(pais_id);
     $("#ciudad_id").val(ciudad_id); // Campo oculto de ciudad_id
     $("#nacionalidad_id").val(nacionalidad_id); // Campo oculto de nacionalidad_id
 
@@ -187,8 +192,35 @@ function seleccionProveedor(id, ciudad_id, nacionalidad_id, prov_razonsocial, pr
 
     $(".form-line").attr("class","form-line focused");
 }
+function buscarPaises(){
+    $.ajax({
+        url:"http://127.0.0.1:8000/Proyecto_tp/paises/read",
+        method: "GET",
+        dataType: "json"
+    })
+    .done(function(resultado){
+        var lista = "<ul class=\"list-group\">";
+        for (rs of resultado) {
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionPais("+rs.id+",'"+rs.pais_descrpcion+"')\">"+rs.pais_descrpcion+"</li>";   
+        }
+        lista += "</ul>";
+        $("#listaPaises").html(lista);
+        $("#listaPaises").attr("style","display:block; position: absolute; z-index: 2000;");
+    })
+    .fail(function(a,b,c){
+        alert(c);
+        console.log(a.responseText);
+    });
+}
 
+// Rellena el campo de producto seleccionado.
+function seleccionPais(id, pais_descrpcion) {
+    $("#pais_id").val(id);  // Asegúrate de que el campo hidden exista
+    $("#pais_descrpcion").val(pais_descrpcion);
 
+    $("#listaPaises").html("");
+    $("#listaPaises").attr("style", "display:none;");
+}
 function buscarCiudades(){
     $.ajax({
         url:"http://127.0.0.1:8000/Proyecto_tp/ciudades/read",
@@ -271,6 +303,7 @@ function grabar() {
             'prov_telefono': $("#prov_telefono").val(),
             'prov_direccion': $("#prov_direccion").val(),
             'prov_correo': $("#prov_correo").val(),
+            'pais_id': $("#pais_id").val(),
             'ciudad_id': $("#ciudad_id").val(),
             'nacionalidad_id': $("#nacionalidad_id").val()
         }

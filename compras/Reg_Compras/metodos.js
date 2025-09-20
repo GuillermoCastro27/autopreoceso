@@ -240,7 +240,7 @@ function seleccionCompra(id_compra_cab, proveedor_id,empresa_id, sucursal_id, or
         $("#formDetalles").attr("style","display:block;");
     }
 
-    if(comp_estado === "CONFIRMADO"){
+    if(comp_estado === "RECIBIDO"){
         $("#btnAgregar").attr("disabled","true");
         $("#btnGrabar").attr("disabled","true");
         $("#btnEditar").attr("disabled","true");

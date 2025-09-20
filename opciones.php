@@ -268,8 +268,7 @@
                 <span>Informes Varios</span>
             </a>
             <ul class="ml-menu">
-                <li><a href="javascript:void(0);"><span>Agendamiento</span></a></li>
-                <li><a href="javascript:void(0);"><span>Reservas de Turnos</span></a></li>
+                <li><a href="/taller_front/compras/Informes_Compra"><span>Informes Web</span></a></li>
             </ul>
         </li>
     </ul>

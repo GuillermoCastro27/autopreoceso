@@ -50,7 +50,7 @@
                     
                     <div class="card">
                         <div class="header">
-                            <h2>Gestionar Presupuestos de Compras <small>CRUD de Presupuestos y su detalle</small> </h2>
+                            <h2>Gestionar Presupuestos de Compras <small>CRUD de Presupuestos y su detalle</small></h2>
                         </div>
                         <div class="body">
                             <div class="row clearfix">

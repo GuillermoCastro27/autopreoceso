@@ -6,7 +6,7 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title>GUI PROVEEDORES</title>
     <!-- Favicon-->
-    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../../images.ico" type="image/x-icon">
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
@@ -107,6 +107,21 @@
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <!-- Campo de texto para la ciudad, habilitado -->
+                                            <input type="text" id="pais_descrpcion" class="form-control" disabled onkeyup="buscarPaises();">
+                                            <label class="form-label">Pais</label>
+                                        </div>
+
+                                        <!-- Campo oculto para almacenar el ID de la ciudad -->
+                                        <input type="hidden" id="pais_id" name="pais_id">
+
+                                        <!-- Contenedor para la lista de ciudades -->
+                                        <div id="listaPaises" style="display:none;"></div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <!-- Campo de texto para la ciudad, habilitado -->
                                             <input type="text" id="ciu_descripcion" class="form-control" disabled onkeyup="buscarCiudades();">
                                             <label class="form-label">Ciudad</label>
                                         </div>
@@ -159,6 +174,7 @@
                                             <th>Telefono</th>
                                             <th>Direccion</th>
                                             <th>Correo</th>
+                                            <th>Pais</th>
                                             <th>Ciudad</th>
                                             <th>Nacionalidad</th>
                                         </tr>
@@ -174,6 +190,7 @@
                                             <th>Telefono</th>
                                             <th>Direccion</th>
                                             <th>Correo</th>
+                                            <th>Pais</th>
                                             <th>Ciudad</th>
                                             <th>Nacionalidad</th>
                                         </tr>

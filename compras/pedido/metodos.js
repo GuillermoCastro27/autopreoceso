@@ -78,7 +78,7 @@ function editar(){
     $("#ped_vence").removeAttr("disabled");
     $("#ped_fecha").removeAttr("disabled");
     $("#ped_pbservaciones").removeAttr("disabled");
-    $("#emp_razon_social").removeAttr("disabled");
+    $("#emp_razon_social").attr("disabled","true");
     $("#suc_razon_social").removeAttr("disabled");
     buscarEmpresas();
 
@@ -230,6 +230,16 @@ function seleccionPedido(id_pedido,empresa_id, sucursal_id,emp_razon_social,suc_
     $("#formDetalles").attr("style","display:block;");
     }
     $(".form-line").attr("class","form-line focused");
+
+    if(ped_estado === "CONFIRMADO"){
+        $("#btnAgregar").attr("disabled","true");
+        $("#btnGrabar").attr("disabled","true");
+        $("#btnEditar").attr("disabled","true");
+
+        $("#btnEliminar").removeAttr("disabled");
+    }
+
+    $(".form-line").attr("class","form-line focused");
 }
 function grabar(){
     var observaciones = $("#ped_pbservaciones").val().trim();
@@ -237,39 +247,16 @@ function grabar(){
     var plazo = $("#ped_vence").val().trim();
     var sucursal = $("#suc_razon_social").val().trim();
 
-    // Validar que el campo descripción no esté vacío
-    if (observaciones === "") {
+    // Validar campos vacíos
+    if (observaciones === "" || fecha === "" || plazo === "" || sucursal === "") {
         swal({
             title: "Error",
-            text: "El campo no debe estar vacío.",
+            text: "Todos los campos son obligatorios.",
             type: "error"
         });
         return; 
     }
-    if (fecha === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return; 
-    }
-    if (plazo === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return; 
-    }
-    if (sucursal === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return; 
-    }
+
     var endpoint = "pedidos/create";
     var metodo = "POST";
     var estado = "PENDIENTE";
@@ -288,6 +275,7 @@ function grabar(){
         metodo = "PUT";
         estado = "CONFIRMADO";
     }
+
     $.ajax({
         url:getUrl()+endpoint,
         method:metodo,
@@ -313,10 +301,11 @@ function grabar(){
         },
         function(){
             if(resultado.tipo == "success"){
-                //location.reload(true);
                 $("#id").val(resultado.registro.id);
                 $("#detalle").attr("style","display:block;");
-                if(resultado.registro.ped_estado!="PENDIENTE"){
+                
+                // 🔄 Recarga si NO es pendiente o si es actualización
+                if(resultado.registro.ped_estado!="PENDIENTE" || $("#txtOperacion").val()==2){
                     location.reload(true);
                 }
             }
@@ -327,6 +316,7 @@ function grabar(){
         console.error(xhr.responseText);
     })
 }
+
 function campoFecha(){
     $('.datetimepicker').bootstrapMaterialDatePicker({
         format: 'DD/MM/YYYY HH:mm:ss',

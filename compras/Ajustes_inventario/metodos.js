@@ -231,6 +231,17 @@ function seleccionAjuste(ajuste_id,empresa_id, sucursal_id,emp_razon_social,suc_
     $("#formDetalles").attr("style","display:block;");
     }
     $(".form-line").attr("class","form-line focused");
+
+    if(ajus_cab_estado === "CONFIRMADO"){
+    $("#btnAgregar").attr("disabled","true");
+    $("#btnGrabar").attr("disabled","true");
+    $("#btnConfirmar").attr("disabled","true");
+    $("#btnEditar").attr("disabled","true");
+    
+    $("#btnEliminar").removeAttr("disabled");
+    $("#formDetalles").attr("style","display:block;");
+    }
+    $(".form-line").attr("class","form-line focused");
 }
 function grabar(){
     var descripcion = $("#descripcion").val().trim();
