@@ -178,15 +178,15 @@
                         <span>Ref_Compras</span>
                     </a>
                     <ul class="ml-menu">
-                        <li><a href="/taller_front/referenciales/proveedor"><span>Proveedores</span></a></li>
-                        <li><a href="/taller_front/referenciales/items"><span>Items</span></a></li>
-                        <li><a href="/taller_front/referenciales/tipo_item"><span>Tipo Items</span></a></li>
-                        <li><a href="/taller_front/referenciales/marca"><span>Marca</span></a></li>
-                        <li><a href="/taller_front/referenciales/item_marca"><span>Item Marca</span></a></li>
-                        <li><a href="/taller_front/referenciales/modelo"><span>Modelo</span></a></li>
-                        <li><a href="/taller_front/referenciales/item_modelo"><span>Item Modelo</span></a></li>
-                        <li><a href="/taller_front/referenciales/tipo_impuesto"><span>Tipo Impuesto</span></a></li>
-                        <li><a href="/taller_front/referenciales/Motivo_ajuste"><span>Motivo Ajuste</span></a></li>
+                        <li><a href="/taller_front/referenciales/proveedor"><span>Mantener Proveedores</span></a></li>
+                        <li><a href="/taller_front/referenciales/items"><span>Mantener Items</span></a></li>
+                        <li><a href="/taller_front/referenciales/tipo_item"><span>Mantener Tipo Items</span></a></li>
+                        <li><a href="/taller_front/referenciales/marca"><span>Mantener Marca</span></a></li>
+                        <li><a href="/taller_front/referenciales/item_marca"><span>Mantener Item Marca</span></a></li>
+                        <li><a href="/taller_front/referenciales/modelo"><span>Mantener Modelo</span></a></li>
+                        <li><a href="/taller_front/referenciales/item_modelo"><span>Mantener Item Modelo</span></a></li>
+                        <li><a href="/taller_front/referenciales/tipo_impuesto"><span>Mantener Tipo Impuesto</span></a></li>
+                        <li><a href="/taller_front/referenciales/Motivo_ajuste"><span>MantenerMotivo Ajuste</span></a></li>
                     </ul>
                 </li>
                 <li>
@@ -195,8 +195,10 @@
                         <span>Ref_Servicios</span>
                     </a>
                     <ul class="ml-menu">
-                        <li><a href="/taller_front/referenciales/paises"><span>Paises</span></a></li>
-                        <li><a href="/taller_front/referenciales/ciudades"><span>Ciudades</span></a></li>
+                        <li><a href="/taller_front/referenciales/tipo_servicio"><span>Mantener Tipo Servicio</span></a></li>
+                        <li><a href="/taller_front/referenciales/Tipo_diagnostico"><span>Mantener Tipo Diagnostico</span></a></li>
+                        <li><a href="/taller_front/referenciales/tipo_promociones"><span>Mantener Tipo Promociones</span></a></li>
+                        <li><a href="/taller_front/referenciales/tipo_descuentos"><span>Mantener Tipo Descuentos</span></a></li>
                     </ul>
                 </li>
                 <li>
