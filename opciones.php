@@ -250,8 +250,9 @@
                 <span>Servicio</span>
             </a>
             <ul class="ml-menu">
-                <li><a href="javascript:void(0);"><span>Agendamiento</span></a></li>
-                <li><a href="javascript:void(0);"><span>Reservas de turnos</span></a></li>
+                <li><a href="/taller_front/Servicio/Solicitud"><span>Registrar Solicitudes de Servicio</span></a></li>
+                <li><a href="/taller_front/Servicio/Recep"><span>Registrar Recepcion de Vehiculos</span></a></li>
+                <li><a href="/taller_front/Servicio/Diagnostico"><span>Registrar Diagnostico</span></a></li>
             </ul>
         </li>
         <li>
