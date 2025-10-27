@@ -56,6 +56,8 @@ function agregar(){
     $("#tipo_prom_descrip").removeAttr("disabled");
     $("#tipo_prom_fechaInicio").removeAttr("disabled");
     $("#tipo_prom_fechaFin").removeAttr("disabled");
+    $("#tipo_prom_modo").removeAttr("disabled");
+    $("#tipo_prom_valor").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -73,6 +75,8 @@ function editar(){
     $("#tipo_prom_descrip").removeAttr("disabled");
     $("#tipo_prom_fechaInicio").removeAttr("disabled");
     $("#tipo_prom_fechaFin").removeAttr("disabled");
+    $("#tipo_prom_modo").removeAttr("disabled");
+    $("#tipo_prom_valor").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -136,9 +140,9 @@ function listar(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipoPromociones("+rs.id+",'"+rs.tipo_prom_nombre+"','"+rs.tipo_prom_descrip+"','"+rs.tipo_prom_fechaInicio+"','"+rs.tipo_prom_fechaFin+"');\">";
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipoPromociones("+rs.tipo_promociones_id+",'"+rs.tipo_prom_nombre+"','"+rs.tipo_prom_descrip+"','"+rs.tipo_prom_fechaInicio+"','"+rs.tipo_prom_fechaFin+"','"+rs.tipo_prom_modo+"','"+rs.tipo_prom_valor+"');\">";
                 lista = lista + "<td>";
-                lista = lista + rs.id;
+                lista = lista + rs.tipo_promociones_id;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
                 lista = lista + rs.tipo_prom_nombre;
@@ -152,6 +156,12 @@ function listar(){
                 lista = lista + "<td>";
                 lista = lista + rs.tipo_prom_fechaFin;
                 lista = lista +"</td>";
+                lista = lista + "<td>";
+                lista = lista + rs.tipo_prom_modo;
+                lista = lista +"</td>";
+                lista = lista + "<td>";
+                lista = lista + rs.tipo_prom_valor;
+                lista = lista +"</td>";
             lista = lista + "</tr>";
         }
         $("#tableBody").html(lista);
@@ -161,12 +171,14 @@ function listar(){
         alert(c);
     })
 }
-function seleccionTipoPromociones(codigo, tipo_prom_nombre,tipo_prom_descrip,tipo_prom_fechaInicio,tipo_prom_fechaFin){
+function seleccionTipoPromociones(codigo, tipo_prom_nombre,tipo_prom_descrip,tipo_prom_fechaInicio,tipo_prom_fechaFin,tipo_prom_modo,tipo_prom_valor){
     $("#txtCodigo").val(codigo);
     $("#tipo_prom_nombre").val(tipo_prom_nombre);
     $("#tipo_prom_descrip").val(tipo_prom_descrip);
     $("#tipo_prom_fechaInicio").val(tipo_prom_fechaInicio);
     $("#tipo_prom_fechaFin").val(tipo_prom_fechaFin);
+    $("#tipo_prom_modo").val(tipo_prom_modo);
+    $("#tipo_prom_valor").val(tipo_prom_valor);
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").removeAttr("disabled");
@@ -191,6 +203,8 @@ function grabar(){
     var descripción = $("#tipo_prom_descrip").val().trim();
     var FechaInicio = $("#tipo_prom_fechaInicio").val().trim();
     var FechaFin = $("#tipo_prom_fechaFin").val().trim();
+    var Modo = $("#tipo_prom_modo").val().trim();
+    var Valor = $("#tipo_prom_valor").val().trim();
 
     // Validar que el campo descripción no esté vacío
     if (nombre === "") {
@@ -225,6 +239,22 @@ function grabar(){
         });
         return;  // Salir de la función si la validación falla
     }
+    if (Modo === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return;  // Salir de la función si la validación falla
+    }
+    if (Valor === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return;  // Salir de la función si la validación falla
+    }
     var endpoint = "tipo-promociones/create";
     var metodo = "POST";
     if($("#txtOperacion").val()==2){
@@ -244,7 +274,9 @@ function grabar(){
             'tipo_prom_descrip': $("#tipo_prom_descrip").val(), 
             'tipo_prom_nombre': $("#tipo_prom_nombre").val(),
             'tipo_prom_fechaInicio': $("#tipo_prom_fechaInicio").val(), 
-            'tipo_prom_fechaFin': $("#tipo_prom_fechaFin").val()
+            'tipo_prom_fechaFin': $("#tipo_prom_fechaFin").val(),
+            'tipo_prom_modo': $("#tipo_prom_modo").val(), 
+            'tipo_prom_valor': $("#tipo_prom_valor").val()
         }
 
     })

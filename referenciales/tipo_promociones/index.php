@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title>GUI TIPO PROMOCIONES</title>
-    <!-- Favicon-->
     <link rel="icon" href="../../images.ico" type="image/x-icon">
 
     <!-- Google Fonts -->
@@ -17,8 +16,6 @@
 
     <!-- Waves Effect Css -->
     <link href="../../plugins/node-waves/waves.css" rel="stylesheet" />
-
-    <!-- Animation Css -->
     <link href="../../plugins/animate-css/animate.css" rel="stylesheet" />
 
     <!-- Sweetalert Css -->
@@ -27,7 +24,7 @@
     <!-- JQuery DataTable Css -->
     <link href="../../plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
 
-    <!-- Bootstrap Material Datetime Picker Css ✅ -->
+    <!-- Bootstrap Material Datetime Picker Css -->
     <link href="../../plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
 
     <!-- Custom Css -->
@@ -45,17 +42,18 @@
         <div class="container-fluid">
 
             <div class="row clearfix">
-
                 <div class="col-md-12">
                     
+                    <!-- 🟩 CARD FORMULARIO -->
                     <div class="card">
                         <div class="header">
-                            <h2>Mantener datos de Tipo Promociones <small>CRUD de Tipo Promociones</small> </h2>
+                            <h2>Mantener datos de Tipo Promociones <small>CRUD de Tipo Promociones</small></h2>
                         </div>
                         <div class="body">
                             <div class="row clearfix">
                                 <input type="hidden" value="0" id="txtOperacion"/>
-                                <!-- CAMPO PARA CODIGO -->
+
+                                <!-- CÓDIGO -->
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
                                         <div class="form-line">
@@ -64,7 +62,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- CAMPO PARA NOMBRE -->
+
+                                <!-- NOMBRE -->
                                 <div class="col-sm-5">
                                     <div class="form-group form-float">
                                         <div class="form-line">
@@ -73,16 +72,18 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- CAMPO PARA DESCRIPCION -->
+
+                                <!-- DESCRIPCIÓN -->
                                 <div class="col-sm-5">
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" id="tipo_prom_descrip" class="form-control" disabled>
-                                            <label class="form-label">Descripcion</label>
+                                            <label class="form-label">Descripción</label>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- CAMPO PARA FECHA INICIO -->
+
+                                <!-- FECHA INICIO -->
                                 <div class="col-sm-6">
                                     <div class="form-group form-float">
                                         <div class="form-line">
@@ -91,7 +92,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- CAMPO PARA FECHA FIN -->
+
+                                <!-- FECHA FIN -->
                                 <div class="col-sm-6">
                                     <div class="form-group form-float">
                                         <div class="form-line">
@@ -100,6 +102,35 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- MODO -->
+                                <div class="col-sm-6">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <select id="tipo_prom_modo" class="form-control" disabled>
+                                                <option value="" selected disabled>Seleccione un modo</option>
+                                                <option value="PORCENTAJE">Porcentaje (%)</option>
+                                                <option value="MONTO_FIJO">Monto fijo (Gs.)</option>
+                                                <option value="2X1">2x1</option>
+                                                <option value="DESCUENTO_ESCALONADO">Descuento escalonado</option>
+                                            </select>
+                                            <label class="form-label">Modo</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- VALOR -->
+                                <div class="col-sm-6">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="number" id="tipo_prom_valor" class="form-control" disabled>
+                                            <label class="form-label">Valor</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BOTONES -->
                             <div class="button-demo">
                                 <button type="button" id="btnAgregar" class="btn btn-success waves-effect" onclick="agregar();">AGREGAR</button>
                                 <button type="button" id="btnEditar" class="btn btn-primary waves-effect" onclick="editar();" disabled>MODIFICAR</button>
@@ -109,8 +140,10 @@
                             </div>
                         </div>
                     </div>
-                </div> 
-                <div class="card">
+                    <!-- 🟩 FIN CARD FORMULARIO -->
+
+                    <!-- 🟦 CARD TABLA -->
+                    <div class="card">
                         <div class="header">
                             <h2>Registros de Tipo Promociones</h2>
                         </div>
@@ -121,9 +154,11 @@
                                         <tr>
                                             <th>Código</th>
                                             <th>Nombre</th>
-                                            <th>Descripcion</th>
+                                            <th>Descripción</th>
                                             <th>Fecha Inicio</th>
                                             <th>Fecha Fin</th>
+                                            <th>Modo</th>
+                                            <th>Valor</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableBody"></tbody>
@@ -131,38 +166,30 @@
                                         <tr>
                                             <th>Código</th>
                                             <th>Nombre</th>
-                                            <th>Descripcion</th>
+                                            <th>Descripción</th>
                                             <th>Fecha Inicio</th>
                                             <th>Fecha Fin</th>
+                                            <th>Modo</th>
+                                            <th>Valor</th>
                                         </tr>
                                     </tfoot>    
                                 </table>
                             </div>
                         </div>
-                    </div> 
+                    </div>
+                    <!-- 🟦 FIN CARD TABLA -->
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Jquery Core Js -->
     <script src="../../plugins/jquery/jquery.min.js"></script>
-
-    <!-- Bootstrap Core Js -->
     <script src="../../plugins/bootstrap/js/bootstrap.js"></script>
-
-    <!-- Select Plugin Js -->
     <script src="../../plugins/bootstrap-select/js/bootstrap-select.js"></script>
-
-    <!-- Slimscroll Plugin Js -->
     <script src="../../plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
-
-    <!-- Waves Effect Plugin Js -->
     <script src="../../plugins/node-waves/waves.js"></script>
-
-    <!-- SweetAlert Plugin Js -->
     <script src="../../plugins/sweetalert/sweetalert.min.js"></script>
-
-    <!-- Jquery DataTable Plugin Js -->
     <script src="../../plugins/jquery-datatable/jquery.dataTables.js"></script>
     <script src="../../plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
     <script src="../../plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
@@ -172,22 +199,11 @@
     <script src="../../plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
     <script src="../../plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
     <script src="../../plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
-
-    <!-- Autosize Plugin Js -->
     <script src="../../plugins/autosize/autosize.js"></script>
-
-    <!-- Moment Plugin Js -->
     <script src="../../plugins/momentjs/moment.js"></script>
-    
-    <!-- Bootstrap Material Datetime Picker Plugin Js -->
     <script src="../../plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
-    
-    <!-- Custom Js -->
     <script src="../../js/admin.js"></script>
-
-    <!-- Demo Js -->
     <script src="../../js/demo.js"></script>
-    
     <script src="metodos.js"></script>
 </body>
 </html>
