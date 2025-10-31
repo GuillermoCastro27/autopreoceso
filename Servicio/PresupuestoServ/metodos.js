@@ -178,35 +178,35 @@ function listar() {
         let lista = "";
         for (let rs of resultado) {
             lista += "<tr class='item-list' onclick=\"seleccionPresupuesto("
-            + rs.id + ","
-            + rs.empresa_id + ","
-            + rs.sucursal_id + ","
-            + rs.clientes_id + ","
-            + rs.tipo_servicio_id + ","
-            + (rs.promociones_cab_id || null) + ","
-            + (rs.descuentos_cab_id || null) + ","
-            + (rs.diagnostico_cab_id || 0) + ", '"  // 👈 nuevo parámetro agregado aquí
-            + esc(rs.emp_razon_social) + "', '"
-            + esc(rs.suc_razon_social) + "', '"
-            + esc(rs.pres_serv_cab_fecha) + "', '"
-            + esc(rs.pres_serv_cab_fecha_vence) + "', '"
-            + esc(rs.cli_nombre) + "', '"
-            + esc(rs.cli_apellido) + "', '"
-            + esc(rs.cli_ruc) + "',  '"
-            + esc(rs.cli_telefono) + "', '"
-            + esc(rs.cli_direccion) + "', '"
-            + esc(rs.cli_correo) + "', '"
-            + esc(rs.diagnostico) + "', '"
-            + esc(rs.pres_serv_cab_observaciones) + "', '"
-            + esc(rs.prom_cab_nombre) + "', '"
-            + esc(rs.desc_cab_nombre) + "', '"
-            + esc(rs.tipo_servicio) + "', '"
-            + esc(rs.tipo_descuentos) + "', '"
-            + esc(rs.tipo_promociones) + "', '"
-            + esc(rs.pres_serv_cab_estado) + "', '"
-            + esc(rs.tipo_prom_modo) + "', "
-            + (rs.tipo_prom_valor || 0) + ", "
-            + (rs.desc_cab_porcentaje || 0) + ");\">";
+                + rs.id + ","
+                + rs.empresa_id + ","
+                + rs.sucursal_id + ","
+                + rs.clientes_id + ","
+                + rs.tipo_servicio_id + ","
+                + (rs.promociones_cab_id || null) + ","
+                + (rs.descuentos_cab_id || null) + ","
+                + (rs.diagnostico_cab_id || 0) + ", '"
+                + esc(rs.emp_razon_social) + "', '"
+                + esc(rs.suc_razon_social) + "', '"
+                + esc(rs.pres_serv_cab_fecha) + "', '"
+                + esc(rs.pres_serv_cab_fecha_vence) + "', '"
+                + esc(rs.cli_nombre) + "', '"
+                + esc(rs.cli_apellido) + "', '"
+                + esc(rs.cli_ruc) + "',  '"
+                + esc(rs.cli_telefono) + "', '"
+                + esc(rs.cli_direccion) + "', '"
+                + esc(rs.cli_correo) + "', '"
+                + esc(rs.diagnostico) + "', '"
+                + esc(rs.pres_serv_cab_observaciones) + "', '"
+                + esc(rs.prom_cab_nombre) + "', '"
+                + esc(rs.desc_cab_nombre) + "', '"
+                + esc(rs.tipo_servicio) + "', '"
+                + esc(rs.tipo_descuentos) + "', '"
+                + esc(rs.tipo_promociones) + "', '"
+                + esc(rs.pres_serv_cab_estado) + "', '"
+                + esc(rs.tipo_prom_modo) + "', "
+                + (rs.tipo_prom_valor || 0) + ", "
+                + (rs.desc_cab_porcentaje || 0) + ");\">";
 
             lista += `<td>${rs.id || ''}</td>`;
             lista += `<td>${rs.emp_razon_social || ''}</td>`;
@@ -242,7 +242,7 @@ function listar() {
 
 function seleccionPresupuesto(
     id, empresa_id, sucursal_id, clientes_id, tipo_servicio_id,
-    promociones_cab_id, descuentos_cab_id, diagnostico_cab_id, // 👈 agregado aquí
+    promociones_cab_id, descuentos_cab_id, diagnostico_cab_id,
     emp_razon_social, suc_razon_social,
     fecha, fecha_vence, cli_nombre, cli_apellido, cli_ruc,
     cli_telefono, cli_direccion, cli_correo,
