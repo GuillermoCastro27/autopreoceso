@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>GUI PEDIDOS</title>
+    <title>GUI INFORMES WEB COMPRAS</title>
     <link rel="icon" href="../../images.ico" type="image/x-icon">
 
     <!-- Google Fonts -->

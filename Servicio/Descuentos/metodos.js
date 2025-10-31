@@ -52,8 +52,13 @@ function cancelar(){
 function agregar(){
     $("#txtOperacion").val(1);
     $("#id").val(0);
-    $("#nota_remi_fecha").removeAttr("disabled");
-    $("#nota_remi_observaciones").removeAttr("disabled");
+    $("#desc_cab_fecha_registro").removeAttr("disabled");
+    $("#desc_cab_fecha_inicio").removeAttr("disabled");
+    $("#desc_cab_fecha_fin").removeAttr("disabled");
+    $("#desc_cab_nombre").removeAttr("disabled");
+    $("#tipo_desc_nombre").removeAttr("disabled");
+    $("#desc_cab_observaciones").removeAttr("disabled");
+    $("#desc_cab_porcentaje").removeAttr("disabled");
     $("#emp_razon_social").attr("disabled","true");
     $("#suc_razon_social").removeAttr("disabled");
     buscarEmpresas();
@@ -74,9 +79,14 @@ function agregar(){
 
 function editar(){
     $("#txtOperacion").val(2);
-    $("#nota_remi_fecha").removeAttr("disabled");
-    $("#nota_remi_observaciones").removeAttr("disabled");
-    $("#emp_razon_social").removeAttr("disabled");
+    $("#desc_cab_fecha_registro").removeAttr("disabled");
+    $("#desc_cab_fecha_inicio").removeAttr("disabled");
+    $("#desc_cab_fecha_fin").removeAttr("disabled");
+    $("#desc_cab_nombre").removeAttr("disabled");
+    $("#tipo_desc_nombre").removeAttr("disabled");
+    $("#desc_cab_observaciones").removeAttr("disabled");
+    $("#desc_cab_porcentaje").removeAttr("disabled");
+    $("#emp_razon_social").attr("disabled","true");
     $("#suc_razon_social").removeAttr("disabled");
     buscarEmpresas();
 
@@ -152,33 +162,45 @@ function mensajeOperacion(titulo,mensaje,tipo) {
 }
 
 
-function listar(){
+function listar() {
     $.ajax({
-        url: getUrl() + "notaremicomp/read",
+        url: getUrl() + "descuentoscab/read",
         method: "GET",
         dataType: "json"
     })
-    .done(function(resultado){
+    .done(function(resultado) {
         var lista = "";
         for (let rs of resultado) {
-            lista += "<tr class=\"item-list\" onclick=\"seleccionNotaRemi("
+            lista += "<tr class=\"item-list\" onclick=\"seleccionPromocion(" 
                 + rs.id + ", " 
                 + rs.empresa_id + ", "
-                + rs.sucursal_id + ", '"
+                + rs.sucursal_id + ", "
+                + rs.user_id + ", "
+                + rs.tipo_descuentos_id + ", '"
                 + rs.emp_razon_social + "', '"
                 + rs.suc_razon_social + "', '"
-                + rs.nota_remi_fecha + "', '"
-                + rs.nota_remi_observaciones + "', '"
-                + rs.nota_remi_estado + "', '"
-                + rs.name + "');\">";
-            
+                + rs.name + "', '"
+                + rs.desc_cab_nombre + "', '"
+                + rs.desc_cab_observaciones + "', '"
+                + rs.desc_cab_fecha_registro + "', '"
+                + rs.desc_cab_fecha_inicio + "', '"
+                + rs.desc_cab_fecha_fin + "', '"
+                + rs.desc_cab_porcentaje + "', '"
+                + rs.desc_cab_estado + "', '"
+                + rs.tipo_desc_nombre + "');\">";
+
             lista += "<td>" + rs.id + "</td>";
             lista += "<td>" + rs.emp_razon_social + "</td>";
             lista += "<td>" + rs.suc_razon_social + "</td>";
-            lista += "<td>" + rs.nota_remi_fecha + "</td>";
-            lista += "<td>" + rs.nota_remi_observaciones + "</td>";
+            lista += "<td>" + rs.desc_cab_nombre + "</td>";
             lista += "<td>" + rs.name + "</td>";
-            lista += "<td>" + rs.nota_remi_estado + "</td>";
+            lista += "<td>" + rs.desc_cab_observaciones + "</td>";
+            lista += "<td>" + rs.desc_cab_fecha_registro + "</td>";
+            lista += "<td>" + rs.desc_cab_fecha_inicio + "</td>";
+            lista += "<td>" + rs.desc_cab_fecha_fin + "</td>";
+            lista += "<td>" + rs.desc_cab_porcentaje + "</td>";
+            lista += "<td>" + rs.desc_cab_estado + "</td>";
+            lista += "<td>" + rs.tipo_desc_nombre + "</td>";
             lista += "</tr>";
         }
         $("#tableBody").html(lista);
@@ -189,101 +211,109 @@ function listar(){
         console.error(xhr.responseText);
     });
 }
-function seleccionNotaRemi(id_nota,empresa_id, sucursal_id,emp_razon_social,suc_razon_social, nota_remi_fecha, nota_remi_observaciones, nota_remi_estado){
-    $("#id").val(id_nota);
+
+function seleccionPromocion(
+    id, empresa_id, sucursal_id, user_id, tipo_descuentos_id,
+    emp_razon_social, suc_razon_social, encargado,
+    desc_cab_nombre, desc_cab_observaciones,
+    desc_cab_fecha_registro, desc_cab_fecha_inicio, desc_cab_fecha_fin,desc_cab_porcentaje,
+    desc_cab_estado, tipo_desc_nombre
+) {
+    $("#id").val(id);
     $("#empresa_id").val(empresa_id);
     $("#sucursal_id").val(sucursal_id);
+    $("#user_id").val(user_id);
+    $("#tipo_descuentos_id").val(tipo_descuentos_id);
+
     $("#emp_razon_social").val(emp_razon_social);
     $("#suc_razon_social").val(suc_razon_social);
-    $("#nota_remi_fecha").val(nota_remi_fecha);
-    $("#nota_remi_observaciones").val(nota_remi_observaciones);
-    $("#nota_remi_estado").val(nota_remi_estado);
+    $("#name").val(encargado);
+    $("#desc_cab_nombre").val(desc_cab_nombre);
+    $("#desc_cab_observaciones").val(desc_cab_observaciones);
+    $("#desc_cab_fecha_registro").val(desc_cab_fecha_registro);
+    $("#desc_cab_fecha_inicio").val(desc_cab_fecha_inicio);
+    $("#desc_cab_fecha_fin").val(desc_cab_fecha_fin);
+    $("#desc_cab_porcentaje").val(desc_cab_porcentaje);
+    $("#desc_cab_estado").val(desc_cab_estado);
+    $("#tipo_desc_nombre").val(tipo_desc_nombre);
 
-    
-    $("#registros").attr("style","display:none;");
-    $("#detalle").attr("style","display:block;");
-    $("#formDetalles").attr("style","display:none;");
-    listarDetalles();
-    
-    $("#btnAgregar").attr("disabled","true");
-    $("#btnEditar").attr("disabled","true");
-    $("#btnGrabar").attr("disabled","true");
-    $("#btnCancelar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
-    $("#btnConfirmar").attr("disabled","true");
+    // Muestra/oculta paneles
+    $("#registros").hide();
+    $("#detalle").show();
+    $("#formDetalles").hide();
 
-    
-    $("#btnCancelar").removeAttr("disabled");
+    listarDetalles(); // Si tuvieras detalles relacionados
 
-    if(nota_remi_estado === "PENDIENTE"){
-    $("#btnAgregar").attr("disabled","true");
-    $("#btnGrabar").attr("disabled","true");
-    
-    $("#btnEliminar").removeAttr("disabled");
-    $("#btnConfirmar").removeAttr("disabled");
-    $("#btnEditar").removeAttr("disabled");
-    $("#formDetalles").attr("style","display:block;");
+    // Botones
+    $("#btnAgregar, #btnEditar, #btnGrabar, #btnCancelar, #btnEliminar, #btnConfirmar").prop("disabled", true);
+    $("#btnCancelar").prop("disabled", false);
+
+    if (desc_cab_estado === "PENDIENTE") {
+        $("#btnEliminar, #btnConfirmar, #btnEditar").prop("disabled", false);
+        $("#formDetalles").show();
     }
-    $(".form-line").attr("class","form-line focused");
+
+    if (desc_cab_estado === "CONFIRMADO") {
+        $("#btnEliminar").prop("disabled", false);
+    }
+
+    $(".form-line").addClass("focused");
 }
+
 function grabar(){
-    var observaciones = $("#nota_remi_observaciones").val().trim();
-    var fecha = $("#nota_remi_fecha").val().trim();
+    var observaciones = $("#desc_cab_observaciones").val().trim();
+    var nombre = $("#desc_cab_nombre").val().trim();
+    var fecharegistro = $("#desc_cab_fecha_registro").val().trim();
+    var fechaInicio = $("#desc_cab_fecha_inicio").val().trim();
+    var fechaFin = $("#desc_cab_fecha_fin").val().trim();
+    var fechaInicio = $("#desc_cab_porcentaje").val().trim();
+    var tipoDesc = $("#tipo_desc_nombre").val().trim();
     var sucursal = $("#suc_razon_social").val().trim();
 
-    // Validar que el campo descripción no esté vacío
-    if (observaciones === "") {
+    // Validar campos vacíos
+    if (observaciones === "" ||tipoDesc === "" ||fecharegistro === "" ||nombre === "" || fecharegistro === "" || fechaInicio === "" || fechaFin === "" || sucursal === "") {
         swal({
             title: "Error",
-            text: "El campo no debe estar vacío.",
+            text: "Todos los campos son obligatorios.",
             type: "error"
         });
         return; 
     }
-    if (fecha === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return; 
-    }
-    if (sucursal === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return; 
-    }
-    var endpoint = "notaremicomp/create";
+
+    var endpoint = "descuentoscab/create";
     var metodo = "POST";
     var estado = "PENDIENTE";
     
     if($("#txtOperacion").val()==2){
-        endpoint = "notaremicomp/update/"+$("#id").val();
+        endpoint = "descuentoscab/update/"+$("#id").val();
         metodo = "PUT";
     }
     if($("#txtOperacion").val()==3){
-        endpoint = "notaremicomp/anular/"+$("#id").val();
+        endpoint = "descuentoscab/anular/"+$("#id").val();
         metodo = "PUT";
         estado = "ANULADO";
     }
     if($("#txtOperacion").val()==4){
-        endpoint = "notaremicomp/confirmar/"+$("#id").val();
+        endpoint = "descuentoscab/confirmar/"+$("#id").val();
         metodo = "PUT";
         estado = "CONFIRMADO";
     }
+
     $.ajax({
         url:getUrl()+endpoint,
         method:metodo,
         dataType: "json",
         data: { 
             'id': $("#id").val(), 
-            'nota_remi_fecha': $("#nota_remi_fecha").val(),
-            'nota_remi_observaciones': $("#nota_remi_observaciones").val(), 
+            'desc_cab_nombre': $("#desc_cab_nombre").val(), 
+            'desc_cab_observaciones': $("#desc_cab_observaciones").val(), 
+            'desc_cab_fecha_registro': $("#desc_cab_fecha_registro").val(),  
+            'desc_cab_fecha_inicio': $("#desc_cab_fecha_inicio").val(),
+            'desc_cab_fecha_fin': $("#desc_cab_fecha_fin").val(),
             'user_id': $("#user_id").val(), 
-            'nota_remi_estado': estado,
+            'desc_cab_estado': estado,
+            'desc_cab_porcentaje': $("#desc_cab_porcentaje").val(),
+            'tipo_descuentos_id': $("#tipo_descuentos_id").val(),
             'empresa_id': $("#empresa_id").val(),
             'sucursal_id': $("#sucursal_id").val(),
             'operacion': $("#txtOperacion").val()
@@ -298,10 +328,11 @@ function grabar(){
         },
         function(){
             if(resultado.tipo == "success"){
-                //location.reload(true);
                 $("#id").val(resultado.registro.id);
                 $("#detalle").attr("style","display:block;");
-                if(resultado.registro.nota_remi_estado!="PENDIENTE"){
+                
+                // 🔄 Recarga si NO es pendiente o si es actualización
+                if(resultado.registro.desc_cab_estado!="PENDIENTE" || $("#txtOperacion").val()==2){
                     location.reload(true);
                 }
             }
@@ -312,6 +343,7 @@ function grabar(){
         console.error(xhr.responseText);
     })
 }
+
 function campoFecha(){
     $('.datetimepicker').bootstrapMaterialDatePicker({
         format: 'DD/MM/YYYY HH:mm:ss',
@@ -319,12 +351,10 @@ function campoFecha(){
         weekStart: 1
     });
 }
-
 function agregarDetalle() {
     $("#txtOperacionDetalle").val(1);
     $("#item_decripcion").removeAttr("disabled");
-    $("#nota_remi_com_det_cantidad").removeAttr("disabled");
-   
+
     $("#btnAgregarDetalle").attr("style", "display:none");
     $("#btnEditarDetalle").attr("style", "display:none");
     $("#btnEliminarDetalle").attr("style", "display:none");
@@ -334,7 +364,6 @@ function agregarDetalle() {
 function editarDetalle() {
     $("#txtOperacionDetalle").val(2);
     $("#item_decripcion").removeAttr("disabled");
-    $("#nota_remi_com_det_cantidad").removeAttr("disabled");
 
     $("#btnAgregarDetalle").attr("style", "display:none");
     $("#btnEditarDetalle").attr("style", "display:none");
@@ -351,15 +380,15 @@ function eliminarDetalle(){
 }
 function grabarDetalle(){
 
-    var endpoint = "notaremicomdet/create";
+    var endpoint = "descuentos_det/create";
     var metodo = "POST";
 
 if($("#txtOperacionDetalle").val()==2){
-    endpoint = "notaremicomdet/update/"+$("#id").val();
+    endpoint = "descuentos_det/update/"+$("#id").val();
     metodo = "PUT";
 }
 if($("#txtOperacionDetalle").val()==3){
-    endpoint = "notaremicomdet/delete/"+$("#id").val()+"/"+$("#item_id").val();
+    endpoint = "descuentos_det/delete/"+$("#id").val()+"/"+$("#item_id").val();
     metodo = "DELETE";
 
 }
@@ -369,9 +398,9 @@ $.ajax({
     method: metodo,
     dataType: "json",
     data: {
-        "nota_remi_comp_id":$("#id").val(),
+        "descuentos_cab_id":$("#id").val(),
         "item_id":$("#item_id").val(),
-        "nota_remi_com_det_cantidad":$("#nota_remi_com_det_cantidad").val()
+        "original_item_id": $("#original_item_id").val()
     }
 })
 
@@ -391,12 +420,11 @@ $("#btnGrabarDetalle").attr("style","display:none");
 $("#txtOperacionDetalle").val(1);
 
 $("#item_decripcion").val("");
-$("#nota_remi_com_det_cantidad").val("");
 }
 
-function buscarProductos() {
+function buscarProductos(){
     $.ajax({
-        url: getUrl() + "items/buscar",
+        url: getUrl()+"items/buscar",
         method: "POST",
         dataType: "json",
         data: {
@@ -406,69 +434,80 @@ function buscarProductos() {
     })
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
-        for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto("+rs.item_id+",'"+rs.item_decripcion+"', "+rs.cantidad_disponible+")\">"+
-                        rs.item_decripcion +"</li>";   
+        for (let rs of resultado) {
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto("
+                + rs.item_id + ",'"
+                + rs.item_decripcion + "',"
+                + rs.tipo_impuesto_id + ",'"
+                + rs.item_costo + "','"
+                + rs.tip_imp_nom + "',"
+                + rs.tipo_imp_tasa + ","
+                + rs.cantidad_disponible + ")\">"
+                + rs.item_decripcion + " (Stock: " + rs.cantidad_disponible + ")</li>";   
         }
         lista += "</ul>";
         $("#listaProductos").html(lista);
         $("#listaProductos").attr("style","display:block; position: absolute; z-index: 2000;");
+    })
+    .fail(function(a, b, c){
+        alert(c);
+        console.log(a.responseText);
+    });
+}
+
+// Rellena el campo de producto seleccionado.
+function seleccionProducto(item_id, item_decripcion){
+    // Asignar valores a los campos del detalle
+    $("#item_id").val(item_id);
+    $("#item_decripcion").val(item_decripcion);
+
+    // Ocultar lista de productos y enfocar formulario
+    $("#listaProductos").html("").attr("style","display:none;");
+    $(".form-line").attr("class","form-line focused");
+}
+
+function listarDetalles() {
+    $.ajax({
+        url: getUrl() + "descuentos_det/read/" + $("#id").val(),
+        method: "GET",
+        dataType: "json"
+    })
+    .done(function(resultado) {
+        var lista = "";
+
+        // Generar las filas del detalle
+        for (rs of resultado) {
+            lista += "<tr class='item-list' onclick=\"seleccionDescuentoDet("
+                + rs.item_id + ", '"
+                + rs.item_decripcion + "');\">";
+
+            lista += "<td>" + rs.item_id + "</td>";
+            lista += "<td>" + rs.item_decripcion + "</td>";
+            lista += "</tr>";
+        }
+
+        $("#tableDetalle").html(lista);
+
+        // 👇 Habilitar botón Confirmar si hay al menos un detalle
+        if ($("#desc_cab_estado").val() === "PENDIENTE" && resultado.length > 0) {
+            $("#btnConfirmar").removeAttr("disabled");
+        } else {
+            $("#btnConfirmar").attr("disabled", "true");
+        }
     })
     .fail(function(xhr, status, error) {
         alert("Error: " + error);
         console.error(xhr.responseText);
     });
 }
-function seleccionProducto(item_id, item_decripcion){
+
+function seleccionDescuentoDet(item_id, item_decripcion) {
+    $("#original_item_id").val(item_id);
     $("#item_id").val(item_id);
     $("#item_decripcion").val(item_decripcion);
-
-    $("#listaProductos").html("");
-    $("#listaProductos").attr("style", "display:none;");
 
     $(".form-line").attr("class", "form-line focused");
 }
-
-function listarDetalles(){
-    var cantidadDetalle = 0;
-    $.ajax({
-        url:getUrl()+"notaremicomdet/read/"+$("#id").val(),
-        method:"GET",
-        dataType: "json"
-    })
-    .done(function(resultado){
-        var lista = "";
-        for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionDetalle("+rs.item_id+",'"+rs.item_decripcion+"',"+rs.nota_remi_com_det_cantidad+");\">";
-                lista = lista + "<td>" + rs.item_id + "</td>";
-                lista = lista + "<td>" + rs.item_decripcion + "</td>";
-                lista = lista + "<td>" + rs.nota_remi_com_det_cantidad + "</td>";
-            lista = lista + "</tr>";
-            cantidadDetalle++;
-        }
-        $("#tableDetalle").html(lista);
-
-        if($("#nota_remi_estado").val() === "PENDIENTE" && cantidadDetalle > 0){
-            $("#btnConfirmar").removeAttr("disabled");
-        } else {
-            $("#btnConfirmar").attr("disabled","true");
-        }
-    })
-    .fail(function(xhr, status, error) {
-        alert("Error: " + error);
-        console.error(xhr.responseText);
-    })
-}
-function seleccionDetalle(item_id, item_decripcion, nota_remi_com_det_cantidad) {
-    $("#item_id").val(item_id);
-    $("#item_decripcion").val(item_decripcion);
-    $("#nota_remi_com_det_cantidad").val(nota_remi_com_det_cantidad);
-
-    $("#listaProductos").html("");
-    $("#listaProductos").attr("style","display:none;");
-    $(".form-line").attr("class","form-line focused");
-}
-
 function buscarEmpresas() {
     $.ajax({
         url:"http://127.0.0.1:8000/Proyecto_tp/empresa/read",
@@ -532,4 +571,32 @@ function seleccionSucursal(empresa_id,suc_razon_social,suc_direccion,suc_telefon
 
     $("#listaSucursal").html("");
     $("#listaSucursal").attr("style","display:none;");
+}
+function buscarTipoDescuento(){
+    $.ajax({
+        url:"http://127.0.0.1:8000/Proyecto_tp/tipo-descuentos/read",
+        method:"GET",
+        dataType: "json"
+    })
+    .done(function(resultado){
+        var lista = "<ul class=\"list-group\">";
+        for(rs of resultado){
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionTipoDesc("+rs.tipo_descuentos_id+",'"+rs.tipo_desc_nombre+"');\">"+rs.tipo_desc_nombre+"</li>";
+        }
+        lista += "</ul>";
+        $("#listaTipoDesc").html(lista);
+        $("#listaTipoDesc").attr("style","display:block; position:absolute; z-index:2000;");
+    })
+    .fail(function(a,b,c){
+        alert(c);
+        console.log(a.responseText);
+    })
+}
+
+function seleccionTipoDesc(tipo_descuentos_id,tipo_desc_nombre){
+    $("#tipo_descuentos_id").val(tipo_descuentos_id);
+    $("#tipo_desc_nombre").val(tipo_desc_nombre);
+
+    $("#listaTipoDesc").html("");
+    $("#listaTipoDesc").attr("style","display:none;");
 }

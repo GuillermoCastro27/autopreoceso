@@ -52,8 +52,12 @@ function cancelar(){
 function agregar(){
     $("#txtOperacion").val(1);
     $("#id").val(0);
-    $("#nota_remi_fecha").removeAttr("disabled");
-    $("#nota_remi_observaciones").removeAttr("disabled");
+    $("#prom_cab_fecha_registro").removeAttr("disabled");
+    $("#prom_cab_fecha_inicio").removeAttr("disabled");
+    $("#prom_cab_fecha_fin").removeAttr("disabled");
+    $("#prom_cab_nombre").removeAttr("disabled");
+    $("#tipo_prom_nombre").removeAttr("disabled");
+    $("#prom_cab_observaciones").removeAttr("disabled");
     $("#emp_razon_social").attr("disabled","true");
     $("#suc_razon_social").removeAttr("disabled");
     buscarEmpresas();
@@ -74,9 +78,13 @@ function agregar(){
 
 function editar(){
     $("#txtOperacion").val(2);
-    $("#nota_remi_fecha").removeAttr("disabled");
-    $("#nota_remi_observaciones").removeAttr("disabled");
-    $("#emp_razon_social").removeAttr("disabled");
+    $("#prom_cab_fecha_registro").removeAttr("disabled");
+    $("#prom_cab_fecha_inicio").removeAttr("disabled");
+    $("#prom_cab_fecha_fin").removeAttr("disabled");
+    $("#prom_cab_nombre").removeAttr("disabled");
+    $("#tipo_prom_nombre").removeAttr("disabled");
+    $("#prom_cab_observaciones").removeAttr("disabled");
+    $("#emp_razon_social").attr("disabled","true");
     $("#suc_razon_social").removeAttr("disabled");
     buscarEmpresas();
 
@@ -152,33 +160,43 @@ function mensajeOperacion(titulo,mensaje,tipo) {
 }
 
 
-function listar(){
+function listar() {
     $.ajax({
-        url: getUrl() + "notaremicomp/read",
+        url: getUrl() + "promocionescab/read",
         method: "GET",
         dataType: "json"
     })
-    .done(function(resultado){
+    .done(function(resultado) {
         var lista = "";
         for (let rs of resultado) {
-            lista += "<tr class=\"item-list\" onclick=\"seleccionNotaRemi("
+            lista += "<tr class=\"item-list\" onclick=\"seleccionPromocion(" 
                 + rs.id + ", " 
                 + rs.empresa_id + ", "
-                + rs.sucursal_id + ", '"
+                + rs.sucursal_id + ", "
+                + rs.user_id + ", "
+                + rs.tipo_promociones_id + ", '"
                 + rs.emp_razon_social + "', '"
                 + rs.suc_razon_social + "', '"
-                + rs.nota_remi_fecha + "', '"
-                + rs.nota_remi_observaciones + "', '"
-                + rs.nota_remi_estado + "', '"
-                + rs.name + "');\">";
-            
+                + rs.name + "', '"
+                + rs.prom_cab_nombre + "', '"
+                + rs.prom_cab_observaciones + "', '"
+                + rs.prom_cab_fecha_registro + "', '"
+                + rs.prom_cab_fecha_inicio + "', '"
+                + rs.prom_cab_fecha_fin + "', '"
+                + rs.prom_cab_estado + "', '"
+                + rs.tipo_prom_nombre + "');\">";
+
             lista += "<td>" + rs.id + "</td>";
             lista += "<td>" + rs.emp_razon_social + "</td>";
             lista += "<td>" + rs.suc_razon_social + "</td>";
-            lista += "<td>" + rs.nota_remi_fecha + "</td>";
-            lista += "<td>" + rs.nota_remi_observaciones + "</td>";
+            lista += "<td>" + rs.prom_cab_nombre + "</td>";
             lista += "<td>" + rs.name + "</td>";
-            lista += "<td>" + rs.nota_remi_estado + "</td>";
+            lista += "<td>" + rs.prom_cab_fecha_registro + "</td>";
+            lista += "<td>" + rs.prom_cab_fecha_inicio + "</td>";
+            lista += "<td>" + rs.prom_cab_fecha_fin + "</td>";
+            lista += "<td>" + rs.prom_cab_estado + "</td>";
+            lista += "<td>" + rs.tipo_prom_nombre + "</td>";
+            lista += "<td>" + rs.prom_cab_observaciones + "</td>";
             lista += "</tr>";
         }
         $("#tableBody").html(lista);
@@ -189,101 +207,105 @@ function listar(){
         console.error(xhr.responseText);
     });
 }
-function seleccionNotaRemi(id_nota,empresa_id, sucursal_id,emp_razon_social,suc_razon_social, nota_remi_fecha, nota_remi_observaciones, nota_remi_estado){
-    $("#id").val(id_nota);
+
+function seleccionPromocion(
+    id, empresa_id, sucursal_id, user_id, tipo_promociones_id,
+    emp_razon_social, suc_razon_social, encargado,
+    prom_cab_nombre, prom_cab_observaciones,
+    prom_cab_fecha_registro, prom_cab_fecha_inicio, prom_cab_fecha_fin,
+    prom_cab_estado, tipo_prom_nombre
+) {
+    $("#id").val(id);
     $("#empresa_id").val(empresa_id);
     $("#sucursal_id").val(sucursal_id);
+    $("#user_id").val(user_id);
+    $("#tipo_promociones_id").val(tipo_promociones_id);
+
     $("#emp_razon_social").val(emp_razon_social);
     $("#suc_razon_social").val(suc_razon_social);
-    $("#nota_remi_fecha").val(nota_remi_fecha);
-    $("#nota_remi_observaciones").val(nota_remi_observaciones);
-    $("#nota_remi_estado").val(nota_remi_estado);
+    $("#name").val(encargado);
+    $("#prom_cab_nombre").val(prom_cab_nombre);
+    $("#prom_cab_observaciones").val(prom_cab_observaciones);
+    $("#prom_cab_fecha_registro").val(prom_cab_fecha_registro);
+    $("#prom_cab_fecha_inicio").val(prom_cab_fecha_inicio);
+    $("#prom_cab_fecha_fin").val(prom_cab_fecha_fin);
+    $("#prom_cab_estado").val(prom_cab_estado);
+    $("#tipo_prom_nombre").val(tipo_prom_nombre);
 
-    
-    $("#registros").attr("style","display:none;");
-    $("#detalle").attr("style","display:block;");
-    $("#formDetalles").attr("style","display:none;");
-    listarDetalles();
-    
-    $("#btnAgregar").attr("disabled","true");
-    $("#btnEditar").attr("disabled","true");
-    $("#btnGrabar").attr("disabled","true");
-    $("#btnCancelar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
-    $("#btnConfirmar").attr("disabled","true");
+    // Muestra/oculta paneles
+    $("#registros").hide();
+    $("#detalle").show();
+    $("#formDetalles").hide();
 
-    
-    $("#btnCancelar").removeAttr("disabled");
+    listarDetalles(); // Si tuvieras detalles relacionados
 
-    if(nota_remi_estado === "PENDIENTE"){
-    $("#btnAgregar").attr("disabled","true");
-    $("#btnGrabar").attr("disabled","true");
-    
-    $("#btnEliminar").removeAttr("disabled");
-    $("#btnConfirmar").removeAttr("disabled");
-    $("#btnEditar").removeAttr("disabled");
-    $("#formDetalles").attr("style","display:block;");
+    // Botones
+    $("#btnAgregar, #btnEditar, #btnGrabar, #btnCancelar, #btnEliminar, #btnConfirmar").prop("disabled", true);
+    $("#btnCancelar").prop("disabled", false);
+
+    if (prom_cab_estado === "PENDIENTE") {
+        $("#btnEliminar, #btnConfirmar, #btnEditar").prop("disabled", false);
+        $("#formDetalles").show();
     }
-    $(".form-line").attr("class","form-line focused");
+
+    if (prom_cab_estado === "CONFIRMADO") {
+        $("#btnEliminar").prop("disabled", false);
+    }
+
+    $(".form-line").addClass("focused");
 }
+
 function grabar(){
-    var observaciones = $("#nota_remi_observaciones").val().trim();
-    var fecha = $("#nota_remi_fecha").val().trim();
+    var observaciones = $("#prom_cab_observaciones").val().trim();
+    var nombre = $("#prom_cab_nombre").val().trim();
+    var fecha = $("#prom_cab_fecha_registro").val().trim();
+    var fechaInicio = $("#prom_cab_fecha_inicio").val().trim();
+    var fechaFin = $("#prom_cab_fecha_fin").val().trim();
     var sucursal = $("#suc_razon_social").val().trim();
 
-    // Validar que el campo descripción no esté vacío
-    if (observaciones === "") {
+    // Validar campos vacíos
+    if (observaciones === "" ||nombre === "" || fecha === "" || fechaInicio === "" || fechaFin === "" || sucursal === "") {
         swal({
             title: "Error",
-            text: "El campo no debe estar vacío.",
+            text: "Todos los campos son obligatorios.",
             type: "error"
         });
         return; 
     }
-    if (fecha === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return; 
-    }
-    if (sucursal === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return; 
-    }
-    var endpoint = "notaremicomp/create";
+
+    var endpoint = "promocionescab/create";
     var metodo = "POST";
     var estado = "PENDIENTE";
     
     if($("#txtOperacion").val()==2){
-        endpoint = "notaremicomp/update/"+$("#id").val();
+        endpoint = "promocionescab/update/"+$("#id").val();
         metodo = "PUT";
     }
     if($("#txtOperacion").val()==3){
-        endpoint = "notaremicomp/anular/"+$("#id").val();
+        endpoint = "promocionescab/anular/"+$("#id").val();
         metodo = "PUT";
         estado = "ANULADO";
     }
     if($("#txtOperacion").val()==4){
-        endpoint = "notaremicomp/confirmar/"+$("#id").val();
+        endpoint = "promocionescab/confirmar/"+$("#id").val();
         metodo = "PUT";
         estado = "CONFIRMADO";
     }
+
     $.ajax({
         url:getUrl()+endpoint,
         method:metodo,
         dataType: "json",
         data: { 
             'id': $("#id").val(), 
-            'nota_remi_fecha': $("#nota_remi_fecha").val(),
-            'nota_remi_observaciones': $("#nota_remi_observaciones").val(), 
+            'prom_cab_observaciones': $("#prom_cab_observaciones").val(), 
+            'prom_cab_nombre': $("#prom_cab_nombre").val(), 
+            'prom_cab_fecha_registro': $("#prom_cab_fecha_registro").val(),  
+            'prom_cab_fecha_inicio': $("#prom_cab_fecha_inicio").val(),
+            'prom_cab_fecha_fin': $("#prom_cab_fecha_fin").val(),
             'user_id': $("#user_id").val(), 
-            'nota_remi_estado': estado,
+            'prom_cab_estado': estado,
+            'tipo_promociones_id': $("#tipo_promociones_id").val(),
             'empresa_id': $("#empresa_id").val(),
             'sucursal_id': $("#sucursal_id").val(),
             'operacion': $("#txtOperacion").val()
@@ -298,10 +320,11 @@ function grabar(){
         },
         function(){
             if(resultado.tipo == "success"){
-                //location.reload(true);
                 $("#id").val(resultado.registro.id);
                 $("#detalle").attr("style","display:block;");
-                if(resultado.registro.nota_remi_estado!="PENDIENTE"){
+                
+                // 🔄 Recarga si NO es pendiente o si es actualización
+                if(resultado.registro.prom_cab_estado!="PENDIENTE" || $("#txtOperacion").val()==2){
                     location.reload(true);
                 }
             }
@@ -312,6 +335,7 @@ function grabar(){
         console.error(xhr.responseText);
     })
 }
+
 function campoFecha(){
     $('.datetimepicker').bootstrapMaterialDatePicker({
         format: 'DD/MM/YYYY HH:mm:ss',
@@ -319,12 +343,10 @@ function campoFecha(){
         weekStart: 1
     });
 }
-
 function agregarDetalle() {
     $("#txtOperacionDetalle").val(1);
     $("#item_decripcion").removeAttr("disabled");
-    $("#nota_remi_com_det_cantidad").removeAttr("disabled");
-   
+
     $("#btnAgregarDetalle").attr("style", "display:none");
     $("#btnEditarDetalle").attr("style", "display:none");
     $("#btnEliminarDetalle").attr("style", "display:none");
@@ -334,7 +356,6 @@ function agregarDetalle() {
 function editarDetalle() {
     $("#txtOperacionDetalle").val(2);
     $("#item_decripcion").removeAttr("disabled");
-    $("#nota_remi_com_det_cantidad").removeAttr("disabled");
 
     $("#btnAgregarDetalle").attr("style", "display:none");
     $("#btnEditarDetalle").attr("style", "display:none");
@@ -351,15 +372,15 @@ function eliminarDetalle(){
 }
 function grabarDetalle(){
 
-    var endpoint = "notaremicomdet/create";
+    var endpoint = "promociones_det/create";
     var metodo = "POST";
 
 if($("#txtOperacionDetalle").val()==2){
-    endpoint = "notaremicomdet/update/"+$("#id").val();
+    endpoint = "promociones_det/update/"+$("#id").val();
     metodo = "PUT";
 }
 if($("#txtOperacionDetalle").val()==3){
-    endpoint = "notaremicomdet/delete/"+$("#id").val()+"/"+$("#item_id").val();
+    endpoint = "promociones_det/delete/"+$("#id").val()+"/"+$("#item_id").val();
     metodo = "DELETE";
 
 }
@@ -369,9 +390,9 @@ $.ajax({
     method: metodo,
     dataType: "json",
     data: {
-        "nota_remi_comp_id":$("#id").val(),
+        "promociones_cab_id":$("#id").val(),
         "item_id":$("#item_id").val(),
-        "nota_remi_com_det_cantidad":$("#nota_remi_com_det_cantidad").val()
+        "original_item_id": $("#original_item_id").val()
     }
 })
 
@@ -391,12 +412,11 @@ $("#btnGrabarDetalle").attr("style","display:none");
 $("#txtOperacionDetalle").val(1);
 
 $("#item_decripcion").val("");
-$("#nota_remi_com_det_cantidad").val("");
 }
 
-function buscarProductos() {
+function buscarProductos(){
     $.ajax({
-        url: getUrl() + "items/buscar",
+        url: getUrl()+"items/buscar",
         method: "POST",
         dataType: "json",
         data: {
@@ -406,69 +426,81 @@ function buscarProductos() {
     })
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
-        for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto("+rs.item_id+",'"+rs.item_decripcion+"', "+rs.cantidad_disponible+")\">"+
-                        rs.item_decripcion +"</li>";   
+        for (let rs of resultado) {
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto("
+                + rs.item_id + ",'"
+                + rs.item_decripcion + "',"
+                + rs.tipo_impuesto_id + ",'"
+                + rs.item_costo + "','"
+                + rs.tip_imp_nom + "',"
+                + rs.tipo_imp_tasa + ","
+                + rs.cantidad_disponible + ")\">"
+                + rs.item_decripcion + " (Stock: " + rs.cantidad_disponible + ")</li>";   
         }
         lista += "</ul>";
         $("#listaProductos").html(lista);
         $("#listaProductos").attr("style","display:block; position: absolute; z-index: 2000;");
+    })
+    .fail(function(a, b, c){
+        alert(c);
+        console.log(a.responseText);
+    });
+}
+
+// Rellena el campo de producto seleccionado.
+function seleccionProducto(item_id, item_decripcion){
+    // Asignar valores a los campos del detalle
+    $("#item_id").val(item_id);
+    $("#item_decripcion").val(item_decripcion);
+
+    // Ocultar lista de productos y enfocar formulario
+    $("#listaProductos").html("").attr("style","display:none;");
+    $(".form-line").attr("class","form-line focused");
+}
+
+function listarDetalles() {
+    $.ajax({
+        url: getUrl() + "promociones_det/read/" + $("#id").val(),
+        method: "GET",
+        dataType: "json"
+    })
+    .done(function(resultado) {
+        let lista = "";
+
+        for (let rs of resultado) {
+            lista += "<tr class='item-list' onclick=\"seleccionPromocionDet("
+                + rs.item_id + ", '"
+                + rs.item_decripcion + "');\">";
+
+            lista += "<td>" + rs.item_id + "</td>";
+            lista += "<td>" + rs.item_decripcion + "</td>";
+            lista += "</tr>";
+        }
+
+        $("#tableDetalle").html(lista);
+
+        // ✅ Validar si hay al menos un ítem cargado
+        const tieneDetalle = resultado.length > 0 && resultado[0].item_decripcion;
+
+        if ($("#prom_cab_estado").val() === "PENDIENTE" && tieneDetalle) {
+            $("#btnConfirmar").removeAttr("disabled");
+        } else {
+            $("#btnConfirmar").attr("disabled", true);
+        }
     })
     .fail(function(xhr, status, error) {
         alert("Error: " + error);
         console.error(xhr.responseText);
     });
 }
-function seleccionProducto(item_id, item_decripcion){
+
+function seleccionPromocionDet(item_id, item_decripcion) {
+    $("#original_item_id").val(item_id);
     $("#item_id").val(item_id);
     $("#item_decripcion").val(item_decripcion);
 
-    $("#listaProductos").html("");
-    $("#listaProductos").attr("style", "display:none;");
-
-    $(".form-line").attr("class", "form-line focused");
-}
-
-function listarDetalles(){
-    var cantidadDetalle = 0;
-    $.ajax({
-        url:getUrl()+"notaremicomdet/read/"+$("#id").val(),
-        method:"GET",
-        dataType: "json"
-    })
-    .done(function(resultado){
-        var lista = "";
-        for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionDetalle("+rs.item_id+",'"+rs.item_decripcion+"',"+rs.nota_remi_com_det_cantidad+");\">";
-                lista = lista + "<td>" + rs.item_id + "</td>";
-                lista = lista + "<td>" + rs.item_decripcion + "</td>";
-                lista = lista + "<td>" + rs.nota_remi_com_det_cantidad + "</td>";
-            lista = lista + "</tr>";
-            cantidadDetalle++;
-        }
-        $("#tableDetalle").html(lista);
-
-        if($("#nota_remi_estado").val() === "PENDIENTE" && cantidadDetalle > 0){
-            $("#btnConfirmar").removeAttr("disabled");
-        } else {
-            $("#btnConfirmar").attr("disabled","true");
-        }
-    })
-    .fail(function(xhr, status, error) {
-        alert("Error: " + error);
-        console.error(xhr.responseText);
-    })
-}
-function seleccionDetalle(item_id, item_decripcion, nota_remi_com_det_cantidad) {
-    $("#item_id").val(item_id);
-    $("#item_decripcion").val(item_decripcion);
-    $("#nota_remi_com_det_cantidad").val(nota_remi_com_det_cantidad);
-
-    $("#listaProductos").html("");
-    $("#listaProductos").attr("style","display:none;");
     $(".form-line").attr("class","form-line focused");
 }
-
 function buscarEmpresas() {
     $.ajax({
         url:"http://127.0.0.1:8000/Proyecto_tp/empresa/read",
@@ -532,4 +564,32 @@ function seleccionSucursal(empresa_id,suc_razon_social,suc_direccion,suc_telefon
 
     $("#listaSucursal").html("");
     $("#listaSucursal").attr("style","display:none;");
+}
+function buscarTipoPromociones(){
+    $.ajax({
+        url:"http://127.0.0.1:8000/Proyecto_tp/tipo-promociones/read",
+        method:"GET",
+        dataType: "json"
+    })
+    .done(function(resultado){
+        var lista = "<ul class=\"list-group\">";
+        for(rs of resultado){
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionTipoProm("+rs.tipo_promociones_id+",'"+rs.tipo_prom_nombre+"');\">"+rs.tipo_prom_nombre+"</li>";
+        }
+        lista += "</ul>";
+        $("#listaTipoProm").html(lista);
+        $("#listaTipoProm").attr("style","display:block; position:absolute; z-index:2000;");
+    })
+    .fail(function(a,b,c){
+        alert(c);
+        console.log(a.responseText);
+    })
+}
+
+function seleccionTipoProm(tipo_promociones_id,tipo_prom_nombre){
+    $("#tipo_promociones_id").val(tipo_promociones_id);
+    $("#tipo_prom_nombre").val(tipo_prom_nombre);
+
+    $("#listaTipoProm").html("");
+    $("#listaTipoProm").attr("style","display:none;");
 }

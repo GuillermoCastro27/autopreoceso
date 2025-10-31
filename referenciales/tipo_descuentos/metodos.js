@@ -136,9 +136,9 @@ function listar(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipoDescuentos("+rs.id+",'"+rs.tipo_desc_nombre+"','"+rs.tipo_desc_descrip+"','"+rs.tipo_desc_fechaInicio+"','"+rs.tipo_desc_fechaFin+"');\">";
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipoDescuentos("+rs.tipo_descuentos_id+",'"+rs.tipo_desc_nombre+"','"+rs.tipo_desc_descrip+"','"+rs.tipo_desc_fechaInicio+"','"+rs.tipo_desc_fechaFin+"');\">";
                 lista = lista + "<td>";
-                lista = lista + rs.id;
+                lista = lista + rs.tipo_descuentos_id;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
                 lista = lista + rs.tipo_desc_nombre;

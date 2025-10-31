@@ -129,9 +129,9 @@ function listar(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipoServicio("+rs.id+",'"+rs.tipo_serv_nombre+"');\">";
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipoServicio("+rs.tipo_servicio_id+",'"+rs.tipo_serv_nombre+"');\">";
                 lista = lista + "<td>";
-                lista = lista + rs.id;
+                lista = lista + rs.tipo_servicio_id;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
                 lista = lista + rs.tipo_serv_nombre;
