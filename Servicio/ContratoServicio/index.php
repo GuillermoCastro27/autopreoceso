@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>GUI ORDEN DE SERVICIO</title>
+    <title>GUI CONTRATO DE SERVICIO</title>
     <!-- Favicon-->
     <link rel="icon" href="../../images.ico" type="image/x-icon">
 
@@ -50,13 +50,13 @@
                     
                     <div class="card">
                         <div class="header">
-                            <h2>Registrar Orden de Servicio <small>CRUD de Orden de Servicio y su detalle</small> </h2>
+                            <h2>Registrar Contrato de Servicio <small>CRUD de Contrato de Servicio y su detalle</small> </h2>
                         </div>
                         <div class="body">
                             <div class="row clearfix">
                                 <input type="hidden" value="0" id="txtOperacion"/>
                                 <input type="hidden" value="1" id="user_id"/>
-                                <input type="hidden" value="PENDIENTE" id="ord_serv_estado"/>
+                                <input type="hidden" value="PENDIENTE" id="contrato_estado"/>
                                 
                                 <!-- CÓDIGO -->
                                 <div class="col-sm-1">
@@ -95,7 +95,7 @@
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="ord_serv_fecha" class="datetimepicker form-control" disabled>
+                                            <input type="text" id="contrato_fecha" class="datetimepicker form-control" disabled>
                                             <label class="form-label">Fecha</label>
                                         </div>
                                     </div>
@@ -105,55 +105,84 @@
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="ord_serv_fecha_vence" class="datetimepicker form-control" disabled>
-                                            <label class="form-label">Fecha Vence</label>
+                                            <input type="text" id="contrato_fecha_inicio" class="datetimepicker form-control" disabled>
+                                            <label class="form-label">Fecha Inicio</label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <!-- Campo de texto para la ciudad, habilitado -->
-                                            <input type="text" id="presupuesto_serv" class="form-control" disabled onkeyup="buscarPresupuestoServ();">
-                                            <label class="form-label">Presupuesto de Servicio</label>
+                                            <input type="text" id="contrato_fecha_fin" class="datetimepicker form-control" disabled>
+                                            <label class="form-label">Fecha Fin</label>
                                         </div>
-
-                                        <!-- Campo oculto para almacenar el ID de la ciudad -->
-                                        <input type="hidden" id="presupuestos_serv_cab_id" name="presupuestos_serv_cab_id">
-
-                                        <!-- Contenedor para la lista de ciudades -->
-                                        <div id="listaPresupuestoServ" style="display:none;"></div>
                                     </div>
                                 </div>
-                                
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <select id="contrato_condicion_pago" class="form-control" disabled onchange="controlarCamposPago();">
+                                                <option value="CONTADO">Al contado</option>
+                                                <option value="CREDITO">A crédito</option>
+                                            </select>
+                                            <label class="form-label">Condición de Pago</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                 <script>
+                                    function controlarCamposPago() {
+                                        console.log("controlarCamposPago se ha llamado"); // Para depuración
+                                        var condicion = document.getElementById('contrato_condicion_pago').value;
+                                        var cuota = document.getElementById('contrato_cuotas');
+                                        var intervaloFechaVence = document.getElementById('contrato_intervalo_fecha_vence');
+
+                                        if (condicion === 'CONTADO') {
+                                            cuota.disabled = true;
+                                            intervaloFechaVence.disabled = true;
+                                            intervaloFechaVence.value = ''; // Limpia el valor si está en contado
+                                        } else {
+                                            cuota.disabled = false;
+                                            intervaloFechaVence.disabled = false;
+                                        }
+                                    }
+                                    // Llamar a la función cuando se carga la página
+                                    window.onload = function() {
+                                        controlarCamposPago(); // Llama a la función para establecer el estado inicial
+                                    };
+                                </script>
+                                <div class="col-sm-1">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="contrato_cuotas" class="form-control" disabled>
+                                            <label class="form-label">Cuota</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="contrato_intervalo_fecha_vence" class="datetimepicker form-control" disabled>
+                                            <label class="form-label">Intervalo Fecha Vence</label>
+                                        </div>
+                                    </div>
+                                </div>
                                 <!-- OBSERVACIONES -->
                                 <div class="col-sm-6">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="ord_serv_observaciones" class="form-control" disabled>
+                                            <input type="text" id="contrato_observacion" class="form-control" disabled>
                                             <label class="form-label">Observaciones</label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <!-- Campo de texto para la ciudad, habilitado -->
-                                            <input type="text" id="diagnostico" class="form-control" disabled>
-                                            <label class="form-label">Diagnostico</label>
-                                        </div>
-                                        <input type="hidden" id="diagnostico_cab_id" name="diagnostico_cab_id">
-                                    </div>
-                                </div>
-
-                                <!-- TIPO DE SERVICIO -->
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="tipo_serv_nombre" class="form-control" disabled>
+                                            <input type="text" id="tipo_serv_nombre" class="form-control" disabled onkeyup="buscarTipoServicio();">
                                             <label class="form-label">Tipo de Servicio</label>
                                         </div>
                                         <input type="hidden" id="tipo_servicio_id" name="tipo_servicio_id">
+                                        <div id="listaTipoServ" style="display:none;"></div>
                                     </div>
                                 </div>
                                  <!-- CLIENTE -->
@@ -230,13 +259,97 @@
                         </div>
                     </div>
 
-                    <!-- DETALLE -->
                     <div class="card" id="detalle" style="display:none">
                         <div class="header">
-                            <h2>Detalles de la Orden de Servicio</h2>
+                            <h2>Detalles del Contrato de Servicio</h2>
                         </div>
                         <div class="body">
-                            <!-- TABLA DETALLE -->
+                            <!-- 🔹 Bloque de formulario de detalle -->
+                            <div class="row clearfix" id="formDetalles">
+                                <input type="hidden" value="0" id="txtOperacionDetalle"/>
+
+                                <!-- CODIGO ITEM -->
+                                <div class="col-sm-1">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="item_id" class="form-control" disabled>
+                                            <label class="form-label">Código</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- PRODUCTO -->
+                                <div class="col-sm-5">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();">
+                                            <label class="form-label">Producto</label>
+                                        </div>
+                                        <div id="listaProductos" style="display:none;"></div>
+                                    </div>
+                                </div>
+
+                                <!-- TIPO IMPUESTO -->
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_imp_nom" class="form-control" disabled>
+                                            <label class="form-label">Tipo impuesto</label>
+                                        </div>
+                                        <input type="hidden" id="tipo_impuesto_id" name="tipo_impuesto_id">
+                                    </div>
+                                </div>
+
+                                <!-- CANTIDAD DISPONIBLE -->
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="contrato_serv_det_cantidad_stock" class="form-control" disabled>
+                                            <label class="form-label">Cantidad Disponible</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- CANTIDAD -->
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="contrato_serv_det_cantidad" class="form-control" disabled>
+                                            <label class="form-label">Cantidad</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- COSTO -->
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="contrato_serv_det_costo" class="form-control" disabled>
+                                            <label class="form-label">Costo</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- BOTONES DETALLE -->
+                                <div class="col-sm-3">
+                                    <div class="icon-button-demo">
+                                        <button type="button" id="btnAgregarDetalle" class="btn btn-success waves-effect" onclick="agregarDetalle();">
+                                            <i class="material-icons">add</i>
+                                        </button>
+                                        <button type="button" id="btnEditarDetalle" class="btn btn-warning waves-effect" onclick="editarDetalle();">
+                                            <i class="material-icons">mode_edit</i>
+                                        </button>
+                                        <button type="button" id="btnEliminarDetalle" class="btn btn-danger waves-effect" onclick="eliminarDetalle();">
+                                            <i class="material-icons">clear</i>
+                                        </button>
+                                        <button type="button" id="btnGrabarDetalle" class="btn btn-default waves-effect" style="display:none;" onclick="grabarDetalle();">
+                                            <i class="material-icons">save</i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div> <!-- 🔹 cierre correcto de formDetalles -->
+
+                            <!-- 🔹 Tabla de detalle -->
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover dataTable">
                                     <thead>
@@ -244,9 +357,24 @@
                                             <th>Código</th>
                                             <th>Producto</th>
                                             <th>Cantidad</th>
+                                            <th>Cantidad Disponible</th>
+                                            <th>Costo</th>
+                                            <th>Tipo impuesto</th>
+                                            <th>Sub Total</th>
+                                            <th>IVA</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableDetalle"></tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="5" class="text-right">Total Comprobante</th>
+                                            <th class="text-right" id="txtTotalGral">0</th>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="5" class="text-right">Total IVA</th>
+                                            <th class="text-right" id="txtTotalConImpuesto">0</th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
@@ -255,7 +383,7 @@
                     <!-- REGISTROS -->
                     <div class="card" id="registros">
                         <div class="header">
-                            <h2>Registros de Orden de Servicio </h2>
+                            <h2>Registros del Contrato de Servicio</h2>
                         </div>
                         <div class="body">
                             <div class="table-responsive">
@@ -266,14 +394,13 @@
                                             <th>Empresa</th>
                                             <th>Sucursal</th>
                                             <th>Fecha</th>
-                                            <th>Fecha Vence</th>
+                                            <th>Fecha Inicio</th>
+                                            <th>Fecha Fin</th>
                                             <th>Cliente</th>
                                             <th>Apellido</th>
                                             <th>RUC</th>
-                                            <th>Estado</th>
-                                            <th>Diagnóstico</th>
-                                            <th>Observaciones</th>
                                             <th>Tipo de Servicio</th>
+                                            <th>Estado</th>
                                             <th>Encargado</th>
                                         </tr>
                                     </thead>
@@ -284,14 +411,13 @@
                                             <th>Empresa</th>
                                             <th>Sucursal</th>
                                             <th>Fecha</th>
-                                            <th>Fecha Vence</th>
+                                            <th>Fecha Inicio</th>
+                                            <th>Fecha Fin</th>
                                             <th>Cliente</th>
                                             <th>Apellido</th>
                                             <th>RUC</th>
-                                            <th>Estado</th>
-                                            <th>Diagnóstico</th>
-                                            <th>Observaciones</th>
                                             <th>Tipo de Servicio</th>
+                                            <th>Estado</th>
                                             <th>Encargado</th>
                                         </tr>
                                     </thead>

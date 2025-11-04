@@ -257,6 +257,7 @@
                             <li><a href="/taller_front/Servicio/Descuentos"><span>Registrar Descuentos</span></a></li>
                             <li><a href="/taller_front/Servicio/PresupuestoServ"><span>Registrar Presupuesto de Servicio</span></a></li>
                             <li><a href="/taller_front/Servicio/OrdenServicio"><span>Registrar Orden de Servicio</span></a></li>
+                            <li><a href="/taller_front/Servicio/ContratoServicio"><span>Registrar Contrato de Servicio</span></a></li>
                         </ul>
                     </li>
                     <li>
