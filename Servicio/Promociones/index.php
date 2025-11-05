@@ -131,6 +131,14 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="prom_cab_observaciones" class="form-control" disabled>
+                                            <label class="form-label">Observaciones</label>
+                                        </div>
+                                    </div>
+                                </div>
                                 <!-- TIPO DE SERVICIO -->
                                 <div class="col-sm-4">
                                     <div class="form-group form-float">
@@ -141,18 +149,23 @@
                                         <input type="hidden" id="tipo_promociones_id" name="tipo_promociones_id">
                                         <div id="listaTipoProm" style="display:none;"></div>
                                     </div>
-                                </div>
-
-                                <div class="col-sm-6">
+                                </div> 
+                                <div class="col-sm-5">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="prom_cab_observaciones" class="form-control" disabled>
-                                            <label class="form-label">Observaciones</label>
+                                            <input type="text" id="tipo_prom_modo" class="form-control" disabled>
+                                            <label class="form-label">Modo</label>
                                         </div>
                                     </div>
                                 </div>
-
-                                
+                                <div class="col-sm-5">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tipo_prom_valor" class="form-control" disabled>
+                                            <label class="form-label">Valor</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- BOTONES -->
@@ -196,6 +209,34 @@
                                         <div id="listaProductos" style="display:none;"></div>
                                     </div>
                                 </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_imp_nom" class="form-control" disabled>
+                                            <label class="form-label">Tipo impuesto</label>
+                                        </div>
+                                        <input type="hidden" id="tipo_impuesto_id" name="tipo_impuesto_id">
+                                    </div>
+                                </div>
+                                <!-- CANTIDAD -->
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="prom_det_cantidad" class="form-control" disabled>
+                                            <label class="form-label">Cantidad</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- COSTO -->
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="prom_det_costo" class="form-control" disabled>
+                                            <label class="form-label">Costo</label>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- BOTONES DETALLE -->
                                 <div class="col-sm-3">
@@ -223,15 +264,24 @@
                                         <tr>
                                             <th>Código</th>
                                             <th>Producto</th>
+                                            <th>Cantidad</th>
+                                            <th>Costo</th>
+                                            <th>Tipo impuesto</th>
+                                            <th>Sub Total</th>
+                                            <th>IVA</th> <!-- Agregado para mostrar el total con impuesto -->
                                         </tr>
                                     </thead>
                                     <tbody id="tableDetalle"></tbody>
-                                    <thead>
+                                    <tfoot>
                                         <tr>
-                                            <th>Código</th>
-                                            <th>Producto</th>
+                                            <th colspan="5" class="text-right">Total Comprobante</th>
+                                            <th class="text-right" id="txtTotalGral">0</th> <!-- Total sin impuestos -->
                                         </tr>
-                                    </thead>
+                                        <tr>
+                                            <th colspan="5" class="text-right">Total IVA</th>
+                                            <th class="text-right" id="txtTotalConImpuesto">0</th> <!-- Total con impuestos -->
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>

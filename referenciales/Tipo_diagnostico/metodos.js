@@ -131,9 +131,9 @@ function listar(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipoServicio("+rs.id+",'"+rs.tipo_diag_nombre+"','"+rs.tipo_diag_descrip+"');\">";
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipoDiagnostico("+rs.tipo_diagnostico_id+",'"+rs.tipo_diag_nombre+"','"+rs.tipo_diag_descrip+"');\">";
                 lista = lista + "<td>";
-                lista = lista + rs.id;
+                lista = lista + rs.tipo_diagnostico_id;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
                 lista = lista + rs.tipo_diag_nombre;
@@ -150,7 +150,7 @@ function listar(){
         alert(c);
     })
 }
-function seleccionTipoServicio(codigo, tipo_diag_nombre,tipo_diag_descrip){
+function seleccionTipoDiagnostico(codigo, tipo_diag_nombre,tipo_diag_descrip){
     $("#txtCodigo").val(codigo);
     $("#tipo_diag_nombre").val(tipo_diag_nombre);
     $("#tipo_diag_descrip").val(tipo_diag_descrip);

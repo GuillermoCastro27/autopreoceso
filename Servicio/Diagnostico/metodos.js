@@ -55,6 +55,7 @@ function agregar(){
     $("#diag_cab_fecha").removeAttr("disabled");
     $("#recepcion").removeAttr("disabled");
     $("#diag_cab_observaciones").removeAttr("disabled");
+    $("#tipo_diag_nombre").removeAttr("disabled");
     $("#diag_cab_prioridad").attr("disabled","true");
     $("#diag_cab_kilometraje").attr("disabled","true");
     $("#diag_cab_nivel_combustible").attr("disabled","true");
@@ -83,6 +84,7 @@ function editar(){
     $("#diag_cab_fecha").removeAttr("disabled");
     $("#recepcion").removeAttr("disabled");
     $("#diag_cab_observaciones").removeAttr("disabled");
+    $("#tipo_diag_nombre").removeAttr("disabled");
     $("#diag_cab_prioridad").attr("disabled","true");
     $("#diag_cab_kilometraje").attr("disabled","true");
     $("#diag_cab_nivel_combustible").attr("disabled","true");
@@ -380,7 +382,35 @@ function seleccionSolicitud(
     // Forzar enfoque visual en campos llenos
     $(".form-line").attr("class", "form-line focused");
 }
+function buscarTipoDiagnostico(){
+    $.ajax({
+        url:"http://127.0.0.1:8000/Proyecto_tp/tipo-diagnostico/read",
+        method:"GET",
+        dataType: "json"
+    })
+    .done(function(resultado){
+        var lista = "<ul class=\"list-group\">";
+        for(rs of resultado){
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionTipoDiagnostico("+rs.tipo_diagnostico_id+",'"+rs.tipo_diag_nombre+"','"+rs.tipo_diag_descrip+"');\">"+rs.tipo_diag_nombre+"</li>";
+        }
+        lista += "</ul>";
+        $("#listaTipoDiag").html(lista);
+        $("#listaTipoDiag").attr("style","display:block; position:absolute; z-index:2000;");
+    })
+    .fail(function(a,b,c){
+        alert(c);
+        console.log(a.responseText);
+    })
+}
 
+function seleccionTipoDiagnostico(tipo_diagnostico_id,tipo_diag_nombre,tipo_diag_descrip){
+    $("#tipo_diagnostico_id").val(tipo_diagnostico_id);
+    $("#tipo_diag_nombre").val(tipo_diag_nombre);
+    $("#tipo_diag_descrip").val(tipo_diag_descrip);
+
+    $("#listaTipoDiag").html("");
+    $("#listaTipoDiag").attr("style","display:none;");
+}
 function grabar(){
     var observaciones = $("#diag_cab_observaciones").val().trim();
     var fecha = $("#diag_cab_fecha").val().trim();
@@ -434,7 +464,7 @@ function grabar(){
             'user_id': $("#user_id").val(), 
             'diag_cab_estado': estado,
             'clientes_id': $("#clientes_id").val(),
-            'tipo_servicio_id': $("#tipo_servicio_id").val(),
+            'tipo_diagnostico_id': $("#tipo_diagnostico_id").val(),
             'recep_cab_id': $("#recep_cab_id").val(),
             'empresa_id': $("#empresa_id").val(),
             'sucursal_id': $("#sucursal_id").val(),

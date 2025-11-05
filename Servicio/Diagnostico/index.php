@@ -100,6 +100,17 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- TIPO DE SERVICIO -->
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tipo_diag_nombre" class="form-control" disabled onkeyup="buscarTipoDiagnostico();">
+                                            <label class="form-label">Tipo de Diagnostico</label>
+                                        </div>
+                                        <input type="hidden" id="tipo_diagnostico_id" name="tipo_diagnostico_id">
+                                        <div id="listaTipoDiag" style="display:none;"></div>
+                                    </div>
+                                </div>
                                 <div class="col-sm-6">
                                     <div class="form-group form-float">
                                         <div class="form-line">

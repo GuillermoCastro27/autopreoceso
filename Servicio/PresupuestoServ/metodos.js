@@ -348,10 +348,12 @@ function buscarDiagnostico() {
                             '${rs.diagnostico}',
                             ${rs.empresa_id}, '${rs.emp_razon_social}',
                             ${rs.sucursal_id}, '${rs.suc_razon_social}',
-                            ${rs.tipo_servicio_id || 0}, '${rs.tipo_servicio || ''}',
+                            ${rs.tipo_diagnostico_id || 0}, '${rs.tipo_diag_nombre || ''}',
+                            ${rs.tipo_servicio_id || 0}, '${rs.tipo_serv_nombre || ''}',
                             ${rs.clientes_id}, '${rs.cli_nombre}', '${rs.cli_apellido}', '${rs.cli_ruc}', '${rs.cli_telefono}', '${rs.cli_direccion}', '${rs.cli_correo}'
                         );">
                         <b>${rs.diagnostico}</b><br>
+                        Servicio: <b>${rs.tipo_serv_nombre || 'N/A'}</b><br>
                         Estado: ${rs.diag_cab_estado} – Prioridad: ${rs.diag_cab_prioridad}
                     </div>
                 `;
@@ -366,16 +368,18 @@ function buscarDiagnostico() {
     });
 }
 function seleccionarDiagnostico(
-    id, diagnostico, 
-    empresa_id, emp_razon_social, 
-    sucursal_id, suc_razon_social, 
-    tipo_servicio_id, tipo_servicio,
+    id, diagnostico,
+    empresa_id, emp_razon_social,
+    sucursal_id, suc_razon_social,
+    tipo_diagnostico_id, tipo_diag_nombre,
+    tipo_servicio_id, tipo_serv_nombre,
     clientes_id, cli_nombre, cli_apellido, cli_ruc, cli_telefono, cli_direccion, cli_correo
 ) {
     // Guardar IDs
     $("#diagnostico_cab_id").val(id);
     $("#empresa_id").val(empresa_id);
     $("#sucursal_id").val(sucursal_id);
+    $("#tipo_diagnostico_id").val(tipo_diagnostico_id);
     $("#tipo_servicio_id").val(tipo_servicio_id);
     $("#clientes_id").val(clientes_id);
 
@@ -383,7 +387,8 @@ function seleccionarDiagnostico(
     $("#diagnostico").val(diagnostico);
     $("#emp_razon_social").val(emp_razon_social);
     $("#suc_razon_social").val(suc_razon_social);
-    $("#tipo_serv_nombre").val(tipo_servicio);
+    $("#tipo_diag_nombre").val(tipo_diag_nombre);
+    $("#tipo_serv_nombre").val(tipo_serv_nombre);
     $("#cli_nombre").val(cli_nombre);
     $("#cli_apellido").val(cli_apellido);
     $("#cli_ruc").val(cli_ruc);
@@ -397,7 +402,7 @@ function seleccionarDiagnostico(
 }
 
 function buscarPromociones() {
-    const texto = $("#promociones").val();
+    const texto = $("#prom_cab_nombre").val();
     const user_id = $("#user_id").val();
 
     $.ajax({
@@ -433,7 +438,7 @@ function buscarPromociones() {
 }
 function seleccionarPromocion(id, nombre, fecha_inicio, fecha_fin, tipo_prom_nombre) {
     // Autocompleta los campos principales
-    $("#promociones").val(nombre + " (" + fecha_inicio + " al " + fecha_fin + ")");
+    $("#prom_cab_nombre").val(nombre + " (" + fecha_inicio + " al " + fecha_fin + ")");
     $("#promociones_cab_id").val(id);
     $("#tipo_prom_nombre").val(tipo_prom_nombre);
 
@@ -444,7 +449,7 @@ function seleccionarPromocion(id, nombre, fecha_inicio, fecha_fin, tipo_prom_nom
     $(".form-line").addClass("focused");
 }
 function buscarDescuentos() {
-    const texto = $("#descuentos").val();
+    const texto = $("#desc_cab_nombre").val();
     const user_id = $("#user_id").val();
 
     $.ajax({
@@ -479,7 +484,7 @@ function buscarDescuentos() {
     });
 }
 function seleccionarDescuento(id, nombre, porcentaje, fecha_inicio, fecha_fin, tipo_desc_nombre) {
-    $("#descuentos").val(nombre + " (" + porcentaje + "% - " + fecha_inicio + " al " + fecha_fin + ")");
+    $("#desc_cab_nombre").val(nombre + " (" + porcentaje + "% - " + fecha_inicio + " al " + fecha_fin + ")");
     $("#descuentos_cab_id").val(id);
     $("#tipo_desc_nombre").val(tipo_desc_nombre);
     $("#listaDescuentos").hide();

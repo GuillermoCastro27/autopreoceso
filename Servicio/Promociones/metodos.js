@@ -184,7 +184,9 @@ function listar() {
                 + rs.prom_cab_fecha_inicio + "', '"
                 + rs.prom_cab_fecha_fin + "', '"
                 + rs.prom_cab_estado + "', '"
-                + rs.tipo_prom_nombre + "');\">";
+                + rs.tipo_prom_nombre + "', '"
+                + rs.tipo_prom_modo + "', '"
+                + rs.tipo_prom_valor + "');\">";
 
             lista += "<td>" + rs.id + "</td>";
             lista += "<td>" + rs.emp_razon_social + "</td>";
@@ -213,7 +215,7 @@ function seleccionPromocion(
     emp_razon_social, suc_razon_social, encargado,
     prom_cab_nombre, prom_cab_observaciones,
     prom_cab_fecha_registro, prom_cab_fecha_inicio, prom_cab_fecha_fin,
-    prom_cab_estado, tipo_prom_nombre
+    prom_cab_estado, tipo_prom_nombre,tipo_prom_modo,tipo_prom_valor
 ) {
     $("#id").val(id);
     $("#empresa_id").val(empresa_id);
@@ -231,6 +233,8 @@ function seleccionPromocion(
     $("#prom_cab_fecha_fin").val(prom_cab_fecha_fin);
     $("#prom_cab_estado").val(prom_cab_estado);
     $("#tipo_prom_nombre").val(tipo_prom_nombre);
+    $("#tipo_prom_modo").val(tipo_prom_modo);
+    $("#tipo_prom_valor").val(tipo_prom_valor);
 
     // Muestra/oculta paneles
     $("#registros").hide();
@@ -343,9 +347,53 @@ function campoFecha(){
         weekStart: 1
     });
 }
+function formatearNumero(valor) {
+    if (valor === null || valor === undefined || valor === '') return '0,00';
+    // Si ya es número, úsalo; si es string, intenta limpiarlo y convertirlo
+    var num = Number(valor);
+    if (isNaN(num)) {
+        num = parseNumero(String(valor));
+    }
+    // formateo en estilo español: separador de miles '.' y decimal ','
+    try {
+        return num.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    } catch (e) {
+        // fallback manual si no soporta toLocaleString con opciones
+        var parts = (Math.round(num * 100) / 100).toFixed(2).split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return parts.join(',');
+    }
+}
+
+// Convierte una cadena formateada (ej: "1.234,56" o "1234.56") a Number
+function parseNumero(str) {
+    if (str === null || str === undefined || str === '') return 0;
+    if (typeof str === 'number') return str;
+    var s = String(str).trim();
+    s = s.replace(/\s+/g, ''); // quitar espacios
+    var hasComma = s.indexOf(',') !== -1;
+    var hasDot = s.indexOf('.') !== -1;
+
+    if (hasComma && hasDot) {
+        // asumimos: '.' = miles, ',' = decimal  ->  "1.234.567,89" -> "1234567.89"
+        s = s.replace(/\./g, '').replace(',', '.');
+    } else if (hasComma && !hasDot) {
+        // asumimos ',' = decimal -> "1234,56" -> "1234.56"
+        s = s.replace(',', '.');
+    } else {
+        // sólo '.' o ninguno -> ya ok ("1234.56" o "1234")
+    }
+
+    // eliminar todo lo que no sea número, signo o punto decimal
+    s = s.replace(/[^0-9\.-]/g, '');
+    var n = parseFloat(s);
+    return isNaN(n) ? 0 : n;
+}
 function agregarDetalle() {
     $("#txtOperacionDetalle").val(1);
     $("#item_decripcion").removeAttr("disabled");
+    $("#prom_det_cantidad").removeAttr("disabled"); 
+    $("#prom_det_costo").attr("disabled","true");
 
     $("#btnAgregarDetalle").attr("style", "display:none");
     $("#btnEditarDetalle").attr("style", "display:none");
@@ -356,6 +404,8 @@ function agregarDetalle() {
 function editarDetalle() {
     $("#txtOperacionDetalle").val(2);
     $("#item_decripcion").removeAttr("disabled");
+    $("#prom_det_cantidad").removeAttr("disabled"); 
+    $("#prom_det_costo").attr("disabled","true");
 
     $("#btnAgregarDetalle").attr("style", "display:none");
     $("#btnEditarDetalle").attr("style", "display:none");
@@ -392,7 +442,10 @@ $.ajax({
     data: {
         "promociones_cab_id":$("#id").val(),
         "item_id":$("#item_id").val(),
-        "original_item_id": $("#original_item_id").val()
+        "tipo_impuesto_id":$("#tipo_impuesto_id").val(),
+        "original_item_id": $("#original_item_id").val(),
+        "prom_det_cantidad":$("#prom_det_cantidad").val(),
+        "prom_det_costo":$("#prom_det_costo").val()
     }
 })
 
@@ -412,6 +465,8 @@ $("#btnGrabarDetalle").attr("style","display:none");
 $("#txtOperacionDetalle").val(1);
 
 $("#item_decripcion").val("");
+$("#prom_det_cantidad").val("");
+$("#prom_det_costo").val("");
 }
 
 function buscarProductos(){
@@ -420,8 +475,7 @@ function buscarProductos(){
         method: "POST",
         dataType: "json",
         data: {
-            "item_decripcion": $("#item_decripcion").val(),
-            "tipo_descripcion": "PRODUCTO"
+            "item_decripcion": $("#item_decripcion").val()
         }
     })
     .done(function(resultado){
@@ -433,9 +487,8 @@ function buscarProductos(){
                 + rs.tipo_impuesto_id + ",'"
                 + rs.item_costo + "','"
                 + rs.tip_imp_nom + "',"
-                + rs.tipo_imp_tasa + ","
-                + rs.cantidad_disponible + ")\">"
-                + rs.item_decripcion + " (Stock: " + rs.cantidad_disponible + ")</li>";   
+                + rs.tipo_imp_tasa + ")\">"
+                + rs.item_decripcion + "</li>";   
         }
         lista += "</ul>";
         $("#listaProductos").html(lista);
@@ -448,10 +501,23 @@ function buscarProductos(){
 }
 
 // Rellena el campo de producto seleccionado.
-function seleccionProducto(item_id, item_decripcion){
+function seleccionProducto(item_id, item_decripcion,tipo_impuesto_id,item_costo,tip_imp_nom,tipo_imp_tasa){
     // Asignar valores a los campos del detalle
     $("#item_id").val(item_id);
     $("#item_decripcion").val(item_decripcion);
+    $("#prom_det_costo").val(item_costo);
+    $("#tipo_impuesto_id").val(tipo_impuesto_id);
+    $("#tip_imp_nom").val(tip_imp_nom);
+
+     const cantidad = parseFloat($("#prom_det_cantidad").val()) || 0;
+    const costo = parseFloat(item_costo) || 0;
+    const tasaImpuesto = parseFloat(tipo_imp_tasa) || 0;
+
+    const subtotal = cantidad * costo;
+    const totalConImpuesto = subtotal + (subtotal * (tasaImpuesto / 100));
+
+    $("#subtotal").val(subtotal);
+    $("#totalConImpuesto").val(totalConImpuesto);
 
     // Ocultar lista de productos y enfocar formulario
     $("#listaProductos").html("").attr("style","display:none;");
@@ -459,33 +525,69 @@ function seleccionProducto(item_id, item_decripcion){
 }
 
 function listarDetalles() {
+    var cantidadDetalle = 0;
+    var TotalGral = 0;          // Total comprobante (sin IVA)
+    var TotalIVA = 0;           // Total IVA
+
     $.ajax({
         url: getUrl() + "promociones_det/read/" + $("#id").val(),
         method: "GET",
         dataType: "json"
     })
     .done(function(resultado) {
-        let lista = "";
+        var lista = "";
 
-        for (let rs of resultado) {
-            lista += "<tr class='item-list' onclick=\"seleccionPromocionDet("
-                + rs.item_id + ", '"
-                + rs.item_decripcion + "');\">";
+        if (resultado && resultado.length > 0) {
+            for (let rs of resultado) {
+                const cantidad = parseFloat(rs.prom_det_cantidad) || 0;
+                const costo = parseFloat(rs.prom_det_costo) || 0;
+                const subtotal = cantidad * costo;
 
-            lista += "<td>" + rs.item_id + "</td>";
-            lista += "<td>" + rs.item_decripcion + "</td>";
-            lista += "</tr>";
+                let iva = 0;
+                if (rs.tip_imp_nom === "IVA10") {
+                    iva = subtotal / 11;
+                } else if (rs.tip_imp_nom === "IVA5") {
+                    iva = subtotal / 21;
+                }
+
+                // Generar fila
+                lista += "<tr class='item-list' onclick=\"seleccionSolicitudDet("
+                    + rs.item_id + ", '"
+                    + rs.item_decripcion + "', "
+                    + cantidad + ", "
+                    + costo + ", "
+                    + rs.tipo_impuesto_id + ", '"
+                    + rs.tip_imp_nom + "'"
+                    + ");\">";
+
+                lista += "<td>" + rs.item_id + "</td>";
+                lista += "<td>" + rs.item_decripcion + "</td>";
+                lista += "<td class='text-right'>" + cantidad + "</td>";
+                lista += "<td class='text-right'>" + formatearNumero(costo) + "</td>";
+                lista += "<td>" + rs.tip_imp_nom + "</td>";
+                lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>";
+                lista += "<td class='text-right'>" + formatearNumero(iva) + "</td>";
+                lista += "</tr>";
+
+                cantidadDetalle++;
+                TotalGral += subtotal;
+                TotalIVA += iva;
+            }
+
+            $("#tableDetalle").html(lista);
+        } else {
+            $("#tableDetalle").html("<tr><td colspan='8' class='text-center'>No se encontraron detalles.</td></tr>");
         }
 
-        $("#tableDetalle").html(lista);
+        // Actualizar totales en el pie
+        $("#txtTotalGral").text(formatearNumero(TotalGral));
+        $("#txtTotalConImpuesto").text(formatearNumero(TotalIVA));
 
-        // ✅ Validar si hay al menos un ítem cargado
-        const tieneDetalle = resultado.length > 0 && resultado[0].item_decripcion;
-
-        if ($("#prom_cab_estado").val() === "PENDIENTE" && tieneDetalle) {
+        // Activar o desactivar Confirmar
+        if ($("#prom_cab_estado").val() === "PENDIENTE" && cantidadDetalle > 0) {
             $("#btnConfirmar").removeAttr("disabled");
         } else {
-            $("#btnConfirmar").attr("disabled", true);
+            $("#btnConfirmar").attr("disabled", "true");
         }
     })
     .fail(function(xhr, status, error) {
@@ -494,10 +596,26 @@ function listarDetalles() {
     });
 }
 
-function seleccionPromocionDet(item_id, item_decripcion) {
+function seleccionSolicitudDet(item_id, item_decripcion, prom_det_cantidad, prom_det_costo, tipo_impuesto_id, tip_imp_nom) {
     $("#original_item_id").val(item_id);
     $("#item_id").val(item_id);
     $("#item_decripcion").val(item_decripcion);
+    $("#prom_det_cantidad").val(prom_det_cantidad);
+    $("#prom_det_costo").val(prom_det_costo);
+    $("#tipo_impuesto_id").val(tipo_impuesto_id);
+    $("#tip_imp_nom").val(tip_imp_nom);
+
+    // Calcular subtotal y IVA para mostrar en el formulario si quieres
+    const subtotal = prom_det_cantidad * prom_det_costo;
+    let iva = 0;
+    if (tip_imp_nom === "IVA10") {
+        iva = subtotal / 11;
+    } else if (tip_imp_nom === "IVA5") {
+        iva = subtotal / 21;
+    }
+
+    $("#subtotal").val(formatearNumero(subtotal));
+    $("#iva").val(formatearNumero(iva));
 
     $(".form-line").attr("class","form-line focused");
 }
@@ -574,7 +692,7 @@ function buscarTipoPromociones(){
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionTipoProm("+rs.tipo_promociones_id+",'"+rs.tipo_prom_nombre+"');\">"+rs.tipo_prom_nombre+"</li>";
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionTipoProm("+rs.tipo_promociones_id+",'"+rs.tipo_prom_nombre+"','"+rs.tipo_prom_modo+"','"+rs.tipo_prom_valor+"');\">"+rs.tipo_prom_nombre+"</li>";
         }
         lista += "</ul>";
         $("#listaTipoProm").html(lista);
@@ -586,9 +704,11 @@ function buscarTipoPromociones(){
     })
 }
 
-function seleccionTipoProm(tipo_promociones_id,tipo_prom_nombre){
+function seleccionTipoProm(tipo_promociones_id,tipo_prom_nombre,tipo_prom_modo,tipo_prom_valor){
     $("#tipo_promociones_id").val(tipo_promociones_id);
     $("#tipo_prom_nombre").val(tipo_prom_nombre);
+    $("#tipo_prom_modo").val(tipo_prom_modo);
+    $("#tipo_prom_valor").val(tipo_prom_valor);
 
     $("#listaTipoProm").html("");
     $("#listaTipoProm").attr("style","display:none;");
