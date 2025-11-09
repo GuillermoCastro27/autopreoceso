@@ -283,12 +283,12 @@
                                     </div>
                                 </div>
 
-                                <!-- COSTO -->
+                                <!-- Precio -->
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" id="soli_det_costo" class="form-control" disabled>
-                                            <label class="form-label">Costo</label>
+                                            <label class="form-label">Precio</label>
                                         </div>
                                     </div>
                                 </div>
@@ -321,7 +321,7 @@
                                             <th>Producto</th>
                                             <th>Cantidad</th>
                                             <th>Cantidad Disponible</th>
-                                            <th>Costo</th>
+                                            <th>Precio</th>
                                             <th>Tipo impuesto</th>
                                             <th>Sub Total</th>
                                             <th>IVA</th> <!-- Agregado para mostrar el total con impuesto -->

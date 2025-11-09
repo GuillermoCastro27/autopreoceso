@@ -481,7 +481,7 @@ $("#soli_det_costo").val("");
 
 function buscarProductos(){
     $.ajax({
-        url: getUrl()+"items/buscar",
+        url: getUrl()+"items/buscarItem",
         method: "POST",
         dataType: "json",
         data: {

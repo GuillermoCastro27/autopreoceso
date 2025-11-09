@@ -465,13 +465,14 @@ $("#btnGrabarDetalle").attr("style","display:none");
 $("#txtOperacionDetalle").val(1);
 
 $("#item_decripcion").val("");
+$("#tip_imp_nom").val("");
 $("#prom_det_cantidad").val("");
 $("#prom_det_costo").val("");
 }
 
 function buscarProductos(){
     $.ajax({
-        url: getUrl()+"items/buscar",
+        url: getUrl()+"items/buscarItem",
         method: "POST",
         dataType: "json",
         data: {

@@ -39,7 +39,7 @@
     <?php require_once('../../opciones.php'); ?>
 
     <section class="content">
-        <div class="container-fluid">+
+        <div class="container-fluid">
 
             <div class="row clearfix">
 
