@@ -55,8 +55,8 @@
                         <div class="body">
                             <div class="row clearfix">
                                 <input type="hidden" value="0" id="txtOperacion"/>
-                                <input type="hidden" value="1" id="user_id"/>
-                                <input type="hidden" value="PENDIENTE" id="nota_comp_estado"/>
+                                <input type="hidden" value="" id="user_id"/>
+                                <input type="hidden" value="PENDIENTE" id="ped_estado"/>
                                 <!-- CAMPO PARA CODIGO CON 1 COLUMNAS -->
                                 <div class="col-sm-1">
                                     <div class="form-group form-float">
@@ -417,9 +417,6 @@
 
     <!-- Custom Js -->
     <script src="../../js/admin.js"></script>
-
-    <!-- Demo Js -->
-    <script src="../../js/demo.js"></script>
 
     <!-- Ruta Js (la url del backend o del api rest) -->
     <script src="../../js/ruta.js"></script>

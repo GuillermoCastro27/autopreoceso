@@ -52,6 +52,7 @@ function agregar(){
     $("#txtOperacion").val(1);
     $("#txtCodigo").val(0);
     $("#txtNom").removeAttr("disabled");
+    $("#mar_tipo").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -66,6 +67,7 @@ function agregar(){
 function editar(){
     $("#txtOperacion").val(2);
     $("#txtNom").removeAttr("disabled");
+    $("#mar_tipo").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -120,52 +122,6 @@ function mensajeOperacion(titulo,mensaje,tipo) {
     swal(titulo, mensaje, tipo);
 }
 
-
-function buscarProductos(){
-    $.ajax({
-        url: getUrl()+"items/buscar",
-        method: "POST",
-        dataType: "json",
-        data:{
-            "item_decripcion":$("#item_decripcion").val(),
-            "tipo_descripcion":"PRODUCTO"
-        }
-    })
-    .done(function(resultado){
-        var lista = "<ul class=\"list-group\">";
-        for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto("+rs.item_id+",'"+rs.item_decripcion+"')\">"+rs.item_decripcion+"</li>";   
-        }
-        lista += "</ul>";
-        $("#listaProductos").html(lista);
-        $("#listaProductos").attr("style","display:block; position: absolute; z-index: 2000;");
-    })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
-    });
-}
-
-// Rellena el campo de producto seleccionado.
-function seleccionProducto(item_id, item_decripcion){
-    $("#item_id").val(item_id);
-    $("#item_decripcion").val(item_decripcion);
-
-    $("#listaProductos").html("");
-    $("#listaProductos").attr("style","display:none;");
-
-    $(".form-line").attr("class","form-line focused");
-}
-
-function seleccionPais(codigo, descripcion, gentilicio, siglas){
-    $("#txtCodigo").val(codigo);
-    $("#txtDescripcion").val(descripcion);
-    $("#txtGentilicio").val(gentilicio);
-    $("#txtSiglas").val(siglas);
-
-    $(".form-line").attr("class","form-line focused");
-}
-
 function listar(){
     $.ajax({
         url:"http://127.0.0.1:8000/Proyecto_tp/marca/read",
@@ -173,14 +129,18 @@ function listar(){
         dataType: "json"
     })
     .done(function(resultado){
+        console.log(resultado); 
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionMarca("+rs.id+",'"+rs.marc_nom+"');\">";
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionMarca("+rs.id+",'"+rs.marc_nom+"','"+rs.mar_tipo+"');\">";
                 lista = lista + "<td>";
                 lista = lista + rs.id;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
                 lista = lista + rs.marc_nom;
+                lista = lista +"</td>";
+                lista = lista + "<td>";
+                lista = lista + rs.mar_tipo;
                 lista = lista +"</td>";
             lista = lista + "</tr>";
         }
@@ -191,9 +151,10 @@ function listar(){
         alert(c);
     })
 }
-function seleccionMarca(codigo, marc_nom){
+function seleccionMarca(codigo, marc_nom, mar_tipo){
     $("#txtCodigo").val(codigo);
     $("#txtNom").val(marc_nom);
+    $("#mar_tipo").val(mar_tipo);
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").removeAttr("disabled");
@@ -236,7 +197,8 @@ function grabar() {
         dataType: "json",
         data: { 
             'id': $("#txtCodigo").val(), 
-            'marc_nom': descripcion
+            'marc_nom': descripcion, 
+            'mar_tipo': $("#mar_tipo").val()
         }
     })
     .done(function(resultado) {

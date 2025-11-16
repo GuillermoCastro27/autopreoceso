@@ -196,6 +196,7 @@
                                 </a>
                                 <ul class="ml-menu">
                                     <li><a href="/taller_front/referenciales/tipo_servicio"><span>Mantener Tipo Servicio</span></a></li>
+                                    <li><a href="/taller_front/referenciales/tipo_vehiculo"><span>Mantener Tipo Vehículo</span></a></li>
                                     <li><a href="/taller_front/referenciales/Tipo_diagnostico"><span>Mantener Tipo Diagnostico</span></a></li>
                                     <li><a href="/taller_front/referenciales/tipo_promociones"><span>Mantener Tipo Promociones</span></a></li>
                                     <li><a href="/taller_front/referenciales/tipo_descuentos"><span>Mantener Tipo Descuentos</span></a></li>

@@ -62,11 +62,22 @@
                                     </div>
                                 </div>
                                 <!-- CAMPO PARA DESCRIPCION CON 4 COLUMNAS -->
-                                <div class="col-sm-8">
+                                <div class="col-sm-4">
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" id="txtNom" class="form-control" disabled>
                                             <label class="form-label">Marca</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                           <select id="mar_tipo" class="form-control" disabled >
+                                                <option value="PRODUCTO">PRODUCTO</option>
+                                                <option value="VEHICULO">VEHICULO</option>
+                                            </select>
+                                            <label class="form-label">Tipo Marca</label>
                                         </div>
                                     </div>
                                 </div>
@@ -91,6 +102,7 @@
                                         <tr>
                                             <th>Código</th>
                                             <th>Marca</th>
+                                            <th>Tipo Marca</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableBody">
@@ -100,6 +112,7 @@
                                         <tr>
                                             <th>Código</th>
                                             <th>Marca</th>
+                                            <th>Tipo Marca</th>
                                         </tr>
                                     </tfoot>    
                                 </table>

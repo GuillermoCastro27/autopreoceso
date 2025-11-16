@@ -9,25 +9,25 @@ function formatoTabla(){
                 extend:'copy',
                 text:'COPIAR',
                 className:'btn btn-primary waves-effect',
-                title:'Listado de Modelos'
+                title:'Listado de Tipo de impuestos'
             },
             {
                 extend:'excel',
                 text:'EXCEL',
                 className:'btn btn-success waves-effect',
-                title:'Listado de Modelos'
+                title:'Listado de Tipo de impuestos'
             },
             {
                 extend:'pdf',
                 text:'PDF',
                 className:'btn btn-danger waves-effect',
-                title:'Listado de Modelos'
+                title:'Listado de Tipo de impuestos'
             },
             {
                 extend:'print',
                 text:'IMPRIMIR',
                 className:'btn btn-warning waves-effect',
-                title:'Listado de Modelos'
+                title:'Listado de Tipo de impuestos'
             }
         ],
         iDisplayLength:3,
@@ -51,10 +51,13 @@ function cancelar(){
 function agregar(){
     $("#txtOperacion").val(1);
     $("#txtCodigo").val(0);
-    $("#txtNom").removeAttr("disabled");
-    $("#marc_nom").attr("disabled","true");
-    $("#modelo_tipo").removeAttr("disabled");
-    $("#modelo_año").removeAttr("disabled");
+    $("#tip_veh_nombre").removeAttr("disabled");
+    $("#tip_veh_capacidad").removeAttr("disabled");
+    $("#tip_veh_combustible").removeAttr("disabled");
+    $("#tip_veh_categoria").removeAttr("disabled");
+    $("#tip_veh_observacion").removeAttr("disabled");
+    $("#marc_nom").removeAttr("disabled");
+    $("#modelo_nom").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -68,10 +71,13 @@ function agregar(){
 
 function editar(){
     $("#txtOperacion").val(2);
-    $("#txtNom").removeAttr("disabled");
+    $("#tip_veh_nombre").removeAttr("disabled");
+    $("#tip_veh_capacidad").removeAttr("disabled");
+    $("#tip_veh_combustible").removeAttr("disabled");
+    $("#tip_veh_categoria").removeAttr("disabled");
+    $("#tip_veh_observacion").removeAttr("disabled");
     $("#marc_nom").removeAttr("disabled");
-    $("#modelo_tipo").removeAttr("disabled");
-    $("#modelo_año").removeAttr("disabled");
+    $("#modelo_nom").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -128,29 +134,43 @@ function mensajeOperacion(titulo,mensaje,tipo) {
 
 function listar(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/modelo/read",
+        url:"http://127.0.0.1:8000/Proyecto_tp/tipo-vehiculo/read",
         method:"GET",
         dataType: "json"
     })
     .done(function(resultado){
-        console.log(resultado); 
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionModelo("+rs.id+","+rs.marca_id+",'"+rs.marc_nom+"','"+rs.modelo_nom+"','"+rs.modelo_tipo+"','"+rs.modelo_año+"');\">";
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipoVehiculo("+rs.tipo_vehiculo_id+","+rs.marca_id+","+rs.modelo_id+",'"+rs.tip_veh_nombre+"','"+rs.tip_veh_capacidad+"','"+rs.tip_veh_combustible+"','"+rs.tip_veh_categoria+"','"+rs.tip_veh_observacion+"','"+rs.marc_nom+"','"+rs.modelo_nom+"');\">";
                 lista = lista + "<td>";
-                lista = lista + rs.id;
+                lista = lista + rs.tipo_vehiculo_id;
+                lista = lista +"</td>";
+                lista = lista + "<td>";
+                lista = lista + rs.marca_id;
+                lista = lista +"</td>";
+                lista = lista + "<td>";
+                lista = lista + rs.modelo_id;
+                lista = lista +"</td>";
+                lista = lista + "<td>";
+                lista = lista + rs.tip_veh_nombre;
+                lista = lista +"</td>";
+                lista = lista + "<td>";
+                lista = lista + rs.tip_veh_capacidad;
+                lista = lista +"</td>";
+                lista = lista + "<td>";
+                lista = lista + rs.tip_veh_combustible;
+                lista = lista +"</td>";
+                lista = lista + "<td>";
+                lista = lista + rs.tip_veh_categoria;
+                lista = lista +"</td>";
+                lista = lista + "<td>";
+                lista = lista + rs.tip_veh_observacion;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
                 lista = lista + rs.marc_nom;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
                 lista = lista + rs.modelo_nom;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.modelo_tipo;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.modelo_año;
                 lista = lista +"</td>";
             lista = lista + "</tr>";
         }
@@ -161,13 +181,19 @@ function listar(){
         alert(c);
     })
 }
-function seleccionModelo(codigo, marca_id, marc_nom, modelo_nom, modelo_tipo, modelo_año){
+function seleccionTipoVehiculo(codigo,marca_id,modelo_id, tipo_veh_nombre,
+     tipo_veh_capacidad, tipo_veh_combustible, tipo_veh_categoria,
+      tipo_veh_observacion, marc_nom, modelo_nom){
     $("#txtCodigo").val(codigo);
-    $("#marca_id").val(marca_id);
+    $("#tipo_veh_nombre").val(tipo_veh_nombre);
+    $("#tipo_veh_capacidad").val(tipo_veh_capacidad);
+    $("#tipo_veh_combustible").val(tipo_veh_combustible);
+    $("#tipo_veh_categoria").val(tipo_veh_categoria);
+    $("#tipo_veh_observacion").val(tipo_veh_observacion);
     $("#marc_nom").val(marc_nom);
-    $("#txtNom").val(modelo_nom);
-    $("#modelo_tipo").val(modelo_tipo);
-    $("#modelo_año").val(modelo_año);
+    $("#modelo_nom").val(modelo_nom);
+    $("#marca_id").val(marca_id);
+    $("#modelo_id").val(modelo_id);
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").removeAttr("disabled");
@@ -181,17 +207,14 @@ function seleccionModelo(codigo, marca_id, marc_nom, modelo_nom, modelo_tipo, mo
 }
 function buscarMarcas() {
     let texto = $("#marc_nom").val();
-    let tipo = $("#modelo_tipo").val();
-
-    if (tipo === "") {
-        $("#listaMarcas").html("<div class='list-group-item'>Seleccione el tipo de modelo primero</div>").show();
-        return;
-    }
 
     $.ajax({
         url: "http://127.0.0.1:8000/Proyecto_tp/marca/buscarPorTipo",
         method: "POST",
-        data: { texto: texto, tipo: tipo },
+        data: { 
+            texto: texto, 
+            tipo: "VEHICULO"  // 👈 SIEMPRE VEHICULO 
+        },
         dataType: "json"
     })
     .done(function(resultado) {
@@ -203,7 +226,7 @@ function buscarMarcas() {
             for (let rs of resultado) {
                 lista += `
                     <li class="list-group-item"
-                        onclick="seleccionMarca(${rs.id}, '${rs.marc_nom}', '${rs.mar_tipo}')">
+                        onclick="seleccionMarca(${rs.id}, '${rs.marc_nom}')">
                         ${rs.marc_nom}
                     </li>
                 `;
@@ -211,7 +234,10 @@ function buscarMarcas() {
         }
 
         lista += "</ul>";
-        $("#listaMarcas").html(lista).show().css({position:"absolute", zIndex:2000});
+
+        $("#listaMarcas").html(lista)
+                         .show()
+                         .css({position:"absolute", zIndex:2000});
     });
 }
 function seleccionMarca(id,marc_nom){
@@ -221,26 +247,8 @@ function seleccionMarca(id,marc_nom){
     $("#listaMarcas").html("");
     $("#listaMarcas").attr("style","display:none;");
 }
-function habilitarMarca() {
-    let tipo = $("#modelo_tipo").val();
-
-    if (tipo === "") {
-        $("#marc_nom").prop("disabled", true);  // lo deshabilita
-        $("#marc_nom").val("");                 // limpia
-        $("#marca_id").val("");
-        $("#listaMarcas").hide();
-        return;
-    }
-
-    // Si se seleccionó algún tipo:
-    $("#marc_nom").prop("disabled", false);     // lo habilita
-    $("#marc_nom").val("");                     // limpia para evitar errores
-    $("#marca_id").val("");
-    $("#listaMarcas").hide();
-}
-
 function grabar(){
-    var descripcion = $("#txtNom").val().trim();
+    var descripcion = $("#tipo_serv_nombre").val().trim();
 
     // Validar que el campo descripción no esté vacío
     if (descripcion === "") {
@@ -251,14 +259,14 @@ function grabar(){
         });
         return;  // Salir de la función si la validación falla
     }
-    var endpoint = "modelo/create";
+    var endpoint = "tipo-servicio/create";
     var metodo = "POST";
     if($("#txtOperacion").val()==2){
-        endpoint = "modelo/update/"+$("#txtCodigo").val();
+        endpoint = "tipo-servicio/update/"+$("#txtCodigo").val();
         metodo = "PUT";
     }
     if($("#txtOperacion").val()==3){
-        endpoint = "modelo/delete/"+$("#txtCodigo").val();
+        endpoint = "tipo-servicio/delete/"+$("#txtCodigo").val();
         metodo = "DELETE";
     }
     $.ajax({
@@ -267,10 +275,7 @@ function grabar(){
         dataType: "json",
         data: { 
             'id': $("#txtCodigo").val(), 
-            'modelo_nom': $("#txtNom").val(), 
-            'modelo_tipo': $("#modelo_tipo").val(), 
-            'modelo_año': $("#modelo_año").val(), 
-            'marca_id': $("#marca_id").val()
+            'tipo_serv_nombre': $("#tipo_serv_nombre").val()
         }
 
     })
@@ -286,8 +291,32 @@ function grabar(){
             }
         });
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
-    })
+    .fail(function(a) {
+        // Manejar el error de respuesta personalizada del servidor
+        try {
+            var response = JSON.parse(a.responseText);  // Intentamos obtener la respuesta JSON
+            if (response.mensaje.includes("ya existe")) {
+                // Mostrar mensaje específico para el error de duplicado
+                swal({
+                    title: "Error",
+                    text: "Error: El registro ya existe",
+                    type: "error"
+                });
+            } else {
+                // Mostrar cualquier otro error personalizado
+                swal({
+                    title: "Error",
+                    text: response.mensaje,
+                    type: "error"
+                });
+            }
+        } catch (e) {
+            // Si no es JSON, mostrar el error genérico
+            swal({
+                title: "Error",
+                text: "El registro ya existe",
+                type: "error"
+            });
+        }
+    });
 }

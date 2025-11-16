@@ -55,7 +55,7 @@
                         <div class="body">
                             <div class="row clearfix">
                                 <input type="hidden" value="0" id="txtOperacion"/>
-                                <input type="hidden" value="1" id="user_id"/>
+                                <input type="hidden" value="" id="user_id"/>
                                 <input type="hidden" value="PENDIENTE" id="ped_estado"/>
                                 
                                 <!-- CAMPO PARA CODIGO CON 2 COLUMNAS -->
