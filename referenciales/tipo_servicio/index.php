@@ -62,11 +62,19 @@
                                     </div>
                                 </div>
                                 <!-- CAMPO PARA DESCRIPCION CON 4 COLUMNAS -->
-                                <div class="col-sm-10">
+                                <div class="col-sm-5">
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" id="tipo_serv_nombre" class="form-control" disabled>
                                             <label class="form-label">Nombre</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_serv_precio" class="form-control" oninput="formatearPrecio(this)" disabled>
+                                            <label class="form-label">Precio</label>
                                         </div>
                                     </div>
                                 </div>
@@ -91,6 +99,7 @@
                                         <tr>
                                             <th>Código</th>
                                             <th>Nombre</th>
+                                            <th>Precio</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableBody">
@@ -100,6 +109,7 @@
                                         <tr>
                                             <th>Código</th>
                                             <th>Nombre</th>
+                                            <th>Precio</th>
                                         </tr>
                                     </tfoot>    
                                 </table>

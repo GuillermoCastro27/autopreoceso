@@ -234,6 +234,73 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- TIPO DE SERVICIO -->
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_veh_nombre" class="form-control" disabled onkeyup="buscarTipoVehiculo();">
+                                            <label class="form-label">Tipo de Vehículo</label>
+                                        </div>
+                                        <input type="hidden" id="tipo_vehiculo_id" name="tipo_vehiculo_id">
+                                        <div id="listaTipoVeh" style="display:none;"></div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_veh_capacidad" class="form-control" disabled>
+                                            <label class="form-label">Capacidad</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_veh_combustible" class="form-control" disabled>
+                                            <label class="form-label">Tipo Combustible</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_veh_categoria" class="form-control" disabled>
+                                            <label class="form-label">Categoría</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_veh_observacion" class="form-control" disabled>
+                                            <label class="form-label">Observación (Tipo vehiculo)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="marc_nom" class="form-control" disabled>
+                                            <label class="form-label">Marca</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="modelo_nom" class="form-control" disabled>
+                                            <label class="form-label">Modelo</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="modelo_año" class="form-control" disabled>
+                                            <label class="form-label">Año Modelo</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- BOTONES -->
@@ -378,45 +445,27 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
-                                        <tr>
-                                            <th>Código</th>
-                                            <th>Empresa</th>
-                                            <th>Sucursal</th>
-                                            <th>Encargado</th>
-                                            <th>Solicitud</th>
-                                            <th>Fecha</th>
-                                            <th>Fecha Estimada</th>
-                                            <th>Estado</th>
-                                            <th>Observaciones</th>
-                                            <th>Prioridad</th>
-                                            <th>Kilometraje</th>
-                                            <th>Combustible</th> 
-                                            <th>Tipo Servicio</th>
-                                            <th>Cliente</th>
-                                            <th>Apellido</th>
-                                            <th>Ruc</th>
-                                        </tr>
-                                    </thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Cliente</th>
+                                        <th>Vehículo</th>
+                                        <th>Solicitud</th>
+                                        <th>Fecha</th>
+                                        <th>Estado</th>
+                                        <th>Encargado</th>
+                                    </tr>
+                                </thead>
                                     <tbody id="tableBody"></tbody>
                                     <tfoot>
                                         <tr>
-                                            <th>Código</th>
-                                            <th>Empresa</th>
-                                            <th>Sucursal</th>
-                                            <th>Encargado</th>
-                                            <th>Solicitud</th>
-                                            <th>Fecha</th>
-                                            <th>Fecha Estimada</th>
-                                            <th>Estado</th>
-                                            <th>Observaciones</th>
-                                            <th>Prioridad</th>
-                                            <th>Kilometraje</th>
-                                            <th>Combustible</th> 
-                                            <th>Tipo Servicio</th>
-                                            <th>Cliente</th>
-                                            <th>Apellido</th>
-                                            <th>Ruc</th>
-                                        </tr>
+                                        <th>Código</th>
+                                        <th>Cliente</th>
+                                        <th>Vehículo</th>
+                                        <th>Solicitud</th>
+                                        <th>Fecha</th>
+                                        <th>Estado</th>
+                                        <th>Encargado</th>
+                                    </tr>
                                     </tfoot>    
                                 </table>
                             </div>

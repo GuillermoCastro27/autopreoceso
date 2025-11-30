@@ -300,38 +300,56 @@ function buscarRecepcion() {
         }
     })
     .done(function(resultado) {
-        console.log("Resultados encontrados:", resultado);
 
-        // Si no hay resultados
         if (!resultado || resultado.length === 0) {
-            $("#listaRecepcion").html("<li class='list-group-item text-center text-muted'>No se encontraron solicitudes</li>");
+            $("#listaRecepcion").html("<li class='list-group-item text-center text-muted'>No se encontraron recepciones</li>");
             $("#listaRecepcion").attr("style", "display:block; position:absolute; z-index:2000;");
             return;
         }
 
-        var lista = "<ul class='list-group'>";
-        for (var rs of resultado) {
-            lista += "<li class='list-group-item' onclick=\"seleccionSolicitud("
-                + rs.recep_cab_id + ","                              // 1 id solicitud
-                + rs.empresa_id + ","                                       // 2 empresa
-                + rs.sucursal_id + ", '"                                    // 3 sucursal
-                + (rs.recepcion || '') + "', "                              // 4 texto solicitud
-                + rs.clientes_id + ", '"                                    // 5 cliente id
-                + (rs.cli_nombre || '') + "', '"                            // 6 nombre
-                + (rs.cli_apellido || '') + "', "                           // 7 apellido
-                + rs.tipo_servicio_id + ", '"                               // 8 tipo servicio id
-                + (rs.cli_ruc || '') + "', '"                               // 9 ruc
-                + (rs.cli_direccion || '') + "', '"                         // 10 direccion
-                + (rs.cli_telefono || '') + "', '"                          // 11 telefono
-                + (rs.cli_correo || '') + "', '"                            // 12 correo
-                + (rs.suc_razon_social || '') + "', '"                      // 13 sucursal razon social
-                + (rs.emp_razon_social || '') + "', '"                      // 14 empresa razon social
-                + (rs.tipo_servicio || '') + "', '"               
-                + (rs.recep_cab_prioridad || '') + "', '"               
-                + (rs.recep_cab_kilometraje || '') + "', '"               
-                + (rs.recep_cab_nivel_combustible || '') + "')\">"                   // 17 prioridad
-                + (rs.recepcion || 'Sin descripción') + "</li>";
+        let lista = "<ul class='list-group'>";
+
+        for (let rs of resultado) {
+
+            lista += `<li class='list-group-item'
+                        onclick="seleccionSolicitud(
+                            ${rs.recep_cab_id},
+                            ${rs.empresa_id},
+                            ${rs.sucursal_id},
+                            '${(rs.recepcion || '')}',
+                            ${rs.clientes_id},
+
+                            '${(rs.cli_nombre || '')}',
+                            '${(rs.cli_apellido || '')}',
+                            ${rs.tipo_servicio_id},
+
+                            '${(rs.cli_ruc || '')}',
+                            '${(rs.cli_direccion || '')}',
+                            '${(rs.cli_telefono || '')}',
+                            '${(rs.cli_correo || '')}',
+
+                            '${(rs.suc_razon_social || '')}',
+                            '${(rs.emp_razon_social || '')}',
+                            '${(rs.tipo_servicio || '')}',
+                            '${(rs.recep_cab_prioridad || '')}',
+                            '${(rs.recep_cab_kilometraje || '')}',
+                            '${(rs.recep_cab_nivel_combustible || '')}',
+
+                            ${rs.tipo_vehiculo_id},
+                            '${(rs.tip_veh_nombre || '')}',
+                            '${(rs.marc_nom || '')}',
+                            '${(rs.modelo_nom || '')}',
+                            '${(rs.modelo_año || '')}',
+                            '${(rs.vehiculo_info || '')}',
+                            '${(rs.tip_veh_combustible || '')}',
+                            '${(rs.tip_veh_categoria || '')}',
+                            '${(rs.tip_veh_capacidad || '')}',
+                            '${(rs.tip_veh_observacion || '')}'
+                        )">
+                        ${(rs.recepcion || 'Sin descripción')}
+                    </li>`;
         }
+
         lista += "</ul>";
 
         $("#listaRecepcion").html(lista);
@@ -346,42 +364,63 @@ function seleccionSolicitud(
     recep_cab_id, empresa_id, sucursal_id,
     recepcion, clientes_id, cli_nombre, cli_apellido, tipo_servicio_id,
     cli_ruc, cli_direccion, cli_telefono, cli_correo,
-    suc_razon_social, emp_razon_social, tipo_servicio,recep_cab_prioridad,
-    recep_cab_kilometraje,recep_cab_nivel_combustible
+    suc_razon_social, emp_razon_social, tipo_servicio,
+    recep_cab_prioridad, recep_cab_kilometraje, recep_cab_nivel_combustible,
+
+    tipo_vehiculo_id, tip_veh_nombre, marc_nom, modelo_nom, modelo_año,
+    vehiculo_info, tip_veh_combustible, tip_veh_categoria, tip_veh_capacidad, tip_veh_observacion
 ) {
-    // Asignar datos principales
-    $("#recep_cab_id").val(recep_cab_id || 0);
-    $("#recepcion").val(recepcion || '');
-    $("#diag_cab_prioridad").val(recep_cab_prioridad || '');
-    $("#diag_cab_kilometraje").val(recep_cab_kilometraje || '');
-    $("#diag_cab_nivel_combustible").val(recep_cab_nivel_combustible || '');
+
+    // Datos principales
+    $("#recep_cab_id").val(recep_cab_id);
+    $("#recepcion").val(recepcion);
 
     // Cliente
-    $("#clientes_id").val(clientes_id || 0);
-    $("#cli_nombre").val(cli_nombre || '');
-    $("#cli_apellido").val(cli_apellido || '');
-    $("#cli_ruc").val(cli_ruc || '');
-    $("#cli_direccion").val(cli_direccion || '');
-    $("#cli_telefono").val(cli_telefono || '');
-    $("#cli_correo").val(cli_correo || '');
+    $("#clientes_id").val(clientes_id);
+    $("#cli_nombre").val(cli_nombre);
+    $("#cli_apellido").val(cli_apellido);
+    $("#cli_ruc").val(cli_ruc);
+    $("#cli_direccion").val(cli_direccion);
+    $("#cli_telefono").val(cli_telefono);
+    $("#cli_correo").val(cli_correo);
 
-    // Empresa y Sucursal
-    $("#empresa_id").val(empresa_id || 0);
-    $("#sucursal_id").val(sucursal_id || 0);
-    $("#suc_razon_social").val(suc_razon_social || '');
-    $("#emp_razon_social").val(emp_razon_social || '');
+    // Empresa / Sucursal
+    $("#empresa_id").val(empresa_id);
+    $("#sucursal_id").val(sucursal_id);
+    $("#suc_razon_social").val(suc_razon_social);
+    $("#emp_razon_social").val(emp_razon_social);
 
     // Tipo de servicio
-    $("#tipo_servicio_id").val(tipo_servicio_id || 0);
-    $("#tipo_serv_nombre").val(tipo_servicio || '');
+    $("#tipo_servicio_id").val(tipo_servicio_id);
+    $("#tipo_serv_nombre").val(tipo_servicio);
 
-    // Limpiar lista
+    // Datos de recepción
+    $("#diag_cab_prioridad").val(recep_cab_prioridad);
+    $("#diag_cab_kilometraje").val(recep_cab_kilometraje);
+    $("#diag_cab_nivel_combustible").val(recep_cab_nivel_combustible);
+
+    // DATOS DEL VEHÍCULO COMPLETOS
+    $("#tipo_vehiculo_id").val(tipo_vehiculo_id);
+    $("#tip_veh_nombre").val(tip_veh_nombre);
+    $("#marc_nom").val(marc_nom);
+    $("#modelo_nom").val(modelo_nom);
+    $("#modelo_año").val(modelo_año);
+
+    $("#vehiculo_info").val(vehiculo_info);
+
+    $("#tip_veh_combustible").val(tip_veh_combustible);
+    $("#tip_veh_categoria").val(tip_veh_categoria);
+    $("#tip_veh_capacidad").val(tip_veh_capacidad);
+    $("#tip_veh_observacion").val(tip_veh_observacion);
+
+    // Ocultar lista
     $("#listaRecepcion").html("");
     $("#listaRecepcion").attr("style", "display:none;");
 
-    // Forzar enfoque visual en campos llenos
-    $(".form-line").attr("class", "form-line focused");
+    // Campos en modo "focused"
+    $(".form-line").addClass("focused");
 }
+
 function buscarTipoDiagnostico(){
     $.ajax({
         url:"http://127.0.0.1:8000/Proyecto_tp/tipo-diagnostico/read",

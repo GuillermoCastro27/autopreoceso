@@ -337,13 +337,14 @@ function grabar() {
             'modelo_id': $("#modelo_id").val()
         }
     })
-    .done(function(resultado) {
+    .done(function(resultado){
         swal({
-            title: "Respuesta",
+            title:"Respuesta",
             text: resultado.mensaje,
-            icon: resultado.tipo,
-        }).then(function() {
-            if(resultado.tipo === "success") {
+            type: resultado.tipo
+        },
+        function(){
+            if(resultado.tipo == "success"){
                 location.reload(true);
             }
         });

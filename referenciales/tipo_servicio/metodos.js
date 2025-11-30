@@ -52,6 +52,7 @@ function agregar(){
     $("#txtOperacion").val(1);
     $("#txtCodigo").val(0);
     $("#tipo_serv_nombre").removeAttr("disabled");
+    $("#tip_serv_precio").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -66,6 +67,7 @@ function agregar(){
 function editar(){
     $("#txtOperacion").val(2);
     $("#tipo_serv_nombre").removeAttr("disabled");
+    $("#tip_serv_precio").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -87,7 +89,22 @@ function eliminar(){
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
 }
+function formatearPrecio(input) {
+    // Eliminar puntos para poder trabajar el número real
+    let valor = input.value.replace(/\./g, "");
 
+    // Si no es número, salir
+    if (isNaN(valor)) {
+        input.value = "";
+        return;
+    }
+
+    // Convertir a número entero
+    let numero = parseInt(valor, 10);
+
+    // Formatear con puntos (estilo paraguayo)
+    input.value = numero.toLocaleString('es-ES'); 
+}
 
 function confirmarOperacion() {
     var oper = parseInt($("#txtOperacion").val());
@@ -120,7 +137,7 @@ function mensajeOperacion(titulo,mensaje,tipo) {
     swal(titulo, mensaje, tipo);
 }
 
-function listar(){
+function listar() {
     $.ajax({
         url:"http://127.0.0.1:8000/Proyecto_tp/tipo-servicio/read",
         method:"GET",
@@ -129,15 +146,26 @@ function listar(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipoServicio("+rs.tipo_servicio_id+",'"+rs.tipo_serv_nombre+"');\">";
-                lista = lista + "<td>";
-                lista = lista + rs.tipo_servicio_id;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.tipo_serv_nombre;
-                lista = lista +"</td>";
-            lista = lista + "</tr>";
+
+            // 🟢 Formatear precio con puntos
+            const precio = rs.tip_serv_precio 
+                ? parseInt(rs.tip_serv_precio).toLocaleString('es-ES') 
+                : "0";
+
+            lista += "<tr class=\"item-list\" onclick=\"seleccionTipoServicio("
+                + rs.tipo_servicio_id + ",'"
+                + rs.tipo_serv_nombre + "','"
+                + precio + "');\">";
+
+            lista += "<td>" + rs.tipo_servicio_id + "</td>";
+            lista += "<td>" + rs.tipo_serv_nombre + "</td>";
+
+            // 🟢 Mostrar precio formateado
+            lista += "<td>" + precio + "</td>";
+
+            lista += "</tr>";
         }
+
         $("#tableBody").html(lista);
         formatoTabla();
     })
@@ -145,9 +173,10 @@ function listar(){
         alert(c);
     })
 }
-function seleccionTipoServicio(codigo, tipo_serv_nombre){
+function seleccionTipoServicio(codigo, tipo_serv_nombre,tip_serv_precio){
     $("#txtCodigo").val(codigo);
     $("#tipo_serv_nombre").val(tipo_serv_nombre);
+    $("#tip_serv_precio").val(tip_serv_precio);
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").removeAttr("disabled");
@@ -167,7 +196,7 @@ function grabar(){
     if (descripcion === "") {
         swal({
             title: "Error",
-            text: "El campo no debe estar vacío.",
+            text: "Ningún campo debe estar vacío.",
             type: "error"
         });
         return;  // Salir de la función si la validación falla
@@ -188,7 +217,8 @@ function grabar(){
         dataType: "json",
         data: { 
             'id': $("#txtCodigo").val(), 
-            'tipo_serv_nombre': $("#tipo_serv_nombre").val()
+            'tipo_serv_nombre': $("#tipo_serv_nombre").val(), 
+            tip_serv_precio: $("#tip_serv_precio").val().replace(/\./g, "")
         }
 
     })
@@ -227,7 +257,7 @@ function grabar(){
             // Si no es JSON, mostrar el error genérico
             swal({
                 title: "Error",
-                text: "El registro ya existe",
+                text: "Ningún campo debe estar vacío.",
                 type: "error"
             });
         }

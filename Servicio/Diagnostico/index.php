@@ -235,6 +235,55 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- TIPO DE SERVICIO -->
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_veh_nombre" class="form-control" disabled>
+                                            <label class="form-label">Tipo de Vehículo</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_veh_capacidad" class="form-control" disabled>
+                                            <label class="form-label">Capacidad</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_veh_combustible" class="form-control" disabled>
+                                            <label class="form-label">Tipo Combustible</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_veh_categoria" class="form-control" disabled>
+                                            <label class="form-label">Categoría</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="marc_nom" class="form-control" disabled>
+                                            <label class="form-label">Marca</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="modelo_nom" class="form-control" disabled>
+                                            <label class="form-label">Modelo</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- BOTONES -->

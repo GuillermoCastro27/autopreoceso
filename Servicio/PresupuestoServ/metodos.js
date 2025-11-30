@@ -361,6 +361,7 @@ function buscarDiagnostico() {
         }
 
         $("#listaDiagnostico").html(lista).show();
+        $("#listaDiagnostico").attr("style", "display:block; position:absolute; z-index:2000;");
     })
     .fail(function(xhr) {
         console.error(xhr.responseText);
@@ -430,6 +431,7 @@ function buscarPromociones() {
         }
 
         $("#listaPromociones").html(lista).show();
+        $("#listaPromociones").attr("style", "display:block; position:absolute; z-index:2000;");
     })
     .fail(function(xhr) {
         console.error(xhr.responseText);
@@ -477,6 +479,7 @@ function buscarDescuentos() {
         }
 
         $("#listaDescuentos").html(lista).show();
+        $("#listaDescuentos").attr("style", "display:block; position:absolute; z-index:2000;");
     })
     .fail(function(xhr) {
         console.error(xhr.responseText);

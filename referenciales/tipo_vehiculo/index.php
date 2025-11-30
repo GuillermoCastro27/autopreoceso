@@ -142,6 +142,14 @@
                                         <div id="listaModelos" style="display:none;"></div>
                                     </div>
                                 </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="modelo_año" class="form-control" disabled>
+                                            <label class="form-label">Año</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- BOTONES -->
@@ -177,6 +185,7 @@
                                             <th>Observación</th>
                                             <th>Marca</th>
                                             <th>Modelo</th>
+                                            <th>Año</th>
                                         </tr>
                                     </thead>
 
@@ -192,6 +201,7 @@
                                             <th>Observación</th>
                                             <th>Marca</th>
                                             <th>Modelo</th>
+                                            <th>Año</th>
                                         </tr>
                                     </tfoot>
                                 </table>

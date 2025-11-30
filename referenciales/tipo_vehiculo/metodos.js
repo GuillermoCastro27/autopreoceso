@@ -57,7 +57,8 @@ function agregar(){
     $("#tip_veh_categoria").removeAttr("disabled");
     $("#tip_veh_observacion").removeAttr("disabled");
     $("#marc_nom").removeAttr("disabled");
-    $("#modelo_nom").removeAttr("disabled");
+    $("#modelo_nom").attr("disabled","true");
+    $("#modelo_año").attr("disabled","true");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -77,7 +78,8 @@ function editar(){
     $("#tip_veh_categoria").removeAttr("disabled");
     $("#tip_veh_observacion").removeAttr("disabled");
     $("#marc_nom").removeAttr("disabled");
-    $("#modelo_nom").removeAttr("disabled");
+    $("#modelo_nom").attr("disabled","true");
+    $("#modelo_año").attr("disabled","true");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -132,79 +134,84 @@ function mensajeOperacion(titulo,mensaje,tipo) {
     swal(titulo, mensaje, tipo);
 }
 
-function listar(){
+function listar() {
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/tipo-vehiculo/read",
-        method:"GET",
+        url: "http://127.0.0.1:8000/Proyecto_tp/tipo-vehiculo/read",
+        method: "GET",
         dataType: "json"
     })
-    .done(function(resultado){
+    .done(function(resultado) {
+
         var lista = "";
-        for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipoVehiculo("+rs.tipo_vehiculo_id+","+rs.marca_id+","+rs.modelo_id+",'"+rs.tip_veh_nombre+"','"+rs.tip_veh_capacidad+"','"+rs.tip_veh_combustible+"','"+rs.tip_veh_categoria+"','"+rs.tip_veh_observacion+"','"+rs.marc_nom+"','"+rs.modelo_nom+"');\">";
-                lista = lista + "<td>";
-                lista = lista + rs.tipo_vehiculo_id;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.marca_id;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.modelo_id;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.tip_veh_nombre;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.tip_veh_capacidad;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.tip_veh_combustible;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.tip_veh_categoria;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.tip_veh_observacion;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.marc_nom;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.modelo_nom;
-                lista = lista +"</td>";
-            lista = lista + "</tr>";
+        for (let rs of resultado) {
+
+            lista += `
+                <tr class="item-list" 
+                    onclick="seleccionTipoVehiculo(
+                        ${rs.tipo_vehiculo_id},
+                        ${rs.marca_id},
+                        ${rs.modelo_id},
+                        '${rs.tip_veh_nombre}',
+                        '${rs.tip_veh_capacidad}',
+                        '${rs.tip_veh_combustible}',
+                        '${rs.tip_veh_categoria}',
+                        '${rs.tip_veh_observacion}',
+                        '${rs.marca_nombre}',
+                        '${rs.modelo_nombre}',
+                        '${rs.modelo_año}'
+                    )">
+                    
+                    <td>${rs.tipo_vehiculo_id}</td>
+                    <td>${rs.tip_veh_nombre}</td>
+                    <td>${rs.tip_veh_capacidad}</td>
+                    <td>${rs.tip_veh_combustible}</td>
+                    <td>${rs.tip_veh_categoria}</td>
+                    <td>${rs.tip_veh_observacion}</td>
+                    <td>${rs.marca_nombre}</td>
+                    <td>${rs.modelo_nombre}</td>
+                    <td>${rs.modelo_año}</td>
+
+                </tr>
+            `;
         }
+
         $("#tableBody").html(lista);
         formatoTabla();
     })
-    .fail(function(a,b,c){
+    .fail(function(a, b, c) {
         alert(c);
-    })
+    });
 }
-function seleccionTipoVehiculo(codigo,marca_id,modelo_id, tipo_veh_nombre,
-     tipo_veh_capacidad, tipo_veh_combustible, tipo_veh_categoria,
-      tipo_veh_observacion, marc_nom, modelo_nom){
+function seleccionTipoVehiculo(
+    codigo, marca_id, modelo_id,
+    tip_veh_nombre, tip_veh_capacidad, tip_veh_combustible,
+    tip_veh_categoria, tip_veh_observacion,
+    marca_nombre, modelo_nombre, modelo_año
+) {
     $("#txtCodigo").val(codigo);
-    $("#tipo_veh_nombre").val(tipo_veh_nombre);
-    $("#tipo_veh_capacidad").val(tipo_veh_capacidad);
-    $("#tipo_veh_combustible").val(tipo_veh_combustible);
-    $("#tipo_veh_categoria").val(tipo_veh_categoria);
-    $("#tipo_veh_observacion").val(tipo_veh_observacion);
-    $("#marc_nom").val(marc_nom);
-    $("#modelo_nom").val(modelo_nom);
-    $("#marca_id").val(marca_id);
-    $("#modelo_id").val(modelo_id);
+    $("#tip_veh_nombre").val(tip_veh_nombre);
+    $("#tip_veh_capacidad").val(tip_veh_capacidad);
+    $("#tip_veh_combustible").val(tip_veh_combustible);
+    $("#tip_veh_categoria").val(tip_veh_categoria);
+    $("#tip_veh_observacion").val(tip_veh_observacion);
 
-    $("#btnAgregar").attr("disabled","true");
+    $("#marc_nom").val(marca_nombre);
+    $("#marca_id").val(marca_id);
+
+    $("#modelo_nom").val(modelo_nombre);
+    $("#modelo_id").val(modelo_id);
+    $("#modelo_año").val(modelo_año);
+
+    $("#btnAgregar").attr("disabled", true);
     $("#btnEditar").removeAttr("disabled");
-    $("#btnGrabar").attr("disabled","true");
-    $("#btnCancelar").attr("disabled","true");
     $("#btnEliminar").removeAttr("disabled");
     
+    $("#btnGrabar").attr("disabled", true);
     $("#btnCancelar").removeAttr("disabled");
 
-    $(".form-line").attr("class","form-line focused");
+    $(".form-line").addClass("focused");
 }
+
 function buscarMarcas() {
     let texto = $("#marc_nom").val();
 
@@ -240,18 +247,82 @@ function buscarMarcas() {
                          .css({position:"absolute", zIndex:2000});
     });
 }
-function seleccionMarca(id,marc_nom){
+function seleccionMarca(id, marc_nom) {
     $("#marca_id").val(id);
     $("#marc_nom").val(marc_nom);
 
-    $("#listaMarcas").html("");
-    $("#listaMarcas").attr("style","display:none;");
+    // habilitar modelo
+    $("#modelo_nom").prop("disabled", false);
+
+    // limpiar modelo y año
+    $("#modelo_id").val("");
+    $("#modelo_nom").val("");
+    $("#modelo_anio").val("");
+
+    $("#listaMarcas").html("").hide();
+}
+function buscarModelo() {
+    let texto = $("#modelo_nom").val();
+    let marca_id = $("#marca_id").val();
+
+    if (!marca_id) {
+        $("#listaModelos").hide();
+        return;
+    }
+
+    $.ajax({
+        url: "http://127.0.0.1:8000/Proyecto_tp/modelo/buscarPorMarca",
+        method: "POST",
+        data: { 
+            texto: texto,
+            marca_id: marca_id
+        },
+        dataType: "json"
+    })
+    .done(function(resultado) {
+        var lista = "<ul class='list-group'>";
+
+        if (resultado.length === 0) {
+            lista += "<li class='list-group-item'>No se encontraron modelos</li>";
+        } else {
+            for (let rs of resultado) {
+                lista += `
+                    <li class="list-group-item" 
+                        onclick="seleccionModelos(${rs.id}, '${rs.modelo_nom}', '${rs.modelo_año}')">
+                        ${rs.modelo_nom} (${rs.modelo_año})
+                    </li>
+                `;
+            }
+        }
+
+        lista += "</ul>";
+
+        $("#listaModelos")
+            .html(lista)
+            .show()
+            .css({ position: "absolute", zIndex: 2000 });
+    });
+}
+function seleccionModelos(id, modelo_nom, modelo_año) {
+    $("#modelo_id").val(id);
+    $("#modelo_nom").val(modelo_nom);
+
+    // MOSTRAR EL AÑO AQUÍ
+    $("#modelo_año").val(modelo_año);
+
+    $("#listaModelos").html("").hide();
 }
 function grabar(){
-    var descripcion = $("#tipo_serv_nombre").val().trim();
+    var nombre = $("#tip_veh_nombre").val().trim();
+    var capacidad = $("#tip_veh_capacidad").val().trim();
+    var combustible = $("#tip_veh_combustible").val().trim();
+    var categoria = $("#tip_veh_categoria").val().trim();
+    var observacion = $("#tip_veh_observacion").val().trim();
+    var marca = $("#marc_nom").val().trim();
+    var modelo = $("#modelo_nom").val().trim();
 
     // Validar que el campo descripción no esté vacío
-    if (descripcion === "") {
+    if (nombre === "") {
         swal({
             title: "Error",
             text: "El campo no debe estar vacío.",
@@ -259,14 +330,62 @@ function grabar(){
         });
         return;  // Salir de la función si la validación falla
     }
-    var endpoint = "tipo-servicio/create";
+    if (capacidad === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return;  // Salir de la función si la validación falla
+    }
+    if (combustible === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return;  // Salir de la función si la validación falla
+    }
+    if (categoria === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return;  // Salir de la función si la validación falla
+    }
+    if (observacion === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return;  // Salir de la función si la validación falla
+    }
+    if (marca === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return;  // Salir de la función si la validación falla
+    }
+    if (modelo === "") {
+        swal({
+            title: "Error",
+            text: "El campo no debe estar vacío.",
+            type: "error"
+        });
+        return;  // Salir de la función si la validación falla
+    }
+    var endpoint = "tipo-vehiculo/create";
     var metodo = "POST";
     if($("#txtOperacion").val()==2){
-        endpoint = "tipo-servicio/update/"+$("#txtCodigo").val();
+        endpoint = "tipo-vehiculo/update/"+$("#txtCodigo").val();
         metodo = "PUT";
     }
     if($("#txtOperacion").val()==3){
-        endpoint = "tipo-servicio/delete/"+$("#txtCodigo").val();
+        endpoint = "tipo-vehiculo/delete/"+$("#txtCodigo").val();
         metodo = "DELETE";
     }
     $.ajax({
@@ -275,7 +394,13 @@ function grabar(){
         dataType: "json",
         data: { 
             'id': $("#txtCodigo").val(), 
-            'tipo_serv_nombre': $("#tipo_serv_nombre").val()
+            'tip_veh_nombre': $("#tip_veh_nombre").val(), 
+            'tip_veh_capacidad': $("#tip_veh_capacidad").val(), 
+            'tip_veh_combustible': $("#tip_veh_combustible").val(), 
+            'tip_veh_categoria': $("#tip_veh_categoria").val(), 
+            'tip_veh_observacion': $("#tip_veh_observacion").val(), 
+            'marca_id': $("#marca_id").val(), 
+            'modelo_id': $("#modelo_id").val()
         }
 
     })
