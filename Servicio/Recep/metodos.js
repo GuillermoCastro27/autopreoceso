@@ -62,8 +62,9 @@ function agregar(){
     $("#emp_razon_social").attr("disabled","true");
     $("#suc_razon_social").attr("disabled","true");
     $("#tipo_serv_nombre").attr("disabled","true");
-    $("#tip_veh_nombre").removeAttr("disabled");
+    $("#tip_veh_nombre").attr("disabled","true");
     $("#cli_nombre").attr("disabled","true");
+    $("#marc_nom").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -92,8 +93,9 @@ function editar(){
     $("#emp_razon_social").attr("disabled","true");
     $("#suc_razon_social").attr("disabled","true");
     $("#tipo_serv_nombre").attr("disabled","true");
-    $("#tip_veh_nombre").removeAttr("disabled");
+    $("#tip_veh_nombre").attr("disabled","true");
     $("#cli_nombre").attr("disabled","true");
+    $("#marc_nom").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -214,9 +216,10 @@ function listar() {
 
                 // Vehículo
                 + "'" + esc(rs.tip_veh_nombre) + "', '"
-                + esc(rs.tip_veh_capacidad) + "', '"
+                + esc(rs.tip_veh_capacidad) + "',  '"
                 + esc(rs.tip_veh_combustible) + "', '"
-                + esc(rs.tip_veh_categoria) + "', '"
+                + esc(rs.tip_veh_categoria) + "','"
+                + esc(rs.tip_veh_observacion) + "', '"
                 + esc(rs.marc_nom) + "', '"
                 + esc(rs.modelo_nom) + "', '"
                 + esc(rs.modelo_año) + "'"
@@ -247,7 +250,7 @@ function seleccionRecepcion(
     recep_cab_observaciones, recep_cab_prioridad, recep_cab_kilometraje,
     recep_cab_nivel_combustible, tipo_servicio, cli_nombre, cli_apellido, cli_ruc,
     cli_telefono, cli_direccion, cli_correo, solicitudes_cab_id,
-    tip_veh_nombre, tip_veh_capacidad, tip_veh_combustible, tip_veh_categoria,
+    tip_veh_nombre, tip_veh_capacidad, tip_veh_combustible, tip_veh_categoria,tip_veh_observacion,
     marc_nom, modelo_nom, modelo_año
 ) {
 
@@ -290,6 +293,7 @@ function seleccionRecepcion(
     $("#tip_veh_capacidad").val(tip_veh_capacidad);
     $("#tip_veh_combustible").val(tip_veh_combustible);
     $("#tip_veh_categoria").val(tip_veh_categoria);
+    $("#tip_veh_observacion").val(tip_veh_observacion);
     $("#marc_nom").val(marc_nom);
     $("#modelo_nom").val(modelo_nom);
     $("#modelo_año").val(modelo_año);
@@ -402,42 +406,58 @@ function seleccionSolicitud(
     // Forzar enfoque visual en campos llenos
     $(".form-line").attr("class", "form-line focused");
 }
-function buscarTipoVehiculo(){
+function buscarTipoVehiculoPorMarca() {
+    let marca_id = $("#marca_id").val();
+    let texto = $("#tip_veh_nombre").val();
+
+    if (!marca_id) {
+        $("#listaTipoVeh").html("<li class='list-group-item'>Seleccione primero una marca</li>")
+                          .show()
+                          .css({position: "absolute", zIndex: 2000});
+        return;
+    }
+
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/tipo-vehiculo/read",
-        method:"GET",
+        url: "http://127.0.0.1:8000/Proyecto_tp/tipo-vehiculo/buscarPorMarca",
+        method: "GET",
+        data: { marca_id: marca_id, texto: texto },
         dataType: "json"
     })
     .done(function(resultado){
-        var lista = "<ul class=\"list-group\">";
-        for(rs of resultado){
-            let descripcion = 
-                rs.tip_veh_nombre + " – " + 
-                rs.marca_nombre + " " + 
-                rs.modelo_nombre + " " + 
+        var lista = "<ul class='list-group'>";
+
+        for (let rs of resultado) {
+            let descripcion =
+                rs.tip_veh_nombre + " – " +
+                rs.marca_nombre + " " +
+                rs.modelo_nombre + " " +
                 rs.modelo_año;
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionTipoVehiculo("
-                  + rs.tipo_vehiculo_id + "," 
-                  + rs.marca_id + "," 
-                  + rs.modelo_id + ",'"
-                  + rs.tip_veh_nombre + "','"
-                  + rs.tip_veh_capacidad + "','"
-                  + rs.tip_veh_combustible + "','"
-                  + rs.tip_veh_categoria + "','"
-                  + rs.tip_veh_observacion + "','"
-                  + rs.marca_nombre + "','"
-                  + rs.modelo_nombre + "','"
-                  + rs.modelo_año
-                  + "');\">" + descripcion + "</li>";
+
+            lista += `
+                <li class='list-group-item'
+                    onclick="seleccionTipoVehiculo(
+                        ${rs.tipo_vehiculo_id},
+                        ${rs.marca_id},
+                        ${rs.modelo_id},
+                        '${rs.tip_veh_nombre}',
+                        '${rs.tip_veh_capacidad}',
+                        '${rs.tip_veh_combustible}',
+                        '${rs.tip_veh_categoria}',
+                        '${rs.tip_veh_observacion}',
+                        '${rs.marca_nombre}',
+                        '${rs.modelo_nombre}',
+                        '${rs.modelo_año}'
+                    )">
+                    ${descripcion}
+                </li>
+            `;
         }
+
         lista += "</ul>";
-        $("#listaTipoVeh").html(lista);
-        $("#listaTipoVeh").attr("style","display:block; position:absolute; z-index:2000;");
-    })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
-    })
+        $("#listaTipoVeh").html(lista)
+                          .show()
+                          .css({position: "absolute", zIndex: 2000});
+    });
 }
 
 function seleccionTipoVehiculo(tipo_vehiculo_id,marca_id,modelo_id,tip_veh_nombre,tip_veh_capacidad,tip_veh_combustible,tip_veh_categoria,tip_veh_observacion,marca_nombre,modelo_nombre,modelo_año){
@@ -456,6 +476,68 @@ function seleccionTipoVehiculo(tipo_vehiculo_id,marca_id,modelo_id,tip_veh_nombr
     $("#listaTipoVeh").html("");
     $("#listaTipoVeh").attr("style","display:none;");
 }
+function buscarMarcasVehiculo() {
+    let texto = $("#marc_nom_veh").val();
+
+    $.ajax({
+        url: "http://127.0.0.1:8000/Proyecto_tp/marca/buscarVehiculo",
+        method: "POST",
+        data: { texto: texto },
+        dataType: "json"
+    })
+    .done(function(resultado) {
+        let lista = "<ul class='list-group'>";
+
+        if (resultado.length === 0) {
+            lista += "<li class='list-group-item'>No se encontraron marcas de vehículo</li>";
+        } else {
+            for (let rs of resultado) {
+                lista += `
+                    <li class="list-group-item"
+                        onclick="seleccionMarcaVehiculo(${rs.id}, '${rs.marc_nom}')">
+                        ${rs.marc_nom}
+                    </li>
+                `;
+            }
+        }
+
+        lista += "</ul>";
+        $("#listaMarcasVehiculo").html(lista)
+                                 .show()
+                                 .css({ position:"absolute", zIndex:2000 });
+    });
+}
+
+function seleccionMarcaVehiculo(id, nombre) {
+
+    // Guardar la marca seleccionada
+    $("#marca_id").val(id);
+    $("#marc_nom").val(nombre);
+
+    // Ocultar lista de marcas
+    $("#listaMarcasVehiculo").html("").hide();
+
+    // Habilitar campo Tipo de Vehículo
+    $("#tip_veh_nombre").prop("disabled", false);
+
+    // Limpiar tipo de vehículo
+    $("#tip_veh_nombre").val("");
+    $("#tipo_vehiculo_id").val("");
+
+    // Limpiar datos del tipo de vehículo
+    $("#tip_veh_capacidad").val("");
+    $("#tip_veh_combustible").val("");
+    $("#tip_veh_categoria").val("");
+    $("#tip_veh_observacion").val("");
+
+    // Limpiar modelo y año
+    $("#modelo_nom").val("");
+    $("#modelo_año").val("");
+
+    console.log("📌 Marca seleccionada:", nombre);
+}
+
+
 
 function grabar(){
     var observaciones = $("#recep_cab_observaciones").val().trim();

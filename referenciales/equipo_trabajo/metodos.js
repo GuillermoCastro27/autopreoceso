@@ -9,25 +9,25 @@ function formatoTabla(){
                 extend:'copy',
                 text:'COPIAR',
                 className:'btn btn-primary waves-effect',
-                title:'Listado de Modelos'
+                title:'Listado de Tipo de impuestos'
             },
             {
                 extend:'excel',
                 text:'EXCEL',
                 className:'btn btn-success waves-effect',
-                title:'Listado de Modelos'
+                title:'Listado de Tipo de impuestos'
             },
             {
                 extend:'pdf',
                 text:'PDF',
                 className:'btn btn-danger waves-effect',
-                title:'Listado de Modelos'
+                title:'Listado de Tipo de impuestos'
             },
             {
                 extend:'print',
                 text:'IMPRIMIR',
                 className:'btn btn-warning waves-effect',
-                title:'Listado de Modelos'
+                title:'Listado de Tipo de impuestos'
             }
         ],
         iDisplayLength:3,
@@ -51,10 +51,9 @@ function cancelar(){
 function agregar(){
     $("#txtOperacion").val(1);
     $("#txtCodigo").val(0);
-    $("#txtNom").removeAttr("disabled");
-    $("#marc_nom").attr("disabled","true");
-    $("#modelo_tipo").removeAttr("disabled");
-    $("#modelo_año").removeAttr("disabled");
+    $("#equipo_nombre").removeAttr("disabled");
+    $("#equipo_descripcion").removeAttr("disabled");
+    $("#equipo_categoria").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -68,10 +67,9 @@ function agregar(){
 
 function editar(){
     $("#txtOperacion").val(2);
-    $("#txtNom").removeAttr("disabled");
-    $("#marc_nom").removeAttr("disabled");
-    $("#modelo_tipo").removeAttr("disabled");
-    $("#modelo_año").removeAttr("disabled");
+    $("#equipo_nombre").removeAttr("disabled");
+    $("#equipo_descripcion").removeAttr("disabled");
+    $("#equipo_categoria").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -93,7 +91,22 @@ function eliminar(){
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
 }
+function formatearPrecio(input) {
+    // Eliminar puntos para poder trabajar el número real
+    let valor = input.value.replace(/\./g, "");
 
+    // Si no es número, salir
+    if (isNaN(valor)) {
+        input.value = "";
+        return;
+    }
+
+    // Convertir a número entero
+    let numero = parseInt(valor, 10);
+
+    // Formatear con puntos (estilo paraguayo)
+    input.value = numero.toLocaleString('es-ES'); 
+}
 
 function confirmarOperacion() {
     var oper = parseInt($("#txtOperacion").val());
@@ -126,34 +139,31 @@ function mensajeOperacion(titulo,mensaje,tipo) {
     swal(titulo, mensaje, tipo);
 }
 
-function listar(){
+function listar() {
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/modelo/read",
+        url:"http://127.0.0.1:8000/Proyecto_tp/equipo_trabajo/read",
         method:"GET",
         dataType: "json"
     })
     .done(function(resultado){
-        console.log(resultado); 
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionModelo("+rs.id+","+rs.marca_id+",'"+rs.marc_nom+"','"+rs.modelo_nom+"','"+rs.modelo_tipo+"','"+rs.modelo_año+"');\">";
-                lista = lista + "<td>";
-                lista = lista + rs.id;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.marc_nom;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.modelo_nom;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.modelo_tipo;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.modelo_año;
-                lista = lista +"</td>";
-            lista = lista + "</tr>";
+            lista += "<tr class=\"item-list\" onclick=\"seleccionTipoServicio("
+                + rs.equipo_trabajo_id + ",'"
+                + rs.equipo_nombre + "','"
+                + rs.equipo_descripcion + "','"
+                + rs.equipo_categoria + "');\">";
+
+            lista += "<td>" + rs.equipo_trabajo_id + "</td>";
+            lista += "<td>" + rs.equipo_nombre + "</td>";
+
+            // 🟢 Mostrar precio formateado
+            lista += "<td>" + rs.equipo_descripcion + "</td>";
+            lista += "<td>" + rs.equipo_categoria + "</td>";
+
+            lista += "</tr>";
         }
+
         $("#tableBody").html(lista);
         formatoTabla();
     })
@@ -161,13 +171,11 @@ function listar(){
         alert(c);
     })
 }
-function seleccionModelo(codigo, marca_id, marc_nom, modelo_nom, modelo_tipo, modelo_año){
+function seleccionTipoServicio(codigo, equipo_nombre,equipo_descripcion,equipo_categoria){
     $("#txtCodigo").val(codigo);
-    $("#marca_id").val(marca_id);
-    $("#marc_nom").val(marc_nom);
-    $("#txtNom").val(modelo_nom);
-    $("#modelo_tipo").val(modelo_tipo);
-    $("#modelo_año").val(modelo_año);
+    $("#equipo_nombre").val(equipo_nombre);
+    $("#equipo_descripcion").val(equipo_descripcion);
+    $("#equipo_categoria").val(equipo_categoria);
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").removeAttr("disabled");
@@ -179,99 +187,45 @@ function seleccionModelo(codigo, marca_id, marc_nom, modelo_nom, modelo_tipo, mo
 
     $(".form-line").attr("class","form-line focused");
 }
-function buscarMarcas() {
-    let texto = $("#marc_nom").val();
-    let tipo = $("#modelo_tipo").val();
-
-    if (tipo === "") {
-        $("#listaMarcas").html("<div class='list-group-item'>Seleccione el tipo de modelo primero</div>").show();
-        return;
-    }
-
-    $.ajax({
-        url: "http://127.0.0.1:8000/Proyecto_tp/marca/buscarPorTipo",
-        method: "POST",
-        data: { texto: texto, tipo: tipo },
-        dataType: "json"
-    })
-    .done(function(resultado) {
-        let lista = "<ul class='list-group'>";
-
-        if (resultado.length === 0) {
-            lista += "<li class='list-group-item'>No se encontraron marcas</li>";
-        } else {
-            for (let rs of resultado) {
-                lista += `
-                    <li class="list-group-item"
-                        onclick="seleccionMarca(${rs.id}, '${rs.marc_nom}', '${rs.mar_tipo}')">
-                        ${rs.marc_nom}
-                    </li>
-                `;
-            }
-        }
-
-        lista += "</ul>";
-        $("#listaMarcas").html(lista).show().css({position:"absolute", zIndex:2000});
-    });
-}
-function seleccionMarca(id,marc_nom){
-    $("#marca_id").val(id);
-    $("#marc_nom").val(marc_nom);
-
-    $("#listaMarcas").html("");
-    $("#listaMarcas").attr("style","display:none;");
-}
-function habilitarMarca() {
-    let tipo = $("#modelo_tipo").val();
-
-    // Si no seleccionó nada
-    if (tipo === "") {
-        $("#marc_nom").prop("disabled", true);
-        $("#marc_nom").val("");
-        $("#marca_id").val("");
-        $("#listaMarcas").hide();
-
-        // Deshabilitar también modelo año
-        $("#modelo_año").prop("disabled", true).val("");
-
-        return;
-    }
-
-    // Si seleccionó algún tipo → habilitar MARCA
-    $("#marc_nom").prop("disabled", false);
-    $("#marc_nom").val("");
-    $("#marca_id").val("");
-    $("#listaMarcas").hide();
-
-    // 🔹 Control específico para VEHÍCULO
-    if (tipo === "VEHICULO") {
-        $("#modelo_año").prop("disabled", false); // habilitar
-    } else {
-        $("#modelo_año").prop("disabled", true).val(""); // deshabilitar y limpiar
-    }
-}
-
 
 function grabar(){
-    var descripcion = $("#txtNom").val().trim();
+    var nombre = $("#equipo_nombre").val().trim();
+    var descripcion = $("#equipo_descripcion").val().trim();
+    var categoria = $("#equipo_categoria").val().trim();
 
     // Validar que el campo descripción no esté vacío
-    if (descripcion === "") {
+    if (nombre === "") {
         swal({
             title: "Error",
-            text: "El campo no debe estar vacío.",
+            text: "Ningún campo debe estar vacío.",
             type: "error"
         });
         return;  // Salir de la función si la validación falla
     }
-    var endpoint = "modelo/create";
+    if (descripcion === "") {
+        swal({
+            title: "Error",
+            text: "Ningún campo debe estar vacío.",
+            type: "error"
+        });
+        return;  // Salir de la función si la validación falla
+    }
+    if (categoria === "") {
+        swal({
+            title: "Error",
+            text: "Ningún campo debe estar vacío.",
+            type: "error"
+        });
+        return;  // Salir de la función si la validación falla
+    }
+    var endpoint = "equipo_trabajo/create";
     var metodo = "POST";
     if($("#txtOperacion").val()==2){
-        endpoint = "modelo/update/"+$("#txtCodigo").val();
+        endpoint = "equipo_trabajo/update/"+$("#txtCodigo").val();
         metodo = "PUT";
     }
     if($("#txtOperacion").val()==3){
-        endpoint = "modelo/delete/"+$("#txtCodigo").val();
+        endpoint = "equipo_trabajo/delete/"+$("#txtCodigo").val();
         metodo = "DELETE";
     }
     $.ajax({
@@ -280,10 +234,9 @@ function grabar(){
         dataType: "json",
         data: { 
             'id': $("#txtCodigo").val(), 
-            'modelo_nom': $("#txtNom").val(), 
-            'modelo_tipo': $("#modelo_tipo").val(), 
-            'modelo_año': $("#modelo_año").val(), 
-            'marca_id': $("#marca_id").val()
+            'equipo_nombre': $("#equipo_nombre").val(),  
+            'equipo_descripcion': $("#equipo_descripcion").val(),  
+            'equipo_categoria': $("#equipo_categoria").val()
         }
 
     })
@@ -299,8 +252,32 @@ function grabar(){
             }
         });
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
-    })
+    .fail(function(a) {
+        // Manejar el error de respuesta personalizada del servidor
+        try {
+            var response = JSON.parse(a.responseText);  // Intentamos obtener la respuesta JSON
+            if (response.mensaje.includes("ya existe")) {
+                // Mostrar mensaje específico para el error de duplicado
+                swal({
+                    title: "Error",
+                    text: "Error: El registro ya existe",
+                    type: "error"
+                });
+            } else {
+                // Mostrar cualquier otro error personalizado
+                swal({
+                    title: "Error",
+                    text: response.mensaje,
+                    type: "error"
+                });
+            }
+        } catch (e) {
+            // Si no es JSON, mostrar el error genérico
+            swal({
+                title: "Error",
+                text: "Ningún campo debe estar vacío.",
+                type: "error"
+            });
+        }
+    });
 }

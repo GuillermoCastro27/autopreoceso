@@ -56,8 +56,8 @@ function agregar(){
     $("#item_precio").removeAttr("disabled");
     $("#tipo_descripcion").removeAttr("disabled");
     $("#tip_imp_nom").removeAttr("disabled");
-    $("#marc_nom").removeAttr("disabled");
-    $("#modelo_nom").removeAttr("disabled");
+    $("#marc_nom").attr("disabled","true");
+    $("#modelo_nom").attr("disabled","true");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -76,8 +76,8 @@ function editar(){
     $("#item_precio").removeAttr("disabled");
     $("#tipo_descripcion").removeAttr("disabled");
     $("#tip_imp_nom").removeAttr("disabled");
-    $("#marc_nom").removeAttr("disabled");
-    $("#modelo_nom").removeAttr("disabled");
+    $("#marc_nom").attr("disabled","true");
+    $("#modelo_nom").attr("disabled","true");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -213,13 +213,29 @@ function buscarTipoItems(){
 
 // Rellena el campo de producto seleccionado.
 function seleccionTipoItems(id, tipo_descripcion, tipo_objeto) {
-    $("#tipo_id").val(id);  // Asegúrate de que el campo hidden exista
+    $("#tipo_id").val(id);
     $("#tipo_descripcion").val(tipo_descripcion);
     $("#tipo_objeto").val(tipo_objeto);
 
-    $("#listaTipoItems").html("");
-    $("#listaTipoItems").attr("style", "display:none;");
+    // Ocultar lista
+    $("#listaTipoItems").html("").hide();
+
+    // HABILITAR campo Marca
+    $("#marc_nom").prop("disabled", false);
+
+    // LIMPIAR Marca y Modelo anteriores
+    $("#marca_id").val("");
+    $("#marc_nom").val("");
+
+    $("#modelo_id").val("");
+    $("#modelo_nom").val("");
+
+    // Modelo debe quedar DESHABILITADO hasta elegir Marca
+    $("#modelo_nom").prop("disabled", true);
+
+    console.log("📌 Tipo Item seleccionado:", tipo_descripcion);
 }
+
 
 function buscarTipoImpuestos(){
     $.ajax({
@@ -251,64 +267,103 @@ function seleccionTipoImpuestos(id,tip_imp_nom,tipo_imp_tasa){
     $("#listaTipoImpuestos").attr("style","display:none;");
 }
 
-function buscarMarcas(){
+function buscarMarcaItem() {
+    let texto = $("#marc_nom").val();      // campo de texto Marca en Items
+    let tipoItem = $("#tipo_descripcion").val();  // 👈 ID del select de Tipo Items (ajustá al tuyo real)
+
+    if (!tipoItem) {
+        $("#listaMarcas").html(
+            "<li class='list-group-item'>Seleccione primero el Tipo de Ítem</li>"
+        ).show().css({ position: "absolute", zIndex: 2000 });
+        return;
+    }
+
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/marca/read",
-        method:"GET",
+        url: "http://127.0.0.1:8000/Proyecto_tp/marca/buscarPorTipoItem",
+        method: "POST",
+        data: { texto: texto, tipo_descripcion: tipoItem },
         dataType: "json"
     })
-    .done(function(resultado){
-        var lista = "<ul class=\"list-group\">";
-        for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionMarca("+rs.id+",'"+rs.marc_nom+"');\">"+rs.marc_nom+"</li>";
+    .done(function(resultado) {
+        let lista = "<ul class='list-group'>";
+
+        if (resultado.length === 0) {
+            lista += "<li class='list-group-item'>No se encontraron marcas</li>";
+        } else {
+            for (let rs of resultado) {
+                lista += `
+                    <li class="list-group-item"
+                        onclick="seleccionMarcaItem(${rs.id}, '${rs.marc_nom}')">
+                        ${rs.marc_nom}
+                    </li>
+                `;
+            }
         }
+
         lista += "</ul>";
-        $("#listaMarcas").html(lista);
-        $("#listaMarcas").attr("style","display:block; position:absolute; z-index:2000;");
-    })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
-    })
+        $("#listaMarcas").html(lista)
+                         .show()
+                         .css({ position: "absolute", zIndex: 2000 });
+    });
 }
 
-function seleccionMarca(id,marc_nom){
+function seleccionMarcaItem(id, nombre) {
     $("#marca_id").val(id);
-    $("#marc_nom").val(marc_nom);
+    $("#marc_nom").val(nombre);
 
-    $("#listaMarcas").html("");
-    $("#listaMarcas").attr("style","display:none;");
+    $("#listaMarcas").html("").hide();
+
+    // HABILITAR Modelo
+    $("#modelo_nom").prop("disabled", false);
+
+    // LIMPIAR modelo previo
+    $("#modelo_id").val("");
+    $("#modelo_nom").val("");
+
+    console.log("📌 Marca seleccionada:", nombre);
 }
 
-function buscarModelo(){
+function buscarModeloItem() {
+    let marca_id = $("#marca_id").val();
+    let texto = $("#modelo_nom").val();
+
+    if (!marca_id) {
+        $("#listaModelos").html(
+            "<li class='list-group-item'>Seleccione primero una Marca</li>"
+        ).show();
+        return;
+    }
+
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/modelo/read",
-        method:"GET",
+        url: "http://127.0.0.1:8000/Proyecto_tp/modelo/buscarModelosItem",
+        method: "GET",
+        data: { marca_id: marca_id, texto: texto },
         dataType: "json"
     })
-    .done(function(resultado){
-        var lista = "<ul class=\"list-group\">";
-        for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionModelos("+rs.id+",'"+rs.modelo_nom+"');\">"+rs.modelo_nom+"</li>";
+    .done(function(resultado) {
+        let lista = "<ul class='list-group'>";
+        for (let rs of resultado) {
+            lista += `
+                <li class="list-group-item"
+                    onclick="seleccionModeloItem(${rs.id}, '${rs.modelo_nom}')">
+                    ${rs.modelo_nom}
+                </li>
+            `;
         }
         lista += "</ul>";
-        $("#listaModelos").html(lista);
-        $("#listaModelos").attr("style","display:block; position:absolute; z-index:2000;");
-    })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
-    })
+
+        $("#listaModelos").html(lista).show();
+    });
 }
 
-function seleccionModelos(id,modelo_nom){
+function seleccionModeloItem(id, nombre) {
     $("#modelo_id").val(id);
-    $("#modelo_nom").val(modelo_nom);
+    $("#modelo_nom").val(nombre);
 
-    $("#listaModelos").html("");
-    $("#listaModelos").attr("style","display:none;");
+    $("#listaModelos").html("").hide();
+
+    console.log("📌 Modelo de ITEM seleccionado:", nombre);
 }
-
 
 function grabar() {
     var endpoint = "items/create";

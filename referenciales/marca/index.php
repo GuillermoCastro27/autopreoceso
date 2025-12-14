@@ -74,6 +74,7 @@
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                            <select id="mar_tipo" class="form-control" disabled >
+                                                <option value="LUBRICANTE">LUBRICANTE</option>
                                                 <option value="PRODUCTO">PRODUCTO</option>
                                                 <option value="VEHICULO">VEHICULO</option>
                                             </select>

@@ -182,11 +182,11 @@
                                     <li><a href="/taller_front/referenciales/items"><span>Mantener Items</span></a></li>
                                     <li><a href="/taller_front/referenciales/tipo_item"><span>Mantener Tipo Items</span></a></li>
                                     <li><a href="/taller_front/referenciales/marca"><span>Mantener Marca</span></a></li>
-                                    <li><a href="/taller_front/referenciales/item_marca"><span>Mantener Item Marca</span></a></li>
+                                    <!--<li><a href="/taller_front/referenciales/item_marca"><span>Mantener Item Marca</span></a></li>-->
                                     <li><a href="/taller_front/referenciales/modelo"><span>Mantener Modelo</span></a></li>
-                                    <li><a href="/taller_front/referenciales/item_modelo"><span>Mantener Item Modelo</span></a></li>
+                                    <!-- <li><a href="/taller_front/referenciales/item_modelo"><span>Mantener Item Modelo</span></a></li>-->
                                     <li><a href="/taller_front/referenciales/tipo_impuesto"><span>Mantener Tipo Impuesto</span></a></li>
-                                    <li><a href="/taller_front/referenciales/Motivo_ajuste"><span>MantenerMotivo Ajuste</span></a></li>
+                                    <li><a href="/taller_front/referenciales/Motivo_ajuste"><span>Mantener Motivo Ajuste</span></a></li>
                                 </ul>
                             </li>
                             <li>
@@ -200,6 +200,7 @@
                                     <li><a href="/taller_front/referenciales/Tipo_diagnostico"><span>Mantener Tipo Diagnostico</span></a></li>
                                     <li><a href="/taller_front/referenciales/tipo_promociones"><span>Mantener Tipo Promociones</span></a></li>
                                     <li><a href="/taller_front/referenciales/tipo_descuentos"><span>Mantener Tipo Descuentos</span></a></li>
+                                    <li><a href="/taller_front/referenciales/equipo_trabajo"><span>Mantener Equipo de Trabajo</span></a></li>
                                 </ul>
                             </li>
                             <li>
@@ -258,7 +259,8 @@
                             <li><a href="/taller_front/Servicio/Descuentos"><span>Registrar Descuentos</span></a></li>
                             <li><a href="/taller_front/Servicio/PresupuestoServ"><span>Registrar Presupuesto de Servicio</span></a></li>
                             <li><a href="/taller_front/Servicio/OrdenServicio"><span>Registrar Orden de Servicio</span></a></li>
-                            <li><a href="/taller_front/Servicio/ContratoServicio"><span>Registrar Contrato de Servicio</span></a></li>
+                            <li><a href="/taller_front/Servicio/contrato_servicio"><span>Registrar Contrato de Servicio</span></a></li>
+                            <li><a href="/taller_front/Servicio/Reclamo_cli"><span>Registrar Reclamo de Clientes</span></a></li>
                         </ul>
                     </li>
                     <li>

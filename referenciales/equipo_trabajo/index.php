@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>GUI MODELO</title>
+    <title>GUI EQUIPO DE TRABAJO</title>
     <!-- Favicon-->
     <link rel="icon" href="../../images.ico" type="image/x-icon">
 
@@ -47,7 +47,7 @@
                     
                     <div class="card">
                         <div class="header">
-                            <h2>Mantener datos de Modelo <small>CRUD de Modelo</small> </h2>
+                            <h2>Mantener datos de Equipo de trabajo <small>CRUD de Equipo de trabajo</small> </h2>
                         </div>
                         <div class="body">
                             <div class="row clearfix">
@@ -61,50 +61,32 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <!-- Campo de texto para la ciudad, habilitado -->
-                                            <input type="text" id="marc_nom" class="form-control" disabled onkeyup="buscarMarcas();">
-                                            <label class="form-label">Marca</label>
-                                        </div>
-
-                                        <!-- Campo oculto para almacenar el ID de la ciudad -->
-                                        <input type="hidden" id="marca_id" name="marca_id">
-
-                                        <!-- Contenedor para la lista de ciudades -->
-                                        <div id="listaMarcas" style="display:none;"></div>
-                                    </div>
-                                </div>
                                 <!-- CAMPO PARA DESCRIPCION CON 4 COLUMNAS -->
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="txtNom" class="form-control" disabled>
-                                            <label class="form-label">Modelo</label>
+                                            <input type="text" id="equipo_nombre" class="form-control" disabled>
+                                            <label class="form-label">Nombre</label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-7">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <select id="modelo_tipo" class="form-control" disabled onchange="habilitarMarca();">
-                                                <option value=""disabled selected>Seleccione tipo...</option>
-                                                <option value="PRODUCTO">PRODUCTO</option>
-                                                <option value="VEHICULO">VEHICULO</option>
-                                            </select>
-                                            <label class="form-label">Tipo Modelo</label>
+                                            <input type="text" id="equipo_descripcion" class="form-control" disabled>
+                                            <label class="form-label">Descripcion</label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-4">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="modelo_año" class="form-control" disabled>
-                                            <label class="form-label">Modelo Año</label>
+                                            <input type="text" id="equipo_categoria" class="form-control" disabled>
+                                            <label class="form-label">Categoria</label>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
                             <div class="button-demo">
                                 <button type="button" id="btnAgregar" class="btn btn-success waves-effect" onclick="agregar();">AGREGAR</button>
                                 <button type="button" id="btnEditar" class="btn btn-primary waves-effect" onclick="editar();"disabled>MODIFICAR</button>
@@ -114,10 +96,11 @@
                             </div>
                         </div>
                     </div>
+                    </div>
                 </div> 
                 <div class="card">
                         <div class="header">
-                            <h2>Registros de Modelo</h2>
+                            <h2>Registros de Equipo de trabajo</h2>
                         </div>
                         <div class="body">
                             <div class="table-responsive">
@@ -125,10 +108,9 @@
                                     <thead>
                                         <tr>
                                             <th>Código</th>
-                                            <th>Marca</th>
-                                            <th>Modelo</th>
-                                            <th>Tipo Modelo</th>
-                                            <th>Modelo Año</th>
+                                            <th>Nombre</th>
+                                            <th>Descripcion</th>
+                                            <th>Categoria</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableBody">
@@ -137,10 +119,9 @@
                                     <tfoot>
                                         <tr>
                                             <th>Código</th>
-                                            <th>Marca</th>
-                                            <th>Modelo</th>
-                                            <th>Tipo Modelo</th>
-                                            <th>Modelo Año</th>
+                                            <th>Nombre</th>
+                                            <th>Descripcion</th>
+                                            <th>Categoria</th>
                                         </tr>
                                     </tfoot>    
                                 </table>

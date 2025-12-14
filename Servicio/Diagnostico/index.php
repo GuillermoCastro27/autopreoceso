@@ -242,6 +242,7 @@
                                             <input type="text" id="tip_veh_nombre" class="form-control" disabled>
                                             <label class="form-label">Tipo de Vehículo</label>
                                         </div>
+                                        <input type="hidden" id="tipo_vehiculo_id" name="tipo_vehiculo_id">
                                     </div>
                                 </div>
                                 <div class="col-sm-3">

@@ -92,7 +92,7 @@
                                     </div>
                                 </div>
                                 <!-- FECHA -->
-                                <div class="col-sm-3">
+                                  <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" id="contrato_fecha" class="datetimepicker form-control" disabled>
@@ -100,7 +100,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                
                                 <!-- FECHA ESTIMADA -->
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
@@ -166,16 +165,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- OBSERVACIONES -->
-                                <div class="col-sm-6">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="contrato_observacion" class="form-control" disabled>
-                                            <label class="form-label">Observaciones</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
+                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" id="tipo_serv_nombre" class="form-control" disabled onkeyup="buscarTipoServicio();">
@@ -185,6 +175,76 @@
                                         <div id="listaTipoServ" style="display:none;"></div>
                                     </div>
                                 </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                           <select id="contrato_tipo" class="form-control" disabled>
+                                                <option value=""disabled selected>Seleccione tipo...</option>
+                                                <option value="FLOTA">Flota</option>
+                                                <option value="MANTENIMIENTO">Mantenimiento</option>
+                                                <option value="SERVICIO_UNICO">Servicio Unico</option>
+                                            </select>
+                                            <label class="form-label">Tipo Contrato</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-11">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <textarea id="contrato_objeto" class="form-control" rows="2" disabled></textarea>
+                                            <label class="form-label">Objeto</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-11">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <textarea id="contrato_alcance" class="form-control" rows="2" disabled></textarea>
+                                            <label class="form-label">Alcance</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-11">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <textarea id="contrato_responsabilidad" class="form-control" rows="2" disabled></textarea>
+                                            <label class="form-label">Responsabilidad</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-11">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <textarea id="contrato_garantia" class="form-control" rows="2" disabled></textarea>
+                                            <label class="form-label">Garantia</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-11">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <textarea id="contrato_limitacion" class="form-control" rows="2" disabled></textarea>
+                                            <label class="form-label">Limitación</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-11">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <textarea id="contrato_fuerza_mayor" class="form-control" rows="2" disabled></textarea>
+                                            <label class="form-label">Fuerza mayor</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-11">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <textarea id="contrato_jurisdiccion" class="form-control" rows="2" disabled></textarea>
+                                            <label class="form-label">Jurisdicción</label>
+                                        </div>
+                                    </div>
+                                </div>
+                               
                                  <!-- CLIENTE -->
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
@@ -245,6 +305,15 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- OBSERVACIONES -->
+                                <div class="col-sm-6">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="contrato_observacion" class="form-control" disabled>
+                                            <label class="form-label">Observaciones</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- BOTONES -->
@@ -254,7 +323,8 @@
                                 <button type="button" id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();"disabled>ANULAR</button>
                                 <button type="button" id="btnConfirmar" class="btn btn-success waves-effect" onclick="confirmar();"disabled>CONFIRMAR</button>
                                 <button type="button" id="btnGrabar" class="btn btn-default waves-effect" disabled onclick="confirmarOperacion();">GRABAR</button>
-                                <button type="button" id="btnCancelar" class="btn btn-warning waves-effect" onclick="cancelar();" disabled>CANCELAR</button> 
+                                <button type="button" id="btnCancelar" class="btn btn-warning waves-effect" onclick="cancelar();" disabled>CANCELAR</button>
+                                <button type="button"id="btnImprimir"class="btn btn-info waves-effect"onclick="imprimirContrato();"disabled>IMPRIMIR</button> 
                             </div>
                         </div>
                     </div>
@@ -367,11 +437,11 @@
                                     <tbody id="tableDetalle"></tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="5" class="text-right">Total Comprobante</th>
+                                            <th colspan="7" class="text-right">Total Comprobante</th>
                                             <th class="text-right" id="txtTotalGral">0</th>
                                         </tr>
                                         <tr>
-                                            <th colspan="5" class="text-right">Total IVA</th>
+                                            <th colspan="7" class="text-right">Total IVA</th>
                                             <th class="text-right" id="txtTotalConImpuesto">0</th>
                                         </tr>
                                     </tfoot>

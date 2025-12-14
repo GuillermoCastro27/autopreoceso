@@ -120,7 +120,7 @@
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <!-- Campo de texto para la ciudad, habilitado -->
-                                            <input type="text" id="marc_nom" class="form-control" disabled onkeyup="buscarMarcas();">
+                                            <input type="text" id="marc_nom" class="form-control" disabled onkeyup="buscarMarcaItem();">
                                             <label class="form-label">Marca</label>
                                         </div>
 
@@ -135,7 +135,7 @@
                                 <div class="col-sm-4">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="modelo_nom" class="form-control" disabled onkeyup="buscarModelo();">
+                                            <input type="text" id="modelo_nom" class="form-control" disabled onkeyup="buscarModeloItem();">
                                             <label class="form-label">Modelo</label>
                                         </div>
                                         <!-- Campo oculto para almacenar el ID de la nacionalidad -->

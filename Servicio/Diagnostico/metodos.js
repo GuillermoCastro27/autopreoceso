@@ -164,7 +164,6 @@ function mensajeOperacion(titulo,mensaje,tipo) {
     swal(titulo, mensaje, tipo);
 }
 
-
 function listar() {
     $.ajax({
         url: getUrl() + "diagnosticocab/read",
@@ -176,33 +175,61 @@ function listar() {
 
         let lista = "";
         for (let rs of resultado) {
-            lista += "<tr class='item-list' onclick=\"seleccionRecepcion("
-                + rs.id + ","                                // id_recepcion
-                + rs.empresa_id + ","                         // empresa_id
-                + rs.sucursal_id + ","                        // sucursal_id
-                + rs.clientes_id + ","                        // clientes_id
-                + rs.tipo_servicio_id + ", '"                 // tipo_servicio_id
-                + esc(rs.emp_razon_social) + "', '"           // emp_razon_social
-                + esc(rs.suc_razon_social) + "', '"           // suc_razon_social
-                + esc(rs.encargado) + "', '"                  // encargado
-                + esc(rs.recepcion) + "', '"                // ✅ solicitudes (TEXTO)
-                + esc(rs.diag_cab_fecha) + "', '"   
-                + esc(rs.diag_cab_estado) + "', '"           // recep_cab_estado
-                + esc(rs.diag_cab_observaciones) + "', '"    // recep_cab_observaciones
-                + esc(rs.diag_cab_prioridad) + "', '"        // recep_cab_prioridad
-                + esc(rs.diag_cab_kilometraje) + "', '"      // recep_cab_kilometraje
-                + esc(rs.diag_cab_nivel_combustible) + "', '"
-                + esc(rs.tipo_servicio) + "', '"              // tipo_servicio (nombre)
-                + esc(rs.cli_nombre) + "', '"                 // cli_nombre
-                + esc(rs.cli_apellido) + "', '"               // cli_apellido
-                + esc(rs.cli_ruc) + "', '"                    // cli_ruc
-                + esc(rs.cli_telefono) + "', '"               // cli_telefono
-                + esc(rs.cli_direccion) + "', '"              // cli_direccion
-                + esc(rs.cli_correo) + "', "                  // cli_correo
-                + (rs.recep_cab_id || 0)                // ✅ solicitudes_cab_id (AL FINAL)
-                + ");\">";
+            lista += "<tr class='item-list' onclick=\"seleccionDiagnostico("
 
-            // celdas visibles
+            // IDs
+            + rs.id + ","
+            + rs.empresa_id + ","
+            + rs.sucursal_id + ","
+            + rs.clientes_id + ","
+            + (rs.tipo_servicio_id || 0) + ","
+            + (rs.tipo_vehiculo_id || 0) + ","
+            + (rs.tipo_diagnostico_id || 0) + ", '"
+
+            // Texto diagnóstico
+            + esc(rs.tipo_diag_nombre) + "', '"
+
+            // Empresa / sucursal / encargado
+            + esc(rs.emp_razon_social) + "', '"
+            + esc(rs.suc_razon_social) + "', '"
+            + esc(rs.encargado) + "', '"
+
+            // Recepción
+            + esc(rs.recepcion) + "', '"
+
+            // Datos diagnóstico
+            + esc(rs.diag_cab_fecha) + "', '"
+            + esc(rs.diag_cab_estado) + "', '"
+            + esc(rs.diag_cab_observaciones) + "', '"
+            + esc(rs.diag_cab_prioridad) + "', '"
+            + esc(rs.diag_cab_kilometraje) + "', '"
+            + esc(rs.diag_cab_nivel_combustible) + "', '"
+
+            // Tipo servicio
+            + esc(rs.tipo_serv_nombre || '') + "', '"
+
+            // Vehículo
+            + esc(rs.tip_veh_nombre) + "', '"
+            + esc(rs.tip_veh_capacidad) + "', '"
+            + esc(rs.tip_veh_combustible) + "', '"
+            + esc(rs.tip_veh_categoria) + "', '"
+            + esc(rs.marca_nombre) + "', '"
+            + esc(rs.modelo_nombre) + "', '"
+
+            // Cliente
+            + esc(rs.cli_nombre) + "', '"
+            + esc(rs.cli_apellido) + "', '"
+            + esc(rs.cli_ruc) + "', '"
+            + esc(rs.cli_telefono) + "', '"
+            + esc(rs.cli_direccion) + "', '"
+            + esc(rs.cli_correo) + "', "
+
+            // Recepción ID
+            + (rs.recep_cab_id || 0)
+
+            + ");\">";
+
+            // 🔹 Celdas visibles
             lista += "<td>" + rs.id + "</td>";
             lista += "<td>" + (rs.emp_razon_social || '') + "</td>";
             lista += "<td>" + (rs.suc_razon_social || '') + "</td>";
@@ -214,7 +241,7 @@ function listar() {
             lista += "<td>" + (rs.diag_cab_prioridad || '') + "</td>";
             lista += "<td>" + (rs.diag_cab_kilometraje || '') + "</td>";
             lista += "<td>" + (rs.diag_cab_nivel_combustible || '') + "</td>";
-            lista += "<td>" + (rs.tipo_servicio || '') + "</td>";
+            lista += "<td>" + (rs.tipo_serv_nombre || '') + "</td>";
             lista += "<td>" + (rs.cli_nombre || '') + "</td>";
             lista += "<td>" + (rs.cli_apellido || '') + "</td>";
             lista += "<td>" + (rs.cli_ruc || '') + "</td>";
@@ -229,26 +256,36 @@ function listar() {
         console.error(xhr.responseText);
     });
 }
-function seleccionRecepcion(
-    id_recepcion, empresa_id, sucursal_id, clientes_id, tipo_servicio_id,
-    emp_razon_social, suc_razon_social, encargado, recepcion,      // ✅ solicitudes acá
-    diag_cab_fecha, diag_cab_estado,diag_cab_observaciones, 
-    diag_cab_prioridad, diag_cab_kilometraje,diag_cab_nivel_combustible,
-    tipo_servicio, cli_nombre, cli_apellido, cli_ruc,cli_telefono, 
-    cli_direccion, cli_correo, recep_cab_id      // ✅ id solicitud al final
+
+function seleccionDiagnostico(
+    id_recepcion, empresa_id, sucursal_id, clientes_id,
+    tipo_servicio_id, tipo_vehiculo_id, tipo_diagnostico_id, tipo_diag_nombre,
+
+    emp_razon_social, suc_razon_social, encargado, recepcion,
+    diag_cab_fecha, diag_cab_estado, diag_cab_observaciones,
+    diag_cab_prioridad, diag_cab_kilometraje, diag_cab_nivel_combustible,
+
+    tipo_servicio,
+    tip_veh_nombre, tip_veh_capacidad, tip_veh_combustible,
+    tip_veh_categoria, marca_nombre, modelo_nombre,
+
+    cli_nombre, cli_apellido, cli_ruc, cli_telefono,
+    cli_direccion, cli_correo, recep_cab_id
 ) {
     // IDs
+    console.log("ID TIPO DIAGNÓSTICO:", tipo_diagnostico_id);
     $("#id").val(id_recepcion);
     $("#empresa_id").val(empresa_id);
     $("#sucursal_id").val(sucursal_id);
     $("#clientes_id").val(clientes_id);
     $("#tipo_servicio_id").val(tipo_servicio_id);
+    $("#tipo_vehiculo_id").val(tipo_vehiculo_id);
     $("#recep_cab_id").val(recep_cab_id);
 
-    // Texto “Solicitud NRO: 000000X”
+    // Recepción
     $("#recepcion").val(recepcion);
 
-    // Datos visibles
+    // Datos del diagnóstico
     $("#emp_razon_social").val(emp_razon_social);
     $("#suc_razon_social").val(suc_razon_social);
     $("#diag_cab_fecha").val(diag_cab_fecha);
@@ -257,7 +294,21 @@ function seleccionRecepcion(
     $("#diag_cab_kilometraje").val(diag_cab_kilometraje);
     $("#diag_cab_nivel_combustible").val(diag_cab_nivel_combustible);
     $("#diag_cab_estado").val(diag_cab_estado);
+
+    // Servicio
+    $("#tipo_diagnostico_id").val(tipo_diagnostico_id);
+    $("#tipo_diag_nombre").val(tipo_diag_nombre);
     $("#tipo_serv_nombre").val(tipo_servicio);
+
+    // VEHÍCULO
+    $("#tip_veh_nombre").val(tip_veh_nombre);
+    $("#tip_veh_capacidad").val(tip_veh_capacidad);
+    $("#tip_veh_combustible").val(tip_veh_combustible);
+    $("#tip_veh_categoria").val(tip_veh_categoria);
+
+    // Marca y modelo (CORRECTOS)
+    $("#marc_nom").val(marca_nombre);
+    $("#modelo_nom").val(modelo_nombre);
 
     // Cliente
     $("#cli_nombre").val(cli_nombre);
@@ -288,7 +339,6 @@ function seleccionRecepcion(
 
     $(".form-line").addClass("focused");
 }
-
 function buscarRecepcion() {
     $.ajax({
         url: getUrl() + "recepcab/buscar",
@@ -312,7 +362,7 @@ function buscarRecepcion() {
         for (let rs of resultado) {
 
             lista += `<li class='list-group-item'
-                        onclick="seleccionSolicitud(
+                        onclick="seleccionRecepcion(
                             ${rs.recep_cab_id},
                             ${rs.empresa_id},
                             ${rs.sucursal_id},
@@ -360,7 +410,7 @@ function buscarRecepcion() {
     });
 }
 
-function seleccionSolicitud(
+function seleccionRecepcion(
     recep_cab_id, empresa_id, sucursal_id,
     recepcion, clientes_id, cli_nombre, cli_apellido, tipo_servicio_id,
     cli_ruc, cli_direccion, cli_telefono, cli_correo,
@@ -451,6 +501,7 @@ function seleccionTipoDiagnostico(tipo_diagnostico_id,tipo_diag_nombre,tipo_diag
     $("#listaTipoDiag").attr("style","display:none;");
 }
 function grabar(){
+    console.log("🧪 tipo_servicio_id al grabar:", $("#tipo_servicio_id").val());
     var observaciones = $("#diag_cab_observaciones").val().trim();
     var fecha = $("#diag_cab_fecha").val().trim();
     var prioridad = $("#diag_cab_prioridad").val().trim();
@@ -505,6 +556,8 @@ function grabar(){
             'clientes_id': $("#clientes_id").val(),
             'tipo_diagnostico_id': $("#tipo_diagnostico_id").val(),
             'recep_cab_id': $("#recep_cab_id").val(),
+            'tipo_vehiculo_id': $("#tipo_vehiculo_id").val(),
+            'tipo_servicio_id': $("#tipo_servicio_id").val(),
             'empresa_id': $("#empresa_id").val(),
             'sucursal_id': $("#sucursal_id").val(),
             'operacion': $("#txtOperacion").val()

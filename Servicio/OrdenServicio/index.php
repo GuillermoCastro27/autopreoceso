@@ -110,7 +110,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-5">
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <!-- Campo de texto para la ciudad, habilitado -->
@@ -119,7 +119,7 @@
                                         </div>
 
                                         <!-- Campo oculto para almacenar el ID de la ciudad -->
-                                        <input type="hidden" id="presupuestos_serv_cab_id" name="presupuestos_serv_cab_id">
+                                        <input type="hidden" id="presupuesto_serv_cab_id" name="presupuesto_serv_cab_id">
 
                                         <!-- Contenedor para la lista de ciudades -->
                                         <div id="listaPresupuestoServ" style="display:none;"></div>
@@ -127,7 +127,7 @@
                                 </div>
                                 
                                 <!-- OBSERVACIONES -->
-                                <div class="col-sm-6">
+                                <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" id="ord_serv_observaciones" class="form-control" disabled>
@@ -135,7 +135,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <!-- Campo de texto para la ciudad, habilitado -->
@@ -150,10 +150,39 @@
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="tipo_serv_nombre" class="form-control" disabled>
-                                            <label class="form-label">Tipo de Servicio</label>
+                                            <input type="text" id="tipo_diag_nombre" class="form-control" disabled>
+                                            <label class="form-label">Tipo de Diagnostico</label>
                                         </div>
-                                        <input type="hidden" id="tipo_servicio_id" name="tipo_servicio_id">
+                                        <input type="hidden" id="tipo_diagnostico_id" name="tipo_diagnostico_id">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="equipo_nombre" class="form-control" disabled onkeyup="buscarEquipoTrabajo();">
+                                            <label class="form-label">Equipo de Trabajo</label>
+                                        </div>
+                                        <input type="hidden" id="equipo_trabajo_id" name="equipo_trabajo_id">
+                                        <div id="listaEquiTrab" style="display:none;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-8">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="equipo_descripcion" class="form-control" disabled>
+                                            <label class="form-label">Descripcion</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- RUC -->
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="equipo_categoria" class="form-control" disabled>
+                                            <label class="form-label">Categoria</label>
+                                        </div>
                                     </div>
                                 </div>
                                  <!-- CLIENTE -->
@@ -213,6 +242,55 @@
                                         <div class="form-line">
                                             <input type="text" id="cli_correo" class="form-control" disabled>
                                             <label class="form-label">Correo</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_veh_nombre" class="form-control" disabled>
+                                            <label class="form-label">Tipo de Vehículo</label>
+                                        </div>
+                                        <input type="hidden" id="tipo_vehiculo_id" name="tipo_vehiculo_id">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_veh_capacidad" class="form-control" disabled>
+                                            <label class="form-label">Capacidad</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_veh_combustible" class="form-control" disabled>
+                                            <label class="form-label">Tipo Combustible</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_veh_categoria" class="form-control" disabled>
+                                            <label class="form-label">Categoría</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="marc_nom" class="form-control" disabled>
+                                            <label class="form-label">Marca</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="modelo_nom" class="form-control" disabled>
+                                            <label class="form-label">Modelo</label>
                                         </div>
                                     </div>
                                 </div>

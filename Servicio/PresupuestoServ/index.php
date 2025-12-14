@@ -179,11 +179,10 @@
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="tipo_serv_nombre" class="form-control" disabled onkeyup="buscarTipoServicio();">
+                                            <input type="text" id="tipo_serv_nombre" class="form-control" disabled>
                                             <label class="form-label">Tipo de Servicio</label>
                                         </div>
                                         <input type="hidden" id="tipo_servicio_id" name="tipo_servicio_id">
-                                        <div id="listaTipoServ" style="display:none;"></div>
                                     </div>
                                 </div>
                                 <!-- TIPO DE SERVICIO -->
@@ -268,10 +267,60 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_veh_nombre" class="form-control" disabled>
+                                            <label class="form-label">Tipo de Vehículo</label>
+                                        </div>
+                                        <input type="hidden" id="tipo_vehiculo_id" name="tipo_vehiculo_id">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_veh_capacidad" class="form-control" disabled>
+                                            <label class="form-label">Capacidad</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_veh_combustible" class="form-control" disabled>
+                                            <label class="form-label">Tipo Combustible</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tip_veh_categoria" class="form-control" disabled>
+                                            <label class="form-label">Categoría</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="marc_nom" class="form-control" disabled>
+                                            <label class="form-label">Marca</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="modelo_nom" class="form-control" disabled>
+                                            <label class="form-label">Modelo</label>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <input type="hidden" id="tipo_prom_modo">
                                 <input type="hidden" id="tipo_prom_valor">
                                 <input type="hidden" id="desc_cab_porcentaje">
+                                <input type="hidden" id="tip_serv_precio">
                             </div>
 
                             <!-- BOTONES -->
@@ -395,23 +444,24 @@
                                             <th>Costo</th>
                                             <th>Tipo impuesto</th>
                                             <th>Sub Total</th>
-                                            <th>IVA</th>
-                                            <th>Descuento</th>
+                                            <th>Desc %</th>
                                             <th>Modo Promoción</th>
-                                            <th>Valor Promoción</th>
-                                            <th>Descuento</th>
-                                            <th>Promoción</th>
-                                            <th>Total Final</th>
+                                            <th>Promo %</th>
+                                            <th>Desc ₲</th>
+                                            <th>Promo ₲</th>
+                                            <th>Total Ítem</th>
+                                            <th>IVA</th>
+                                            <th>Mano de Obra</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableDetalle"></tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="13" class="text-right">Total Comprobante (sin IVA)</th>
+                                            <th colspan="14" class="text-right">Total Comprobante</th>
                                             <th class="text-right" id="txtTotalGral">0</th>
                                         </tr>
                                         <tr>
-                                            <th colspan="13" class="text-right">Total IVA</th>
+                                            <th colspan="14" class="text-right">Total IVA</th>
                                             <th class="text-right" id="txtTotalConImpuesto">0</th>
                                         </tr>
                                     </tfoot>
@@ -428,51 +478,25 @@
                         <div class="body">
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover dataTable js-exportable">
-                                    <thead>
+                                   <thead>
                                         <tr>
                                             <th>Código</th>
-                                            <th>Empresa</th>
-                                            <th>Sucursal</th>
                                             <th>Fecha</th>
-                                            <th>Fecha Vence</th>
                                             <th>Cliente</th>
-                                            <th>Apellido</th>
-                                            <th>Ruc</th>
-                                            <th>Teléfono</th>
-                                            <th>Dirección</th>
-                                            <th>Correo</th>
+                                            <th>RUC</th>
+                                            <th>Vehículo</th>
                                             <th>Estado</th>
-                                            <th>Diagnóstico</th>
-                                            <th>Observaciones</th>
-                                            <th>Promociones</th>
-                                            <th>Descuentos</th>
-                                            <th>Tipo de Servicio</th>
-                                            <th>Tipo de Descuento</th>
-                                            <th>Tipo de Promoción</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableBody"></tbody>
                                     <tfoot>
                                         <tr>
                                             <th>Código</th>
-                                            <th>Empresa</th>
-                                            <th>Sucursal</th>
                                             <th>Fecha</th>
-                                            <th>Fecha Vence</th>
                                             <th>Cliente</th>
-                                            <th>Apellido</th>
-                                            <th>Ruc</th>
-                                            <th>Teléfono</th>
-                                            <th>Dirección</th>
-                                            <th>Correo</th>
+                                            <th>RUC</th>
+                                            <th>Vehículo</th>
                                             <th>Estado</th>
-                                            <th>Diagnóstico</th>
-                                            <th>Observaciones</th>
-                                            <th>Promociones</th>
-                                            <th>Descuentos</th>
-                                            <th>Tipo de Servicio</th>
-                                            <th>Tipo de Descuento</th>
-                                            <th>Tipo de Promoción</th>
                                         </tr>
                                     </tfoot>    
                                 </table>

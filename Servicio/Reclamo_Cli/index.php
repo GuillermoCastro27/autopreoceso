@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>GUI RECEPCION DE VEHICULOS</title>
+    <title>GUI RECLAMO DE CLIENTES</title>
     <!-- Favicon-->
     <link rel="icon" href="../../images.ico" type="image/x-icon">
 
@@ -50,13 +50,13 @@
                     
                     <div class="card">
                         <div class="header">
-                            <h2>Registrar Recepcion de Vehiculos <small>CRUD de Recepcion de Vehiculos y su detalle</small> </h2>
+                            <h2>Registrar Reclamo de clientes <small>CRUD de Reclamo de Clientes y su detalle</small> </h2>
                         </div>
                         <div class="body">
                             <div class="row clearfix">
                                 <input type="hidden" value="0" id="txtOperacion"/>
                                 <input type="hidden" value="1" id="user_id"/>
-                                <input type="hidden" value="PENDIENTE" id="recep_cab_estado"/>
+                                <input type="hidden" value="PENDIENTE" id="rec_cli_cab_estado"/>
                                 
                                 <!-- CÓDIGO -->
                                 <div class="col-sm-1">
@@ -95,85 +95,48 @@
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="recep_cab_fecha" class="datetimepicker form-control" disabled>
+                                            <input type="text" id="rec_cli_cab_fecha" class="datetimepicker form-control" disabled>
                                             <label class="form-label">Fecha</label>
                                         </div>
                                     </div>
                                 </div>
-                                
-                                <!-- FECHA ESTIMADA -->
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="recep_cab_fecha_estimada" class="datetimepicker form-control" disabled>
-                                            <label class="form-label">Fecha Estimada</label>
+                                            <input type="text" id="rec_cli_cab_fecha_inicio" class="datetimepicker form-control" disabled>
+                                            <label class="form-label">Fecha Inicio</label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <!-- Campo de texto para la ciudad, habilitado -->
-                                            <input type="text" id="solicitud" class="form-control" disabled onkeyup="buscarSolicitud();">
-                                            <label class="form-label">Solicitud</label>
-                                        </div>
-
-                                        <!-- Campo oculto para almacenar el ID de la ciudad -->
-                                        <input type="hidden" id="solicitudes_cab_id" name="solicitudes_cab_id" value="0">
-
-                                        <!-- Contenedor para la lista de ciudades -->
-                                        <div id="listaSolicitud" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                
-                                <!-- OBSERVACIONES -->
-                                <div class="col-sm-6">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="recep_cab_observaciones" class="form-control" disabled>
-                                            <label class="form-label">Observaciones</label>
+                                            <input type="text" id="rec_cli_cab_fecha_fin" class="datetimepicker form-control" disabled>
+                                            <label class="form-label">Fecha Fin</label>
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- PRIORIDAD -->
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="recep_cab_prioridad" class="form-control" disabled>
+                                            <select id="rec_cli_cab_prioridad" class="form-control" disabled>
+                                                <option value="ALTA">Alta</option>
+                                                <option value="MEDIA">Media</option>
+                                                <option value="BAJA">Baja</option>
+                                            </select>
                                             <label class="form-label">Prioridad</label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
+                                <!-- OBSERVACIONES -->
+                                <div class="col-sm-6">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="recep_cab_kilometraje" class="form-control" disabled>
-                                            <label class="form-label">Kilometraje</label>
+                                            <input type="text" id="rec_cli_cab_observacion" class="form-control" disabled>
+                                            <label class="form-label">Observaciones</label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="recep_cab_nivel_combustible" class="form-control" disabled>
-                                            <label class="form-label">Combustible</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- TIPO DE SERVICIO -->
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="tipo_serv_nombre" class="form-control" disabled onkeyup="buscarTipoServicio();">
-                                            <label class="form-label">Tipo de Servicio</label>
-                                        </div>
-                                        <input type="hidden" id="tipo_servicio_id" name="tipo_servicio_id">
-                                        <div id="listaTipoServ" style="display:none;"></div>
-                                    </div>
-                                </div>
-
                                 <!-- CLIENTE -->
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
@@ -194,7 +157,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <!-- RUC -->
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
@@ -204,7 +166,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <!-- TELEFONO -->
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
@@ -214,7 +175,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <!-- DIRECCION -->
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
@@ -224,87 +184,12 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <!-- CORREO -->
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" id="cli_correo" class="form-control" disabled>
                                             <label class="form-label">Correo</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- TIPO DE SERVICIO -->
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="tip_veh_nombre" class="form-control" disabled onkeyup="buscarTipoVehiculoPorMarca();">
-                                            <label class="form-label">Tipo de Vehículo</label>
-                                        </div>
-                                        <input type="hidden" id="tipo_vehiculo_id" name="tipo_vehiculo_id">
-                                        <div id="listaTipoVeh" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="tip_veh_capacidad" class="form-control" disabled>
-                                            <label class="form-label">Capacidad</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="tip_veh_combustible" class="form-control" disabled>
-                                            <label class="form-label">Tipo Combustible</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="tip_veh_categoria" class="form-control" disabled>
-                                            <label class="form-label">Categoría</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="tip_veh_observacion" class="form-control" disabled>
-                                            <label class="form-label">Observación (Tipo vehiculo)</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <!-- Campo de texto para la ciudad, habilitado -->
-                                            <input type="text" id="marc_nom" class="form-control" disabled onkeyup="buscarMarcasVehiculo();">
-                                            <label class="form-label">Marca</label>
-                                        </div>
-
-                                        <!-- Campo oculto para almacenar el ID de la ciudad -->
-                                        <input type="hidden" id="marca_id" name="marca_id">
-
-                                        <!-- Contenedor para la lista de ciudades -->
-                                        <div id="listaMarcasVehiculo" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="modelo_nom" class="form-control" disabled>
-                                            <label class="form-label">Modelo</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="modelo_año" class="form-control" disabled>
-                                            <label class="form-label">Año Modelo</label>
                                         </div>
                                     </div>
                                 </div>
@@ -325,7 +210,7 @@
                     <!-- DETALLE -->
                     <div class="card" id="detalle" style="display:none">
                         <div class="header">
-                            <h2>Detalles de la Recepcion</h2>
+                            <h2>Detalles del Reclamo de Clientes</h2>
                         </div>
                         <div class="body">
                             <div class="row clearfix" id="formDetalles">
@@ -367,7 +252,7 @@
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="recep_det_cantidad_stock" class="form-control" disabled>
+                                            <input type="text" id="rec_cli_det_cantidad_stock" class="form-control" disabled>
                                             <label class="form-label">Cantidad Disponible</label>
                                         </div>
                                     </div>
@@ -377,7 +262,7 @@
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="recep_det_cantidad" class="form-control" disabled>
+                                            <input type="text" id="rec_cli_det_cantidad" class="form-control" disabled>
                                             <label class="form-label">Cantidad</label>
                                         </div>
                                     </div>
@@ -387,7 +272,7 @@
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="text" id="recep_det_costo" class="form-control" disabled>
+                                            <input type="text" id="rec_cli_det_costo" class="form-control" disabled>
                                             <label class="form-label">Precio</label>
                                         </div>
                                     </div>
@@ -430,11 +315,11 @@
                                     <tbody id="tableDetalle"></tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="5" class="text-right">Total Comprobante</th>
+                                            <th colspan="7" class="text-right">Total Comprobante</th>
                                             <th class="text-right" id="txtTotalGral">0</th> <!-- Total sin impuestos -->
                                         </tr>
                                         <tr>
-                                            <th colspan="5" class="text-right">Total IVA</th>
+                                            <th colspan="7" class="text-right">Total IVA</th>
                                             <th class="text-right" id="txtTotalConImpuesto">0</th> <!-- Total con impuestos -->
                                         </tr>
                                     </tfoot>    
@@ -446,39 +331,46 @@
                     <!-- REGISTROS -->
                     <div class="card" id="registros">
                         <div class="header">
-                            <h2>Registros de Recepcion de Vehiculos</h2>
+                            <h2>Registros de Reclamo de Clientes</h2>
                         </div>
                         <div class="body">
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
-                                    <tr>
-                                        <th>Código</th>
-                                        <th>Cliente</th>
-                                        <th>Vehículo</th>
-                                        <th>Solicitud</th>
-                                        <th>Fecha</th>
-                                        <th>Estado</th>
-                                        <th>Encargado</th>
-                                    </tr>
-                                </thead>
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Empresa</th>
+                                            <th>Sucursal</th>
+                                            <th>Fecha Reclamo</th>
+                                            <th>Cliente</th>
+                                            <th>Apellido</th>
+                                            <th>RUC</th>
+                                            <th>Prioridad</th>
+                                            <th>Estado</th>
+                                            <th>Encargado</th>
+                                            <th>Observación</th>
+                                        </tr>
+                                    </thead>
                                     <tbody id="tableBody"></tbody>
                                     <tfoot>
                                         <tr>
-                                        <th>Código</th>
-                                        <th>Cliente</th>
-                                        <th>Vehículo</th>
-                                        <th>Solicitud</th>
-                                        <th>Fecha</th>
-                                        <th>Estado</th>
-                                        <th>Encargado</th>
-                                    </tr>
+                                            <th>Código</th>
+                                            <th>Empresa</th>
+                                            <th>Sucursal</th>
+                                            <th>Fecha Reclamo</th>
+                                            <th>Cliente</th>
+                                            <th>Apellido</th>
+                                            <th>RUC</th>
+                                            <th>Prioridad</th>
+                                            <th>Estado</th>
+                                            <th>Encargado</th>
+                                            <th>Observación</th>
+                                        </tr>
                                     </tfoot>    
                                 </table>
                             </div>
                         </div>
                     </div>
-
                 </div>
                 
             </div>

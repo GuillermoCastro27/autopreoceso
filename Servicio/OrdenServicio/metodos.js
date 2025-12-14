@@ -57,10 +57,11 @@ function agregar(){
     $("#presupuesto_serv").removeAttr("disabled");
     $("#ord_serv_observaciones").removeAttr("disabled");
     $("#diagnostico").attr("disabled","true");
-    $("#tipo_serv_nombre").attr("disabled","true");
+    $("#tipo_diag_nombre").attr("disabled","true");
     $("#emp_razon_social").attr("disabled","true");
     $("#suc_razon_social").attr("disabled","true");
     $("#cli_nombre").attr("disabled","true");
+    $("#equipo_nombre").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -85,10 +86,11 @@ function editar(){
     $("#presupuesto_serv").removeAttr("disabled");
     $("#ord_serv_observaciones").removeAttr("disabled");
     $("#diagnostico").attr("disabled","true");
-    $("#tipo_serv_nombre").attr("disabled","true");
+    $("#tipo_diag_nombre").attr("disabled","true");
     $("#emp_razon_social").attr("disabled","true");
     $("#suc_razon_social").attr("disabled","true");
     $("#cli_nombre").attr("disabled","true");
+    $("#equipo_nombre").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -168,51 +170,71 @@ function listar() {
         dataType: "json"
     })
     .done(function (resultado) {
+
         const esc = s => (s || '').toString().replace(/'/g, "\\'");
 
         let lista = "";
-        for (let rs of resultado) {
-            // 🧩 Cada fila del listado
-            lista += "<tr class='item-list' onclick=\"seleccionOrdenServicio("
-            + rs.id + ","                                // ID de orden
-            + rs.empresa_id + ","                        // Empresa
-            + rs.clientes_id + ","                       // Cliente
-            + rs.diagnostico_cab_id + ","                // ID diagnóstico
-            + rs.tipo_servicio_id + ", '"                // ID tipo servicio
-            + esc(rs.emp_razon_social) + "', '"          // Empresa nombre
-            + esc(rs.suc_razon_social) + "', '"          // Sucursal nombre
-            + esc(rs.ord_serv_fecha) + "', '"            // Fecha
-            + esc(rs.ord_serv_fecha_vence) + "', '"      // Fecha vence
-            + esc(rs.cli_nombre) + "', '"                // Cliente nombre
-            + esc(rs.cli_apellido) + "', '"              // Cliente apellido
-            + esc(rs.cli_ruc) + "', '"                   // RUC
-            + esc(rs.cli_telefono) + "', '"              // Teléfono
-            + esc(rs.cli_direccion) + "', '"             // Dirección
-            + esc(rs.cli_correo) + "', '"                // Correo
-            + esc(rs.presupuesto_serv) + "', '"          // Presupuesto
-            + esc(rs.diagnostico || '') + "', '"         // 👈 Diagnóstico (nuevo)
-            + esc(rs.tipo_serv_nombre || '') + "', '"    // 👈 Tipo de servicio (nuevo)
-            + esc(rs.ord_serv_observaciones) + "', '"    // Observaciones
-            + esc(rs.ord_serv_estado) + "', '"           // Estado
-            + esc(rs.ord_serv_tipo) + "', '"             // Tipo
-            + esc(rs.encargado) + "');\">";              // Encargado
 
-            // 🧱 Columnas visibles en la tabla
-            lista += `<td>${rs.id || ''}</td>`;
-            lista += `<td>${rs.emp_razon_social || ''}</td>`;
-            lista += `<td>${rs.suc_razon_social || ''}</td>`;
-            lista += `<td>${rs.ord_serv_fecha || ''}</td>`;
-            lista += `<td>${rs.ord_serv_fecha_vence || ''}</td>`;
-            lista += `<td>${rs.cli_nombre || ''}</td>`;
-            lista += `<td>${rs.cli_apellido || ''}</td>`;
-            lista += `<td>${rs.cli_ruc || ''}</td>`;
-            lista += `<td>${rs.presupuesto_serv || ''}</td>`;
-            lista += `<td>${rs.ord_serv_observaciones || 'N/A'}</td>`;
-            lista += `<td>${rs.ord_serv_estado || 'N/A'}</td>`;
-            lista += `<td>${rs.ord_serv_tipo || 'N/A'}</td>`;
-            lista += `<td>${rs.encargado || ''}</td>`;
-            lista += `</tr>`;
-        }
+        resultado.forEach(rs => {
+
+            lista += `
+            <tr class="item-list" onclick="seleccionOrdenServicio(
+                ${rs.id},
+                ${rs.empresa_id},
+                ${rs.sucursal_id},
+                ${rs.clientes_id},
+                ${rs.diagnostico_cab_id || 0},
+                ${rs.tipo_diagnostico_id || 0},
+                ${rs.tipo_vehiculo_id || 0},
+                ${rs.equipo_trabajo_id || 0},
+                ${rs.presupuesto_serv_cab_id}, 
+
+                '${esc(rs.emp_razon_social)}',
+                '${esc(rs.suc_razon_social)}',
+
+                '${esc(rs.ord_serv_fecha)}',
+                '${esc(rs.ord_serv_fecha_vence)}',
+
+                '${esc(rs.cli_nombre)}',
+                '${esc(rs.cli_apellido)}',
+                '${esc(rs.cli_ruc)}',
+                '${esc(rs.cli_telefono)}',
+                '${esc(rs.cli_direccion)}',
+                '${esc(rs.cli_correo)}',
+
+                '${esc(rs.presupuesto_serv)}',
+                '${esc(rs.diagnostico || "")}',
+                '${esc(rs.tipo_diag_nombre || "")}',
+
+                '${esc(rs.ord_serv_observaciones)}',
+                '${esc(rs.ord_serv_estado)}',
+                '${esc(rs.ord_serv_tipo)}',
+                '${esc(rs.encargado)}',
+                '${esc(rs.tip_veh_nombre)}',
+                ${rs.tip_veh_capacidad || 0},
+                '${esc(rs.tip_veh_combustible)}',
+                '${esc(rs.tip_veh_categoria)}',
+                '${esc(rs.marc_nom)}',
+                '${esc(rs.modelo_nom)}',
+                '${esc(rs.equipo_nombre)}',
+                '${esc(rs.equipo_descripcion)}',
+                '${esc(rs.equipo_categoria)}'
+            )">
+                <td>${rs.id || ""}</td>
+                <td>${rs.emp_razon_social || ""}</td>
+                <td>${rs.suc_razon_social || ""}</td>
+                <td>${rs.ord_serv_fecha || ""}</td>
+                <td>${rs.ord_serv_fecha_vence || ""}</td>
+                <td>${rs.cli_nombre || ""}</td>
+                <td>${rs.cli_apellido || ""}</td>
+                <td>${rs.cli_ruc || ""}</td>
+                <td>${rs.presupuesto_serv || ""}</td>
+                <td>${rs.ord_serv_observaciones || "N/A"}</td>
+                <td>${rs.ord_serv_estado || "N/A"}</td>
+                <td>${rs.ord_serv_tipo || "N/A"}</td>
+                <td>${rs.encargado || ""}</td>
+            </tr>`;
+        });
 
         $("#tableBody").html(lista);
         formatoTabla();
@@ -223,21 +245,30 @@ function listar() {
     });
 }
 function seleccionOrdenServicio(
-    id, empresa_id, clientes_id, diagnostico_cab_id, tipo_servicio_id,
+    id, empresa_id, sucursal_id, clientes_id,
+    diagnostico_cab_id, tipo_diagnostico_id, tipo_vehiculo_id, equipo_trabajo_id,
+    presupuesto_serv_cab_id,
     emp_razon_social, suc_razon_social,
-    fecha, fecha_vence, cli_nombre, cli_apellido, cli_ruc,
-    cli_telefono, cli_direccion, cli_correo,
-    presupuesto_serv, diagnostico, tipo_serv_nombre,  // 👈 nuevos
-    observaciones, estado, tipo, encargado
+    fecha, fecha_vence,
+    cli_nombre, cli_apellido, cli_ruc,
+    cli_telefono, cli_direccion, cli_correo
+    ,presupuesto_serv, diagnostico, tipo_diag_nombre,
+    observaciones, estado, tipo, encargado,
+    tip_veh_nombre, tip_veh_capacidad,
+    tip_veh_combustible, tip_veh_categoria,
+    marc_nom, modelo_nom,
+    equipo_nombre, equipo_descripcion, equipo_categoria
 ) {
-    // 🧩 Asignar valores principales
+    // 🧩 IDs principales
     $("#id").val(id);
     $("#empresa_id").val(empresa_id);
+    $("#sucursal_id").val(sucursal_id);
     $("#clientes_id").val(clientes_id);
     $("#diagnostico_cab_id").val(diagnostico_cab_id);
-    $("#tipo_servicio_id").val(tipo_servicio_id);
+    $("#tipo_diagnostico_id").val(tipo_diagnostico_id);
+    $("#tipo_vehiculo_id").val(tipo_vehiculo_id);
 
-    // 🏢 Empresa y Sucursal
+    // 🏢 Empresa y sucursal
     $("#emp_razon_social").val(emp_razon_social);
     $("#suc_razon_social").val(suc_razon_social);
 
@@ -245,7 +276,7 @@ function seleccionOrdenServicio(
     $("#ord_serv_fecha").val(fecha);
     $("#ord_serv_fecha_vence").val(fecha_vence);
 
-    // 👤 Datos del cliente
+    // 👤 Cliente
     $("#cli_nombre").val(cli_nombre);
     $("#cli_apellido").val(cli_apellido);
     $("#cli_ruc").val(cli_ruc);
@@ -253,27 +284,44 @@ function seleccionOrdenServicio(
     $("#cli_direccion").val(cli_direccion);
     $("#cli_correo").val(cli_correo);
 
-    // 📋 Presupuesto, diagnóstico y tipo de servicio
+    // 📋 Presupuesto, diagnóstico y tipo diagnóstico
+    $("#presupuesto_serv_cab_id").val(presupuesto_serv_cab_id);
     $("#presupuesto_serv").val(presupuesto_serv);
     $("#diagnostico").val(diagnostico);
-    $("#tipo_serv_nombre").val(tipo_serv_nombre);
+    $("#tipo_diag_nombre").val(tipo_diag_nombre);
 
-    // 📋 Observaciones, estado y tipo
+    $("#tipo_vehiculo_id").val(tipo_vehiculo_id);
+    $("#tip_veh_nombre").val(tip_veh_nombre);
+    $("#tip_veh_capacidad").val(tip_veh_capacidad);
+    $("#tip_veh_combustible").val(tip_veh_combustible);
+    $("#tip_veh_categoria").val(tip_veh_categoria);
+    $("#marc_nom").val(marc_nom);
+    $("#modelo_nom").val(modelo_nom);
+
+    $("#equipo_trabajo_id").val(equipo_trabajo_id);
+    $("#equipo_nombre").val(equipo_nombre);
+    $("#equipo_descripcion").val(equipo_descripcion);
+    $("#equipo_categoria").val(equipo_categoria);
+
+    // 📋 Observaciones, estado, tipo y encargado
     $("#ord_serv_observaciones").val(observaciones);
     $("#ord_serv_estado").val(estado);
     $("#ord_serv_tipo").val(tipo);
     $("#encargado").val(encargado);
-    // Cargar detalles asociados
+
+    // 📄 Detalle de la orden (asegurate que esta función exista para orden de serv.)
     listarDetalles();
-    // 🔹 Mostrar secciones y activar estilo
+
+    // 🎛️ Vista y botones
     $("#registros").hide();
     $("#detalle").show();
-    $("#btnAgregar, #btnEditar, #btnGrabar, #btnCancelar, #btnEliminar, #btnConfirmar")
+
+    $("#btnAgregar, #btnEditar, #btnGrabar, #btnEliminar, #btnConfirmar")
         .prop("disabled", true);
     $("#btnCancelar").prop("disabled", false);
 
     if (estado === "PENDIENTE") {
-        $("#btnEditar, #btnEliminar").prop("disabled", false);
+        $("#btnEditar, #btnEliminar, #btnConfirmar").prop("disabled", false);
     }
 
     $(".form-line").addClass("focused");
@@ -304,7 +352,7 @@ function buscarPresupuestoServ() {
                             ${rs.empresa_id}, '${(rs.emp_razon_social || '').replace(/'/g, "\\'")}',
                             ${rs.sucursal_id}, '${(rs.suc_razon_social || '').replace(/'/g, "\\'")}',
 
-                            ${rs.tipo_servicio_id}, '${(rs.tipo_serv_nombre || '').replace(/'/g, "\\'")}',
+                            ${rs.tipo_diagnostico_id}, '${(rs.tipo_diag_nombre || '').replace(/'/g, "\\'")}',
 
                             ${rs.clientes_id}, '${(rs.cli_nombre || '').replace(/'/g, "\\'")}',
                             '${(rs.cli_apellido || '').replace(/'/g, "\\'")}',
@@ -319,7 +367,14 @@ function buscarPresupuestoServ() {
                             '${(rs.diag_cab_nivel_combustible || '').replace(/'/g, "\\'")}',
                             '${(rs.diag_cab_kilometraje || '').replace(/'/g, "\\'")}',
                             '${(rs.encargado || '').replace(/'/g, "\\'")}',
-                            '${(rs.pres_serv_cab_fecha_vence || '').replace(/'/g, "\\'")}'
+                            '${(rs.pres_serv_cab_fecha_vence || '').replace(/'/g, "\\'")}',
+                            ${rs.tipo_vehiculo_id},
+                            '${(rs.tip_veh_nombre || '').replace(/'/g, "\\'")}',
+                            ${rs.tip_veh_capacidad || 0},
+                            '${(rs.tip_veh_combustible || '').replace(/'/g, "\\'")}',
+                            '${(rs.tip_veh_categoria || '').replace(/'/g, "\\'")}',
+                            '${(rs.marc_nom || '').replace(/'/g, "\\'")}',
+                            '${(rs.modelo_nom || '').replace(/'/g, "\\'")}'
                         );">
                         <b>${rs.presupuesto_serv}</b><br>
                         Estado: ${rs.pres_serv_cab_estado} – Encargado: ${rs.encargado}
@@ -329,6 +384,7 @@ function buscarPresupuestoServ() {
         }
 
         $("#listaPresupuestoServ").html(lista).show();
+        $("#listaPresupuestoServ").attr("style", "display:block; position:absolute; z-index:2000;");
     })
     .fail(function(xhr) {
         console.error(xhr.responseText);
@@ -340,16 +396,20 @@ function seleccionarPresupuestoServ(
     id, presupuesto_serv,
     empresa_id, emp_razon_social,
     sucursal_id, suc_razon_social,
-    tipo_servicio_id, tipo_serv_nombre,
+    tipo_diagnostico_id, tipo_diag_nombre,
     clientes_id, cli_nombre, cli_apellido, cli_ruc, cli_telefono, cli_direccion, cli_correo,
-    diagnostico_cab_id, diag_cab_observaciones, diag_cab_prioridad, diag_cab_nivel_combustible, diag_cab_kilometraje,
-    encargado, fecha_vence_presupuesto
+    diagnostico_cab_id, diag_cab_observaciones, diag_cab_prioridad,
+    diag_cab_nivel_combustible, diag_cab_kilometraje,
+    encargado, fecha_vence_presupuesto,
+    tipo_vehiculo_id, tip_veh_nombre, tip_veh_capacidad,
+    tip_veh_combustible, tip_veh_categoria,
+    marc_nom, modelo_nom
 ) {
     // 🧩 Guardar IDs
     $("#presupuestos_serv_cab_id").val(id);
     $("#empresa_id").val(empresa_id);
     $("#sucursal_id").val(sucursal_id);
-    $("#tipo_servicio_id").val(tipo_servicio_id);
+    $("#tipo_diagnostico_id").val(tipo_diagnostico_id);
     $("#clientes_id").val(clientes_id);
     $("#diagnostico_cab_id").val(diagnostico_cab_id);
 
@@ -381,9 +441,49 @@ function seleccionarPresupuestoServ(
     $("#diag_kilometraje").val?.(diag_cab_kilometraje || "");
     $("#encargado").val?.(encargado || "");
 
+    $("#tipo_diag_nombre").val(tipo_diag_nombre);
     // 🧩 Ocultar la lista y aplicar estilo
+    $("#tipo_vehiculo_id").val(tipo_vehiculo_id);
+    $("#tip_veh_nombre").val(tip_veh_nombre);
+    $("#tip_veh_capacidad").val(tip_veh_capacidad);
+    $("#tip_veh_combustible").val(tip_veh_combustible);
+    $("#tip_veh_categoria").val(tip_veh_categoria);
+    $("#marc_nom").val(marc_nom);
+    $("#modelo_nom").val(modelo_nom);
+
     $("#listaPresupuestoServ").hide();
     $(".form-line").addClass("focused");
+}
+
+function buscarEquipoTrabajo(){
+    $.ajax({
+        url:"http://127.0.0.1:8000/Proyecto_tp/equipo_trabajo/read",
+        method:"GET",
+        dataType: "json"
+    })
+    .done(function(resultado){
+        var lista = "<ul class=\"list-group\">";
+        for(rs of resultado){
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionEquiTrab("+rs.equipo_trabajo_id+",'"+rs.equipo_nombre+"','"+rs.equipo_descripcion+"','"+rs.equipo_categoria+"');\">"+rs.equipo_nombre+"</li>";
+        }
+        lista += "</ul>";
+        $("#listaEquiTrab").html(lista);
+        $("#listaEquiTrab").attr("style","display:block; position:absolute; z-index:2000;");
+    })
+    .fail(function(a,b,c){
+        alert(c);
+        console.log(a.responseText);
+    })
+}
+
+function seleccionEquiTrab(equipo_trabajo_id,equipo_nombre,equipo_descripcion,equipo_categoria){
+    $("#equipo_trabajo_id").val(equipo_trabajo_id);
+    $("#equipo_nombre").val(equipo_nombre);
+    $("#equipo_descripcion").val(equipo_descripcion);
+    $("#equipo_categoria").val(equipo_categoria);
+
+    $("#listaEquiTrab").html("");
+    $("#listaEquiTrab").attr("style","display:none;");
 }
 
 function grabar() {
@@ -392,7 +492,7 @@ function grabar() {
     const fechaVence = ($("#ord_serv_fecha_vence").val() || "").trim();
     const empresa = parseInt($("#empresa_id").val()) || 0;
     const sucursal = parseInt($("#sucursal_id").val()) || 0;
-    const presupuesto = parseInt($("#presupuestos_serv_cab_id").val()) || 0;
+    const presupuesto = parseInt($("#presupuesto_serv_cab_id").val()) || 0;
     const cliente = parseInt($("#clientes_id").val()) || 0;
     const tipo = ($("#ord_serv_tipo").val() || "NORMAL").trim();
 
@@ -443,6 +543,10 @@ function grabar() {
             'presupuesto_serv_cab_id': presupuesto,
             'clientes_id': cliente,
             'user_id': $("#user_id").val(),
+            'equipo_trabajo_id': $("#equipo_trabajo_id").val(),
+            'diagnostico_cab_id': $("#diagnostico_cab_id").val(),
+            'tipo_diagnostico_id': $("#tipo_diagnostico_id").val(),
+            'tipo_vehiculo_id': $("#tipo_vehiculo_id").val(),
             'operacion': $("#txtOperacion").val()
         }
     })
