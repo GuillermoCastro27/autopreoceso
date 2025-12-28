@@ -111,7 +111,7 @@ function eliminar(){
     $("#btnCancelar").removeAttr("disabled");
 }
 
-function confirmar(){
+function procesar(){
     $("#txtOperacion").val(4);
 
     $("#btnAgregar").attr("disabled","true");
@@ -122,25 +122,45 @@ function confirmar(){
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
 }
+function resolver() {
+    $("#txtOperacion").val(5);
 
+    // 🔒 Bloquear acciones
+    $("#btnAgregar").attr("disabled", "true");
+    $("#btnEditar").attr("disabled", "true");
+    $("#btnEliminar").attr("disabled", "true");
+    $("#btnProcesar").attr("disabled", "true");
+    $("#btnResolver").attr("disabled", "true");
+
+    // ✅ Habilitar grabar / cancelar
+    $("#btnGrabar").removeAttr("disabled");
+    $("#btnCancelar").removeAttr("disabled");
+
+    $(".form-line").addClass("focused");
+}
 
 function confirmarOperacion() {
     var oper = parseInt($("#txtOperacion").val());
     var titulo = "AGREGAR";
     var pregunta = "¿DESEA GRABAR EL NUEVO REGISTRO?";
 
-    if(oper===2){
+    if (oper === 2) {
         titulo = "EDITAR";
         pregunta = "¿DESEA EDITAR EL REGISTRO SELECCIONADO?";
     }
-    if(oper===3){
+    else if (oper === 3) {
         titulo = "ANULAR";
         pregunta = "¿DESEA ANULAR EL REGISTRO SELECCIONADO?";
     }
-    if(oper===4){
-        titulo = "CONFIRMAR";
-        pregunta="¿DESEA CONFIRMAR EL REGISTRO SELECCIONADO?";
+    else if (oper === 4) {
+        titulo = "PROCESADO";
+        pregunta = "¿DESEA PASAR EL RECLAMO A ESTADO EN PROCESO?";
     }
+    else if (oper === 5) {
+        titulo = "RESOLVER";
+        pregunta = "¿DESEA MARCAR EL RECLAMO COMO RESUELTO?";
+    }
+
     swal({
         title: titulo,
         text: pregunta,
@@ -167,9 +187,7 @@ function listar() {
     })
     .done(function (resultado) {
 
-        // ✅ Escapa strings de forma segura para meter en onclick
         const q = (v) => JSON.stringify((v ?? "").toString());
-
         let lista = "";
 
         resultado.forEach(rs => {
@@ -183,6 +201,7 @@ function listar() {
 
                     ${q(rs.emp_razon_social)},
                     ${q(rs.suc_razon_social)},
+
                     ${q(rs.rec_cli_cab_fecha)},
                     ${q(rs.rec_cli_cab_fecha_inicio)},
                     ${q(rs.rec_cli_cab_fecha_fin)},
@@ -209,7 +228,6 @@ function listar() {
                     <td>${rs.rec_cli_cab_prioridad || ""}</td>
                     <td>${rs.rec_cli_cab_estado || ""}</td>
                     <td>${rs.encargado || ""}</td>
-                    <td>${rs.rec_cli_cab_observacion || ""}</td>
                 </tr>
             `;
         });
@@ -222,7 +240,6 @@ function listar() {
         console.error(xhr.responseText);
     });
 }
-
 function seleccionReclamo(
     id,
     empresa_id,
@@ -231,6 +248,7 @@ function seleccionReclamo(
 
     emp_razon_social,
     suc_razon_social,
+
     rec_cli_cab_fecha,
     rec_cli_cab_fecha_inicio,
     rec_cli_cab_fecha_fin,
@@ -245,19 +263,20 @@ function seleccionReclamo(
     prioridad,
     estado,
     encargado,
-    observacion
+    rec_cli_cab_observacion
 ) {
     // 🔹 IDs
     $("#id").val(id);
     $("#empresa_id").val(empresa_id);
     $("#sucursal_id").val(sucursal_id);
     $("#clientes_id").val(clientes_id);
+    $("#rec_cli_cab_estado").val(estado);
 
     // 🔹 Empresa / Sucursal
     $("#emp_razon_social").val(emp_razon_social);
     $("#suc_razon_social").val(suc_razon_social);
 
-    // 🔹 Fecha reclamo
+    // 🔹 Fechas
     $("#rec_cli_cab_fecha").val(rec_cli_cab_fecha);
     $("#rec_cli_cab_fecha_inicio").val(rec_cli_cab_fecha_inicio);
     $("#rec_cli_cab_fecha_fin").val(rec_cli_cab_fecha_fin);
@@ -272,28 +291,36 @@ function seleccionReclamo(
 
     // 🔹 Reclamo
     $("#rec_cli_cab_prioridad").val(prioridad);
-    $("#rec_cli_cab_estado").val(estado);
-    $("#rec_cli_cab_observacion").val(observacion);
+    $("#rec_cli_cab_observacion").val(rec_cli_cab_observacion);
 
-    // 🔹 Encargado (solo visual si lo usás)
+    // 🔹 Encargado (solo visual)
     $("#encargado").val(encargado);
 
-    // 🔹 Vistas
+    // 🔹 Vista
     $("#registros").hide();
     $("#detalle").show();
-    $("#formDetalles").show();
 
     // 🔹 Botones
-    $("#btnAgregar, #btnGrabar").prop("disabled", true);
+    $("#btnAgregar, #btnEditar, #btnEliminar, #btnProcesar, #btnResolver")
+        .prop("disabled", true);
+
     $("#btnCancelar").prop("disabled", false);
 
-    if (estado === "PENDIENTE") {
-        $("#btnEditar, #btnEliminar").prop("disabled", false);
-    }
     listarDetalles();
+
+    // 🟡 PENDIENTE
+    if (estado === "PENDIENTE") {
+        $("#btnEditar, #btnEliminar, #btnProcesar").prop("disabled", false);
+    }
+
+    // 🔵 EN PROCESO
+    if (estado === "EN PROCESO") {
+        $("#btnEliminar, #btnResolver").prop("disabled", false);
+    }
 
     $(".form-line").addClass("focused");
 }
+
 function buscarCliente(){
     $.ajax({
         url: getUrl()+"clientes/buscar",
@@ -402,13 +429,13 @@ function grabar() {
     // 🔹 Captura de campos
     var observacion = $("#rec_cli_cab_observacion").val().trim();
     var prioridad   = $("#rec_cli_cab_prioridad").val().trim();
-    var fecha        = $("#rec_cli_cab_fecha").val().trim();
-    var fechaInicio        = $("#rec_cli_cab_fecha_inicio").val().trim();
-    var fechaFin        = $("#rec_cli_cab_fecha_fin").val().trim();
-    var sucursalTxt  = $("#suc_razon_social").val().trim();
+    var fecha       = $("#rec_cli_cab_fecha").val().trim();
+    var fechaInicio = $("#rec_cli_cab_fecha_inicio").val().trim();
+    var fechaFin    = $("#rec_cli_cab_fecha_fin").val().trim();
+    var sucursalTxt = $("#suc_razon_social").val().trim();
 
-    // 🔹 Validación mínima (cabecera)
-    if (observacion === "" || prioridad === "" || fecha === "" || sucursalTxt === ""|| fechaInicio === ""|| fechaFin === "") {
+    // 🔹 Validación mínima
+    if (!observacion || !prioridad || !fecha || !fechaInicio || !fechaFin || !sucursalTxt) {
         swal({
             title: "Error",
             text: "Todos los campos obligatorios deben estar completos.",
@@ -417,26 +444,30 @@ function grabar() {
         return;
     }
 
-    // 🔹 Configuración por defecto
+    // 🔹 Configuración base
+    var oper     = parseInt($("#txtOperacion").val());
     var endpoint = "reclamoclicab/create";
     var metodo   = "POST";
     var estado   = "PENDIENTE";
 
-    if ($("#txtOperacion").val() == 2) {
+    if (oper === 2) {
         endpoint = "reclamoclicab/update/" + $("#id").val();
-        metodo = "PUT";
+        metodo   = "PUT";
     }
-
-    if ($("#txtOperacion").val() == 3) {
+    else if (oper === 3) {
         endpoint = "reclamoclicab/anular/" + $("#id").val();
-        metodo = "PUT";
-        estado = "ANULADO";
+        metodo   = "PUT";
+        estado   = "ANULADO";
     }
-
-    if ($("#txtOperacion").val() == 4) {
-        endpoint = "reclamoclicab/confirmar/" + $("#id").val();
-        metodo = "PUT";
-        estado = "CONFIRMADO";
+    else if (oper === 4) {
+        endpoint = "reclamoclicab/procesar/" + $("#id").val();
+        metodo   = "PUT";
+        estado   = "EN PROCESO";
+    }
+    else if (oper === 5) {
+        endpoint = "reclamoclicab/resolver/" + $("#id").val();
+        metodo   = "PUT";
+        estado   = "RESUELTO";
     }
 
     // 🔹 Envío AJAX
@@ -450,6 +481,7 @@ function grabar() {
             rec_cli_cab_fecha: $("#rec_cli_cab_fecha").val(),
             rec_cli_cab_fecha_inicio: $("#rec_cli_cab_fecha_inicio").val(),
             rec_cli_cab_fecha_fin: $("#rec_cli_cab_fecha_fin").val(),
+
             rec_cli_cab_prioridad: $("#rec_cli_cab_prioridad").val(),
             rec_cli_cab_observacion: $("#rec_cli_cab_observacion").val(),
             rec_cli_cab_estado: estado,
@@ -457,35 +489,22 @@ function grabar() {
             clientes_id: $("#clientes_id").val(),
             empresa_id: $("#empresa_id").val(),
             sucursal_id: $("#sucursal_id").val(),
-            user_id: $("#user_id").val(),
-
-            operacion: $("#txtOperacion").val()
+            user_id: $("#user_id").val()
         }
     })
-    .done(function (resultado) {
-
+    .done(function(resultado){
         swal({
-            title: "Respuesta",
+            title:"Respuesta",
             text: resultado.mensaje,
             type: resultado.tipo
-        }, function () {
-
-            if (resultado.tipo === "success") {
-
-                // 🔹 Asignar ID generado
-                if (resultado.registro && resultado.registro.id) {
-                    $("#id").val(resultado.registro.id);
-                }
-
-                // 🔹 Mostrar panel de detalle
-                $("#detalle").show();
-                $("#formDetalles").show();
-
-                // 🔹 Cargar detalles del reclamo
-                listarDetalles();
-
-                // 🔄 Recargar si cambia de estado
-                if (estado !== "PENDIENTE" || $("#txtOperacion").val() == 2) {
+        },
+        function(){
+            if(resultado.tipo == "success"){
+                $("#id").val(resultado.registro.id);
+                $("#detalle").attr("style","display:block;");
+                
+                // 🔄 Recarga si NO es pendiente o si es actualización
+                if(resultado.registro.rec_cli_cab_estado!="PENDIENTE" || $("#txtOperacion").val()==2){
                     location.reload(true);
                 }
             }
@@ -757,9 +776,9 @@ function listarDetalles() {
 
         // Activar o desactivar Confirmar
         if ($("#rec_cli_cab_estado").val() === "PENDIENTE" && cantidadDetalle > 0) {
-            $("#btnConfirmar").removeAttr("disabled");
+            $("#btnProcesar").removeAttr("disabled");
         } else {
-            $("#btnConfirmar").attr("disabled", "true");
+            $("#btnProcesar").attr("disabled", "true");
         }
     })
     .fail(function(xhr, status, error) {

@@ -191,19 +191,14 @@ function listar() {
                 + rs.soli_cab_estado + "', '"
                 + rs.name + "');\">";
 
-            lista += "<td>" + rs.id + "</td>";
-            lista += "<td>" + rs.emp_razon_social + "</td>";
-            lista += "<td>" + rs.suc_razon_social + "</td>";
-            lista += "<td>" + rs.cli_nombre + "</td>";
-            lista += "<td>" + rs.cli_apellido + "</td>";
-            lista += "<td>" + rs.cli_ruc + "</td>";
-            lista += "<td>" + rs.tipo_serv_nombre + "</td>";
-            lista += "<td>" + rs.soli_cab_fecha + "</td>";
-            lista += "<td>" + rs.soli_cab_fecha_estimada + "</td>";
-            lista += "<td>" + rs.soli_cab_prioridad + "</td>";
-            lista += "<td>" + rs.name + "</td>";
-            lista += "<td>" + rs.soli_cab_estado + "</td>";
-            lista += "</tr>";
+           lista += `<td>${rs.id}</td>`;
+            lista += `<td>${rs.emp_razon_social}</td>`;
+            lista += `<td>${rs.cli_nombre} ${rs.cli_apellido}</td>`;
+            lista += `<td>${rs.tipo_serv_nombre}</td>`;
+            lista += `<td>${rs.soli_cab_fecha}</td>`;
+            lista += `<td>${rs.soli_cab_prioridad}</td>`;
+            lista += `<td>${rs.soli_cab_estado}</td>`;
+            lista += `</tr>`;
         }
         $("#tableBody").html(lista);
         formatoTabla();

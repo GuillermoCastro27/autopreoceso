@@ -112,7 +112,6 @@
                                                 <option value="PORCENTAJE">Porcentaje (%)</option>
                                                 <option value="MONTO_FIJO">Monto fijo (Gs.)</option>
                                                 <option value="2X1">2x1</option>
-                                                <option value="DESCUENTO_ESCALONADO">Descuento escalonado</option>
                                             </select>
                                             <label class="form-label">Modo</label>
                                         </div>

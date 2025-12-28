@@ -63,7 +63,7 @@ function agregar() {
     $("#nota_comp_cant_cuota").attr("disabled", "true");
     $("#compra_cab").removeAttr("disabled");
     $("#emp_razon_social").attr("disabled", "true");
-    $("#nota_comp_condicion_pago").removeAttr("disabled");
+    $("#nota_comp_condicion_pago").attr("disabled", "true");
     $("#suc_razon_social").attr("disabled", "true");
     $("#nota_comp_tipo").removeAttr("disabled");
     $("#nota_comp_observaciones").removeAttr("disabled");

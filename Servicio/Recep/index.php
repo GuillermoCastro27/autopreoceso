@@ -2,537 +2,451 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>GUI RECEPCION DE VEHICULOS</title>
-    <!-- Favicon-->
-    <link rel="icon" href="../../images.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<title>GUI RECEPCION DE VEHICULOS</title>
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+<link rel="icon" href="../../images.ico" type="image/x-icon">
 
-    <!-- Bootstrap Core Css -->
-    <link href="../../plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&subset=latin,cyrillic-ext" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <!-- Waves Effect Css -->
-    <link href="../../plugins/node-waves/waves.css" rel="stylesheet" />
+<!-- Bootstrap & Plugins -->
+<link href="../../plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+<link href="../../plugins/node-waves/waves.css" rel="stylesheet" />
+<link href="../../plugins/animate-css/animate.css" rel="stylesheet" />
+<link href="../../plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+<link href="../../plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet" />
+<link href="../../plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
 
-    <!-- Animation Css -->
-    <link href="../../plugins/animate-css/animate.css" rel="stylesheet" />
+<!-- AdminBSB -->
+<link href="../../css/style.css" rel="stylesheet">
+<link href="../../css/themes/all-themes.css" rel="stylesheet" />
 
-    <!-- Bootstrap Material Datetime Picker Css -->
-    <link href="../../plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
+<!-- ESTILO INDUSTRIAL (IGUAL A SOLICITUDES) -->
+<style>
+body { background:#f1f2f6; }
 
-    <!-- Sweetalert Css -->
-    <link href="../../plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+.card-industrial {
+    border-left: 6px solid #0984e3;
+    border-radius: 6px;
+    box-shadow: 0 6px 14px rgba(0,0,0,.12);
+    background: #fff;
+}
 
-    <!-- JQuery DataTable Css -->
-    <link href="../../plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
+.card-industrial .header {
+    background: #2d3436;
+    color: #fff;
+    padding: 15px 20px;
+}
 
-    <!-- Custom Css -->
-    <link href="../../css/style.css" rel="stylesheet">
+.section-box {
+    background: #f8f9fa;
+    border: 1px solid #dcdde1;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
 
-    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
-    <link href="../../css/themes/all-themes.css" rel="stylesheet" />
+.section-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #2d3436;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ced6e0;
+}
+
+.btn-toolbar-left button {
+    margin-right: 6px;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.table thead {
+    background: #2d3436;
+    color: #fff;
+    font-size: 13px;
+}
+</style>
 </head>
 
 <body class="theme-red">
 
-    <?php require_once('../../opciones.php'); ?>
+<?php require_once('../../opciones.php'); ?>
 
-    <section class="content">
-        <div class="container-fluid">
+<section class="content">
+<div class="container-fluid">
+<div class="row clearfix">
+<div class="col-md-12">
 
-            <div class="row clearfix">
+<!-- ================= CABECERA ================= -->
+<div class="card card-industrial">
+<div class="header">
+<h2>
+<i class="material-icons">directions_car</i>
+Recepción de Vehículos
+<small>Registro y control</small>
+</h2>
+</div>
 
-                <div class="col-md-12">
-                    
-                    <div class="card">
-                        <div class="header">
-                            <h2>Registrar Recepcion de Vehiculos <small>CRUD de Recepcion de Vehiculos y su detalle</small> </h2>
-                        </div>
-                        <div class="body">
-                            <div class="row clearfix">
-                                <input type="hidden" value="0" id="txtOperacion"/>
-                                <input type="hidden" value="1" id="user_id"/>
-                                <input type="hidden" value="PENDIENTE" id="recep_cab_estado"/>
-                                
-                                <!-- CÓDIGO -->
-                                <div class="col-sm-1">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="id" class="form-control" disabled>
-                                            <label class="form-label">Código</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- EMPRESA -->
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="emp_razon_social" class="form-control" disabled>
-                                            <label class="form-label">Empresa</label>
-                                        </div>
-                                        <input type="hidden" id="empresa_id" name="empresa_id">
-                                        <div id="listaEmpresa" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                
-                                <!-- SUCURSAL -->
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="suc_razon_social" class="form-control" disabled onkeyup="buscarSucursal();">
-                                            <label class="form-label">Sucursal</label>
-                                        </div>
-                                        <input type="hidden" id="sucursal_id" name="sucursal_id">
-                                        <div id="listaSucursal" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                <!-- FECHA -->
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="recep_cab_fecha" class="datetimepicker form-control" disabled>
-                                            <label class="form-label">Fecha</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- FECHA ESTIMADA -->
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="recep_cab_fecha_estimada" class="datetimepicker form-control" disabled>
-                                            <label class="form-label">Fecha Estimada</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <!-- Campo de texto para la ciudad, habilitado -->
-                                            <input type="text" id="solicitud" class="form-control" disabled onkeyup="buscarSolicitud();">
-                                            <label class="form-label">Solicitud</label>
-                                        </div>
+<div class="body">
 
-                                        <!-- Campo oculto para almacenar el ID de la ciudad -->
-                                        <input type="hidden" id="solicitudes_cab_id" name="solicitudes_cab_id" value="0">
+<input type="hidden" id="txtOperacion" value="0">
+<input type="hidden" id="user_id" value="1">
+<input type="hidden" id="recep_cab_estado" value="PENDIENTE">
 
-                                        <!-- Contenedor para la lista de ciudades -->
-                                        <div id="listaSolicitud" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                
-                                <!-- OBSERVACIONES -->
-                                <div class="col-sm-6">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="recep_cab_observaciones" class="form-control" disabled>
-                                            <label class="form-label">Observaciones</label>
-                                        </div>
-                                    </div>
-                                </div>
+<!-- ================= DATOS GENERALES ================= -->
+<div class="section-box">
+<div class="section-title">Datos Generales</div>
 
-                                <!-- PRIORIDAD -->
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="recep_cab_prioridad" class="form-control" disabled>
-                                            <label class="form-label">Prioridad</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="recep_cab_kilometraje" class="form-control" disabled>
-                                            <label class="form-label">Kilometraje</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="recep_cab_nivel_combustible" class="form-control" disabled>
-                                            <label class="form-label">Combustible</label>
-                                        </div>
-                                    </div>
-                                </div>
+<div class="row clearfix">
+    <div class="col-sm-2">
+        <input type="text" id="id" class="form-control" disabled placeholder="Código">
+    </div>
 
-                                <!-- TIPO DE SERVICIO -->
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="tipo_serv_nombre" class="form-control" disabled onkeyup="buscarTipoServicio();">
-                                            <label class="form-label">Tipo de Servicio</label>
-                                        </div>
-                                        <input type="hidden" id="tipo_servicio_id" name="tipo_servicio_id">
-                                        <div id="listaTipoServ" style="display:none;"></div>
-                                    </div>
-                                </div>
+    <div class="col-sm-3">
+        <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
+        <input type="hidden" id="empresa_id">
+        <div id="listaEmpresa" style="display:none;"></div>
+    </div>
 
-                                <!-- CLIENTE -->
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="cli_nombre" class="form-control" disabled onkeyup="buscarCliente();">
-                                            <label class="form-label">Cliente</label>
-                                        </div>
-                                        <input type="hidden" id="clientes_id" name="clientes_id">
-                                        <div id="listaClientes" style="display:none;"></div>
-                                    </div>
-                                </div>
+    <div class="col-sm-3">
+        <input type="text" id="suc_razon_social" class="form-control" disabled onkeyup="buscarSucursal();" placeholder="Sucursal">
+        <input type="hidden" id="sucursal_id">
+        <div id="listaSucursal" style="display:none;"></div>
+    </div>
 
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="cli_apellido" class="form-control" disabled>
-                                            <label class="form-label">Apellido</label>
-                                        </div>
-                                    </div>
-                                </div>
+    <div class="col-sm-2">
+        <input type="text" id="recep_cab_fecha" class="datetimepicker form-control" disabled placeholder="Fecha">
+    </div>
 
-                                <!-- RUC -->
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="cli_ruc" class="form-control" disabled>
-                                            <label class="form-label">RUC</label>
-                                        </div>
-                                    </div>
-                                </div>
+    <div class="col-sm-2">
+        <input type="text" id="recep_cab_fecha_estimada" class="datetimepicker form-control" disabled placeholder="Fecha Estimada">
+    </div>
+</div>
+</div>
 
-                                <!-- TELEFONO -->
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="cli_telefono" class="form-control" disabled>
-                                            <label class="form-label">Telefono</label>
-                                        </div>
-                                    </div>
-                                </div>
+<!-- ================= SOLICITUD ================= -->
+<div class="section-box">
+<div class="section-title">Solicitud</div>
 
-                                <!-- DIRECCION -->
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="cli_direccion" class="form-control" disabled>
-                                            <label class="form-label">Direccion</label>
-                                        </div>
-                                    </div>
-                                </div>
+<div class="row clearfix">
+    <div class="col-sm-6">
+        <input type="text" id="solicitud" class="form-control" disabled onkeyup="buscarSolicitud();" placeholder="Solicitud">
+        <input type="hidden" id="solicitudes_cab_id" value="0">
+        <div id="listaSolicitud" style="display:none;"></div>
+    </div>
 
-                                <!-- CORREO -->
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="cli_correo" class="form-control" disabled>
-                                            <label class="form-label">Correo</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- TIPO DE SERVICIO -->
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="tip_veh_nombre" class="form-control" disabled onkeyup="buscarTipoVehiculoPorMarca();">
-                                            <label class="form-label">Tipo de Vehículo</label>
-                                        </div>
-                                        <input type="hidden" id="tipo_vehiculo_id" name="tipo_vehiculo_id">
-                                        <div id="listaTipoVeh" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="tip_veh_capacidad" class="form-control" disabled>
-                                            <label class="form-label">Capacidad</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="tip_veh_combustible" class="form-control" disabled>
-                                            <label class="form-label">Tipo Combustible</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="tip_veh_categoria" class="form-control" disabled>
-                                            <label class="form-label">Categoría</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="tip_veh_observacion" class="form-control" disabled>
-                                            <label class="form-label">Observación (Tipo vehiculo)</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <!-- Campo de texto para la ciudad, habilitado -->
-                                            <input type="text" id="marc_nom" class="form-control" disabled onkeyup="buscarMarcasVehiculo();">
-                                            <label class="form-label">Marca</label>
-                                        </div>
+    <div class="col-sm-6">
+        <input type="text" id="recep_cab_observaciones" class="form-control" disabled placeholder="Observaciones">
+    </div>
+</div>
 
-                                        <!-- Campo oculto para almacenar el ID de la ciudad -->
-                                        <input type="hidden" id="marca_id" name="marca_id">
+<div class="row clearfix" style="margin-top:10px;">
+    <div class="col-sm-2">
+        <input type="text" id="recep_cab_prioridad" class="form-control" disabled placeholder="Prioridad">
+    </div>
 
-                                        <!-- Contenedor para la lista de ciudades -->
-                                        <div id="listaMarcasVehiculo" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="modelo_nom" class="form-control" disabled>
-                                            <label class="form-label">Modelo</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="modelo_año" class="form-control" disabled>
-                                            <label class="form-label">Año Modelo</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+    <div class="col-sm-2">
+        <input type="text" id="recep_cab_kilometraje" class="form-control" disabled placeholder="Kilometraje">
+    </div>
 
-                            <!-- BOTONES -->
-                            <div class="button-demo">
-                                <button type="button" id="btnAgregar" class="btn btn-success waves-effect" onclick="agregar();">AGREGAR</button>
-                                <button type="button" id="btnEditar" class="btn btn-primary waves-effect" onclick="editar();" disabled>MODIFICAR</button>
-                                <button type="button" id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();"disabled>ANULAR</button>
-                                <button type="button" id="btnConfirmar" class="btn btn-success waves-effect" onclick="confirmar();"disabled>CONFIRMAR</button>
-                                <button type="button" id="btnGrabar" class="btn btn-default waves-effect" disabled onclick="confirmarOperacion();">GRABAR</button>
-                                <button type="button" id="btnCancelar" class="btn btn-warning waves-effect" onclick="cancelar();" disabled>CANCELAR</button> 
-                            </div>
-                        </div>
+    <div class="col-sm-2">
+        <input type="text" id="recep_cab_nivel_combustible" class="form-control" disabled placeholder="Combustible">
+    </div>
+
+    <div class="col-sm-4">
+        <input type="text" id="tipo_serv_nombre" class="form-control" disabled onkeyup="buscarTipoServicio();" placeholder="Tipo Servicio">
+        <input type="hidden" id="tipo_servicio_id">
+        <div id="listaTipoServ" style="display:none;"></div>
+    </div>
+</div>
+</div>
+
+<!-- ================= CLIENTE ================= -->
+<div class="section-box">
+<div class="section-title">Cliente</div>
+
+<div class="row clearfix">
+    <div class="col-sm-3">
+        <input type="text" id="cli_nombre" class="form-control" disabled onkeyup="buscarCliente();" placeholder="Nombre">
+        <input type="hidden" id="clientes_id">
+        <div id="listaClientes" style="display:none;"></div>
+    </div>
+
+    <div class="col-sm-3">
+        <input type="text" id="cli_apellido" class="form-control" disabled placeholder="Apellido">
+    </div>
+
+    <div class="col-sm-3">
+        <input type="text" id="cli_ruc" class="form-control" disabled placeholder="RUC">
+    </div>
+
+    <div class="col-sm-3">
+        <input type="text" id="cli_telefono" class="form-control" disabled placeholder="Teléfono">
+    </div>
+</div>
+
+<div class="row clearfix" style="margin-top:10px;">
+    <div class="col-sm-6">
+        <input type="text" id="cli_direccion" class="form-control" disabled placeholder="Dirección">
+    </div>
+
+    <div class="col-sm-6">
+        <input type="text" id="cli_correo" class="form-control" disabled placeholder="Correo">
+    </div>
+</div>
+</div>
+
+<!-- ================= VEHÍCULO ================= -->
+<div class="section-box">
+<div class="section-title">Vehículo</div>
+
+<div class="row clearfix">
+    <div class="col-sm-3">
+        <input type="text" id="tip_veh_nombre" class="form-control" disabled onkeyup="buscarTipoVehiculoPorMarca();" placeholder="Tipo Vehículo">
+        <input type="hidden" id="tipo_vehiculo_id">
+        <div id="listaTipoVeh" style="display:none;"></div>
+    </div>
+
+    <div class="col-sm-3">
+        <input type="text" id="tip_veh_capacidad" class="form-control" disabled placeholder="Capacidad">
+    </div>
+
+    <div class="col-sm-3">
+        <input type="text" id="tip_veh_combustible" class="form-control" disabled placeholder="Tipo Combustible">
+    </div>
+
+    <div class="col-sm-3">
+        <input type="text" id="tip_veh_categoria" class="form-control" disabled placeholder="Categoría">
+    </div>
+</div>
+
+<div class="row clearfix" style="margin-top:10px;">
+    <div class="col-sm-3">
+        <input type="text" id="tip_veh_observacion" class="form-control" disabled placeholder="Observación">
+    </div>
+
+    <div class="col-sm-4">
+        <input type="text" id="marc_nom" class="form-control" disabled onkeyup="buscarMarcasVehiculo();" placeholder="Marca">
+        <input type="hidden" id="marca_id">
+        <div id="listaMarcasVehiculo" style="display:none;"></div>
+    </div>
+
+    <div class="col-sm-3">
+        <input type="text" id="modelo_nom" class="form-control" disabled placeholder="Modelo">
+    </div>
+
+    <div class="col-sm-2">
+        <input type="text" id="modelo_año" class="form-control" disabled placeholder="Año Modelo">
+    </div>
+</div>
+</div>
+
+<!-- ================= BOTONES ================= -->
+<div class="btn-toolbar-left">
+<button id="btnAgregar" class="btn btn-success" onclick="agregar();"><i class="material-icons">add</i> Agregar</button>
+<button id="btnEditar" class="btn btn-primary" onclick="editar();" disabled><i class="material-icons">edit</i> Modificar</button>
+<button id="btnEliminar" class="btn btn-danger" onclick="eliminar();" disabled><i class="material-icons">delete</i> Anular</button>
+<button id="btnConfirmar" class="btn btn-success" onclick="confirmar();" disabled><i class="material-icons">check_circle</i> Confirmar</button>
+<button id="btnGrabar" class="btn btn-default" onclick="confirmarOperacion();" disabled><i class="material-icons">save</i> Grabar</button>
+<button id="btnCancelar" class="btn btn-warning" onclick="cancelar();" disabled><i class="material-icons">close</i> Cancelar</button>
+</div>
+
+</div>
+</div>
+<div class="card card-industrial" id="detalle" style="display:none">
+
+    <div class="header">
+        <h2>
+            <i class="material-icons">playlist_add</i>
+            Detalles de la Recepción
+        </h2>
+    </div>
+
+    <div class="body">
+
+        <!-- ===== FORMULARIO DETALLE ===== -->
+        <div class="row clearfix" id="formDetalles">
+
+            <input type="hidden" id="txtOperacionDetalle" value="0"/>
+
+            <!-- CÓDIGO ITEM -->
+            <div class="col-sm-1">
+                <div class="form-group form-float">
+                    <div class="form-line">
+                        <input type="text" id="item_id" class="form-control" disabled>
+                        <label class="form-label">Código</label>
                     </div>
-
-                    <!-- DETALLE -->
-                    <div class="card" id="detalle" style="display:none">
-                        <div class="header">
-                            <h2>Detalles de la Recepcion</h2>
-                        </div>
-                        <div class="body">
-                            <div class="row clearfix" id="formDetalles">
-                                <input type="hidden" value="0" id="txtOperacionDetalle"/>
-
-                                <!-- CODIGO ITEM -->
-                                <div class="col-sm-1">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="item_id" class="form-control" disabled>
-                                            <label class="form-label">Código</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- PRODUCTO -->
-                                <div class="col-sm-5">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();">
-                                            <label class="form-label">Producto</label>
-                                        </div>
-                                        <div id="listaProductos" style="display:none;"></div>
-                                    </div>
-                                </div>
-
-                                <!-- TIPO IMPUESTO -->
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="tip_imp_nom" class="form-control" disabled>
-                                            <label class="form-label">Tipo impuesto</label>
-                                        </div>
-                                        <input type="hidden" id="tipo_impuesto_id" name="tipo_impuesto_id">
-                                    </div>
-                                </div>
-
-                                <!-- CANTIDAD DISPONIBLE -->
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="recep_det_cantidad_stock" class="form-control" disabled>
-                                            <label class="form-label">Cantidad Disponible</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- CANTIDAD -->
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="recep_det_cantidad" class="form-control" disabled>
-                                            <label class="form-label">Cantidad</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- COSTO -->
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="recep_det_costo" class="form-control" disabled>
-                                            <label class="form-label">Precio</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- BOTONES DETALLE -->
-                                <div class="col-sm-3">
-                                    <div class="icon-button-demo">
-                                        <button type="button" id="btnAgregarDetalle" class="btn btn-success waves-effect" onclick="agregarDetalle();">
-                                            <i class="material-icons">add</i>
-                                        </button>
-                                        <button type="button" id="btnEditarDetalle" class="btn btn-warning waves-effect" onclick="editarDetalle();">
-                                            <i class="material-icons">mode_edit</i>
-                                        </button>
-                                        <button type="button" id="btnEliminarDetalle" class="btn btn-danger waves-effect" onclick="eliminarDetalle();">
-                                            <i class="material-icons">clear</i>
-                                        </button>
-                                        <button type="button" id="btnGrabarDetalle" class="btn btn-default waves-effect" style="display:none;" onclick="grabarDetalle();">
-                                            <i class="material-icons">save</i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- TABLA DETALLE -->
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable ">
-                                    <thead>
-                                        <tr>
-                                            <th>Código</th>
-                                            <th>Producto</th>
-                                            <th>Cantidad</th>
-                                            <th>Cantidad Disponible</th>
-                                            <th>Precio</th>
-                                            <th>Tipo impuesto</th>
-                                            <th>Sub Total</th>
-                                            <th>IVA</th> <!-- Agregado para mostrar el total con impuesto -->
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tableDetalle"></tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th colspan="5" class="text-right">Total Comprobante</th>
-                                            <th class="text-right" id="txtTotalGral">0</th> <!-- Total sin impuestos -->
-                                        </tr>
-                                        <tr>
-                                            <th colspan="5" class="text-right">Total IVA</th>
-                                            <th class="text-right" id="txtTotalConImpuesto">0</th> <!-- Total con impuestos -->
-                                        </tr>
-                                    </tfoot>    
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- REGISTROS -->
-                    <div class="card" id="registros">
-                        <div class="header">
-                            <h2>Registros de Recepcion de Vehiculos</h2>
-                        </div>
-                        <div class="body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
-                                    <thead>
-                                    <tr>
-                                        <th>Código</th>
-                                        <th>Cliente</th>
-                                        <th>Vehículo</th>
-                                        <th>Solicitud</th>
-                                        <th>Fecha</th>
-                                        <th>Estado</th>
-                                        <th>Encargado</th>
-                                    </tr>
-                                </thead>
-                                    <tbody id="tableBody"></tbody>
-                                    <tfoot>
-                                        <tr>
-                                        <th>Código</th>
-                                        <th>Cliente</th>
-                                        <th>Vehículo</th>
-                                        <th>Solicitud</th>
-                                        <th>Fecha</th>
-                                        <th>Estado</th>
-                                        <th>Encargado</th>
-                                    </tr>
-                                    </tfoot>    
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
-                
             </div>
+
+            <!-- PRODUCTO -->
+            <div class="col-sm-5">
+                <div class="form-group form-float">
+                    <div class="form-line">
+                        <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();">
+                        <label class="form-label">Producto</label>
+                    </div>
+                    <div id="listaProductos" style="display:none;"></div>
+                </div>
+            </div>
+
+            <!-- TIPO IMPUESTO -->
+            <div class="col-sm-2">
+                <div class="form-group form-float">
+                    <div class="form-line">
+                        <input type="text" id="tip_imp_nom" class="form-control" disabled>
+                        <label class="form-label">Tipo impuesto</label>
+                    </div>
+                    <input type="hidden" id="tipo_impuesto_id" name="tipo_impuesto_id">
+                </div>
+            </div>
+
+            <!-- CANTIDAD DISPONIBLE -->
+            <div class="col-sm-2">
+                <div class="form-group form-float">
+                    <div class="form-line">
+                        <input type="text" id="recep_det_cantidad_stock" class="form-control" disabled>
+                        <label class="form-label">Cantidad Disponible</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CANTIDAD -->
+            <div class="col-sm-2">
+                <div class="form-group form-float">
+                    <div class="form-line">
+                        <input type="text" id="recep_det_cantidad" class="form-control" disabled>
+                        <label class="form-label">Cantidad</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COSTO -->
+            <div class="col-sm-2">
+                <div class="form-group form-float">
+                    <div class="form-line">
+                        <input type="text" id="recep_det_costo" class="form-control" disabled>
+                        <label class="form-label">Precio</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTONES DETALLE -->
+            <div class="col-sm-3">
+                <div class="icon-button-demo" style="margin-top:15px;">
+                    <button type="button" id="btnAgregarDetalle" class="btn btn-success waves-effect" onclick="agregarDetalle();">
+                        <i class="material-icons">add</i>
+                    </button>
+
+                    <button type="button" id="btnEditarDetalle" class="btn btn-warning waves-effect" onclick="editarDetalle();">
+                        <i class="material-icons">mode_edit</i>
+                    </button>
+
+                    <button type="button" id="btnEliminarDetalle" class="btn btn-danger waves-effect" onclick="eliminarDetalle();">
+                        <i class="material-icons">clear</i>
+                    </button>
+
+                    <button type="button" id="btnGrabarDetalle" class="btn btn-default waves-effect" style="display:none;" onclick="grabarDetalle();">
+                        <i class="material-icons">save</i>
+                    </button>
+                </div>
+            </div>
+
         </div>
-    </section>
 
-    <!-- Jquery Core Js -->
-    <script src="../../plugins/jquery/jquery.min.js"></script>
+        <hr>
 
-    <!-- Bootstrap Core Js -->
-    <script src="../../plugins/bootstrap/js/bootstrap.js"></script>
+        <!-- ===== TABLA DETALLE ===== -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover dataTable">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Cantidad Disponible</th>
+                        <th>Precio</th>
+                        <th>Tipo impuesto</th>
+                        <th>Sub Total</th>
+                        <th>IVA</th>
+                    </tr>
+                </thead>
 
-    <!-- Select Plugin Js -->
-    <script src="../../plugins/bootstrap-select/js/bootstrap-select.js"></script>
+                <tbody id="tableDetalle"></tbody>
 
-    <!-- Slimscroll Plugin Js -->
-    <script src="../../plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+                <tfoot>
+                    <tr>
+                        <th colspan="7" class="text-right">Total Comprobante</th>
+                        <th class="text-right" id="txtTotalGral">0</th>
+                    </tr>
+                    <tr>
+                        <th colspan="7" class="text-right">Total IVA</th>
+                        <th class="text-right" id="txtTotalConImpuesto">0</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
 
-    <!-- Waves Effect Plugin Js -->
-    <script src="../../plugins/node-waves/waves.js"></script>
+    </div>
+</div>
 
-    <!-- SweetAlert Plugin Js -->
-    <script src="../../plugins/sweetalert/sweetalert.min.js"></script>
+<!-- ================= REGISTROS ================= -->
+<div class="card card-industrial" id="registros">
+<div class="header">
+<h2><i class="material-icons">list</i> Registros de Recepción</h2>
+</div>
+<div class="body">
+<table class="table table-bordered table-striped table-hover dataTable js-exportable">
+<thead>
+<tr>
+<th>Código</th>
+<th>Cliente</th>
+<th>Vehículo</th>
+<th>Solicitud</th>
+<th>Fecha</th>
+<th>Estado</th>
+<th>Encargado</th>
+</tr>
+</thead>
+<tbody id="tableBody"></tbody>
+</table>
+</div>
+</div>
 
-    <!-- Jquery DataTable Plugin Js -->
-    <script src="../../plugins/jquery-datatable/jquery.dataTables.js"></script>
-    <script src="../../plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
-    <script src="../../plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
-    <script src="../../plugins/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
-    <script src="../../plugins/jquery-datatable/extensions/export/jszip.min.js"></script>
-    <script src="../../plugins/jquery-datatable/extensions/export/pdfmake.min.js"></script>
-    <script src="../../plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
-    <script src="../../plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
-    <script src="../../plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
+</div>
+</div>
+</div>
+</section>
 
-    <!-- Autosize Plugin Js -->
-    <script src="../../plugins/autosize/autosize.js"></script>
+<!-- JS -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.js"></script>
+<script src="../../plugins/bootstrap-select/js/bootstrap-select.js"></script>
+<script src="../../plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+<script src="../../plugins/node-waves/waves.js"></script>
+<script src="../../plugins/sweetalert/sweetalert.min.js"></script>
 
-    <!-- Moment Plugin Js -->
-    <script src="../../plugins/momentjs/moment.js"></script>
+<script src="../../plugins/jquery-datatable/jquery.dataTables.js"></script>
+<script src="../../plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
+<script src="../../plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
+<script src="../../plugins/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
+<script src="../../plugins/jquery-datatable/extensions/export/jszip.min.js"></script>
+<script src="../../plugins/jquery-datatable/extensions/export/pdfmake.min.js"></script>
+<script src="../../plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
+<script src="../../plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
+<script src="../../plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
 
-    <!-- Bootstrap Material Datetime Picker Plugin Js -->
-    <script src="../../plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+<script src="../../plugins/momentjs/moment.js"></script>
+<script src="../../plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
 
-    <!-- Custom Js -->
-    <script src="../../js/admin.js"></script>
+<script src="../../js/admin.js"></script>
+<script src="../../js/demo.js"></script>
+<script src="../../js/ruta.js"></script>
+<script src="metodos.js"></script>
 
-    <!-- Demo Js -->
-    <script src="../../js/demo.js"></script>
-
-    <!-- Ruta Js -->
-    <script src="../../js/ruta.js"></script>
-
-    <script src="metodos.js"></script>
 </body>
-
 </html>

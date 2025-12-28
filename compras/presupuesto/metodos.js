@@ -168,103 +168,105 @@ function mensajeOperacion(titulo,mensaje,tipo) {
 // Obtiene y muestra la lista de presupuestos mediante una solicitud AJAX.
 function listar(){
     $.ajax({
-        url:getUrl()+"presupuesto/read",
-        method:"GET",
+        url: getUrl() + "presupuesto/read",
+        method: "GET",
         dataType: "json"
     })
     .done(function(resultado){
-        var lista = "";
-        for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionPresupuesto("+rs.id+","+rs.empresa_id+","+rs.sucursal_id+",'"+rs.emp_razon_social+"','"+rs.suc_razon_social+"','"+rs.pre_fecha+"','"+rs.pre_vence+"','"+rs.pre_observaciones+"','"+rs.pre_estado+"',"+rs.proveedor_id+",'"+rs.prov_razonsocial+"','"+rs.prov_ruc+"','"+rs.prov_telefono+"','"+rs.prov_correo+"',"+rs.pedido_id+",'"+rs.pedido+"');\">";
-                lista = lista + "<td>";
-                lista = lista + rs.id;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.pre_fecha;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.pre_vence;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.pre_observaciones;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.name;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.pre_estado;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.nro_pedido;
-                lista = lista +"</td>";
-            lista = lista + "</tr>";
+        let lista = "";
+
+        for (let rs of resultado) {
+            lista += "<tr class='item-list' onclick=\"seleccionPresupuesto("
+                + rs.id + ","
+                + rs.empresa_id + ","
+                + rs.sucursal_id + ",'"
+                + rs.emp_razon_social + "','"
+                + rs.suc_razon_social + "','"
+                + rs.pre_fecha + "','"
+                + rs.pre_vence + "','"
+                + rs.pre_observaciones + "','"
+                + rs.pre_estado + "',"
+                + rs.proveedor_id + ",'"
+                + rs.prov_razonsocial + "','"
+                + rs.prov_ruc + "','"
+                + rs.prov_telefono + "','"
+                + rs.prov_correo + "',"
+                + rs.pedido_id + ",'"
+                + rs.pedido + "')\">";
+
+            lista += "<td>" + rs.id + "</td>";
+            lista += "<td>" + rs.pre_fecha + "</td>";
+            lista += "<td>" + rs.pre_vence + "</td>";
+            lista += "<td>" + rs.pre_observaciones + "</td>";
+            lista += "<td>" + rs.name + "</td>";
+            lista += "<td>" + rs.pre_estado + "</td>";
+            lista += "<td>" + rs.nro_pedido + "</td>";
+            lista += "</tr>";
         }
+
         $("#tableBody").html(lista);
         formatoTabla();
     })
     .fail(function(a,b,c){
         alert(c);
         console.log(a.responseText);
-    })
+    });
 }
 
 // Rellena el formulario con los datos de un presupuesto seleccionado.
-function seleccionPresupuesto(id, empresa_id, sucursal_id, emp_razon_social, suc_razon_social, pre_fecha, pre_vence,pre_observaciones,pre_estado,proveedor_id,prov_razonsocial,prov_ruc,prov_telefono,prov_correo,pedido_id,pedido){
+function seleccionPresupuesto(
+    id, empresa_id, sucursal_id,
+    emp_razon_social, suc_razon_social,
+    pre_fecha, pre_vence, pre_observaciones, pre_estado,
+    proveedor_id, prov_razonsocial, prov_ruc, prov_telefono, prov_correo,
+    pedido_id, pedido
+){
     $("#id").val(id);
     $("#empresa_id").val(empresa_id);
     $("#sucursal_id").val(sucursal_id);
     $("#emp_razon_social").val(emp_razon_social);
     $("#suc_razon_social").val(suc_razon_social);
-    $("#pre_observaciones").val(pre_observaciones);
-    $("#pre_estado").val(pre_estado);
     $("#pre_fecha").val(pre_fecha);
     $("#pre_vence").val(pre_vence);
+    $("#pre_observaciones").val(pre_observaciones);
+    $("#pre_estado").val(pre_estado);
+
     $("#proveedor_id").val(proveedor_id);
     $("#prov_razonsocial").val(prov_razonsocial);
     $("#prov_ruc").val(prov_ruc);
     $("#prov_telefono").val(prov_telefono);
     $("#prov_correo").val(prov_correo);
+
     $("#pedido_id").val(pedido_id);
     $("#pedido").val(pedido);
 
+    $("#registros").hide();
+    $("#detalle").show();
+    $("#formDetalles").hide();
 
-    $("#registros").attr("style","display:none;");
-    $("#detalle").attr("style","display:block;");
-    $("#formDetalles").attr("style","display:none;");
+    $("#btnAgregar").prop("disabled", true);
+    $("#btnEditar").prop("disabled", true);
+    $("#btnGrabar").prop("disabled", true);
+    $("#btnEliminar").prop("disabled", true);
+    $("#btnConfirmar").prop("disabled", true);
+    $("#btnRechazar").prop("disabled", true);
+    $("#btnAprobar").prop("disabled", true);
+
+    $("#btnCancelar").prop("disabled", false);
+    if (pre_estado === "PENDIENTE") {
+        $("#btnEditar").prop("disabled", false);
+        $("#btnEliminar").prop("disabled", false);
+        $("#formDetalles").show();
+    }
+
+    if (pre_estado === "CONFIRMADO") {
+        $("#btnEliminar").prop("disabled", false);
+    }
+
+    $(".form-line").addClass("focused");
     listarDetalles();
-
-    $("#btnAgregar").attr("disabled","true");
-    $("#btnEditar").attr("disabled","true");
-    $("#btnGrabar").attr("disabled","true");
-    $("#btnCancelar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
-    $("#btnConfirmar").attr("disabled","true");
-    $("#btnRechazar").attr("disabled","true");
-    $("#btnAprobar").attr("disabled","true");
-    
-    $("#btnCancelar").removeAttr("disabled");
-
-    if(pre_estado === "PENDIENTE"){
-        $("#btnAgregar").attr("disabled","true");
-        $("#btnGrabar").attr("disabled","true");
-
-        $("#btnEliminar").removeAttr("disabled");
-        $("#btnEditar").removeAttr("disabled");
-        $("#btnConfirmar").removeAttr("disabled");
-        $("#formDetalles").attr("style","display:block;");
-    }
-
-
-    if(pre_estado === "CONFIRMADO"){
-        $("#btnAgregar").attr("disabled","true");
-        $("#btnGrabar").attr("disabled","true");
-        $("#btnEditar").attr("disabled","true");
-
-        $("#btnEliminar").removeAttr("disabled");
-    }
-
-    $(".form-line").attr("class","form-line focused");
 }
+
 
 // Realiza operaciones de creación, edición, eliminación, confirmación, rechazo o aprobación de un presupuesto.
 function grabar(){
@@ -495,13 +497,14 @@ function formatearNumero(numero) {
 
 // Obtiene y muestra la lista de detalles de un presupuesto mediante una solicitud AJAX.
 function listarDetalles() {
-    var cantidadDetalle = 0;
-    var TotalGral = 0;
+    console.log("Estado crudo:", $("#pre_estado").val());
+    console.log("Estado normalizado:", $("#pre_estado").val()?.trim().toUpperCase())
+    let cantidadDetalle = 0;
+    let TotalGral = 0;
 
-    const presupuestoId = $("#id").val(); // Obtener el ID del presupuesto
-    const estadoPresupuesto = $("#pre_estado").val(); // Obtener el estado del presupuesto
+    const presupuestoId = $("#id").val();
+    const estadoPresupuesto = $("#pre_estado").val();
 
-    // Verificar si el ID del presupuesto es válido
     if (!presupuestoId) {
         alert("No se ha definido el ID del presupuesto.");
         return;
@@ -513,57 +516,54 @@ function listarDetalles() {
         dataType: "json"
     })
     .done(function(resultado) {
-        var lista = "";
-        if (resultado && resultado.length > 0) {
-            // Iterar sobre los detalles si existen
-            for (let rs of resultado) {
-                const cantidad = rs.det_cantidad || 0; // Valor de cantidad, por defecto 0
-                const costo = rs.det_costo || 0; // Valor de costo, por defecto 0
-                const subtotal = cantidad * costo; // Calcular el subtotal
+        let lista = "";
 
-                lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" 
-                    + rs.item_id + ", '" + rs.item_decripcion + "', " 
-                    + cantidad + ", " + costo + ");\">";
+        if (resultado && resultado.length > 0) {
+            for (let rs of resultado) {
+                const cantidad = rs.det_cantidad || 0;
+                const costo = rs.det_costo || 0;
+                const subtotal = cantidad * costo;
+
+                lista += "<tr class='item-list' onclick=\"seleccionDetalle("
+                    + rs.item_id + ",'"
+                    + rs.item_decripcion + "',"
+                    + cantidad + ","
+                    + costo + ")\">";
+
                 lista += "<td>" + rs.item_id + "</td>";
                 lista += "<td>" + rs.item_decripcion + "</td>";
                 lista += "<td>" + cantidad + "</td>";
-                lista += "<td class='text-right'>" + formatearNumero(costo) + "</td>"; // Formatear costo
-                lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>"; // Formatear subtotal
+                lista += "<td class='text-right'>" + formatearNumero(costo) + "</td>";
+                lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>";
                 lista += "</tr>";
 
                 cantidadDetalle++;
-                TotalGral += subtotal; // Acumular el total general
+                TotalGral += subtotal;
             }
-
-            // Actualizar la tabla con los detalles generados
-            $("#tableDetalle").html(lista);
         } else {
-            // Si no hay detalles, mostrar un mensaje en la tabla
-            $("#tableDetalle").html("<tr><td colspan='5' class='text-center'>No se encontraron detalles para este presupuesto.</td></tr>");
+            lista = "<tr><td colspan='5' class='text-center'>No se encontraron detalles</td></tr>";
         }
 
-        // Mostrar el total general con formato
-        $("#txtTotalGral").text(formatearNumero(TotalGral)); // Formatear TotalGral
-
-        // Habilitar el botón Confirmar si hay detalles y el presupuesto está pendiente
+        $("#tableDetalle").html(lista);
+        $("#txtTotalGral").text(formatearNumero(TotalGral));
+        
         if (estadoPresupuesto === "PENDIENTE" && cantidadDetalle > 0) {
-            $("#btnConfirmar").removeAttr("disabled");
+            $("#btnConfirmar").prop("disabled", false);
         } else {
-            $("#btnConfirmar").attr("disabled","true"); // Deshabilitar si no hay detalles o el presupuesto no está pendiente
+            $("#btnConfirmar").prop("disabled", true);
         }
     })
-    .fail(function(a, b, c) {
-        alert("Error al obtener detalles: " + c);
+    .fail(function(a,b,c){
+        alert("Error al listar detalles");
         console.log(a.responseText);
     });
 }
-
 // Rellena el formulario con los datos de un detalle seleccionado.
-function seleccionDetalle(item_id, item_decripcion, det_cantidad, det_costo) {
+function seleccionDetalle(item_id, item_decripcion, det_cantidad, det_costo){
     $("#item_id").val(item_id);
     $("#item_decripcion").val(item_decripcion);
     $("#det_cantidad").val(det_cantidad);
-    $("#det_costo").val(formatearNumero(det_costo)); // Formatear costo
+    $("#det_costo").val(formatearNumero(det_costo));
 }
 
 // Realiza una búsqueda de proveedores y muestra los resultados.

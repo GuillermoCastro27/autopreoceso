@@ -201,6 +201,7 @@
                                     <li><a href="/taller_front/referenciales/tipo_promociones"><span>Mantener Tipo Promociones</span></a></li>
                                     <li><a href="/taller_front/referenciales/tipo_descuentos"><span>Mantener Tipo Descuentos</span></a></li>
                                     <li><a href="/taller_front/referenciales/equipo_trabajo"><span>Mantener Equipo de Trabajo</span></a></li>
+                                    <li><a href="/taller_front/referenciales/tipo_contrato"><span>Mantener Tipo de Contrato</span></a></li>
                                 </ul>
                             </li>
                             <li>
@@ -209,8 +210,11 @@
                                     <span>Ref_Ventas</span>
                                 </a>
                                 <ul class="ml-menu">
-                                    <li><a href="/taller_front/referenciales/paises"><span>Paises</span></a></li>
-                                    <li><a href="/taller_front/referenciales/ciudades"><span>Ciudades</span></a></li>
+                                    <li><a href="/taller_front/referenciales/caja"><span>Mantener Caja</span></a></li>
+                                    <li><a href="/taller_front/referenciales/entidad_emisora"><span>Mantener Entidad Emisora</span></a></li>
+                                    <li><a href="/taller_front/referenciales/marca_tarjeta"><span>Mantener Marca de Tarjeta</span></a></li>
+                                    <li><a href="/taller_front/referenciales/entidad_adherida"><span>Mantener Entidad Adherida</span></a></li>
+                                    <li><a href="/taller_front/referenciales/forma_cobro"><span>Mantener Forma de Cobro</span></a></li>
                                 </ul>
                             </li>
                             <li>
@@ -269,8 +273,10 @@
                             <span>Ventas</span>
                         </a>
                         <ul class="ml-menu">
-                            <li><a href="javascript:void(0);"><span>Apertura de Caja</span></a></li>
-                            <li><a href="javascript:void(0);"><span>Facturación</span></a></li>
+                            <li><a href="/taller_front/Ventas/pedido_ventas"><span>Registrar Pedido Ventas</span></a></li>
+                            <li><a href="/taller_front/Ventas/gestionar_ventas"><span>Gestionar Ventas</span></a></li>
+                            <li><a href="/taller_front/Ventas/apertura_cierre_caja"><span>Registrar Apertura y Cierre de Caja</span></a></li>
+                            <li><a href="/taller_front/Ventas/cobranzas"><span>Gestioinar Cobranzas</span></a></li>
                         </ul>
                     </li>
                     <li>

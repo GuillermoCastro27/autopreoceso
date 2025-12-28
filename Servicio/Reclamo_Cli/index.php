@@ -33,8 +33,42 @@
     <!-- Custom Css -->
     <link href="../../css/style.css" rel="stylesheet">
 
-    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <!-- AdminBSB Themes -->
     <link href="../../css/themes/all-themes.css" rel="stylesheet" />
+
+    <!-- ESTILO INDUSTRIAL (NO TOCA TUS IDs NI ESTRUCTURA) -->
+    <style>
+        body { background:#f1f2f6; }
+
+        .card-industrial {
+            border-left: 6px solid #0984e3;
+            border-radius: 6px;
+            box-shadow: 0 6px 14px rgba(0,0,0,.12);
+            background: #fff;
+            margin-bottom: 25px;
+        }
+
+        .card-industrial > .header {
+            background: #2d3436 !important;
+            color: #fff !important;
+        }
+
+        .card-industrial > .header h2,
+        .card-industrial > .header h2 small,
+        .card-industrial > .header i.material-icons {
+            color: #fff !important;
+        }
+
+        .table thead {
+            background: #2d3436;
+            color: #fff;
+        }
+
+        .button-demo button{
+            margin-right:6px;
+            margin-bottom:6px;
+        }
+    </style>
 </head>
 
 <body class="theme-red">
@@ -47,17 +81,23 @@
             <div class="row clearfix">
 
                 <div class="col-md-12">
-                    
-                    <div class="card">
+
+                    <div class="card card-industrial">
                         <div class="header">
-                            <h2>Registrar Reclamo de clientes <small>CRUD de Reclamo de Clientes y su detalle</small> </h2>
+                            <h2>
+                                <i class="material-icons">report_problem</i>
+                                Registrar Reclamo de clientes
+                                <small>CRUD de Reclamo de Clientes y su detalle</small>
+                            </h2>
                         </div>
+
                         <div class="body">
                             <div class="row clearfix">
+
                                 <input type="hidden" value="0" id="txtOperacion"/>
                                 <input type="hidden" value="1" id="user_id"/>
                                 <input type="hidden" value="PENDIENTE" id="rec_cli_cab_estado"/>
-                                
+
                                 <!-- CÓDIGO -->
                                 <div class="col-sm-1">
                                     <div class="form-group form-float">
@@ -67,7 +107,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <!-- EMPRESA -->
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
@@ -79,7 +119,7 @@
                                         <div id="listaEmpresa" style="display:none;"></div>
                                     </div>
                                 </div>
-                                
+
                                 <!-- SUCURSAL -->
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
@@ -91,6 +131,7 @@
                                         <div id="listaSucursal" style="display:none;"></div>
                                     </div>
                                 </div>
+
                                 <!-- FECHA -->
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
@@ -100,6 +141,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
@@ -108,6 +150,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
                                         <div class="form-line">
@@ -116,6 +159,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
                                         <div class="form-line">
@@ -128,6 +172,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <!-- OBSERVACIONES -->
                                 <div class="col-sm-6">
                                     <div class="form-group form-float">
@@ -137,6 +182,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <!-- CLIENTE -->
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
@@ -157,6 +203,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <!-- RUC -->
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
@@ -166,6 +213,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <!-- TELEFONO -->
                                 <div class="col-sm-2">
                                     <div class="form-group form-float">
@@ -175,6 +223,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <!-- DIRECCION -->
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
@@ -184,6 +233,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <!-- CORREO -->
                                 <div class="col-sm-3">
                                     <div class="form-group form-float">
@@ -193,22 +243,73 @@
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
 
                             <!-- BOTONES -->
                             <div class="button-demo">
-                                <button type="button" id="btnAgregar" class="btn btn-success waves-effect" onclick="agregar();">AGREGAR</button>
-                                <button type="button" id="btnEditar" class="btn btn-primary waves-effect" onclick="editar();" disabled>MODIFICAR</button>
-                                <button type="button" id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();"disabled>ANULAR</button>
-                                <button type="button" id="btnConfirmar" class="btn btn-success waves-effect" onclick="confirmar();"disabled>CONFIRMAR</button>
-                                <button type="button" id="btnGrabar" class="btn btn-default waves-effect" disabled onclick="confirmarOperacion();">GRABAR</button>
-                                <button type="button" id="btnCancelar" class="btn btn-warning waves-effect" onclick="cancelar();" disabled>CANCELAR</button> 
+
+                                <button type="button"
+                                        id="btnAgregar"
+                                        class="btn btn-success waves-effect"
+                                        onclick="agregar();">
+                                    AGREGAR
+                                </button>
+
+                                <button type="button"
+                                        id="btnEditar"
+                                        class="btn btn-primary waves-effect"
+                                        onclick="editar();"
+                                        disabled>
+                                    MODIFICAR
+                                </button>
+
+                                <button type="button"
+                                        id="btnEliminar"
+                                        class="btn btn-danger waves-effect"
+                                        onclick="eliminar();"
+                                        disabled>
+                                    ANULAR
+                                </button>
+
+                                <button type="button"
+                                        id="btnProcesar"
+                                        class="btn btn-info waves-effect"
+                                        onclick="procesar();"
+                                        disabled>
+                                    PROCESAR
+                                </button>
+
+                                <button type="button"
+                                        id="btnResolver"
+                                        class="btn btn-success waves-effect"
+                                        onclick="resolver();"
+                                        disabled>
+                                    RESOLVER
+                                </button>
+
+                                <button type="button"
+                                        id="btnGrabar"
+                                        class="btn btn-default waves-effect"
+                                        disabled
+                                        onclick="confirmarOperacion();">
+                                    GRABAR
+                                </button>
+
+                                <button type="button"
+                                        id="btnCancelar"
+                                        class="btn btn-warning waves-effect"
+                                        onclick="cancelar();"
+                                        disabled>
+                                    CANCELAR
+                                </button>
+
                             </div>
                         </div>
                     </div>
 
                     <!-- DETALLE -->
-                    <div class="card" id="detalle" style="display:none">
+                    <div class="card card-industrial" id="detalle" style="display:none">
                         <div class="header">
                             <h2>Detalles del Reclamo de Clientes</h2>
                         </div>
@@ -309,27 +410,27 @@
                                             <th>Precio</th>
                                             <th>Tipo impuesto</th>
                                             <th>Sub Total</th>
-                                            <th>IVA</th> <!-- Agregado para mostrar el total con impuesto -->
+                                            <th>IVA</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableDetalle"></tbody>
                                     <tfoot>
                                         <tr>
                                             <th colspan="7" class="text-right">Total Comprobante</th>
-                                            <th class="text-right" id="txtTotalGral">0</th> <!-- Total sin impuestos -->
+                                            <th class="text-right" id="txtTotalGral">0</th>
                                         </tr>
                                         <tr>
                                             <th colspan="7" class="text-right">Total IVA</th>
-                                            <th class="text-right" id="txtTotalConImpuesto">0</th> <!-- Total con impuestos -->
+                                            <th class="text-right" id="txtTotalConImpuesto">0</th>
                                         </tr>
-                                    </tfoot>    
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
                     </div>
 
                     <!-- REGISTROS -->
-                    <div class="card" id="registros">
+                    <div class="card card-industrial" id="registros">
                         <div class="header">
                             <h2>Registros de Reclamo de Clientes</h2>
                         </div>
@@ -348,7 +449,6 @@
                                             <th>Prioridad</th>
                                             <th>Estado</th>
                                             <th>Encargado</th>
-                                            <th>Observación</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableBody"></tbody>
@@ -364,15 +464,15 @@
                                             <th>Prioridad</th>
                                             <th>Estado</th>
                                             <th>Encargado</th>
-                                            <th>Observación</th>
                                         </tr>
-                                    </tfoot>    
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
                     </div>
+
                 </div>
-                
+
             </div>
         </div>
     </section>

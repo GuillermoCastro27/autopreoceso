@@ -337,7 +337,16 @@ function seleccionPresupuesto(
     if (estado === "PENDIENTE") {
         $("#btnEliminar, #btnEditar").prop("disabled", false);
         $("#formDetalles").show();
-    }
+    }else if (estado === "CONFIRMADO") {
+
+    // 🔒 Presupuesto confirmado: SOLO lectura
+    $("#btnConfirmar").prop("disabled", true);
+    $("#btnEditar").prop("disabled", true);
+    $("#btnEliminar").prop("disabled", true);
+    $("#formDetalles").hide();
+
+}
+
 }
 function buscarDiagnostico() {
     const texto = $("#diagnostico").val();
@@ -565,9 +574,6 @@ function cargarPresupuesto(id) {
         console.error("Error cargarPresupuesto:", xhr.responseText);
     });
 }
-
-
-
 function grabar() {
     const observaciones = ($("#pres_serv_cab_observaciones").val() || "").trim();
     const fecha = ($("#pres_serv_cab_fecha").val() || "").trim();
@@ -670,11 +676,11 @@ function grabar() {
                 cargarPresupuesto(resultado.registro.id);
                 return;
             }
-            $("#id").val(resultado.registro.id);
-            $("#detalle").show();
-            listarDetalles();
+            location.reload(true);
         });
     })
+
+
     .fail(function (xhr, status, error) {
         console.error("❌ Error AJAX:", xhr.responseText);
         swal("Error", "Ocurrió un error al procesar la solicitud.", "error");
@@ -974,10 +980,12 @@ function listarDetalles() {
         $("#txtTotalGral").text(formatearNumero(totalSinIVA));
         $("#txtTotalConImpuesto").text(formatearNumero(totalIVA));
 
-        if (cantidadDetalle > 0) {
-            $("#btnConfirmar").removeAttr("disabled");
+        const estado = ($("#pres_serv_cab_estado").val() || "").trim().toUpperCase();
+
+        if (cantidadDetalle > 0 && estado === "PENDIENTE") {
+            $("#btnConfirmar").prop("disabled", false);
         } else {
-            $("#btnConfirmar").attr("disabled", "true");
+            $("#btnConfirmar").prop("disabled", true);
         }
     });
 }

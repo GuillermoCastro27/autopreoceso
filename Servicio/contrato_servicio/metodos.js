@@ -63,7 +63,7 @@ function agregar(){
     $("#emp_razon_social").attr("disabled","true");
     $("#suc_razon_social").removeAttr("disabled");
     $("#cli_nombre").removeAttr("disabled");
-    $("#contrato_tipo").removeAttr("disabled");
+    $("#tip_con_nombre").removeAttr("disabled");
     $("#contrato_objeto").removeAttr("disabled");
     $("#contrato_alcance").removeAttr("disabled");
     $("#contrato_responsabilidad").removeAttr("disabled");
@@ -102,7 +102,7 @@ function editar(){
     $("#emp_razon_social").attr("disabled","true");
     $("#suc_razon_social").removeAttr("disabled");
     $("#cli_nombre").removeAttr("disabled");
-    $("#contrato_tipo").removeAttr("disabled");
+    $("#tip_con_nombre").removeAttr("disabled");
     $("#contrato_objeto").removeAttr("disabled");
     $("#contrato_alcance").removeAttr("disabled");
     $("#contrato_responsabilidad").removeAttr("disabled");
@@ -209,12 +209,14 @@ function listar() {
         for (let rs of resultado) {
 
             lista += "<tr class='item-list' onclick=\"seleccionContratoServicio("
-                + rs.id + ","                            // ID contrato
-                + rs.empresa_id + ","                    // Empresa ID
-                + rs.sucursal_id + ","                   // Sucursal ID
-                + rs.clientes_id + ","                   // Cliente ID
-                + rs.tipo_servicio_id + ", '"            // Tipo servicio ID  ✅ OJO: acá ya empieza texto
+                + rs.id + ","
+                + rs.empresa_id + ","
+                + rs.sucursal_id + ","
+                + rs.clientes_id + ","
+                + rs.tipo_servicio_id + ","
+                + rs.tipo_contrato_id + ", '"
 
+                + esc(rs.tip_con_nombre) + "', '"
                 + esc(rs.emp_razon_social) + "', '"
                 + esc(rs.suc_razon_social) + "', '"
 
@@ -234,7 +236,6 @@ function listar() {
                 + esc(rs.contrato_condicion_pago || '') + "', '"
                 + esc(rs.contrato_cuotas || '') + "', '"
 
-                + esc(rs.contrato_tipo || '') + "', '"
                 + esc(rs.contrato_objeto || '') + "', '"
                 + esc(rs.contrato_alcance || '') + "', '"
                 + esc(rs.contrato_responsabilidad || '') + "', '"
@@ -247,18 +248,18 @@ function listar() {
                 + esc(rs.contrato_estado || '') + "', '"
                 + esc(rs.encargado || '') + "');\">";
 
-            lista += `<td>${rs.id}</td>`;
-            lista += `<td>${rs.emp_razon_social}</td>`;
-            lista += `<td>${rs.suc_razon_social}</td>`;
-            lista += `<td>${rs.contrato_fecha}</td>`;
-            lista += `<td>${rs.contrato_fecha_inicio}</td>`;
-            lista += `<td>${rs.contrato_fecha_fin}</td>`;
-            lista += `<td>${rs.cli_nombre}</td>`;
-            lista += `<td>${rs.cli_apellido}</td>`;
-            lista += `<td>${rs.cli_ruc}</td>`;
-            lista += `<td>${rs.tipo_serv_nombre}</td>`;
-            lista += `<td>${rs.contrato_estado}</td>`;
-            lista += `<td>${rs.encargado}</td>`;
+                lista += `<td>${rs.id}</td>`;                    // Código
+                lista += `<td>${rs.emp_razon_social}</td>`;     // Empresa
+                lista += `<td>${rs.suc_razon_social}</td>`;     // Sucursal
+                lista += `<td>${rs.contrato_fecha}</td>`;       // Fecha
+                lista += `<td>${rs.contrato_fecha_inicio}</td>`;// Fecha Inicio
+                lista += `<td>${rs.contrato_fecha_fin}</td>`;   // Fecha Fin
+                lista += `<td>${rs.cli_nombre}</td>`;           // Cliente
+                lista += `<td>${rs.cli_apellido}</td>`;         // Apellido
+                lista += `<td>${rs.cli_ruc}</td>`;              // RUC
+                lista += `<td>${rs.tipo_serv_nombre}</td>`;     // Tipo de Servicio
+                lista += `<td>${rs.contrato_estado}</td>`;      // Estado
+                lista += `<td>${rs.encargado}</td>`;            // Encargado
             lista += `</tr>`;
         }
 
@@ -268,14 +269,14 @@ function listar() {
 }
 function seleccionContratoServicio(
     id, empresa_id, sucursal_id, clientes_id, tipo_servicio_id,
+    tipo_contrato_id, tip_con_nombre,
     emp_razon_social, suc_razon_social,
     contrato_fecha, contrato_fecha_inicio, contrato_fecha_fin, contrato_intervalo_fecha_vence,
     cli_nombre, cli_apellido, cli_ruc, cli_telefono, cli_direccion, cli_correo,
     tipo_serv_nombre, contrato_condicion_pago, contrato_cuotas,
-    contrato_tipo, contrato_objeto, contrato_alcance,
-    contrato_responsabilidad, contrato_garantia, contrato_limitacion,
-    contrato_fuerza_mayor, contrato_jurisdiccion,
-    contrato_observacion, contrato_estado, encargado
+    contrato_objeto, contrato_alcance, contrato_responsabilidad,
+    contrato_garantia, contrato_limitacion, contrato_fuerza_mayor,
+    contrato_jurisdiccion, contrato_observacion, contrato_estado, encargado
 ) {
 
     $("#id").val(id);
@@ -284,7 +285,8 @@ function seleccionContratoServicio(
     $("#clientes_id").val(clientes_id);
     $("#tipo_servicio_id").val(tipo_servicio_id);
 
-    // ✅ user_id NO se toca acá. Se usa el user logueado en el hidden del HTML.
+    $("#tipo_contrato_id").val(tipo_contrato_id);
+    $("#tip_con_nombre").val(tip_con_nombre);
 
     $("#emp_razon_social").val(emp_razon_social);
     $("#suc_razon_social").val(suc_razon_social);
@@ -293,9 +295,16 @@ function seleccionContratoServicio(
     $("#contrato_fecha_inicio").val(contrato_fecha_inicio);
     $("#contrato_fecha_fin").val(contrato_fecha_fin);
 
-    $("#contrato_intervalo_fecha_vence").val(
-        contrato_intervalo_fecha_vence === 'N/A' ? '' : contrato_intervalo_fecha_vence
-    );
+    if (contrato_intervalo_fecha_vence === 'N/A' || !contrato_intervalo_fecha_vence) {
+        $("#contrato_intervalo_fecha_vence")
+            .val('')
+            .attr("placeholder", "N/A");
+    } else {
+        $("#contrato_intervalo_fecha_vence")
+            .val(contrato_intervalo_fecha_vence)
+            .attr("placeholder", "");
+    }
+    
 
     $("#cli_nombre").val(cli_nombre);
     $("#cli_apellido").val(cli_apellido);
@@ -310,7 +319,6 @@ function seleccionContratoServicio(
     $("#contrato_cuotas").val(contrato_cuotas);
     controlarCamposPago();
 
-    $("#contrato_tipo").val(contrato_tipo);
     $("#contrato_objeto").val(contrato_objeto);
     $("#contrato_alcance").val(contrato_alcance);
     $("#contrato_responsabilidad").val(contrato_responsabilidad);
@@ -334,14 +342,16 @@ function seleccionContratoServicio(
     if (contrato_estado === "PENDIENTE") {
         $("#btnEditar, #btnEliminar, #btnConfirmar").prop("disabled", false);
     }
+
     if (contrato_estado === "CONFIRMADO") {
-    $("#btnImprimir").prop("disabled", false);
+        $("#btnImprimir").prop("disabled", false);
     } else {
         $("#btnImprimir").prop("disabled", true);
     }
 
     $(".form-line").addClass("focused");
 }
+
 function buscarTipoServicio(){
     $.ajax({
         url:"http://127.0.0.1:8000/Proyecto_tp/tipo-servicio/read",
@@ -409,6 +419,81 @@ function seleccionCliente(clientes_id,cli_nombre,cli_apellido,cli_ruc,cli_direcc
 
     $(".form-line").attr("class","form-line focused");
 }
+function buscarTipoContrato(){
+    $.ajax({
+        url: "http://127.0.0.1:8000/Proyecto_tp/tipo_contrato/read",
+        method: "GET",
+        dataType: "json"
+    })
+    .done(function(resultado){
+        var lista = "<ul class=\"list-group\">";
+
+        for (rs of resultado) {
+
+            // 👉 Solo permitir seleccionar ACTIVO (recomendado)
+            if (rs.tip_con_estado !== "ACTIVO") {
+                continue;
+            }
+
+            lista += "<li class=\"list-group-item\" style=\"cursor:pointer\" "
+                + "onclick=\"seleccionTipoContrato("
+                + rs.tipo_contrato_id + ",'"
+                + rs.tip_con_nombre + "','"
+                + rs.tip_con_objeto + "','"
+                + rs.tip_con_alcance + "','"
+                + rs.tip_con_garantia + "','"
+                + rs.tip_con_responsabilidad + "','"
+                + rs.tip_con_limitacion + "','"
+                + rs.tip_con_fuerza_mayor + "','"
+                + rs.tip_con_jurisdiccion + "');\">"
+                + rs.tip_con_nombre
+                + "</li>";
+        }
+
+        lista += "</ul>";
+
+        $("#listaTipoCont").html(lista);
+        $("#listaTipoCont").attr(
+            "style",
+            "display:block; position:absolute; z-index:2000; width:100%;"
+        );
+    })
+    .fail(function(a,b,c){
+        alert(c);
+        console.log(a.responseText);
+    });
+}
+
+function seleccionTipoContrato(
+    tipo_contrato_id,
+    tip_con_nombre,
+    tip_con_objeto,
+    tip_con_alcance,
+    tip_con_garantia,
+    tip_con_responsabilidad,
+    tip_con_limitacion,
+    tip_con_fuerza_mayor,
+    tip_con_jurisdiccion
+){
+    // 🔹 Guardar FK
+    $("#tipo_contrato_id").val(tipo_contrato_id);
+
+    // 🔹 Mostrar nombre (si tenés input visible)
+    $("#tip_con_nombre").val(tip_con_nombre);
+
+    // 🔹 Autocompletar campos del contrato
+    $("#contrato_objeto").val(tip_con_objeto);
+    $("#contrato_alcance").val(tip_con_alcance);
+    $("#contrato_garantia").val(tip_con_garantia);
+    $("#contrato_responsabilidad").val(tip_con_responsabilidad);
+    $("#contrato_limitacion").val(tip_con_limitacion);
+    $("#contrato_fuerza_mayor").val(tip_con_fuerza_mayor);
+    $("#contrato_jurisdiccion").val(tip_con_jurisdiccion);
+
+    // 🔹 Ocultar lista
+    $("#listaTipoCont").html("");
+    $("#listaTipoCont").attr("style","display:none;");
+}
 function grabar() {
 
     // 🔹 Definición inicial de endpoint, método y estado
@@ -448,7 +533,7 @@ function grabar() {
     var user = $("#user_id").val();
 
     // 🔹 Nuevos campos del contrato
-    var contratoTipo = $("#contrato_tipo").val();
+    var tipoContratoId = $("#tipo_contrato_id").val();
     var contratoObjeto = $("#contrato_objeto").val();
     var contratoAlcance = $("#contrato_alcance").val();
     var contratoResponsabilidad = $("#contrato_responsabilidad").val();
@@ -485,7 +570,7 @@ function grabar() {
             contrato_condicion_pago: condicionPago,
             contrato_cuotas: cuota,
 
-            contrato_tipo: contratoTipo,
+            tipo_contrato_id: tipoContratoId,
             contrato_objeto: contratoObjeto,
             contrato_alcance: contratoAlcance,
             contrato_responsabilidad: contratoResponsabilidad,
