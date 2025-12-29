@@ -35,6 +35,51 @@
 
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="../../css/themes/all-themes.css" rel="stylesheet" />
+    <style>
+        body { background:#f1f2f6; }
+
+        .card-industrial {
+            border-left: 6px solid #00b894;
+            border-radius: 6px;
+            box-shadow: 0 6px 14px rgba(0,0,0,.12);
+            background: #fff;
+        }
+
+        .card-industrial .header {
+            background: #2d3436;
+            color: #fff;
+            padding: 15px 20px;
+        }
+
+        .section-box {
+            background: #f8f9fa;
+            border: 1px solid #dcdde1;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #2d3436;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ced6e0;
+        }
+
+        .btn-toolbar-left button {
+            margin-right: 6px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .table thead {
+            background: #2d3436;
+            color: #fff;
+            font-size: 13px;
+        }
+    </style>
 </head>
 
 <body class="theme-red">
@@ -48,131 +93,153 @@
 
                 <div class="col-md-12">
                     
-                    <div class="card">
-                        <div class="header">
-                            <h2>Registrar Apertura y Cierre de Caja <small>CRUD de Apertura y Cierre de Caja y su detalle</small> </h2>
-                        </div>
-                        <div class="body">
-                            <div class="row clearfix">
-                                <input type="hidden" value="0" id="txtOperacion"/>
-                                <input type="hidden" value="" id="user_id"/>
-                                
-                                <!-- CAMPO PARA CODIGO CON 2 COLUMNAS -->
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="id" class="form-control" disabled>
-                                            <label class="form-label">Código</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- CAMPO PARA EMPRESA CON 2 COLUMNAS -->
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="emp_razon_social" class="form-control" disabled>
-                                            <label class="form-label">Empresa</label>
-                                        </div>
-                                        <input type="hidden" id="empresa_id" name="empresa_id">
-                                        <div id="listaEmpresa" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                
-                                <!-- CAMPO PARA SUCURSAL CON 2 COLUMNAS -->
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="suc_razon_social" class="form-control" disabled onkeyup="buscarSucursal();">
-                                            <label class="form-label">Sucursal</label>
-                                        </div>
-                                        <input type="hidden" id="sucursal_id" name="sucursal_id">
-                                        <div id="listaSucursal" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                
-                                <!-- CAMPO PARA FECHA CON 3 COLUMNAS -->
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="fecha_apertura" class="datetimepicker form-control" disabled>
-                                            <label class="form-label">Fecha</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="caja_descripcion" class="form-control" disabled onkeyup="buscarCaja();">
-                                            <label class="form-label">Caja</label>
-                                        </div>
-                                        <input type="hidden" id="caja_id" name="caja_id">
-                                        <div id="listaCaja" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="number" id="monto_apertura" class="form-control" disabled>
-                                            <label class="form-label">Monto Apertura</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="fecha_cierre" class="form-control" disabled>
-                                            <label class="form-label">Fecha Cierre</label>
-                                        </div>
-                                    </div>
-                                </div>
+                    <!-- ================= APERTURA Y CIERRE DE CAJA ================= -->
+<div class="card card-industrial">
 
-                                <div class="col-sm-4">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="monto_efectivo_cierre" class="form-control" disabled>
-                                            <label class="form-label">Total Efectivo</label>
-                                        </div>
-                                    </div>
-                                </div>
+    <div class="header">
+        <h2>
+            <i class="material-icons">account_balance_wallet</i>
+            Registrar Apertura y Cierre de Caja
+            <small>CRUD de Apertura y Cierre de Caja</small>
+        </h2>
+    </div>
 
-                                <div class="col-sm-4">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="monto_tarjeta_cierre" class="form-control" disabled>
-                                            <label class="form-label">Total Tarjeta</label>
-                                        </div>
-                                    </div>
-                                </div>
+    <div class="body">
 
-                                <div class="col-sm-4">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="monto_cheque_cierre" class="form-control" disabled>
-                                            <label class="form-label">Total Cheque</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="monto_cierre" class="form-control" disabled>
-                                            <label class="form-label">Monto Cierre</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="button-demo">
-                                <button type="button" id="btnApertura" class="btn btn-success waves-effect" onclick="apertura();">APERTURA</button>
-                                <button type="button" id="btnEditar" class="btn btn-primary waves-effect" onclick="editar();" disabled>MODIFICAR</button>
-                                <button type="button" id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();"disabled>ANULAR</button>
-                                <button type="button" id="btnCierre" class="btn btn-success waves-effect" onclick="cierre();"disabled>CIERRRE</button>
-                                <button type="button" id="btnGrabar" class="btn btn-default waves-effect" disabled onclick="confirmarOperacion();">GRABAR</button>
-                                <button type="button" id="btnCancelar" class="btn btn-warning waves-effect" onclick="cancelar();" disabled>CANCELAR</button> 
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card" id="registros">
+        <!-- CAMPOS OCULTOS -->
+        <input type="hidden" id="txtOperacion" value="0">
+        <input type="hidden" id="user_id">
+
+        <!-- ================= DATOS GENERALES ================= -->
+        <div class="section-box">
+            <div class="section-title">Datos Generales</div>
+
+            <div class="row clearfix">
+
+                <!-- CÓDIGO -->
+                <div class="col-sm-2">
+                    <input type="text" id="id" class="form-control" disabled placeholder="Código">
+                </div>
+
+                <!-- EMPRESA -->
+                <div class="col-sm-2">
+                    <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
+                    <input type="hidden" id="empresa_id">
+                    <div id="listaEmpresa" style="display:none;"></div>
+                </div>
+
+                <!-- SUCURSAL -->
+                <div class="col-sm-2">
+                    <input type="text" id="suc_razon_social" class="form-control"
+                           disabled onkeyup="buscarSucursal();" placeholder="Sucursal">
+                    <input type="hidden" id="sucursal_id">
+                    <div id="listaSucursal" style="display:none;"></div>
+                </div>
+
+                <!-- FECHA APERTURA -->
+                <div class="col-sm-3">
+                    <input type="text" id="fecha_apertura"
+                           class="datetimepicker form-control" disabled
+                           placeholder="Fecha Apertura">
+                </div>
+
+                <!-- CAJA -->
+                <div class="col-sm-3">
+                    <input type="text" id="caja_descripcion"
+                           class="form-control" disabled
+                           onkeyup="buscarCaja();" placeholder="Caja">
+                    <input type="hidden" id="caja_id">
+                    <div id="listaCaja" style="display:none;"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ================= APERTURA ================= -->
+        <div class="section-box">
+            <div class="section-title">Datos de Apertura</div>
+
+            <div class="row clearfix">
+                <div class="col-sm-3">
+                    <input type="number" id="monto_apertura"
+                           class="form-control" disabled
+                           placeholder="Monto Apertura">
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= CIERRE ================= -->
+        <div class="section-box">
+            <div class="section-title">Datos de Cierre</div>
+
+            <div class="row clearfix">
+
+                <div class="col-sm-4">
+                    <input type="text" id="fecha_cierre"
+                           class="form-control" disabled
+                           placeholder="Fecha Cierre">
+                </div>
+
+                <div class="col-sm-4">
+                    <input type="text" id="monto_efectivo_cierre"
+                           class="form-control" disabled
+                           placeholder="Total Efectivo">
+                </div>
+
+                <div class="col-sm-4">
+                    <input type="text" id="monto_tarjeta_cierre"
+                           class="form-control" disabled
+                           placeholder="Total Tarjeta">
+                </div>
+
+                <div class="col-sm-4" style="margin-top:10px;">
+                    <input type="text" id="monto_cheque_cierre"
+                           class="form-control" disabled
+                           placeholder="Total Cheque">
+                </div>
+
+                <div class="col-sm-4" style="margin-top:10px;">
+                    <input type="text" id="monto_cierre"
+                           class="form-control" disabled
+                           placeholder="Monto Total Cierre">
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ================= BOTONES ================= -->
+        <div class="btn-toolbar-left text-center">
+
+            <button id="btnApertura" class="btn btn-success" onclick="apertura();">
+                <i class="material-icons">lock_open</i> Apertura
+            </button>
+
+            <button id="btnEditar" class="btn btn-primary" onclick="editar();" disabled>
+                <i class="material-icons">edit</i> Modificar
+            </button>
+
+            <button id="btnEliminar" class="btn btn-danger" onclick="eliminar();" disabled>
+                <i class="material-icons">delete</i> Anular
+            </button>
+
+            <button id="btnCierre" class="btn btn-success" onclick="cierre();" disabled>
+                <i class="material-icons">lock</i> Cierre
+            </button>
+
+            <button id="btnGrabar" class="btn btn-default" onclick="confirmarOperacion();" disabled>
+                <i class="material-icons">save</i> Grabar
+            </button>
+
+            <button id="btnCancelar" class="btn btn-warning" onclick="cancelar();" disabled>
+                <i class="material-icons">close</i> Cancelar
+            </button>
+
+        </div>
+
+    </div>
+</div>
+
+                    <div class="card card-industrial" id="registros">
                         <div class="header">
                             <h2>Registros de Apertura y Cierre de Caja</h2>
                         </div>

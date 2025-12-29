@@ -185,6 +185,15 @@
             </div>
         </div>
     </div>
+    <div class="col-sm-3">
+        <div class="form-group form-float">
+            <div class="form-line">
+                <input type="text" id="tipo_serv_nombre" class="form-control" disabled>
+                <label class="form-label">Tipo de Servicio</label>
+            </div>
+            <input type="hidden" id="tipo_servicio_id" name="tipo_servicio_id">
+        </div>
+    </div>
 
     </div>
     </div>
@@ -215,6 +224,30 @@
             <div id="listaDescuentos" style="display:none;"></div>
         </div>
     </div>
+    <!-- TIPO DE SERVICIO -->
+                                
+                                <!-- TIPO DE SERVICIO -->
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tipo_desc_nombre" class="form-control" disabled onkeyup="buscarTipoDescuento();">
+                                            <label class="form-label">Tipo de Descuento</label>
+                                        </div>
+                                        <input type="hidden" id="tipo_descuento_id" name="tipo_descuento_id">
+                                        <div id="listaTipoDesc" style="display:none;"></div>
+                                    </div>
+                                </div>
+                                <!-- TIPO DE SERVICIO -->
+                                <div class="col-sm-3">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="tipo_prom_nombre" class="form-control" disabled onkeyup="buscarTipoPromocion();">
+                                            <label class="form-label">Tipo de Promociones</label>
+                                        </div>
+                                        <input type="hidden" id="tipo_promocion_id" name="tipo_promocion_id">
+                                        <div id="listaTipoProm" style="display:none;"></div>
+                                    </div>
+                                </div>
 
     <div class="col-sm-6">
         <div class="form-group form-float">

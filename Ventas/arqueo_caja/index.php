@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>GUI DE VENTAS</title>
+    <title>GUI ARQUEO DE CAJA</title>
     <!-- Favicon-->
     <link rel="icon" href="../../images.ico" type="image/x-icon">
 
@@ -79,6 +79,9 @@
             color: #fff;
             font-size: 13px;
         }
+        .card-industrial.equal-height {
+            min-height: 430px;
+        }
     </style>
 </head>
 
@@ -93,13 +96,14 @@
 
                 <div class="col-md-12">
                     
-                    <div class="card card-industrial">
+                    <!-- ================= REGISTRAR ARQUEO DE CAJA ================= -->
+<div class="card card-industrial">
 
     <div class="header">
         <h2>
-            <i class="material-icons">point_of_sale</i>
-            Gestionar Ventas
-            <small>CRUD de Ventas y su detalle</small>
+            <i class="material-icons">fact_check</i>
+            Registrar Arqueo de Caja
+            <small>CRUD de Arqueo de Caja</small>
         </h2>
     </div>
 
@@ -108,16 +112,15 @@
         <!-- CAMPOS OCULTOS -->
         <input type="hidden" id="txtOperacion" value="0">
         <input type="hidden" id="user_id">
-        <input type="hidden" id="vent_estado" value="PENDIENTE">
 
         <!-- ================= DATOS GENERALES ================= -->
         <div class="section-box">
-            <div class="section-title">Datos Generales de la Venta</div>
+            <div class="section-title">Datos Generales</div>
 
             <div class="row clearfix">
 
                 <!-- CÓDIGO -->
-                <div class="col-sm-1">
+                <div class="col-sm-2">
                     <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
@@ -130,108 +133,88 @@
 
                 <!-- SUCURSAL -->
                 <div class="col-sm-2">
-                    <input type="text" id="suc_razon_social" class="form-control" disabled onkeyup="buscarSucursal();" placeholder="Sucursal">
+                    <input type="text" id="suc_razon_social"
+                           class="form-control" disabled
+                           onkeyup="buscarSucursal();" placeholder="Sucursal">
                     <input type="hidden" id="sucursal_id">
                     <div id="listaSucursal" style="display:none;"></div>
                 </div>
 
-                <!-- CONDICIÓN DE PAGO -->
-                <div class="col-sm-2">
-                    <select id="condicion_pago" class="form-control" disabled onchange="controlarCamposPago();">
-                        <option value="CONTADO">Al contado</option>
-                        <option value="CREDITO">A crédito</option>
-                    </select>
-                </div>
-
-                <!-- INTERVALO VENCIMIENTO -->
-                <div class="col-sm-3">
-                    <input type="text" id="vent_intervalo_fecha_vence"
-                           class="datetimepicker form-control" disabled
-                           placeholder="Intervalo fecha vencimiento">
-                </div>
-
                 <!-- FECHA -->
-                <div class="col-sm-2">
-                    <input type="text" id="vent_fecha"
+                <div class="col-sm-3">
+                    <input type="text" id="arqueo_fecha"
                            class="datetimepicker form-control" disabled
                            placeholder="Fecha">
                 </div>
 
-                <!-- CUOTA -->
-                <div class="col-sm-1">
-                    <input type="text" id="vent_cant_cuota"
+                <!-- CAJA -->
+                <div class="col-sm-3">
+                    <input type="text" id="caja"
                            class="form-control" disabled
-                           placeholder="Cuota">
+                           onkeyup="buscarApertCierCaja();" placeholder="Caja">
+                    <input type="hidden" id="apertura_cierre_caja_id">
+                    <div id="listaAperCierCaja" style="display:none;"></div>
                 </div>
 
             </div>
         </div>
 
-        <!-- ================= PEDIDO DE VENTA ================= -->
+        <!-- ================= TIPO DE ARQUEO ================= -->
         <div class="section-box">
-            <div class="section-title">Pedido de Venta</div>
+            <div class="section-title">Tipo de Arqueo</div>
 
             <div class="row clearfix">
-                <div class="col-sm-6">
-                    <input type="text" id="pedido_venta" class="form-control"
-                           disabled onkeyup="buscarPedidoVentas();"
-                           placeholder="Pedido de Ventas">
-                    <input type="hidden" id="pedidos_ventas_id" value="0">
-                    <div id="listaPedidoVentas" style="display:none;"></div>
-                </div>
-            </div>
-        </div>
 
-        <!-- ================= CLIENTE ================= -->
-        <div class="section-box">
-            <div class="section-title">Cliente</div>
-
-            <div class="row clearfix">
                 <div class="col-sm-2">
-                    <input type="text" id="cli_nombre" class="form-control"
-                           disabled onkeyup="buscarCliente();"
-                           placeholder="Nombre">
-                    <input type="hidden" id="clientes_id">
-                    <div id="listaClientes" style="display:none;"></div>
+                    <select id="tipo_arqueo" class="form-control" disabled>
+                        <option value="EFECTIVO">EFECTIVO</option>
+                        <option value="CHEQUE">CHEQUE</option>
+                        <option value="TARJETA">TARJETA</option>
+                        <option value="TOTAL">TOTAL</option>
+                    </select>
                 </div>
 
-                <div class="col-sm-3">
-                    <input type="text" id="cli_apellido" class="form-control"
-                           disabled placeholder="Apellido">
-                </div>
-
-                <div class="col-sm-3">
-                    <input type="text" id="cli_ruc" class="form-control"
-                           disabled placeholder="RUC">
-                </div>
-
-                <div class="col-sm-4">
-                    <input type="text" id="cli_direccion" class="form-control"
-                           disabled placeholder="Dirección">
-                </div>
             </div>
+        </div>
 
-            <div class="row clearfix" style="margin-top:10px;">
+        <!-- ================= TOTALES ================= -->
+        <div class="section-box">
+            <div class="section-title">Totales del Arqueo</div>
+
+            <div class="row clearfix">
+
                 <div class="col-sm-4">
-                    <input type="text" id="cli_telefono" class="form-control"
-                           disabled placeholder="Teléfono">
+                    <input type="text" id="total_efectivo"
+                           class="form-control" disabled
+                           placeholder="Total Efectivo">
                 </div>
 
                 <div class="col-sm-4">
-                    <input type="text" id="cli_correo" class="form-control"
-                           disabled placeholder="Correo">
+                    <input type="text" id="total_cheque"
+                           class="form-control" disabled
+                           placeholder="Total Cheque">
                 </div>
+
+                <div class="col-sm-4">
+                    <input type="text" id="total_tarjeta"
+                           class="form-control" disabled
+                           placeholder="Total Tarjeta">
+                </div>
+
+                <div class="col-sm-3" style="margin-top:10px;">
+                    <input type="text" id="total_general"
+                           class="form-control" disabled
+                           placeholder="Total General">
+                </div>
+
             </div>
         </div>
 
         <!-- ================= BOTONES ================= -->
-        <div class="btn-toolbar-left">
-            <button id="btnAgregar" class="btn btn-success" onclick="agregar();">
-                <i class="material-icons">add</i> Agregar
-            </button>
+        <div class="btn-toolbar-left text-center">
 
-            <button id="btnEditar" class="btn btn-primary" onclick="editar();" disabled>
-                <i class="material-icons">edit</i> Modificar
+            <button id="btnApertura" class="btn btn-success" onclick="generar_arqueo();">
+                <i class="material-icons">calculate</i> Generar Arqueo
             </button>
 
             <button id="btnEliminar" class="btn btn-danger" onclick="eliminar();" disabled>
@@ -239,7 +222,7 @@
             </button>
 
             <button id="btnConfirmar" class="btn btn-success" onclick="confirmar();" disabled>
-                <i class="material-icons">check_circle</i> Recibido
+                <i class="material-icons">check_circle</i> Confirmar
             </button>
 
             <button id="btnGrabar" class="btn btn-default" onclick="confirmarOperacion();" disabled>
@@ -249,50 +232,15 @@
             <button id="btnCancelar" class="btn btn-warning" onclick="cancelar();" disabled>
                 <i class="material-icons">close</i> Cancelar
             </button>
+
         </div>
 
     </div>
 </div>
 
-                    <div class="card card-industrial" id="detalle" style="display:none">
-                        <div class="header">
-                            <h2>Detalles de Ventas</h2>
-                        </div>
-                        <div class="body">
-                            <div class="row clearfix" id="formDetalles"></div>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Código</th>
-                                            <th>Producto</th>
-                                            <th>Cantidad</th>
-                                            <th>Costo</th>
-                                            <th>Tipo impuesto</th>
-                                            <th>Sub Total</th>
-                                            <th>IVA</th> <!-- Agregado para mostrar el total con impuesto -->
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tableDetalle">
-                                        <!-- Aquí se llenarán los detalles de los productos -->
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th colspan="6" class="text-right">Total Comprobante</th>
-                                            <th class="text-right" id="txtTotalGral">0</th> <!-- Total sin impuestos -->
-                                        </tr>
-                                        <tr>
-                                            <th colspan="6" class="text-right">Total IVA</th>
-                                            <th class="text-right" id="txtTotalConImpuesto">0</th> <!-- Total con impuestos -->
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
                     <div class="card card-industrial" id="registros">
                         <div class="header">
-                            <h2>Registros de Ventas</h2>
+                            <h2>Registros de Arqueo de Caja</h2>
                         </div>
                         <div class="body">
                             <div class="table-responsive">
@@ -300,11 +248,10 @@
                                     <thead>
                                         <tr>
                                             <th>Código</th>
-                                            <th>Intervalo de fecha Vencimiento</th>
+                                            <th>Empresa</th>
+                                            <th>Sucursal</th>
                                             <th>Fecha</th>
-                                            <th>Pedido de Ventas</th>
-                                            <th>Encargado</th>
-                                            <th>Cantidad de cuota</th>
+                                            <th>Caja</th>
                                             <th>Estado</th>
                                         </tr>
                                     </thead>
@@ -314,11 +261,10 @@
                                     <tfoot>
                                         <tr>
                                             <th>Código</th>
-                                            <th>Intervalo de fecha Vencimiento</th>
+                                            <th>Empresa</th>
+                                            <th>Sucursal</th>
                                             <th>Fecha</th>
-                                            <th>Pedido de Ventas</th>
-                                            <th>Encargado</th>
-                                            <th>Cantidad de cuota</th>
+                                            <th>Caja</th>
                                             <th>Estado</th>
                                         </tr>
                                     </tfoot>    
@@ -374,34 +320,13 @@
     <!-- Custom Js -->
     <script src="../../js/admin.js"></script>
 
+    <!-- Demo Js -->
+    <script src="../../js/demo.js"></script>
+
     <!-- Ruta Js (la url del backend o del api rest) -->
     <script src="../../js/ruta.js"></script>
 
     <script src="metodos.js"></script>
-    
-
-                                <script>
-                                // Función para habilitar/deshabilitar campos según la condición de pago seleccionada
-                                function controlarCamposPago() {
-                                    var condicion = document.getElementById('condicion_pago').value;
-                                    var cuota = document.getElementById('vent_cant_cuota');
-                                    var intervaloFechaVence = document.getElementById('vent_intervalo_fecha_vence');
-
-                                    if (condicion === 'CONTADO') {
-                                        cuota.disabled = true;
-                                        intervaloFechaVence.disabled = true;
-                                        intervaloFechaVence.value = ''; // Asegúrate de limpiar el valor
-                                    } else {
-                                        cuota.disabled = false;
-                                        intervaloFechaVence.disabled = false;
-                                    }
-                                }
-
-                                // Llamar a la función cuando se carga la página para que establezca el estado inicial
-                                window.onload = function() {
-                                    controlarCamposPago();
-                                };
-                                </script>
 </body>
 
 </html>

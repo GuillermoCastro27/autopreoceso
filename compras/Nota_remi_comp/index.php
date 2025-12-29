@@ -112,7 +112,7 @@
 
         <input type="hidden" id="txtOperacion" value="0">
         <input type="hidden" id="user_id">
-        <input type="hidden" id="ped_estado" value="PENDIENTE">
+        <input type="hidden" id="nota_remi_estado" value="PENDIENTE">
 
         <!-- DATOS GENERALES -->
         <div class="section-box">

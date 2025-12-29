@@ -277,6 +277,9 @@
                             <li><a href="/taller_front/Ventas/gestionar_ventas"><span>Gestionar Ventas</span></a></li>
                             <li><a href="/taller_front/Ventas/apertura_cierre_caja"><span>Registrar Apertura y Cierre de Caja</span></a></li>
                             <li><a href="/taller_front/Ventas/cobranzas"><span>Gestioinar Cobranzas</span></a></li>
+                            <li><a href="/taller_front/Ventas/arqueo_caja"><span>Generar Arqueo de Caja</span></a></li>
+                            <li><a href="/taller_front/Ventas/nota_remi_vent"><span>Registrar Nota de Remision</span></a></li>
+                            <li><a href="/taller_front/Ventas/notas_ventas"><span>Registrar Nota de Ventas</span></a></li>
                         </ul>
                     </li>
                     <li>

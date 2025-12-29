@@ -1,5 +1,3 @@
-// Cargar user_id del usuario logueado
-cargarUserIdLogueado();
 listar();
 campoFecha();
 function formatoTabla(){
@@ -12,25 +10,25 @@ function formatoTabla(){
                 extend:'copy',
                 text:'COPIAR',
                 className:'btn btn-primary waves-effect',
-                title:'Listado de Pedidos'
+                title:'Listado de Notas de Remision'
             },
             {
                 extend:'excel',
                 text:'EXCEL',
                 className:'btn btn-success waves-effect',
-                title:'Listado de Pedidos'
+                title:'Listado de Notas de Remision'
             },
             {
                 extend:'pdf',
                 text:'PDF',
                 className:'btn btn-danger waves-effect',
-                title:'Listado de Pedidos'
+                title:'Listado de Notas de Remision'
             },
             {
                 extend:'print',
                 text:'IMPRIMIR',
                 className:'btn btn-warning waves-effect',
-                title:'Listado de Pedidos'
+                title:'Listado de Notas de Remision'
             }
         ],
         iDisplayLength:3,
@@ -353,6 +351,13 @@ function eliminarDetalle(){
 }
 function grabarDetalle(){
 
+     let cantidad = parseFloat($("#nota_remi_com_det_cantidad").val());
+
+    // 🔴 VALIDACIÓN FRONTEND
+    if (isNaN(cantidad) || cantidad <= 0) {
+        swal("Error", "La cantidad debe ser mayor a cero", "error");
+        return;
+    }
     var endpoint = "notaremicomdet/create";
     var metodo = "POST";
 
@@ -365,7 +370,6 @@ if($("#txtOperacionDetalle").val()==3){
     metodo = "DELETE";
 
 }
-
 $.ajax({
     url:getUrl()+endpoint,
     method: metodo,
@@ -373,7 +377,7 @@ $.ajax({
     data: {
         "nota_remi_comp_id":$("#id").val(),
         "item_id":$("#item_id").val(),
-        "nota_remi_com_det_cantidad":$("#nota_remi_com_det_cantidad").val()
+        "nota_remi_com_det_cantidad":cantidad
     }
 })
 
@@ -431,45 +435,58 @@ function seleccionProducto(item_id, item_decripcion){
     $(".form-line").attr("class", "form-line focused");
 }
 
-function listarDetalles(){
-    var cantidadDetalle = 0;
+function listarDetalles() {
+
+    let cantidadDetalle = 0;
+
     $.ajax({
-        url:getUrl()+"notaremicomdet/read/"+$("#id").val(),
-        method:"GET",
+        url: getUrl() + "notaremicomdet/read/" + $("#id").val(),
+        method: "GET",
         dataType: "json"
     })
-    .done(function(resultado){
-        var lista = "";
-        for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionDetalle("+rs.item_id+",'"+rs.item_decripcion+"',"+rs.nota_remi_com_det_cantidad+");\">";
-                lista = lista + "<td>" + rs.item_id + "</td>";
-                lista = lista + "<td>" + rs.item_decripcion + "</td>";
-                lista = lista + "<td>" + rs.nota_remi_com_det_cantidad + "</td>";
-            lista = lista + "</tr>";
+    .done(function (resultado) {
+
+        let lista = "";
+
+        for (let rs of resultado) {
+
+            lista += `
+                <tr class="item-list"
+                    onclick="seleccionDetalle(
+                        ${rs.item_id},
+                        '${rs.item_decripcion}',
+                        ${rs.nota_remi_com_det_cantidad}
+                    )">
+                    <td>${rs.item_id}</td>
+                    <td>${rs.item_decripcion}</td>
+                    <td>${rs.nota_remi_com_det_cantidad}</td>
+                </tr>
+            `;
+
             cantidadDetalle++;
         }
+
         $("#tableDetalle").html(lista);
 
-        if($("#nota_remi_estado").val() === "PENDIENTE" && cantidadDetalle > 0){
-            $("#btnConfirmar").removeAttr("disabled");
+        // ✅ NORMALIZAR ESTADO
+        let estado = ($("#nota_remi_estado").val() || "").trim().toUpperCase();
+
+        // ✅ HABILITAR CONFIRMAR SOLO SI PENDIENTE Y CON DETALLE
+        if (estado === "PENDIENTE" && cantidadDetalle > 0) {
+            $("#btnConfirmar").prop("disabled", false);
         } else {
-            $("#btnConfirmar").attr("disabled","true");
+            $("#btnConfirmar").prop("disabled", true);
         }
+
+        // 🔍 Debug rápido (dejalo un rato)
+        console.log("Estado nota remi compra:", estado, "Cantidad detalle:", cantidadDetalle);
     })
-    .fail(function(xhr, status, error) {
+    .fail(function (xhr, status, error) {
         alert("Error: " + error);
         console.error(xhr.responseText);
-    })
+    });
 }
-function seleccionDetalle(item_id, item_decripcion, nota_remi_com_det_cantidad) {
-    $("#item_id").val(item_id);
-    $("#item_decripcion").val(item_decripcion);
-    $("#nota_remi_com_det_cantidad").val(nota_remi_com_det_cantidad);
 
-    $("#listaProductos").html("");
-    $("#listaProductos").attr("style","display:none;");
-    $(".form-line").attr("class","form-line focused");
-}
 
 function buscarEmpresas() {
     $.ajax({
@@ -534,24 +551,4 @@ function seleccionSucursal(empresa_id,suc_razon_social,suc_direccion,suc_telefon
 
     $("#listaSucursal").html("");
     $("#listaSucursal").attr("style","display:none;");
-}
-
-// Función para cargar el user_id real del usuario logueado
-function cargarUserIdLogueado() {
-    try {
-        const datosSesion = JSON.parse(sessionStorage.getItem('datosSesion'));
-        
-        if (datosSesion && datosSesion.user && datosSesion.user.id) {
-            $('#user_id').val(datosSesion.user.id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.id);
-        } else {
-            console.error('No se encontraron datos de sesión válidos');
-            alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');
-            window.location.href = '../../index.html';
-        }
-    } catch (error) {
-        console.error('Error al cargar datos de usuario:', error);
-        alert('Error al cargar datos del usuario. Inicie sesión nuevamente.');
-        window.location.href = '../../index.html';
-    }
 }

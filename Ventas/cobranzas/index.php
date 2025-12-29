@@ -35,6 +35,54 @@
 
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="../../css/themes/all-themes.css" rel="stylesheet" />
+    <style>
+        body { background:#f1f2f6; }
+
+        .card-industrial {
+            border-left: 6px solid #00b894;
+            border-radius: 6px;
+            box-shadow: 0 6px 14px rgba(0,0,0,.12);
+            background: #fff;
+        }
+
+        .card-industrial .header {
+            background: #2d3436;
+            color: #fff;
+            padding: 15px 20px;
+        }
+
+        .section-box {
+            background: #f8f9fa;
+            border: 1px solid #dcdde1;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #2d3436;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ced6e0;
+        }
+
+        .btn-toolbar-left button {
+            margin-right: 6px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .table thead {
+            background: #2d3436;
+            color: #fff;
+            font-size: 13px;
+        }
+        .card-industrial.equal-height {
+            min-height: 430px;
+        }
+    </style>
 </head>
 
 <body class="theme-red">
@@ -48,511 +96,534 @@
 
                 <div class="col-md-12">
                     
-                    <div class="card">
-                        <div class="header">
-                            <h2>Gestionar Cobranzas <small>CRUD de Cobranzas y su detalle</small> </h2>
-                        </div>
-                        <div class="body">
-                            <div class="row clearfix">
-                                <input type="hidden" value="0" id="txtOperacion"/>
-                                <input type="hidden" value="" id="user_id"/>
-                                <input type="hidden" value="PENDIENTE" id="cobro_estado"/>
-                                <!-- CAMPO PARA CODIGO CON 1 COLUMNAS -->
-                                <div class="col-sm-1">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="id" class="form-control" disabled>
-                                            <label class="form-label">Código</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <input type="hidden" id="ventas_cab_id" name="ventas_cab_id">
-                                <input type="hidden" id="cuotas_seleccionadas" name="cuotas_seleccionadas">
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <!-- Campo de texto para la ciudad, habilitado -->
-                                            <input type="text" id="emp_razon_social" class="form-control" disabled>
-                                            <label class="form-label">Empresa</label>
-                                        </div>
+                    <!-- ================= GESTIONAR COBRANZAS ================= -->
+<div class="card card-industrial">
 
-                                        <!-- Campo oculto para almacenar el ID de la ciudad -->
-                                        <input type="hidden" id="empresa_id" name="empresa_id">
+    <div class="header">
+        <h2>
+            <i class="material-icons">payments</i>
+            Gestionar Cobranzas
+            <small>CRUD de Cobranzas y su detalle</small>
+        </h2>
+    </div>
 
-                                        <!-- Contenedor para la lista de ciudades -->
-                                        <div id="listaEmpresa" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <!-- Campo de texto para la ciudad, habilitado -->
-                                            <input type="text" id="suc_razon_social" class="form-control" disabled onkeyup="buscarSucursal();">
-                                            <label class="form-label">Sucursal</label>
-                                        </div>
+    <div class="body">
 
-                                        <!-- Campo oculto para almacenar el ID de la ciudad -->
-                                        <input type="hidden" id="sucursal_id" name="sucursal_id">
+        <!-- CAMPOS OCULTOS -->
+        <input type="hidden" id="txtOperacion" value="0">
+        <input type="hidden" id="user_id">
+        <input type="hidden" id="cobro_estado" value="PENDIENTE">
 
-                                        <!-- Contenedor para la lista de ciudades -->
-                                        <div id="listaSucursal" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="caja" class="form-control" disabled onkeyup="buscarApertCierCaja();">
-                                            <label class="form-label">Caja</label>
-                                        </div>
-                                        <input type="hidden" id="apertura_cierre_caja_id" name="apertura_cierre_caja_id">
-                                        <div id="listaAperCierCaja" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                <!-- CAMPO PARA FECHA DE VENCIMIENTO CON 3 COLUMNAS -->
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="cobro_fecha" class="datetimepicker form-control" disabled>
-                                            <label class="form-label">Fecha</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="cli_nombre" class="form-control" disabled onkeyup="buscarClienteCtasCobrar();">
-                                            <label class="form-label">Cliente</label>
-                                        </div>
-                                        <input type="hidden" id="clientes_id" name="clientes_id">
-                                        <div id="listaClientes" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                 <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="cli_apellido" class="form-control" disabled>
-                                            <label class="form-label">Apellido</label>
-                                        </div>
-                                    </div>
-                                </div>
+        <input type="hidden" id="ventas_cab_id" name="ventas_cab_id">
+        <input type="hidden" id="cuotas_seleccionadas" name="cuotas_seleccionadas">
 
-                                <!-- RUC -->
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="cli_ruc" class="form-control" disabled>
-                                            <label class="form-label">RUC</label>
-                                        </div>
-                                    </div>
-                                </div>
+        <!-- ================= DATOS GENERALES ================= -->
+        <div class="section-box">
+            <div class="section-title">Datos Generales del Cobro</div>
 
-                                <!-- DIRECCION -->
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="cli_direccion" class="form-control" disabled>
-                                            <label class="form-label">Direccion</label>
-                                        </div>
-                                    </div>
-                                </div>
+            <div class="row clearfix">
 
-                                <!-- TELEFONO -->
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="cli_telefono" class="form-control" disabled>
-                                            <label class="form-label">Telefono</label>
-                                        </div>
-                                    </div>
-                                </div>
+                <!-- CÓDIGO -->
+                <div class="col-sm-1">
+                    <input type="text" id="id" class="form-control" disabled placeholder="Código">
+                </div>
 
-                                <!-- CORREO -->
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="cli_correo" class="form-control" disabled>
-                                            <label class="form-label">Correo</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="forma_cobro" class="form-control" disabled onkeyup="buscarFormasCobro();">
-                                            <label class="form-label">Forma de cobro</label>
-                                        </div>
-                                        <input type="hidden" id="forma_cobro_id" name="forma_cobro_id">
-                                        <div id="listaFormasCobro" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="cobro_importe" class="form-control" disabled>
-                                            <label class="form-label">Importe</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="cobro_observacion" class="form-control" disabled>
-                                            <label class="form-label">Observacion</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="number" id="monto_efectivo" class="form-control" disabled>
-                                            <label class="form-label">Monto Efectivo</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="number" id="vuelto" class="form-control" disabled>
-                                            <label class="form-label">Vuelto</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                 <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="numero_documento" class="form-control" disabled>
-                                            <label class="form-label">Nro. Docuemento</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                 <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="nro_voucher" class="form-control" disabled>
-                                            <label class="form-label">Nro. Voucher</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                 <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="portador" class="form-control" disabled>
-                                            <label class="form-label">Portador</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="fecha_cobro_diferido" class="datetimepicker form-control" disabled>
-                                            <label class="form-label">Fecha de Cobro</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="entidad_emisora" class="form-control" disabled onkeyup="buscarEntidadEmisora();">
-                                            <label class="form-label">Entidad Emisora</label>
-                                        </div>
-                                        <input type="hidden" id="entidad_emisora_id" name="entidad_emisora_id">
-                                        <div id="listaEntidadEmi" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="marca_tarjeta" class="form-control" disabled onkeyup="buscarMarcaTarjeta();">
-                                            <label class="form-label">Marca Tarjeta</label>
-                                        </div>
-                                        <input type="hidden" id="marca_tarjeta_id" name="marca_tarjeta_id">
-                                        <div id="listaMarcaTarj" style="display:none;"></div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text"
-                                                id="entidad_adherida"
-                                                class="form-control"
-                                                disabled
-                                                onkeyup="buscarEntidadAdherida();">
-                                            <label class="form-label">Entidad Adherida</label>
-                                        </div>
-                                        <input type="hidden" id="entidad_adherida_id" name="entidad_adherida_id">
-                                        <div id="listaEntidadAdhe" style="display:none;"></div>
-                                    </div>
-                                </div>
+                <!-- EMPRESA -->
+                <div class="col-sm-2">
+                    <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
+                    <input type="hidden" id="empresa_id">
+                    <div id="listaEmpresa" style="display:none;"></div>
+                </div>
+
+                <!-- SUCURSAL -->
+                <div class="col-sm-2">
+                    <input type="text" id="suc_razon_social"
+                           class="form-control" disabled
+                           onkeyup="buscarSucursal();" placeholder="Sucursal">
+                    <input type="hidden" id="sucursal_id">
+                    <div id="listaSucursal" style="display:none;"></div>
+                </div>
+
+                <!-- CAJA -->
+                <div class="col-sm-2">
+                    <input type="text" id="caja"
+                           class="form-control" disabled
+                           onkeyup="buscarApertCierCaja();" placeholder="Caja">
+                    <input type="hidden" id="apertura_cierre_caja_id">
+                    <div id="listaAperCierCaja" style="display:none;"></div>
+                </div>
+
+                <!-- FECHA -->
+                <div class="col-sm-3">
+                    <input type="text" id="cobro_fecha"
+                           class="datetimepicker form-control" disabled
+                           placeholder="Fecha">
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ================= CLIENTE ================= -->
+        <div class="section-box">
+            <div class="section-title">Cliente</div>
+
+            <div class="row clearfix">
+
+                <div class="col-sm-2">
+                    <input type="text" id="cli_nombre"
+                           class="form-control" disabled
+                           onkeyup="buscarClienteCtasCobrar();"
+                           placeholder="Nombre">
+                    <input type="hidden" id="clientes_id">
+                    <div id="listaClientes" style="display:none;"></div>
+                </div>
+
+                <div class="col-sm-3">
+                    <input type="text" id="cli_apellido"
+                           class="form-control" disabled
+                           placeholder="Apellido">
+                </div>
+
+            </div>
+        </div>
+
+                                <!-- ================= DATOS DEL CLIENTE ================= -->
+<div class="section-box">
+    <div class="section-title">Datos del Cliente</div>
+
+    <div class="row clearfix">
+
+        <!-- RUC -->
+        <div class="col-sm-3">
+            <input type="text" id="cli_ruc" class="form-control" disabled placeholder="RUC">
+        </div>
+
+        <!-- DIRECCIÓN -->
+        <div class="col-sm-3">
+            <input type="text" id="cli_direccion" class="form-control" disabled placeholder="Dirección">
+        </div>
+
+        <!-- TELÉFONO -->
+        <div class="col-sm-3">
+            <input type="text" id="cli_telefono" class="form-control" disabled placeholder="Teléfono">
+        </div>
+
+        <!-- CORREO -->
+        <div class="col-sm-3">
+            <input type="text" id="cli_correo" class="form-control" disabled placeholder="Correo">
+        </div>
+
+    </div>
+</div>
+
+<!-- ================= DATOS DEL COBRO ================= -->
+<div class="section-box">
+    <div class="section-title">Datos del Cobro</div>
+
+    <div class="row clearfix">
+
+        <!-- FORMA DE COBRO -->
+        <div class="col-sm-3">
+            <input type="text" id="forma_cobro"
+                   class="form-control" disabled
+                   onkeyup="buscarFormasCobro();"
+                   placeholder="Forma de Cobro">
+            <input type="hidden" id="forma_cobro_id">
+            <div id="listaFormasCobro" style="display:none;"></div>
+        </div>
+
+        <!-- IMPORTE -->
+        <div class="col-sm-3">
+            <input type="text" id="cobro_importe"
+                   class="form-control" disabled
+                   placeholder="Importe">
+        </div>
+
+        <!-- OBSERVACIÓN -->
+        <div class="col-sm-3">
+            <input type="text" id="cobro_observacion"
+                   class="form-control" disabled
+                   placeholder="Observación">
+        </div>
+
+    </div>
+
+    <div class="row clearfix" style="margin-top:10px;">
+
+        <!-- MONTO EFECTIVO -->
+        <div class="col-sm-3">
+            <input type="number" id="monto_efectivo"
+                   class="form-control" disabled
+                   placeholder="Monto Efectivo">
+        </div>
+
+        <!-- VUELTO -->
+        <div class="col-sm-3">
+            <input type="number" id="vuelto"
+                   class="form-control" disabled
+                   placeholder="Vuelto">
+        </div>
+
+        <!-- NRO DOCUMENTO -->
+        <div class="col-sm-3">
+            <input type="text" id="numero_documento"
+                   class="form-control" disabled
+                   placeholder="Nro. Documento">
+        </div>
+
+        <!-- NRO VOUCHER -->
+        <div class="col-sm-3">
+            <input type="text" id="nro_voucher"
+                   class="form-control" disabled
+                   placeholder="Nro. Voucher">
+        </div>
+
+    </div>
+</div>
+
+<!-- ================= DATOS BANCARIOS / TARJETA ================= -->
+<div class="section-box">
+    <div class="section-title">Datos Bancarios / Tarjeta</div>
+
+    <div class="row clearfix">
+
+        <!-- PORTADOR -->
+        <div class="col-sm-3">
+            <input type="text" id="portador"
+                   class="form-control" disabled
+                   placeholder="Portador">
+        </div>
+
+        <!-- FECHA COBRO DIFERIDO -->
+        <div class="col-sm-3">
+            <input type="text" id="fecha_cobro_diferido"
+                   class="datetimepicker form-control" disabled
+                   placeholder="Fecha de Cobro">
+        </div>
+
+        <!-- ENTIDAD EMISORA -->
+        <div class="col-sm-2">
+            <input type="text" id="entidad_emisora"
+                   class="form-control" disabled
+                   onkeyup="buscarEntidadEmisora();"
+                   placeholder="Entidad Emisora">
+            <input type="hidden" id="entidad_emisora_id">
+            <div id="listaEntidadEmi" style="display:none;"></div>
+        </div>
+
+        <!-- MARCA TARJETA -->
+        <div class="col-sm-2">
+            <input type="text" id="marca_tarjeta"
+                   class="form-control" disabled
+                   onkeyup="buscarMarcaTarjeta();"
+                   placeholder="Marca Tarjeta">
+            <input type="hidden" id="marca_tarjeta_id">
+            <div id="listaMarcaTarj" style="display:none;"></div>
+        </div>
+
+        <!-- ENTIDAD ADHERIDA -->
+        <div class="col-sm-4">
+            <input type="text" id="entidad_adherida"
+                   class="form-control" disabled
+                   onkeyup="buscarEntidadAdherida();"
+                   placeholder="Entidad Adherida">
+            <input type="hidden" id="entidad_adherida_id">
+            <div id="listaEntidadAdhe" style="display:none;"></div>
+        </div>
+
+    </div>
+</div>
+
                                 
                             </div>
-                                <div class="row clearfix">
+                                <!-- ================= COBRO CON TARJETA ================= -->
+<div class="col-sm-6">
 
-                                    <!-- ===================== -->
-                                    <!-- COBRO CON TARJETA -->
-                                    <!-- ===================== -->
-                                    <div class="col-sm-6">
-                                        <div class="card">
-                                            <div class="header bg-blue">
-                                                <h2>
-                                                    <i class="material-icons">credit_card</i>
-                                                    Cobro con Tarjeta
-                                                </h2>
-                                            </div>
-                                            <div class="body">
+    <div class="card card-industrial equal-height">
 
-                                                <div class="row clearfix">
+        <div class="header">
+            <h2>
+                <i class="material-icons">credit_card</i>
+                Cobro con Tarjeta
+            </h2>
+        </div>
 
-                                                    <div class="col-sm-6">
-                                                        <div class="form-group form-float">
-                                                            <div class="form-line">
-                                                                <input type="text"
-                                                                    id="nro_tarjeta"
-                                                                    class="form-control"
-                                                                    disabled>
-                                                                <label class="form-label">Nro. Tarjeta</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+        <div class="body">
 
-                                                    <!-- FECHA VENCIMIENTO -->
-                                                    <div class="col-sm-6">
-                                                        <div class="form-group form-float">
-                                                            <div class="form-line">
-                                                                <input type="text"
-                                                                    id="fecha_venc_tarjeta"
-                                                                    class="datetimepicker form-control"
-                                                                    disabled>
-                                                                <label class="form-label">Fecha Vencimiento</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+            <div class="row clearfix">
 
-                                                    <!-- MONTO TARJETA -->
-                                                    <div class="col-sm-6">
-                                                        <div class="form-group form-float">
-                                                            <div class="form-line">
-                                                                <input type="text"
-                                                                    id="monto_tarjeta"
-                                                                    class="form-control"
-                                                                    disabled>
-                                                                <label class="form-label">Monto Tarjeta</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                <!-- NRO TARJETA -->
+                <div class="col-sm-6">
+                    <input type="text"
+                           id="nro_tarjeta"
+                           class="form-control"
+                           disabled
+                           placeholder="Nro. Tarjeta">
+                </div>
 
-                                                    <!-- NRO VOUCHER -->
-                                                    <div class="col-sm-6">
-                                                        <div class="form-group form-float">
-                                                            <div class="form-line">
-                                                                <input type="text"
-                                                                    id="nro_voucher_tarjeta"
-                                                                    class="form-control"
-                                                                    disabled>
-                                                                <label class="form-label">Nro. Voucher</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                <!-- FECHA VENCIMIENTO -->
+                <div class="col-sm-6">
+                    <input type="text"
+                           id="fecha_venc_tarjeta"
+                           class="datetimepicker form-control"
+                           disabled
+                           placeholder="Fecha Vencimiento">
+                </div>
 
-                                                    <!-- ENTIDAD EMISORA -->
-                                                    <div class="col-sm-4">
-                                                        <div class="form-group form-float">
-                                                            <div class="form-line">
-                                                                <input type="text"
-                                                                    id="entidad_emisora_tarjeta"
-                                                                    class="form-control"
-                                                                    disabled
-                                                                    onkeyup="buscarEntidadEmisoraTarjeta();">
-                                                                <label class="form-label">Entidad Emisora</label>
-                                                            </div>
-                                                            <input type="hidden"
-                                                                id="entidad_emisora_tarjeta_id"
-                                                                name="entidad_emisora_tarjeta_id">
-                                                            <div id="listaEntidadEmiTarj" style="display:none;"></div>
-                                                        </div>
-                                                    </div>
+                <!-- MONTO TARJETA -->
+                <div class="col-sm-6" style="margin-top:10px;">
+                    <input type="text"
+                           id="monto_tarjeta"
+                           class="form-control"
+                           disabled
+                           placeholder="Monto Tarjeta">
+                </div>
 
-                                                    <!-- MARCA TARJETA -->
-                                                    <div class="col-sm-4">
-                                                        <div class="form-group form-float">
-                                                            <div class="form-line">
-                                                                <input type="text"
-                                                                    id="marca_tarjeta_tarjeta"
-                                                                    class="form-control"
-                                                                    disabled
-                                                                    onkeyup="buscarMarcaTarjetaCobro();">
-                                                                <label class="form-label">Marca Tarjeta</label>
-                                                            </div>
-                                                            <input type="hidden"
-                                                                id="marca_tarjeta_tarjeta_id"
-                                                                name="marca_tarjeta_tarjeta_id">
-                                                            <div id="listaMarcaTarjCobro" style="display:none;"></div>
-                                                        </div>
-                                                    </div>
+                <!-- NRO VOUCHER -->
+                <div class="col-sm-6" style="margin-top:10px;">
+                    <input type="text"
+                           id="nro_voucher_tarjeta"
+                           class="form-control"
+                           disabled
+                           placeholder="Nro. Voucher">
+                </div>
 
-                                                    <!-- ENTIDAD ADHERIDA -->
-                                                    <div class="col-sm-4">
-                                                        <div class="form-group form-float">
-                                                            <div class="form-line">
-                                                                <input type="text"
-                                                                    id="entidad_adherida_tarjeta"
-                                                                    class="form-control"
-                                                                    disabled
-                                                                    onkeyup="buscarEntidadAdheridaTarjeta();">
-                                                                <label class="form-label">Entidad Adherida</label>
-                                                            </div>
-                                                            <input type="hidden"
-                                                                id="entidad_adherida_tarjeta_id"
-                                                                name="entidad_adherida_tarjeta_id">
-                                                            <div id="listaEntidadAdheTarj" style="display:none;"></div>
-                                                        </div>
-                                                    </div>
+            </div>
 
-                                                </div>
-                                               <div class="text-right" style="margin-top:10px;">
-                                                    <button
-                                                        id="btnAgregarTarjeta"
-                                                        class="btn btn-success"
-                                                        onclick="habilitarCobroTarjeta()"
-                                                        disabled>
-                                                        + Agregar Tarjeta
-                                                    </button>
-                                                </div>
+            <hr>
 
-                                            </div>
-                                        </div>
-                                    </div>
+            <div class="row clearfix">
+
+                <!-- ENTIDAD EMISORA -->
+                <div class="col-sm-4">
+                    <input type="text"
+                           id="entidad_emisora_tarjeta"
+                           class="form-control"
+                           disabled
+                           onkeyup="buscarEntidadEmisoraTarjeta();"
+                           placeholder="Entidad Emisora">
+                    <input type="hidden"
+                           id="entidad_emisora_tarjeta_id">
+                    <div id="listaEntidadEmiTarj" style="display:none;"></div>
+                </div>
+
+                <!-- MARCA TARJETA -->
+                <div class="col-sm-4">
+                    <input type="text"
+                           id="marca_tarjeta_tarjeta"
+                           class="form-control"
+                           disabled
+                           onkeyup="buscarMarcaTarjetaCobro();"
+                           placeholder="Marca Tarjeta">
+                    <input type="hidden"
+                           id="marca_tarjeta_tarjeta_id">
+                    <div id="listaMarcaTarjCobro" style="display:none;"></div>
+                </div>
+
+                <!-- ENTIDAD ADHERIDA -->
+                <div class="col-sm-4">
+                    <input type="text"
+                           id="entidad_adherida_tarjeta"
+                           class="form-control"
+                           disabled
+                           onkeyup="buscarEntidadAdheridaTarjeta();"
+                           placeholder="Entidad Adherida">
+                    <input type="hidden"
+                           id="entidad_adherida_tarjeta_id">
+                    <div id="listaEntidadAdheTarj" style="display:none;"></div>
+                </div>
+
+            </div>
+
+            <!-- BOTÓN -->
+            <div class="text-right" style="margin-top:15px;">
+                <button id="btnAgregarTarjeta"
+                        class="btn btn-success"
+                        onclick="habilitarCobroTarjeta()"
+                        disabled>
+                    <i class="material-icons">add</i> Agregar Tarjeta
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
 
                                     <!-- ===================== -->
                                     <!-- COBRO CON CHEQUE -->
                                     <!-- ===================== -->
-                                    <div class="col-sm-6">
-                                        <div class="card">
-                                            <div class="header bg-orange">
-                                                <h2>
-                                                    <i class="material-icons">receipt</i>
-                                                    Cobro con Cheque
-                                                </h2>
-                                            </div>
-                                            <div class="body">
+                                    <!-- ================= COBRO CON CHEQUE ================= -->
+<div class="col-sm-6">
 
-                                                <div class="row clearfix">
+    <div class="card card-industrial equal-height">
 
-                                                    <div class="col-sm-4">
-                                                        <div class="form-group form-float">
-                                                            <div class="form-line">
-                                                                <input type="text"
-                                                                    id="entidad_emisora_cheque"
-                                                                    class="form-control"
-                                                                    disabled
-                                                                    onkeyup="buscarEntidadEmisoraCheque();">
-                                                                <label class="form-label">Entidad Emisora</label>
-                                                            </div>
-                                                            <input type="hidden"
-                                                                id="entidad_emisora_cheque_id"
-                                                                name="entidad_emisora_cheque_id">
-                                                            <div id="listaEntidadEmiCheq" style="display:none;"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                        <div class="form-group form-float">
-                                                            <div class="form-line">
-                                                                <input type="text" id="nro_cheque" class="form-control">
-                                                                <label class="form-label">Nro. Cheque</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+        <div class="header">
+            <h2>
+                <i class="material-icons">receipt</i>
+                Cobro con Cheque
+            </h2>
+        </div>
 
-                                                    <div class="col-sm-6">
-                                                        <div class="form-group form-float">
-                                                            <div class="form-line">
-                                                                <input type="text" id="fecha_venc_cheque" class="datetimepicker form-control">
-                                                                <label class="form-label">Fecha Vencimiento</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+        <div class="body">
 
-                                                    <div class="col-sm-12">
-                                                        <div class="form-group form-float">
-                                                            <div class="form-line">
-                                                                <input type="text" id="monto_cheque" class="form-control">
-                                                                <label class="form-label">Monto Cheque</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+            <div class="row clearfix">
 
-                                                </div>
-                                                <div class="text-right" style="margin-top:10px;">
-                                                    <button
-                                                        id="btnAgregarCheque"
-                                                        class="btn btn-success"
-                                                        onclick="habilitarCobroCheque()"
-                                                        disabled>
-                                                        + Agregar Cheque
-                                                    </button>
-                                                </div>
+                <!-- ENTIDAD EMISORA -->
+                <div class="col-sm-4">
+                    <input type="text"
+                           id="entidad_emisora_cheque"
+                           class="form-control"
+                           disabled
+                           onkeyup="buscarEntidadEmisoraCheque();"
+                           placeholder="Entidad Emisora">
+                    <input type="hidden"
+                           id="entidad_emisora_cheque_id"
+                           name="entidad_emisora_cheque_id">
+                    <div id="listaEntidadEmiCheq" style="display:none;"></div>
+                </div>
 
-                                            </div>
-                                        </div>
-                                    </div>
+                <!-- NRO CHEQUE -->
+                <div class="col-sm-6">
+                    <input type="text"
+                           id="nro_cheque"
+                           class="form-control"
+                           placeholder="Nro. Cheque">
+                </div>
 
-                                </div>
-                                <div class="row clearfix" id="panelCtasCobrar" style="display:none;">
-                                    <div class="col-sm-12">
-                                        <div class="card">
-                                            <div class="header">
-                                                <h2>Cuentas a Cobrar del Cliente</h2>
-                                            </div>
-                                            <div class="body">
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered table-striped">
-                                                        <thead>
-                                                            <tr>
-                                                                <th style="width:5%"></th>
-                                                                <th>Venta</th>
-                                                                <th>Cuota</th>
-                                                                <th>Vencimiento</th>
-                                                                <th class="text-right">Monto</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="tablaCtasCobrar">
-                                                            <!-- Se carga por JS -->
-                                                        </tbody>
-                                                        <tfoot>
-                                                            <tr>
-                                                                <th colspan="4" class="text-right">TOTAL A COBRAR</th>
-                                                                <th class="text-right" id="totalCobrar">0</th>
-                                                            </tr>
-                                                        </tfoot>
-                                                    </table>
-                                                </div>
+                <!-- FECHA VENCIMIENTO -->
+                <div class="col-sm-6" style="margin-top:10px;">
+                    <input type="text"
+                           id="fecha_venc_cheque"
+                           class="datetimepicker form-control"
+                           placeholder="Fecha Vencimiento">
+                </div>
 
-                                                <!-- 🔽 BOTÓN AGREGAR CUOTA -->
-                                                <div class="text-right" style="margin-top:10px;">
-                                                    <button
-                                                        id="btnAgregarCuota"
-                                                        class="btn btn-success"
-                                                        onclick="listarCtasCobrarCliente()"
-                                                        disabled>
-                                                        + Agregar cuota
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                <!-- MONTO CHEQUE -->
+                <div class="col-sm-12" style="margin-top:10px;">
+                    <input type="text"
+                           id="monto_cheque"
+                           class="form-control"
+                           placeholder="Monto Cheque">
+                </div>
+
+            </div>
+
+            <!-- BOTÓN -->
+            <div class="text-right" style="margin-top:15px;">
+                <button id="btnAgregarCheque"
+                        class="btn btn-success"
+                        onclick="habilitarCobroCheque()"
+                        disabled>
+                    <i class="material-icons">add</i> Agregar Cheque
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+                                <!-- ================= CUENTAS A COBRAR ================= -->
+<div class="row clearfix" id="panelCtasCobrar" style="display:none;">
+
+    <div class="col-sm-12">
+
+        <div class="card card-industrial">
+
+            <div class="header">
+                <h2>
+                    <i class="material-icons">assignment</i>
+                    Cuentas a Cobrar del Cliente
+                </h2>
+            </div>
+
+            <div class="body">
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th style="width:5%"></th>
+                                <th>Venta</th>
+                                <th>Cuota</th>
+                                <th>Vencimiento</th>
+                                <th class="text-right">Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaCtasCobrar">
+                            <!-- Se carga por JS -->
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="4" class="text-right">TOTAL A COBRAR</th>
+                                <th class="text-right" id="totalCobrar">0</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <!-- BOTÓN AGREGAR CUOTA -->
+                <div class="text-right" style="margin-top:15px;">
+                    <button id="btnAgregarCuota"
+                            class="btn btn-success"
+                            onclick="listarCtasCobrarCliente()"
+                            disabled>
+                        <i class="material-icons">add</i> Agregar cuota
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
                             
-                            <div class="button-demo">
-                                <button type="button" id="btnAgregar" class="btn btn-success waves-effect" onclick="agregar();">AGREGAR</button>
-                                <button type="button" id="btnEditar" class="btn btn-primary waves-effect" onclick="editar();" disabled>MODIFICAR</button>
-                                <button type="button" id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();"disabled>ANULAR</button>
-                                <button type="button" id="btnConfirmar" class="btn btn-success waves-effect" onclick="confirmar();"disabled>RECIBIDO</button>
-                                <button type="button" id="btnGrabar" class="btn btn-default waves-effect" disabled onclick="confirmarOperacion();">GRABAR</button>
-                                <button type="button" id="btnCancelar" class="btn btn-warning waves-effect" onclick="cancelar();" disabled>CANCELAR</button>  
-                            </div>
-                        </div>
-                    </div>
+                            <!-- ================= BOTONERA COBRANZAS ================= -->
+<div class="btn-toolbar-left text-center">
 
-                    <div class="card" id="detalle" style="display:none">
+    <button type="button" id="btnAgregar"
+            class="btn btn-success"
+            onclick="agregar();">
+        <i class="material-icons">add</i> Agregar
+    </button>
+
+    <button type="button" id="btnEditar"
+            class="btn btn-primary"
+            onclick="editar();" disabled>
+        <i class="material-icons">edit</i> Modificar
+    </button>
+
+    <button type="button" id="btnEliminar"
+            class="btn btn-danger"
+            onclick="eliminar();" disabled>
+        <i class="material-icons">delete</i> Anular
+    </button>
+
+    <button type="button" id="btnConfirmar"
+            class="btn btn-success"
+            onclick="confirmar();" disabled>
+        <i class="material-icons">check_circle</i> Recibido
+    </button>
+
+    <button type="button" id="btnGrabar"
+            class="btn btn-default"
+            onclick="confirmarOperacion();" disabled>
+        <i class="material-icons">save</i> Grabar
+    </button>
+
+    <button type="button" id="btnCancelar"
+            class="btn btn-warning"
+            onclick="cancelar();" disabled>
+        <i class="material-icons">close</i> Cancelar
+    </button>
+
+</div>
+
+
+                    <div class="card card-industrial" id="detalle" style="display:none">
                         <div class="header">
                             <h2>Detalles de Cobros</h2>
                         </div>
@@ -588,7 +659,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card" id="registros">
+                    <div class="card card-industrial" id="registros">
                         <div class="header">
                             <h2>Registros de Cobros</h2>
                         </div>

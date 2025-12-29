@@ -192,6 +192,7 @@ function listar() {
                 rs.cli_nombre + "','" +
                 rs.cli_apellido + "','" +
                 rs.cli_ruc + "','" +
+                rs.cli_direccion + "','" +
                 rs.cli_telefono + "','" +
                 rs.cli_correo + "','" +
                 rs.condicion_pago +
@@ -231,6 +232,7 @@ function seleccionVenta(
     cli_nombre,
     cli_apellido,
     cli_ruc,
+    cli_direccion,
     cli_telefono,
     cli_correo,
     condicion_pago
@@ -254,6 +256,7 @@ function seleccionVenta(
     $("#cli_nombre").val(cli_nombre);
     $("#cli_apellido").val(cli_apellido);
     $("#cli_ruc").val(cli_ruc);
+    $("#cli_direccion").val(cli_direccion);
     $("#cli_telefono").val(cli_telefono);
     $("#cli_correo").val(cli_correo);
 
