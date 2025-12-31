@@ -435,58 +435,45 @@ function seleccionProducto(item_id, item_decripcion){
     $(".form-line").attr("class", "form-line focused");
 }
 
-function listarDetalles() {
-
-    let cantidadDetalle = 0;
-
+function listarDetalles(){
+    var cantidadDetalle = 0;
     $.ajax({
-        url: getUrl() + "notaremicomdet/read/" + $("#id").val(),
-        method: "GET",
+        url:getUrl()+"notaremicomdet/read/"+$("#id").val(),
+        method:"GET",
         dataType: "json"
     })
-    .done(function (resultado) {
-
-        let lista = "";
-
-        for (let rs of resultado) {
-
-            lista += `
-                <tr class="item-list"
-                    onclick="seleccionDetalle(
-                        ${rs.item_id},
-                        '${rs.item_decripcion}',
-                        ${rs.nota_remi_com_det_cantidad}
-                    )">
-                    <td>${rs.item_id}</td>
-                    <td>${rs.item_decripcion}</td>
-                    <td>${rs.nota_remi_com_det_cantidad}</td>
-                </tr>
-            `;
-
+    .done(function(resultado){
+        var lista = "";
+        for(rs of resultado){
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionDetalle("+rs.item_id+",'"+rs.item_decripcion+"',"+rs.nota_remi_com_det_cantidad+");\">";
+                lista = lista + "<td>" + rs.item_id + "</td>";
+                lista = lista + "<td>" + rs.item_decripcion + "</td>";
+                lista = lista + "<td>" + rs.nota_remi_com_det_cantidad + "</td>";
+            lista = lista + "</tr>";
             cantidadDetalle++;
         }
-
         $("#tableDetalle").html(lista);
 
-        // ✅ NORMALIZAR ESTADO
-        let estado = ($("#nota_remi_estado").val() || "").trim().toUpperCase();
-
-        // ✅ HABILITAR CONFIRMAR SOLO SI PENDIENTE Y CON DETALLE
-        if (estado === "PENDIENTE" && cantidadDetalle > 0) {
-            $("#btnConfirmar").prop("disabled", false);
+        if($("#nota_remi_estado").val() === "PENDIENTE" && cantidadDetalle > 0){
+            $("#btnConfirmar").removeAttr("disabled");
         } else {
-            $("#btnConfirmar").prop("disabled", true);
+            $("#btnConfirmar").attr("disabled","true");
         }
-
-        // 🔍 Debug rápido (dejalo un rato)
-        console.log("Estado nota remi compra:", estado, "Cantidad detalle:", cantidadDetalle);
     })
-    .fail(function (xhr, status, error) {
+    .fail(function(xhr, status, error) {
         alert("Error: " + error);
         console.error(xhr.responseText);
-    });
+    })
 }
+function seleccionDetalle(item_id, item_decripcion, nota_remi_com_det_cantidad) {
+    $("#item_id").val(item_id);
+    $("#item_decripcion").val(item_decripcion);
+    $("#nota_remi_com_det_cantidad").val(nota_remi_com_det_cantidad);
 
+    $("#listaProductos").html("");
+    $("#listaProductos").attr("style","display:none;");
+    $(".form-line").attr("class","form-line focused");
+}
 
 function buscarEmpresas() {
     $.ajax({

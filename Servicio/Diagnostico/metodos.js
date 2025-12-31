@@ -10,25 +10,25 @@ function formatoTabla(){
                 extend:'copy',
                 text:'COPIAR',
                 className:'btn btn-primary waves-effect',
-                title:'Listado de Pedidos'
+                title:'Listado de Diagnostico'
             },
             {
                 extend:'excel',
                 text:'EXCEL',
                 className:'btn btn-success waves-effect',
-                title:'Listado de Pedidos'
+                title:'Listado de Diagnostico'
             },
             {
                 extend:'pdf',
                 text:'PDF',
                 className:'btn btn-danger waves-effect',
-                title:'Listado de Pedidos'
+                title:'Listado de Diagnostico'
             },
             {
                 extend:'print',
                 text:'IMPRIMIR',
                 className:'btn btn-warning waves-effect',
-                title:'Listado de Pedidos'
+                title:'Listado de Diagnostico'
             }
         ],
         iDisplayLength:3,

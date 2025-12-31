@@ -406,7 +406,7 @@ function seleccionarPresupuestoServ(
     marc_nom, modelo_nom
 ) {
     // 🧩 Guardar IDs
-    $("#presupuestos_serv_cab_id").val(id);
+    $("#presupuesto_serv_cab_id").val(id);
     $("#empresa_id").val(empresa_id);
     $("#sucursal_id").val(sucursal_id);
     $("#tipo_diagnostico_id").val(tipo_diagnostico_id);
@@ -487,6 +487,7 @@ function seleccionEquiTrab(equipo_trabajo_id,equipo_nombre,equipo_descripcion,eq
 }
 
 function grabar() {
+    
     const observaciones = ($("#ord_serv_observaciones").val() || "").trim();
     const fecha = ($("#ord_serv_fecha").val() || "").trim();
     const fechaVence = ($("#ord_serv_fecha_vence").val() || "").trim();
@@ -495,7 +496,17 @@ function grabar() {
     const presupuesto = parseInt($("#presupuesto_serv_cab_id").val()) || 0;
     const cliente = parseInt($("#clientes_id").val()) || 0;
     const tipo = ($("#ord_serv_tipo").val() || "NORMAL").trim();
-
+console.log("=== DATOS ANTES DE VALIDAR ===");
+console.log("observaciones:", observaciones);
+console.log("fecha:", fecha);
+console.log("fechaVence:", fechaVence);
+console.log("empresa:", empresa);
+console.log("sucursal:", sucursal);
+console.log("presupuesto:", presupuesto);
+console.log("cliente:", cliente);
+console.log("tipo:", tipo);
+console.log("📌 Presupuesto ID leído en grabar:", $("#presupuesto_serv_cab_id").val());
+console.log("=============================");
     // ✅ Validar campos obligatorios
     if (!observaciones || !fecha || !fechaVence || empresa <= 0 || sucursal <= 0 || presupuesto <= 0 || cliente <= 0) {
         swal({
