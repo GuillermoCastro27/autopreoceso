@@ -96,7 +96,7 @@
     <div class="body">
 
         <input type="hidden" id="txtOperacion" value="0">
-        <input type="hidden" id="user_id" value="1">
+        <input type="hidden" id="user_id">
         <input type="hidden" id="soli_cab_estado" value="PENDIENTE">
 
         <div class="section-box">

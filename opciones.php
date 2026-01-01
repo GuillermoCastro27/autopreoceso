@@ -175,6 +175,15 @@
                             <li>
                                 <a href="javascript:void(0);" class="menu-toggle">
                                     <i class="material-icons">trending_down</i>
+                                    <span>Seguridad</span>
+                                </a>
+                                <ul class="ml-menu">
+                                    <li><a href="/taller_front/referenciales/roles"><span>Mantener Roles</span></a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    <i class="material-icons">trending_down</i>
                                     <span>Ref_Compras</span>
                                 </a>
                                 <ul class="ml-menu">

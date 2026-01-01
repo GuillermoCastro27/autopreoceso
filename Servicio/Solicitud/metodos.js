@@ -1,3 +1,4 @@
+cargarUserIdLogueado();
 listar();
 campoFecha();
 function formatoTabla(){
@@ -762,4 +763,22 @@ function seleccionCliente(clientes_id,cli_nombre,cli_apellido,cli_ruc,cli_direcc
     $("#listaClientes").attr("style","display:none;");
 
     $(".form-line").attr("class","form-line focused");
+}
+function cargarUserIdLogueado() {
+    try {
+        const datosSesion = JSON.parse(sessionStorage.getItem('datosSesion'));
+        
+        if (datosSesion && datosSesion.user && datosSesion.user.id) {
+            $('#user_id').val(datosSesion.user.id);
+            console.log('User ID cargado exitosamente:', datosSesion.user.id);
+        } else {
+            console.error('No se encontraron datos de sesión válidos');
+            alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');
+            window.location.href = '../../index.html';
+        }
+    } catch (error) {
+        console.error('Error al cargar datos de usuario:', error);
+        alert('Error al cargar datos del usuario. Inicie sesión nuevamente.');
+        window.location.href = '../../index.html';
+    }
 }

@@ -105,7 +105,7 @@
 <div class="row clearfix">
 
 <input type="hidden" value="0" id="txtOperacion"/>
-<input type="hidden" value="1" id="user_id"/>
+<input type="hidden" id="user_id">
 <input type="hidden" value="PENDIENTE" id="ord_serv_estado"/>
 
 <div class="col-sm-1">

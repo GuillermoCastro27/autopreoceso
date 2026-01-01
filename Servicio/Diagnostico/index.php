@@ -110,7 +110,7 @@ body { background:#f1f2f6; }
 
         <!-- CAMPOS OCULTOS -->
         <input type="hidden" id="txtOperacion" value="0">
-        <input type="hidden" id="user_id" value="1">
+        <input type="hidden" id="user_id">
         <input type="hidden" id="diag_cab_estado" value="PENDIENTE">
 
         <!-- ================= DATOS GENERALES ================= -->

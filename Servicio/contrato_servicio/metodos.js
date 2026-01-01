@@ -1,3 +1,4 @@
+cargarUserIdLogueado();
 listar();
 campoFecha();
 function formatoTabla(){
@@ -980,5 +981,22 @@ function seleccionSucursal(empresa_id,suc_razon_social,suc_direccion,suc_telefon
     $("#listaSucursal").html("");
     $("#listaSucursal").attr("style","display:none;");
 }
-
+function cargarUserIdLogueado() {
+    try {
+        const datosSesion = JSON.parse(sessionStorage.getItem('datosSesion'));
+        
+        if (datosSesion && datosSesion.user && datosSesion.user.id) {
+            $('#user_id').val(datosSesion.user.id);
+            console.log('User ID cargado exitosamente:', datosSesion.user.id);
+        } else {
+            console.error('No se encontraron datos de sesión válidos');
+            alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');
+            window.location.href = '../../index.html';
+        }
+    } catch (error) {
+        console.error('Error al cargar datos de usuario:', error);
+        alert('Error al cargar datos del usuario. Inicie sesión nuevamente.');
+        window.location.href = '../../index.html';
+    }
+}
 

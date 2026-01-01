@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Verificación 2FA</title>
+</head>
+<body>
+
+<h2>Verificación de dos factores</h2>
+
+<input type="text" id="code" placeholder="Código recibido por correo">
+<br><br>
+<button onclick="verificarCodigo()">Verificar</button>
+
+<script src="plugins/jquery/jquery.min.js"></script>
+<script src="js/ruta.js"></script>
+
+<script>
+function verificarCodigo(){
+    $.ajax({
+        url: getUrl() + "2fa/email/validar",
+        method: "POST",
+        dataType: "json",
+        data: {
+            email: sessionStorage.getItem('2fa_email'),
+            code: $("#code").val()
+        }
+    })
+    .done(function(resultado){
+        // 🔐 GUARDAMOS TOKEN
+        sessionStorage.setItem('datosSesion', JSON.stringify(resultado));
+        window.location = 'menu.php';
+    })
+    .fail(function(e){
+        alert(JSON.parse(e.responseText).mensaje);
+    });
+}
+</script>
+
+</body>
+</html>
