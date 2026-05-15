@@ -1,6 +1,6 @@
-// Lista los registros de pedidos utilizando DataTables
-// Cargar user_id del usuario logueado
-cargarUserIdLogueado();
+﻿// Lista los registros de pedidos utilizando DataTables
+// Cargar funcionario_id del usuario logueado
+cargarFuncionarioIdLogueado();
 listar();
 campoFecha();
 // Configura el formato de la tabla para exportar en diferentes formatos
@@ -195,7 +195,7 @@ function listar() {
                 <td>${rs.vencimiento}</td>
                 <td>${rs.nota_vent_fecha}</td>
                 <td>${rs.venta}</td>
-                <td>${rs.encargado}</td>
+                <td>${rs.funcionario || rs.name || rs.encargado || '-'}</td>
                 <td>${rs.cuotas}</td>
                 <td>${rs.nota_vent_tipo}</td>
                 <td>${rs.nota_vent_observaciones}</td>
@@ -492,7 +492,7 @@ function grabar() {
             'clientes_id'         : $("#clientes_id").val(),
             'empresa_id'          : $("#empresa_id").val(),
             'sucursal_id'         : $("#sucursal_id").val(),
-            'user_id'             : $("#user_id").val(),
+            'funcionario_id'             : $("#funcionario_id").val(),
 
             // Nota de venta
             'nota_vent_fecha'                 : $("#nota_vent_fecha").val(),
@@ -760,7 +760,7 @@ function seleccionProducto(
 }
 function buscarTipoImpuestos(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/tipo-impuesto/read",
+        url:getUrl() + "tipo-impuesto/read",
         method:"GET",
         dataType: "json"
     })
@@ -939,14 +939,14 @@ function actualizarTotalesVenta() {
     $("#totalConImpuesto").val(subtotal.toFixed(2));
 }
 
-// Función para cargar el user_id real del usuario logueado
-function cargarUserIdLogueado() {
+// Función para cargar el funcionario_id del usuario logueado
+function cargarFuncionarioIdLogueado() {
     try {
-        const datosSesion = JSON.parse(sessionStorage.getItem('datosSesion'));
+        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
         
-        if (datosSesion && datosSesion.user && datosSesion.user.id) {
-            $('#user_id').val(datosSesion.user.id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.id);
+        if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
+            $('#funcionario_id').val(datosSesion.user.funcionario_id);
+            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
             console.error('No se encontraron datos de sesión válidos');
             alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');

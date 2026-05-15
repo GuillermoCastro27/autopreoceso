@@ -1,3 +1,10 @@
+(function () {
+    var session = JSON.parse(localStorage.getItem('datosSesion') || '{}');
+    if (!session.token) {
+        window.location.href = '/taller_front/index.html';
+    }
+})();
+
 if (typeof jQuery === "undefined") {
     throw new Error("jQuery plugins need to be before this file");
 }
@@ -466,4 +473,23 @@ $(function () {
     $.AdminBSB.search.activate();
 
     setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
+
+    $('input, select, textarea').not('[autocomplete]').attr('autocomplete', 'off');
+});
+
+// Envía el token Bearer en todas las llamadas AJAX automáticamente
+$.ajaxSetup({
+    beforeSend: function(xhr) {
+        var session = JSON.parse(localStorage.getItem('datosSesion') || '{}');
+        if (session.token) {
+            xhr.setRequestHeader('Authorization', 'Bearer ' + session.token);
+        }
+    }
+});
+
+// Handler global — cubre todas las llamadas AJAX de las páginas internas
+$(document).ajaxError(function (event, xhr) {
+    if (xhr.status === 403) {
+        swal('Acceso denegado', 'No tiene permiso para acceder a este recurso.', 'error');
+    }
 });

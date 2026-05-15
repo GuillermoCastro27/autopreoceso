@@ -22,13 +22,12 @@ function verificarCodigo(){
         method: "POST",
         dataType: "json",
         data: {
-            email: sessionStorage.getItem('2fa_email'),
+            email: localStorage.getItem('2fa_email'),
             code: $("#code").val()
         }
     })
     .done(function(resultado){
-        // 🔐 GUARDAMOS TOKEN
-        sessionStorage.setItem('datosSesion', JSON.stringify(resultado));
+        localStorage.setItem('datosSesion', JSON.stringify(resultado));
         window.location = 'menu.php';
     })
     .fail(function(e){

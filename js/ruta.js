@@ -1,3 +1,7 @@
 function getUrl(){
-    return "http://127.0.0.1:8000/Proyecto_tp/";
+    return "https://web-production-f58ca.up.railway.app/Proyecto_tp/";
+}
+
+function getFrontUrl(){
+    return "https://web-production-f58ca.up.railway.app/Proyecto_tp/";
 }

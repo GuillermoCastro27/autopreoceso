@@ -38,7 +38,7 @@
   .navbar .navbar-collapse.in {
     overflow: visible; }
   .navbar, .navbar-header {
-      background-color: #cc4008 !important; /* Reemplaza con el color que desees */
+      background-color: #2d3436 !important;
   }
   
   /* Opcional: Cambia el color del texto a blanco para mejor contraste */
@@ -8247,3 +8247,89 @@ html.ie11 .dropdown-menu ul.menu li a {
 
 html.ie11 .bs-searchbox .form-control {
   width: 90%; }
+
+
+/* ===== ESTILOS INDUSTRIALES (card-industrial, section-box, etc.) ===== */
+body.theme-red { background: #f1f2f6; }
+
+.card-industrial {
+    border-left: 6px solid #0984e3;
+    border-radius: 6px;
+    box-shadow: 0 6px 14px rgba(0,0,0,.12);
+    background: #fff;
+}
+
+.card-industrial .header {
+    background: #2d3436;
+    color: #fff;
+    padding: 15px 20px;
+}
+
+.card-industrial .header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.card-industrial .header small {
+    color: #dfe6e9;
+}
+
+.section-box {
+    background: #f8f9fa;
+    border: 1px solid #dcdde1;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #2d3436;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #ced6e0;
+    padding-bottom: 4px;
+}
+
+.btn-toolbar-left button {
+    margin-right: 6px;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.table thead {
+    background: #2d3436;
+    color: #fff;
+    font-size: 13px;
+}
+
+.table tbody {
+    font-size: 13px;
+}
+
+.filtro-box {
+    background: #f8f9fa;
+    border: 1px solid #dcdde1;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.filtro-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #ced6e0;
+    padding-bottom: 4px;
+    color: #2d3436;
+}
+
+
+/* ===== NAVBAR: fondo gris oscuro para que el botón de cerrar sesión resalte ===== */
+.theme-red .navbar,
+.theme-red .navbar-header {
+    background-color: #2d3436 !important;
+}

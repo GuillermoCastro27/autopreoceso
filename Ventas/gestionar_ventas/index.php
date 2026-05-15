@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -35,51 +35,6 @@
 
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="../../css/themes/all-themes.css" rel="stylesheet" />
-    <style>
-        body { background:#f1f2f6; }
-
-        .card-industrial {
-            border-left: 6px solid #00b894;
-            border-radius: 6px;
-            box-shadow: 0 6px 14px rgba(0,0,0,.12);
-            background: #fff;
-        }
-
-        .card-industrial .header {
-            background: #2d3436;
-            color: #fff;
-            padding: 15px 20px;
-        }
-
-        .section-box {
-            background: #f8f9fa;
-            border: 1px solid #dcdde1;
-            border-radius: 4px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-size: 13px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #2d3436;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #ced6e0;
-        }
-
-        .btn-toolbar-left button {
-            margin-right: 6px;
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-
-        .table thead {
-            background: #2d3436;
-            color: #fff;
-            font-size: 13px;
-        }
-    </style>
 </head>
 
 <body class="theme-red">
@@ -107,7 +62,7 @@
 
         <!-- CAMPOS OCULTOS -->
         <input type="hidden" id="txtOperacion" value="0">
-        <input type="hidden" id="user_id">
+        <input type="hidden" id="funcionario_id">
         <input type="hidden" id="vent_estado" value="PENDIENTE">
 
         <!-- ================= DATOS GENERALES ================= -->
@@ -167,17 +122,39 @@
             </div>
         </div>
 
-        <!-- ================= PEDIDO DE VENTA ================= -->
+        <!-- ================= ORIGEN DE LA VENTA ================= -->
         <div class="section-box">
-            <div class="section-title">Pedido de Venta</div>
+            <div class="section-title">Origen de la Venta <small style="font-weight:400;text-transform:none;">(seleccione pedido o bien orden de servicio — no ambos)</small></div>
+
+            <!-- Hidden fields para IDs staged -->
+            <input type="hidden" id="pedidos_ventas_id" value="">
+            <input type="hidden" id="orden_serv_cab_id_staged" value="">
+            <input type="hidden" id="contrato_serv_cab_id_staged" value="">
 
             <div class="row clearfix">
-                <div class="col-sm-6">
+                <!-- Pedido de ventas -->
+                <div class="col-sm-4">
+                    <label style="font-size:12px;color:#636e72;margin-bottom:4px;">Pedido de Ventas</label>
                     <input type="text" id="pedido_venta" class="form-control"
                            disabled onkeyup="buscarPedidoVentas();"
-                           placeholder="Pedido de Ventas">
-                    <input type="hidden" id="pedidos_ventas_id" value="0">
+                           placeholder="Buscar pedido de ventas...">
                     <div id="listaPedidoVentas" style="display:none;"></div>
+                </div>
+
+                <!-- Orden de servicio -->
+                <div class="col-sm-4">
+                    <label style="font-size:12px;color:#636e72;margin-bottom:4px;">Orden de Servicio</label>
+                    <input type="text" id="orden_buscar" class="form-control"
+                           disabled onkeyup="buscarOrdenServ();"
+                           placeholder="Buscar orden de servicio confirmada...">
+                    <div id="listaOrdenes" style="display:none;"></div>
+                </div>
+
+                <!-- Contrato (auto-llenado) -->
+                <div class="col-sm-4">
+                    <label style="font-size:12px;color:#636e72;margin-bottom:4px;">Contrato vinculado</label>
+                    <input type="text" id="contrato_descripcion_sel" class="form-control" disabled
+                           placeholder="Se llena automáticamente con la orden">
                 </div>
             </div>
         </div>
@@ -254,6 +231,51 @@
     </div>
 </div>
 
+                    <!-- ===== ÓRDENES VINCULADAS (visible tras seleccionar/crear venta) ===== -->
+                    <div class="card card-industrial" id="cardOrdenesVinculadas" style="display:none;">
+                        <div class="header">
+                            <h2><i class="material-icons">build</i> Órdenes de Servicio vinculadas</h2>
+                        </div>
+                        <div class="body">
+                            <!-- Buscador para agregar órdenes adicionales -->
+                            <div class="row clearfix" id="rowAgregarOrden" style="display:none;">
+                                <div class="col-sm-5">
+                                    <input type="text" id="orden_buscar_extra" class="form-control"
+                                           onkeyup="buscarOrdenServExtra();"
+                                           placeholder="Vincular otra orden de servicio...">
+                                    <input type="hidden" id="orden_serv_cab_id_extra" value="0">
+                                    <input type="hidden" id="contrato_serv_cab_id_extra" value="">
+                                    <div id="listaOrdenesExtra" style="display:none;"></div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="text" id="contrato_desc_extra" class="form-control" disabled
+                                           placeholder="Contrato (auto)">
+                                </div>
+                                <div class="col-sm-3">
+                                    <button class="btn btn-info waves-effect" id="btnVincularExtra"
+                                            onclick="agregarOrdenServVenta();" disabled>
+                                        <i class="material-icons">link</i> Vincular
+                                    </button>
+                                </div>
+                            </div>
+
+                            <table class="table table-bordered table-striped" style="margin-top:10px;">
+                                <thead>
+                                    <tr>
+                                        <th>Orden</th>
+                                        <th>Estado</th>
+                                        <th>Cliente</th>
+                                        <th>Contrato</th>
+                                        <th style="width:50px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableOrdenes">
+                                    <tr><td colspan="5" class="text-center text-muted">Sin órdenes vinculadas</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                     <div class="card card-industrial" id="detalle" style="display:none">
                         <div class="header">
                             <h2>Detalles de Ventas</h2>
@@ -269,21 +291,21 @@
                                             <th>Cantidad</th>
                                             <th>Costo</th>
                                             <th>Tipo impuesto</th>
+                                            <th>Depósito</th>
                                             <th>Sub Total</th>
-                                            <th>IVA</th> <!-- Agregado para mostrar el total con impuesto -->
+                                            <th>IVA</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableDetalle">
-                                        <!-- Aquí se llenarán los detalles de los productos -->
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="6" class="text-right">Total Comprobante</th>
-                                            <th class="text-right" id="txtTotalGral">0</th> <!-- Total sin impuestos -->
+                                            <th colspan="7" class="text-right">Total Comprobante</th>
+                                            <th class="text-right" id="txtTotalGral">0</th>
                                         </tr>
                                         <tr>
-                                            <th colspan="6" class="text-right">Total IVA</th>
-                                            <th class="text-right" id="txtTotalConImpuesto">0</th> <!-- Total con impuestos -->
+                                            <th colspan="7" class="text-right">Total IVA</th>
+                                            <th class="text-right" id="txtTotalConImpuesto">0</th>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -372,12 +394,13 @@
     <script src="../../plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
 
     <!-- Custom Js -->
-    <script src="../../js/admin.js"></script>
+    <script src="../../js/admin.js?v=3"></script>
+    <script src="../../js/demo.js"></script>
 
     <!-- Ruta Js (la url del backend o del api rest) -->
     <script src="../../js/ruta.js"></script>
 
-    <script src="metodos.js"></script>
+    <script src="metodos.js?v=3"></script>
     
 
                                 <script>

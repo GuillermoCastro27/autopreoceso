@@ -1,4 +1,4 @@
-listar();
+﻿listar();
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -136,7 +136,7 @@ function mensajeOperacion(titulo,mensaje,tipo) {
 
 function listar() {
     $.ajax({
-        url: "http://127.0.0.1:8000/Proyecto_tp/tipo-vehiculo/read",
+        url: getUrl() + "tipo-vehiculo/read",
         method: "GET",
         dataType: "json"
     })
@@ -216,7 +216,7 @@ function buscarMarcas() {
     let texto = $("#marc_nom").val();
 
     $.ajax({
-        url: "http://127.0.0.1:8000/Proyecto_tp/marca/buscarPorTipo",
+        url: getUrl() + "marca/buscarPorTipo",
         method: "POST",
         data: { 
             texto: texto, 
@@ -271,7 +271,7 @@ function buscarModelo() {
     }
 
     $.ajax({
-        url: "http://127.0.0.1:8000/Proyecto_tp/modelo/buscarPorMarca",
+        url: getUrl() + "modelo/buscarPorMarca",
         method: "POST",
         data: { 
             texto: texto,
@@ -389,7 +389,7 @@ function grabar(){
         metodo = "DELETE";
     }
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/"+endpoint,
+        url:getUrl() + ""+endpoint,
         method:metodo,
         dataType: "json",
         data: { 
@@ -416,32 +416,20 @@ function grabar(){
             }
         });
     })
-    .fail(function(a) {
-        // Manejar el error de respuesta personalizada del servidor
-        try {
-            var response = JSON.parse(a.responseText);  // Intentamos obtener la respuesta JSON
-            if (response.mensaje.includes("ya existe")) {
-                // Mostrar mensaje específico para el error de duplicado
-                swal({
-                    title: "Error",
-                    text: "Error: El registro ya existe",
-                    type: "error"
-                });
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        if (xhr.status === 422) {
+            var msg = '';
+            if (res && res.errors) {
+                $.each(res.errors, function(k, v){ msg += v[0] + '\n'; });
             } else {
-                // Mostrar cualquier otro error personalizado
-                swal({
-                    title: "Error",
-                    text: response.mensaje,
-                    type: "error"
-                });
+                msg = 'Ningún campo debe estar vacío.';
             }
-        } catch (e) {
-            // Si no es JSON, mostrar el error genérico
-            swal({
-                title: "Error",
-                text: "El registro ya existe",
-                type: "error"
-            });
+            swal('Error de validación', msg, 'error');
+        } else if (xhr.status === 500 && xhr.responseText.indexOf('SQLSTATE[23') !== -1) {
+            swal('Error', 'Este registro está en uso y no puede ser eliminado.', 'error');
+        } else {
+            swal('Error', res ? (res.mensaje || res.message || 'Error inesperado.') : 'Error inesperado.', 'error');
         }
     });
 }

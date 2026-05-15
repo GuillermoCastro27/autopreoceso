@@ -1,4 +1,4 @@
-listar();
+﻿listar();
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -131,14 +131,14 @@ function mensajeOperacion(titulo,mensaje,tipo) {
 
 function listar(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/sucursal/read",
+        url:getUrl() + "sucursal/read",
         method:"GET",
         dataType: "json"
     })
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionSucursal("+ rs.empresa_id +", '" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.suc_telefono + "','" + rs.suc_direccion + "','" + rs.suc_correo + "');\">";
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionSucursal("+ rs.id +", "+ rs.empresa_id +", '" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.suc_telefono + "','" + rs.suc_direccion + "','" + rs.suc_correo + "');\">";
                 lista = lista + "<td>" + rs.emp_razon_social + "</td>";
                 lista = lista + "<td>" + rs.suc_razon_social + "</td>";
                 lista = lista + "<td>" + rs.suc_telefono + "</td>";
@@ -154,8 +154,8 @@ function listar(){
     });
 }
 
-function seleccionSucursal(empresa_id, emp_razon_social, suc_razon_social, suc_telefono, suc_direccion, suc_correo) {
-    // Asignar los valores a los campos correspondientes
+function seleccionSucursal(id, empresa_id, emp_razon_social, suc_razon_social, suc_telefono, suc_direccion, suc_correo) {
+    $("#sucursal_id").val(id);
     $("#empresa_id").val(empresa_id);
     $("#emp_razon_social").val(emp_razon_social);
     $("#suc_razon_social").val(suc_razon_social);
@@ -177,7 +177,7 @@ function seleccionSucursal(empresa_id, emp_razon_social, suc_razon_social, suc_t
 
 function buscarEmpresas(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/empresa/read",
+        url:getUrl() + "empresa/read",
         method:"GET",
         dataType: "json"
     })
@@ -208,22 +208,33 @@ function seleccionEmpresa(id,emp_razon_social,emp_direccion,emp_telefono,emp_cor
 }
 
 function grabar(){
+    var op = parseInt($("#txtOperacion").val());
+
+    if (op !== 3) {
+        var suc  = $("#suc_razon_social").val().trim();
+        var emp  = $("#empresa_id").val();
+        if (!suc || !emp) {
+            swal('Error', 'Razón social y empresa son obligatorios.', 'error');
+            return;
+        }
+    }
+
     var endpoint = "sucursal/create";
     var metodo = "POST";
-    if($("#txtOperacion").val() == 2){
-        endpoint = "sucursal/update/" + $("#empresa_id").val();
+    if (op === 2) {
+        endpoint = "sucursal/update/" + $("#sucursal_id").val();
         metodo = "PUT";
     }
-    if($("#txtOperacion").val() == 3){
-        endpoint = "sucursal/delete/" + $("#empresa_id").val();
+    if (op === 3) {
+        endpoint = "sucursal/delete/" + $("#sucursal_id").val();
         metodo = "DELETE";
     }
 
     $.ajax({
-        url: "http://127.0.0.1:8000/Proyecto_tp/" + endpoint,
+        url: getUrl() + "" + endpoint,
         method: metodo,
         dataType: "json",
-        data: { 
+        data: {
             'empresa_id': $("#empresa_id").val(),
             'suc_razon_social': $("#suc_razon_social").val(),
             'suc_direccion': $("#suc_direccion").val(),
@@ -242,33 +253,20 @@ function grabar(){
             }
         });
     })
-    .fail(function(xhr, status, error){
-        var respuesta = xhr.responseJSON;
-
-        // Verificar si es un error de validación o duplicado
-        if (xhr.status === 400) {
-            swal({
-                title: "Error",
-                text: respuesta.mensaje,  // Mostrar el mensaje específico del error
-                type: "error"
-            });
-        } else if (xhr.status === 422) {
-            // Errores de validación
-            let errores = "";
-            $.each(respuesta.errors, function(key, value){
-                errores += value + "\n";
-            });
-            swal({
-                title: "Error de validación",
-                text: "Ningun campo debe estar vacio",
-                type: "error"
-            });
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        if (xhr.status === 422) {
+            var msg = '';
+            if (res && res.errors) {
+                $.each(res.errors, function(k, v){ msg += v[0] + '\n'; });
+            } else {
+                msg = 'Ningún campo debe estar vacío.';
+            }
+            swal('Error de validación', msg, 'error');
+        } else if (xhr.status === 500 && xhr.responseText.indexOf('SQLSTATE[23') !== -1) {
+            swal('Error', 'Esta sucursal está en uso y no puede ser eliminada.', 'error');
         } else {
-            swal({
-                title: "Error",
-                text: "El RUC ya existe",
-                type: "error"
-            });
+            swal('Error', res ? (res.mensaje || res.message || 'Error inesperado.') : 'Error inesperado.', 'error');
         }
         console.log(xhr.responseText);
     });

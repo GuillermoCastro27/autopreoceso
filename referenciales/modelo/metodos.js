@@ -1,4 +1,4 @@
-listar();
+﻿listar();
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -128,7 +128,7 @@ function mensajeOperacion(titulo,mensaje,tipo) {
 
 function listar(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/modelo/read",
+        url:getUrl() + "modelo/read",
         method:"GET",
         dataType: "json"
     })
@@ -189,7 +189,7 @@ function buscarMarcas() {
     }
 
     $.ajax({
-        url: "http://127.0.0.1:8000/Proyecto_tp/marca/buscarPorTipo",
+        url: getUrl() + "marca/buscarPorTipo",
         method: "POST",
         data: { texto: texto, tipo: tipo },
         dataType: "json"
@@ -275,7 +275,7 @@ function grabar(){
         metodo = "DELETE";
     }
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/"+endpoint,
+        url:getUrl() + ""+endpoint,
         method:metodo,
         dataType: "json",
         data: { 
@@ -299,8 +299,21 @@ function grabar(){
             }
         });
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        if (xhr.status === 422) {
+            var msg = '';
+            if (res && res.errors) {
+                $.each(res.errors, function(k, v){ msg += v[0] + '\n'; });
+            } else {
+                msg = 'Ningún campo debe estar vacío.';
+            }
+            swal('Error de validación', msg, 'error');
+        } else if (xhr.status === 500 && xhr.responseText.indexOf('SQLSTATE[23') !== -1) {
+            swal('Error', 'Este modelo está en uso y no puede ser eliminado.', 'error');
+        } else {
+            swal('Error', res ? (res.mensaje || res.message || 'Error inesperado.') : 'Error inesperado.', 'error');
+        }
+        console.log(xhr.responseText);
     })
 }

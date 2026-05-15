@@ -25,68 +25,6 @@
     <!-- AdminBSB -->
     <link href="../../css/style.css" rel="stylesheet">
     <link href="../../css/themes/all-themes.css" rel="stylesheet" />
-
-    <!-- ===== ESTILO PROFESIONAL ===== -->
-    <style>
-        body { background:#f1f2f6; }
-
-        .card-industrial {
-            border-left: 6px solid #00b894;
-            border-radius: 6px;
-            box-shadow: 0 6px 14px rgba(0,0,0,.12);
-            background: #fff;
-        }
-
-        .card-industrial .header {
-            background: #2d3436;
-            color: #fff;
-            padding: 15px 20px;
-        }
-
-        .card-industrial .header h2 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        .card-industrial .header small {
-            color: #dfe6e9;
-        }
-
-        .section-box {
-            background: #f8f9fa;
-            border: 1px solid #dcdde1;
-            border-radius: 4px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-size: 13px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #2d3436;
-            margin-bottom: 12px;
-            border-bottom: 1px solid #ced6e0;
-            padding-bottom: 4px;
-        }
-
-        .btn-toolbar-left button {
-            margin-right: 6px;
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-
-        .table thead {
-            background: #2d3436;
-            color: #fff;
-            font-size: 13px;
-        }
-
-        .table tbody {
-            font-size: 13px;
-        }
-    </style>
 </head>
 
 <body class="theme-red">
@@ -111,7 +49,7 @@
     <div class="body">
 
         <input type="hidden" id="txtOperacion" value="0">
-        <input type="hidden" id="user_id">
+        <input type="hidden" id="funcionario_id">
         <input type="hidden" id="pre_estado" value="PENDIENTE">
 
         <!-- DATOS GENERALES -->
@@ -154,10 +92,26 @@
             <div class="section-title">Pedido y Proveedor</div>
             <div class="row clearfix">
 
-                <div class="col-sm-6">
-                    <input type="hidden" id="pedido_id" value="0">
-                    <input type="text" id="pedido" class="form-control" disabled onkeyup="buscarPedidos();" placeholder="Pedido">
-                    <div id="listaPedidos" style="display:none;"></div>
+                <div class="col-sm-12">
+                    <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:#2d3436;margin-bottom:4px;display:block;">Pedidos</label>
+                    <div style="position:relative;">
+                        <input type="text" id="pedido" class="form-control" disabled onkeyup="buscarPedidos();" placeholder="Buscar por número de pedido...">
+                        <div id="listaPedidos" style="display:none;"></div>
+                    </div>
+                    <table class="table table-bordered table-condensed" style="font-size:12px;margin-top:8px;">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Pedido</th>
+                                <th>Empresa</th>
+                                <th>Sucursal</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyPedidosSeleccionados">
+                            <tr><td colspan="5" class="text-center text-muted">Sin pedidos seleccionados</td></tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="col-sm-4">
@@ -237,7 +191,13 @@
                     <input type="text" id="det_costo" class="form-control" disabled placeholder="Costo">
                 </div>
 
-                <div class="col-sm-3">
+                <div class="col-sm-2">
+                    <select class="form-control" id="deposito_id_det" disabled>
+                        <option value="">-- Depósito --</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-2">
                     <button id="btnEditarDetalle" class="btn btn-warning waves-effect" onclick="editarDetalle();">
                         <i class="material-icons">edit</i>
                     </button>
@@ -257,12 +217,13 @@
                     <th>Cantidad</th>
                     <th>Costo</th>
                     <th>Sub Total</th>
+                    <th>Depósito</th>
                 </tr>
             </thead>
             <tbody id="tableDetalle"></tbody>
             <tfoot>
                 <tr>
-                    <th colspan="4">Total General</th>
+                    <th colspan="5">Total General</th>
                     <th id="txtTotalGral" class="text-right">0</th>
                 </tr>
             </tfoot>
@@ -320,9 +281,10 @@
 <script src="../../plugins/momentjs/moment.js"></script>
 <script src="../../plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
 
-<script src="../../js/admin.js"></script>
+<script src="../../js/admin.js?v=3"></script>
+<script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js"></script>
-<script src="metodos.js"></script>
+<script src="metodos.js?v=2"></script>
 
 </body>
 </html>

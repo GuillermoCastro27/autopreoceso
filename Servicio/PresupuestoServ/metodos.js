@@ -1,4 +1,4 @@
-cargarUserIdLogueado();
+﻿cargarFuncionarioIdLogueado();
 listar();
 campoFecha();
 function formatoTabla(){
@@ -351,12 +351,12 @@ function seleccionPresupuesto(
 }
 function buscarDiagnostico() {
     const texto = $("#diagnostico").val();
-    const user_id = $("#user_id").val();
+    const funcionario_id = $("#funcionario_id").val();
 
     $.ajax({
         url: getUrl() + "diagnosticocab/buscar",
         method: "POST",
-        data: { texto: texto, user_id: user_id },
+        data: { texto: texto, funcionario_id: funcionario_id },
         dataType: "json"
     })
     .done(function(resultado) {
@@ -451,12 +451,12 @@ function seleccionarDiagnostico(
 }
 function buscarPromociones() {
     const texto = $("#prom_cab_nombre").val();
-    const user_id = $("#user_id").val();
+    const funcionario_id = $("#funcionario_id").val();
 
     $.ajax({
         url: getUrl() + "promocionescab/buscar",
         method: "POST",
-        data: { texto: texto, user_id: user_id },
+        data: { texto: texto, funcionario_id: funcionario_id },
         dataType: "json"
     })
     .done(function(resultado) {
@@ -499,12 +499,12 @@ function seleccionarPromocion(id, nombre, fecha_inicio, fecha_fin, tipo_prom_nom
 }
 function buscarDescuentos() {
     const texto = $("#desc_cab_nombre").val();
-    const user_id = $("#user_id").val();
+    const funcionario_id = $("#funcionario_id").val();
 
     $.ajax({
         url: getUrl() + "descuentoscab/buscar",
         method: "POST",
-        data: { texto: texto, user_id: user_id },
+        data: { texto: texto, funcionario_id: funcionario_id },
         dataType: "json"
     })
     .done(function(resultado) {
@@ -661,7 +661,7 @@ function grabar() {
             promociones_cab_id: promociones,
             descuentos_cab_id: descuentos,
 
-            user_id: $("#user_id").val()
+            funcionario_id: $("#funcionario_id").val()
         }
     })
     .done(function (resultado) {
@@ -1040,13 +1040,13 @@ function seleccionPresupuestoDet(
     $(".form-line").addClass("focused");
 }
 
-function cargarUserIdLogueado() {
+function cargarFuncionarioIdLogueado() {
     try {
-        const datosSesion = JSON.parse(sessionStorage.getItem('datosSesion'));
+        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
         
-        if (datosSesion && datosSesion.user && datosSesion.user.id) {
-            $('#user_id').val(datosSesion.user.id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.id);
+        if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
+            $('#funcionario_id').val(datosSesion.user.funcionario_id);
+            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
             console.error('No se encontraron datos de sesión válidos');
             alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');

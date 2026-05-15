@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -35,51 +35,6 @@
 
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="../../css/themes/all-themes.css" rel="stylesheet" />
-    <style>
-body { background:#f1f2f6; }
-
-.card-industrial {
-    border-left: 6px solid #0984e3;
-    border-radius: 6px;
-    box-shadow: 0 6px 14px rgba(0,0,0,.12);
-    background: #fff;
-}
-
-.card-industrial .header {
-    background: #2d3436;
-    color: #fff;
-    padding: 15px 20px;
-}
-
-.section-box {
-    background: #f8f9fa;
-    border: 1px solid #dcdde1;
-    border-radius: 4px;
-    padding: 15px;
-    margin-bottom: 20px;
-}
-
-.section-title {
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: #2d3436;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #ced6e0;
-}
-
-.btn-toolbar-left button {
-    margin-right: 6px;
-    margin-bottom: 6px;
-    font-weight: 600;
-}
-
-.table thead {
-    background: #2d3436;
-    color: #fff;
-    font-size: 13px;
-}
-</style>
 </head>
 
 <body class="theme-red">
@@ -109,7 +64,7 @@ body { background:#f1f2f6; }
 
         <!-- CAMPOS OCULTOS -->
         <input type="hidden" id="txtOperacion" value="0">
-        <input type="hidden" id="user_id">
+        <input type="hidden" id="funcionario_id">
         <input type="hidden" id="desc_cab_estado" value="PENDIENTE">
 
         <!-- ================= DATOS GENERALES ================= -->
@@ -213,33 +168,25 @@ body { background:#f1f2f6; }
         </div>
 
         <!-- ================= BOTONERA ================= -->
-        <div class="section-box text-center">
-
-            <button id="btnAgregar" class="btn btn-success waves-effect" onclick="agregar();">
-                AGREGAR
+        <div class="btn-toolbar-left text-center">
+            <button id="btnAgregar" class="btn btn-success" onclick="agregar();">
+                <i class="material-icons">add</i> Agregar
             </button>
-
-            <button id="btnEditar" class="btn btn-primary waves-effect" onclick="editar();" disabled>
-                MODIFICAR
+            <button id="btnEditar" class="btn btn-primary" onclick="editar();" disabled>
+                <i class="material-icons">edit</i> Modificar
             </button>
-
-            <button id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();" disabled>
-                ANULAR
+            <button id="btnEliminar" class="btn btn-danger" onclick="eliminar();" disabled>
+                <i class="material-icons">delete</i> Anular
             </button>
-
-            <button id="btnConfirmar" class="btn btn-success waves-effect" onclick="confirmar();" disabled>
-                CONFIRMAR
+            <button id="btnConfirmar" class="btn btn-success" onclick="confirmar();" disabled>
+                <i class="material-icons">check_circle</i> Confirmar
             </button>
-
-            <button id="btnGrabar" class="btn btn-default waves-effect"
-                    onclick="confirmarOperacion();" disabled>
-                GRABAR
+            <button id="btnGrabar" class="btn btn-default" onclick="confirmarOperacion();" disabled>
+                <i class="material-icons">save</i> Grabar
             </button>
-
-            <button id="btnCancelar" class="btn btn-warning waves-effect" onclick="cancelar();" disabled>
-                CANCELAR
+            <button id="btnCancelar" class="btn btn-warning" onclick="cancelar();" disabled>
+                <i class="material-icons">close</i> Cancelar
             </button>
-
         </div>
 
     </div> <!-- FIN BODY -->
@@ -256,29 +203,14 @@ body { background:#f1f2f6; }
                             <div class="row clearfix" id="formDetalles">
                                 <input type="hidden" value="0" id="txtOperacionDetalle"/>
 
-                                <!-- CODIGO ITEM -->
                                 <div class="col-sm-1">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="item_id" class="form-control" disabled>
-                                            <label class="form-label">Código</label>
-                                        </div>
-                                    </div>
+                                    <input type="text" id="item_id" class="form-control" disabled placeholder="Código">
                                 </div>
-
-                                <!-- PRODUCTO -->
                                 <div class="col-sm-5">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();">
-                                            <label class="form-label">Producto</label>
-                                        </div>
-                                        <div id="listaProductos" style="display:none;"></div>
-                                    </div>
+                                    <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
+                                    <div id="listaProductos" style="display:none;"></div>
                                 </div>
-
-                                <!-- BOTONES DETALLE -->
-                                <div class="col-sm-3">
+                                <div class="col-sm-3" style="margin-top:10px;">
                                     <div class="icon-button-demo">
                                         <button type="button" id="btnAgregarDetalle" class="btn btn-success waves-effect" onclick="agregarDetalle();">
                                             <i class="material-icons">add</i>
@@ -408,7 +340,7 @@ body { background:#f1f2f6; }
     <script src="../../plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
 
     <!-- Custom Js -->
-    <script src="../../js/admin.js"></script>
+    <script src="../../js/admin.js?v=3"></script>
 
     <!-- Demo Js -->
     <script src="../../js/demo.js"></script>
@@ -416,7 +348,7 @@ body { background:#f1f2f6; }
     <!-- Ruta Js -->
     <script src="../../js/ruta.js"></script>
 
-    <script src="metodos.js"></script>
+    <script src="metodos.js?v=2"></script>
 </body>
 
 </html>

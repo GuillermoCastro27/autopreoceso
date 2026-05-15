@@ -1,4 +1,4 @@
-listar();
+﻿listar();
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -126,7 +126,7 @@ function mensajeOperacion(titulo,mensaje,tipo) {
 
 function listar(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/item-modelo/read",
+        url:getUrl() + "item-modelo/read",
         method:"GET",
         dataType: "json"
     })
@@ -172,61 +172,34 @@ function seleccionItemModelo(modelo_id,modelo_nom,item_id, item_decripcion, item
 }
 
 function grabar() {
-    var descripcion = $("#item_modelo_descrip").val().trim();
-    var producto = $("#item_decripcion").val().trim();
-    var modelo = $("#modelo_nom").val().trim();
+    var op = parseInt($("#txtOperacion").val());
 
-    // Validar que el campo descripción no esté vacío
-    if (descripcion === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return; 
+    if (op !== 3) {
+        if (!$("#item_decripcion").val().trim() || !$("#modelo_nom").val().trim() || !$("#item_modelo_descrip").val().trim()) {
+            swal('Error', 'Producto, modelo y descripción son obligatorios.', 'error');
+            return;
+        }
     }
-    if (producto === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return; 
-    }
-    if (modelo === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return; 
-    }
-    console.log({
-        id: $("#id").val(),
-        item_id: $("#item_id").val(),
-        modelo_id: $("#modelo_id").val(),
-        item_modelo_descrip: $("#item_modelo_descrip").val()
-    });
+
     var endpoint = "item-modelo/create";
     var metodo = "POST";
-    if ($("#txtOperacion").val() == 2) {
-        endpoint = "item-modelo/update/" + $("#id").val();
+    if (op === 2) {
+        endpoint = "item-modelo/update/" + $("#modelo_id").val() + "/" + $("#item_id").val();
         metodo = "PUT";
     }
-    if ($("#txtOperacion").val() == 3) {
-        endpoint = "item-modelo/delete/" + $("#id").val();
+    if (op === 3) {
+        endpoint = "item-modelo/delete/" + $("#modelo_id").val() + "/" + $("#item_id").val();
         metodo = "DELETE";
     }
+
     $.ajax({
-        url: "http://127.0.0.1:8000/Proyecto_tp/" + endpoint,
+        url: getUrl() + "" + endpoint,
         method: metodo,
         dataType: "json",
         data: {
-            'id': $("#id").val(),
-            'item_id': $("#item_id").val(),  // Cambiado para enviar item_id
-            'modelo_id': $("#modelo_id").val(), // Cambiado para enviar modelo_id
-            'item_modelo_descrip': $("#item_modelo_descrip").val(), // Cambiado para enviar item_modelo_descrip
-            'operacion': $("#txtOperacion").val()
+            'item_id': $("#item_id").val(),
+            'modelo_id': $("#modelo_id").val(),
+            'item_modelo_descrip': $("#item_modelo_descrip").val()
         }
     })
     .done(function(resultado) {
@@ -240,14 +213,26 @@ function grabar() {
             }
         });
     })
-    .fail(function(a, b, c) {
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        if (xhr.status === 422) {
+            var msg = '';
+            if (res && res.errors) {
+                $.each(res.errors, function(k, v){ msg += v[0] + '\n'; });
+            } else {
+                msg = 'Ningún campo debe estar vacío.';
+            }
+            swal('Error de validación', msg, 'error');
+        } else if (xhr.status === 500 && xhr.responseText.indexOf('SQLSTATE[23') !== -1) {
+            swal('Error', 'Este registro está en uso y no puede ser eliminado.', 'error');
+        } else {
+            swal('Error', res ? (res.mensaje || res.message || 'Error inesperado.') : 'Error inesperado.', 'error');
+        }
     });
 }
 function buscarProductos(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/items/buscar",
+        url:getUrl() + "items/buscar",
         method: "POST",
         dataType: "json",
         data:{
@@ -281,7 +266,7 @@ function seleccionProducto(item_id, item_decripcion) {
 
 function buscarModelo(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/modelo/read",
+        url:getUrl() + "modelo/read",
         method:"GET",
         dataType: "json",
         data: {

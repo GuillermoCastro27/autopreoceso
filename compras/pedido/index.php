@@ -25,68 +25,6 @@
     <!-- AdminBSB -->
     <link href="../../css/style.css" rel="stylesheet">
     <link href="../../css/themes/all-themes.css" rel="stylesheet" />
-
-    <!-- ===== ESTILO INDUSTRIAL ===== -->
-    <style>
-        body { background:#f1f2f6; }
-
-        .card-industrial {
-            border-left: 6px solid #0984e3;
-            border-radius: 6px;
-            box-shadow: 0 6px 14px rgba(0,0,0,.12);
-            background: #fff;
-        }
-
-        .card-industrial .header {
-            background: #2d3436;
-            color: #fff;
-            padding: 15px 20px;
-        }
-
-        .card-industrial .header h2 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        .card-industrial .header small {
-            color: #dfe6e9;
-        }
-
-        .section-box {
-            background: #f8f9fa;
-            border: 1px solid #dcdde1;
-            border-radius: 4px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-size: 13px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #2d3436;
-            margin-bottom: 12px;
-            border-bottom: 1px solid #ced6e0;
-            padding-bottom: 4px;
-        }
-
-        .btn-toolbar-left button {
-            margin-right: 6px;
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-
-        .table thead {
-            background: #2d3436;
-            color: #fff;
-            font-size: 13px;
-        }
-
-        .table tbody {
-            font-size: 13px;
-        }
-    </style>
 </head>
 
 <body class="theme-red">
@@ -113,7 +51,7 @@
     <div class="body">
 
         <input type="hidden" id="txtOperacion" value="0">
-        <input type="hidden" id="user_id">
+        <input type="hidden" id="funcionario_id">
         <input type="hidden" id="ped_estado" value="PENDIENTE">
 
         <div class="section-box">
@@ -201,12 +139,18 @@
                     <div id="listaProductos" style="display:none;"></div>
                 </div>
 
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <input type="text" id="cantidad_stock" class="form-control" disabled placeholder="Disponible">
                 </div>
 
                 <div class="col-sm-2">
                     <input type="text" id="det_cantidad" class="form-control" disabled placeholder="Cantidad">
+                </div>
+
+                <div class="col-sm-3">
+                    <select class="form-control" id="deposito_id_det" disabled>
+                        <option value="">-- Depósito --</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -250,6 +194,7 @@
                     <th>Producto</th>
                     <th>Cantidad</th>
                     <th>Cantidad Disponible</th>
+                    <th>Depósito</th>
                 </tr>
             </thead>
             <tbody id="tableDetalle"></tbody>
@@ -311,10 +256,10 @@
 <script src="../../plugins/momentjs/moment.js"></script>
 <script src="../../plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
 
-<script src="../../js/admin.js"></script>
+<script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js"></script>
-<script src="metodos.js"></script>
+<script src="metodos.js?v=3"></script>
 
 </body>
 </html>

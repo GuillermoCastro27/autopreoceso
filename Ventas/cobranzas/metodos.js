@@ -1,7 +1,7 @@
-// Lista los registros de pedidos utilizando DataTables
-// Cargar user_id del usuario logueado
+﻿// Lista los registros de pedidos utilizando DataTables
+// Cargar funcionario_id del usuario logueado
 let cuotasActualesCobro = [];
-cargarUserIdLogueado();
+cargarFuncionarioIdLogueado();
 listar();
 campoFecha();
 // Configura el formato de la tabla para exportar en diferentes formatos
@@ -148,8 +148,9 @@ function editar() {
     $("#fecha_cobro_diferido").prop("disabled", true);
 
     // ==================================================
-    // 🔹 MEDIOS DE COBRO (SOLO HABILITAR)
+    // 🔹 MEDIOS DE COBRO (HABILITAR TODOS)
     // ==================================================
+    $("#monto_efectivo").prop("disabled", false);
     habilitarCobroTarjeta(true);
     habilitarCobroCheque(true);
 
@@ -891,7 +892,7 @@ function seleccionFormaCobro(id, descripcion) {
 function controlarCamposFormaCobro(descripcion) {
 
     // ==================================================
-    // 🔄 RESET GENERAL
+    // 🔄 RESET GENERAL (solo campos adicionales, no efectivo)
     // ==================================================
     $("#numero_documento").prop("disabled", true).val("");
     $("#nro_voucher").prop("disabled", true).val("");
@@ -907,16 +908,8 @@ function controlarCamposFormaCobro(descripcion) {
     $("#marca_tarjeta_id").val("");
     $("#entidad_adherida_id").val("");
 
-    // 🔥 EFECTIVO
-    $("#monto_efectivo").prop("disabled", true).val("");
-    $("#vuelto").val("");
-
-    // ==================================================
-    // 💵 EFECTIVO
-    // ==================================================
-    if (descripcion.includes("Efectivo")) {
-        $("#monto_efectivo").prop("disabled", false);
-    }
+    // 💵 Efectivo siempre disponible (permite combinarlo con tarjeta/cheque)
+    $("#monto_efectivo").prop("disabled", false);
 
     // ==================================================
     // 🧾 CHEQUE
@@ -1539,11 +1532,8 @@ function grabar() {
     let montoTarjeta = parseFloat($("#monto_tarjeta").val()) || 0;
     let montoCheque  = parseFloat($("#monto_cheque").val()) || 0;
 
-    // 👇 EFECTIVO IMPUTADO (NO EL ENTREGADO)
-    let montoEfectivo = 0;
-    if (!$("#monto_efectivo").prop("disabled")) {
-        montoEfectivo = parseFloat($("#monto_efectivo").val()) || 0;
-    }
+    // 👇 EFECTIVO IMPUTADO (siempre disponible para combinar con otros medios)
+    let montoEfectivo = parseFloat($("#monto_efectivo").val()) || 0;
 
     // 🔒 VALIDACIÓN: suma de medios = importe
     if ((montoTarjeta + montoCheque + montoEfectivo) !== importeCobro) {
@@ -1562,7 +1552,7 @@ function grabar() {
         cobro_fecha: $("#cobro_fecha").val(),
         forma_cobro_id: $("#forma_cobro_id").val(),
         clientes_id: $("#clientes_id").val(),
-        user_id: $("#user_id").val(),
+        funcionario_id: $("#funcionario_id").val(),
         apertura_cierre_caja_id: $("#apertura_cierre_caja_id").val(),
         ventas_cab_id: $("#ventas_cab_id").val(),
         cobro_importe: importeCobro,
@@ -1869,7 +1859,7 @@ function listarCobroCheque(cobro_id) {
 
 function buscarEmpresas() {
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/empresa/read",
+        url:getUrl() + "empresa/read",
         method:"GET",
         dataType: "json"
     })
@@ -1902,14 +1892,14 @@ function seleccionEmpresa(id, emp_razon_social, emp_direccion, emp_telefono, emp
 
 function buscarSucursal(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/sucursal/read",
+        url:getUrl() + "sucursal/read",
         method:"GET",
         dataType: "json"
     })
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.empresa_id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
         }
         lista += "</ul>";
         $("#listaSucursal").html(lista);
@@ -1932,14 +1922,14 @@ function seleccionSucursal(empresa_id,suc_razon_social,suc_direccion,suc_telefon
     $("#listaSucursal").attr("style","display:none;");
 }
 
-// Función para cargar el user_id real del usuario logueado
-function cargarUserIdLogueado() {
+// Función para cargar el funcionario_id del usuario logueado
+function cargarFuncionarioIdLogueado() {
     try {
-        const datosSesion = JSON.parse(sessionStorage.getItem('datosSesion'));
+        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
         
-        if (datosSesion && datosSesion.user && datosSesion.user.id) {
-            $('#user_id').val(datosSesion.user.id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.id);
+        if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
+            $('#funcionario_id').val(datosSesion.user.funcionario_id);
+            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
             console.error('No se encontraron datos de sesión válidos');
             alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');

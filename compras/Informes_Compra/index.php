@@ -24,62 +24,6 @@
     <!-- AdminBSB -->
     <link href="../../css/style.css" rel="stylesheet">
     <link href="../../css/themes/all-themes.css" rel="stylesheet" />
-
-    <!-- ===== ESTILO INDUSTRIAL (SUAVE) ===== -->
-    <style>
-        body { background:#f1f2f6; }
-
-        .card-industrial {
-            border-left: 6px solid #0984e3;
-            border-radius: 6px;
-            box-shadow: 0 6px 14px rgba(0,0,0,.12);
-            background: #fff;
-        }
-
-        .card-industrial .header {
-            background: #2d3436;
-            color: #fff;
-            padding: 15px 20px;
-        }
-
-        .card-industrial .header h2 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        .card-industrial .header small {
-            color: #dfe6e9;
-        }
-
-        .filtro-box {
-            background: #f8f9fa;
-            border: 1px solid #dcdde1;
-            border-radius: 4px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        .filtro-title {
-            font-size: 13px;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            border-bottom: 1px solid #ced6e0;
-            padding-bottom: 4px;
-            color: #2d3436;
-        }
-
-        .table thead {
-            background: #2d3436;
-            color: #fff;
-            font-size: 13px;
-        }
-
-        .table tbody {
-            font-size: 13px;
-        }
-    </style>
 </head>
 
 <body class="theme-red">
@@ -125,7 +69,7 @@
                         <option value="ordenes_compras">Órdenes de compra</option>
                         <option value="compras">Compras</option>
                         <option value="libro_compras">Libro de compras</option>
-                        <option value="notas_remision">Notas de Remisión</option>
+                        <option value="nota_remi_comp">Notas de Remisión</option>
                         <option value="ajuste_inventario">Ajuste de inventario</option>
                         <option value="notas_compra">Notas de compra</option>
                     </select>
@@ -139,6 +83,9 @@
                 </div>
             </div>
         </div>
+
+        <!-- ================= TOTALES ================= -->
+        <div id="resumen_totales" class="filtro-box" style="display:none; margin-bottom:12px;"></div>
 
         <!-- ================= TABLA ================= -->
         <div class="table-responsive" id="contenedor_tabla" style="display:none;">
@@ -184,10 +131,10 @@
 <script src="../../plugins/momentjs/moment.js"></script>
 <script src="../../plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
 
-<script src="../../js/admin.js"></script>
+<script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js"></script>
-<script src="metodos.js"></script>
+<script src="metodos.js?v=4"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>

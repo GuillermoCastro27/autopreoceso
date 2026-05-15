@@ -1,9 +1,27 @@
-// Cargar user_id del usuario logueado
-cargarUserIdLogueado();
+﻿var pedidosSeleccionados = [];
+
+// Cargar funcionario_id del usuario logueado
+cargarFuncionarioIdLogueado();
 // Función para cargar la lista de presupuestos al cargar la página.
 listar();
 // Función para configurar el formato de fecha en ciertos campos.
 campoFecha();
+
+var listaDepositos = [];
+function cargarDepositos() {
+    $.ajax({ url: getUrl()+'deposito/read', method:'GET', dataType:'json', success:function(data){ listaDepositos=data; } });
+}
+cargarDepositos();
+function getSelectDeposito(id_sel) {
+    var opts = '<option value="">-- Depósito --</option>';
+    listaDepositos.forEach(function(d){ opts += '<option value="'+d.id+'"'+(d.id==id_sel?' selected':'')+'>'+d.dep_nombre+'</option>'; });
+    return opts;
+}
+function getNombreDeposito(id) {
+    var d = listaDepositos.find(function(x){ return x.id==id; });
+    return d ? d.dep_nombre : '-';
+}
+
 // Configura el formato de la tabla para exportar en diferentes formatos
 function formatoTabla(){
     //Exportable table
@@ -36,7 +54,7 @@ function formatoTabla(){
                 title:'Listado de Presupuestos'
             }
         ],
-        iDisplayLength:3,
+        iDisplayLength:25,
         language:{
             sSearch: 'Buscar: ',
             sInfo: 'Mostrando resultados del _START_ al _END_ de un total de _TOTAL_ registros',
@@ -65,8 +83,8 @@ function agregar(){
     $("#prov_razonsocial").removeAttr("disabled");
     $("#pedido").removeAttr("disabled");
     $("#emp_razon_social").attr("disabled","true");
-    $("#suc_razon_social").attr("disabled","true");
-    
+    $("#suc_razon_social").removeAttr("disabled");
+
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
     $("#btnEliminar").attr("disabled","true");
@@ -76,6 +94,9 @@ function agregar(){
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
+
+    pedidosSeleccionados = [];
+    renderizarPedidosSeleccionados();
 
     $(".form-line").attr("class","form-line focused");
     $("#registros").attr("style","display:none;");
@@ -90,7 +111,7 @@ function editar(){
     $("#prov_razonsocial").removeAttr("disabled");
     $("#pedido").removeAttr("disabled");
     $("#emp_razon_social").attr("disabled","true");
-    $("#suc_razon_social").attr("disabled","true");
+    $("#suc_razon_social").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -99,6 +120,9 @@ function editar(){
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
+
+    pedidosSeleccionados = [];
+    renderizarPedidosSeleccionados();
 
     $(".form-line").attr("class","form-line focused");
 }
@@ -190,26 +214,24 @@ function listar(){
                 + rs.prov_razonsocial + "','"
                 + rs.prov_ruc + "','"
                 + rs.prov_telefono + "','"
-                + rs.prov_correo + "',"
-                + rs.pedido_id + ",'"
-                + rs.pedido + "')\">";
+                + rs.prov_correo + "')\">";
 
             lista += "<td>" + rs.id + "</td>";
             lista += "<td>" + rs.pre_fecha + "</td>";
             lista += "<td>" + rs.pre_vence + "</td>";
             lista += "<td>" + rs.pre_observaciones + "</td>";
-            lista += "<td>" + rs.name + "</td>";
+            lista += "<td>" + (rs.funcionario || rs.name || rs.encargado || '-') + "</td>";
             lista += "<td>" + rs.pre_estado + "</td>";
-            lista += "<td>" + rs.nro_pedido + "</td>";
+            lista += "<td>" + (rs.pedidos || '-') + "</td>";
             lista += "</tr>";
         }
 
         $("#tableBody").html(lista);
         formatoTabla();
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr,b,c){
+        if (xhr.status !== 403) swal('Error', 'No se pudo cargar el listado.', 'error');
+        console.log(xhr.responseText);
     });
 }
 
@@ -218,8 +240,7 @@ function seleccionPresupuesto(
     id, empresa_id, sucursal_id,
     emp_razon_social, suc_razon_social,
     pre_fecha, pre_vence, pre_observaciones, pre_estado,
-    proveedor_id, prov_razonsocial, prov_ruc, prov_telefono, prov_correo,
-    pedido_id, pedido
+    proveedor_id, prov_razonsocial, prov_ruc, prov_telefono, prov_correo
 ){
     $("#id").val(id);
     $("#empresa_id").val(empresa_id);
@@ -237,8 +258,8 @@ function seleccionPresupuesto(
     $("#prov_telefono").val(prov_telefono);
     $("#prov_correo").val(prov_correo);
 
-    $("#pedido_id").val(pedido_id);
-    $("#pedido").val(pedido);
+    pedidosSeleccionados = [];
+    renderizarPedidosSeleccionados();
 
     $("#registros").hide();
     $("#detalle").show();
@@ -273,40 +294,22 @@ function grabar(){
     var observaciones = $("#pre_observaciones").val().trim();
     var fecha = $("#pre_fecha").val().trim();
     var proveedor = $("#prov_razonsocial").val().trim();
-    var pedido = $("#pedido").val().trim();
 
-    // Validar que el campo descripción no esté vacío
     if (observaciones === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return; 
+        swal("Error", "Las observaciones no deben estar vacías.", "error");
+        return;
     }
     if (fecha === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return; 
+        swal("Error", "Debe ingresar la fecha.", "error");
+        return;
     }
     if (proveedor === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return; 
+        swal("Error", "Debe seleccionar un proveedor.", "error");
+        return;
     }
-    if (pedido === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return; 
+    if (pedidosSeleccionados.length === 0) {
+        swal("Error", "Debe agregar al menos un pedido.", "error");
+        return;
     }
     var endpoint = "presupuesto/create";
     var metodo = "POST";
@@ -330,14 +333,14 @@ function grabar(){
         url:getUrl()+endpoint,
         method:metodo,
         dataType: "json",
-        data: { 
-            'id': $("#id").val(), 
+        data: {
+            'id': $("#id").val(),
             'pre_fecha': $("#pre_fecha").val(),
-            'pre_vence': $("#pre_vence").val(), 
-            'pre_observaciones': $("#pre_observaciones").val(), 
-            'user_id': $("#user_id").val(),  
-            'proveedor_id': $("#proveedor_id").val(),  
-            'pedido_id': $("#pedido_id").val(),
+            'pre_vence': $("#pre_vence").val(),
+            'pre_observaciones': $("#pre_observaciones").val(),
+            'funcionario_id': $("#funcionario_id").val(),
+            'proveedor_id': $("#proveedor_id").val(),
+            'pedidos_ids': JSON.stringify(pedidosSeleccionados.map(function(p){ return p.pedido_id; })),
             'pre_estado': estado,
             'empresa_id': $("#empresa_id").val(),
             'sucursal_id': $("#sucursal_id").val(),
@@ -363,10 +366,11 @@ function grabar(){
             }
         });
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
-    })
+    .fail(function(xhr,b,c){
+        if (xhr.status === 403) return;
+        swal('Error', 'No se pudo completar la operación.', 'error');
+        console.log(xhr.responseText);
+    });
 }
 function campoFecha(){
     $('.datetimepicker').bootstrapMaterialDatePicker({
@@ -379,8 +383,8 @@ function campoFecha(){
 // Prepara el formulario para agregar un nuevo detalle al presupuesto.
 function agregarDetalle(){
     $("#txtOperacionDetalle").val(1);
-    //$("#item_decripcion").removeAttr("disabled");
     $("#det_costo").removeAttr("disabled");
+    $("#deposito_id_det").html(getSelectDeposito(null)).removeAttr("disabled");
     $("#btnAgregarDetalle").attr("style","display:none");
     $("#btnEditarDetalle").attr("style","display:none");
     $("#btnEliminarDetalle").attr("style","display:none");
@@ -390,8 +394,8 @@ function agregarDetalle(){
 // Prepara el formulario para editar un detalle existente del presupuesto
 function editarDetalle(){
     $("#txtOperacionDetalle").val(2);
-    //$("#item_decripcion").removeAttr("disabled");
     $("#det_costo").removeAttr("disabled");
+    $("#deposito_id_det").removeAttr("disabled");
     $("#btnAgregarDetalle").attr("style","display:none");
     $("#btnEditarDetalle").attr("style","display:none");
     $("#btnEliminarDetalle").attr("style","display:none");
@@ -429,15 +433,16 @@ function grabarDetalle(){
             "presupuesto_id":$("#id").val(),
             "item_id":$("#item_id").val(),
             "det_cantidad":$("#det_cantidad").val(),
-            "det_costo":$("#det_costo").val()
+            "det_costo":$("#det_costo").val(),
+            "deposito_id":$("#deposito_id_det").val()
         }
     })
     .done(function(respuesta){
         listarDetalles();
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr,b,c){
+        if (xhr.status !== 403) swal('Error', 'No se pudo guardar el detalle.', 'error');
+        console.log(xhr.responseText);
     })
 
     $("#btnAgregarDetalle").attr("style","display:inline");
@@ -471,9 +476,8 @@ function buscarProductos(){
         $("#listaProductos").html(lista);
         $("#listaProductos").attr("style","display:block; position: absolute; z-index: 2000;");
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr,b,c){
+        if (xhr.status !== 403) swal('Error', 'No se pudo buscar productos.', 'error');
     });
 }
 
@@ -528,13 +532,15 @@ function listarDetalles() {
                     + rs.item_id + ",'"
                     + rs.item_decripcion + "',"
                     + cantidad + ","
-                    + costo + ")\">";
+                    + costo + ","
+                    + (rs.deposito_id||0) + ")\">";
 
                 lista += "<td>" + rs.item_id + "</td>";
                 lista += "<td>" + rs.item_decripcion + "</td>";
                 lista += "<td>" + cantidad + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(costo) + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>";
+                lista += "<td>" + getNombreDeposito(rs.deposito_id) + "</td>";
                 lista += "</tr>";
 
                 cantidadDetalle++;
@@ -553,17 +559,18 @@ function listarDetalles() {
             $("#btnConfirmar").prop("disabled", true);
         }
     })
-    .fail(function(a,b,c){
-        alert("Error al listar detalles");
-        console.log(a.responseText);
+    .fail(function(xhr,b,c){
+        if (xhr.status !== 403) swal('Error', 'No se pudo cargar los detalles.', 'error');
+        console.log(xhr.responseText);
     });
 }
 // Rellena el formulario con los datos de un detalle seleccionado.
-function seleccionDetalle(item_id, item_decripcion, det_cantidad, det_costo){
+function seleccionDetalle(item_id, item_decripcion, det_cantidad, det_costo, deposito_id){
     $("#item_id").val(item_id);
     $("#item_decripcion").val(item_decripcion);
     $("#det_cantidad").val(det_cantidad);
     $("#det_costo").val(formatearNumero(det_costo));
+    $("#deposito_id_det").html(getSelectDeposito(deposito_id));
 }
 
 // Realiza una búsqueda de proveedores y muestra los resultados.
@@ -585,9 +592,8 @@ function buscarProveedores(){
         $("#listaProveedores").html(lista);
         $("#listaProveedores").attr("style","display:block; position: absolute; z-index: 2000;");
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr,b,c){
+        if (xhr.status !== 403) swal('Error', 'No se pudo buscar proveedores.', 'error');
     });
 }
 
@@ -612,8 +618,7 @@ function buscarPedidos(){
         method: "POST",
         dataType: "json",
         data:{
-            "user_id":$("#user_id").val(),
-            "name":$("#pedido").val()
+            "numero":$("#pedido").val()
         }
     })
     .done(function(resultado){
@@ -625,30 +630,59 @@ function buscarPedidos(){
         $("#listaPedidos").html(lista);
         $("#listaPedidos").attr("style","display:block; position: absolute; z-index: 2000;");
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr,b,c){
+        if (xhr.status !== 403) swal('Error', 'No se pudo buscar pedidos.', 'error');
     });
 }
 
-// Rellena el formulario con los datos de un pedido seleccionado.
-function seleccionPedido(pedido_id,empresa_id,sucursal_id,emp_razon_social,suc_razon_social,ped_vence,pedido){
-    $("#pedido_id").val(pedido_id);
-    $("#empresa_id").val(empresa_id);
-    $("#sucursal_id").val(sucursal_id);
-    $("#pedido").val(pedido);
-    $("#pre_vence").val(ped_vence);
-    $("#emp_razon_social").val(emp_razon_social);
-    $("#suc_razon_social").val(suc_razon_social);
+// Agrega el pedido seleccionado al array y actualiza la tabla.
+function seleccionPedido(pedido_id, empresa_id, sucursal_id, emp_razon_social, suc_razon_social, ped_vence, pedido) {
+    if (pedidosSeleccionados.find(function(p){ return p.pedido_id === pedido_id; })) {
+        swal("Aviso", "Este pedido ya fue agregado.", "warning");
+        $("#listaPedidos").hide().html("");
+        return;
+    }
 
-    $("#listaPedidos").html("");
-    $("#listaPedidos").attr("style","display:none;");
+    pedidosSeleccionados.push({ pedido_id: pedido_id, empresa_id: empresa_id, sucursal_id: sucursal_id, emp_razon_social: emp_razon_social, suc_razon_social: suc_razon_social, ped_vence: ped_vence, pedido: pedido });
 
-    $(".form-line").attr("class","form-line focused");
+    if (pedidosSeleccionados.length === 1) {
+        $("#empresa_id").val(empresa_id);
+        $("#emp_razon_social").val(emp_razon_social);
+        $("#pre_vence").val(ped_vence);
+    }
+
+    $("#pedido").val("");
+    $("#listaPedidos").hide().html("");
+    renderizarPedidosSeleccionados();
 }
+
+function renderizarPedidosSeleccionados() {
+    if (pedidosSeleccionados.length === 0) {
+        $("#bodyPedidosSeleccionados").html('<tr><td colspan="5" class="text-center text-muted">Sin pedidos seleccionados</td></tr>');
+        return;
+    }
+    var html = "";
+    pedidosSeleccionados.forEach(function(p, i) {
+        html += "<tr>"
+            + "<td>" + p.pedido_id + "</td>"
+            + "<td>" + p.pedido + "</td>"
+            + "<td>" + p.emp_razon_social + "</td>"
+            + "<td>" + p.suc_razon_social + "</td>"
+            + "<td><button type='button' class='btn btn-xs btn-danger' onclick='removerPedido(" + i + ")'>"
+            + "<i class='material-icons' style='font-size:14px;line-height:1;'>close</i></button></td>"
+            + "</tr>";
+    });
+    $("#bodyPedidosSeleccionados").html(html);
+}
+
+function removerPedido(index) {
+    pedidosSeleccionados.splice(index, 1);
+    renderizarPedidosSeleccionados();
+}
+
 function buscarEmpresas() {
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/empresa/read",
+        url: getUrl() + "empresa/read",
         method:"GET",
         dataType: "json"
     })
@@ -662,9 +696,8 @@ function buscarEmpresas() {
             seleccionEmpresa(primeraEmpresa.id, primeraEmpresa.emp_razon_social, primeraEmpresa.emp_direccion, primeraEmpresa.emp_telef, primeraEmpresa.emp_correo);
         }
     })
-    .fail(function(a,b,c) {
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr,b,c) {
+        if (xhr.status !== 403) swal('Error', 'No se pudo cargar las empresas.', 'error');
     });
 }
 
@@ -681,23 +714,22 @@ function seleccionEmpresa(id, emp_razon_social, emp_direccion, emp_telef, emp_co
 
 function buscarSucursal(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/sucursal/read",
+        url: getUrl() + "sucursal/read",
         method:"GET",
         dataType: "json"
     })
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.empresa_id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
         }
         lista += "</ul>";
         $("#listaSucursal").html(lista);
         $("#listaSucursal").attr("style","display:block; position:absolute; z-index:2000;");
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
-    })
+    .fail(function(xhr,b,c){
+        if (xhr.status !== 403) swal('Error', 'No se pudo cargar las sucursales.', 'error');
+    });
 }
 
 function seleccionSucursal(empresa_id,suc_razon_social,suc_direccion,suc_telefono,suc_correo){
@@ -711,22 +743,20 @@ function seleccionSucursal(empresa_id,suc_razon_social,suc_direccion,suc_telefon
     $("#listaSucursal").attr("style","display:none;");
 }
 
-// Función para cargar el user_id real del usuario logueado
-function cargarUserIdLogueado() {
+// Función para cargar el funcionario_id del usuario logueado
+function cargarFuncionarioIdLogueado() {
     try {
-        const datosSesion = JSON.parse(sessionStorage.getItem('datosSesion'));
+        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
         
-        if (datosSesion && datosSesion.user && datosSesion.user.id) {
-            $('#user_id').val(datosSesion.user.id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.id);
+        if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
+            $('#funcionario_id').val(datosSesion.user.funcionario_id);
+            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
             console.error('No se encontraron datos de sesión válidos');
-            alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');
-            window.location.href = '../../index.html';
+            window.location.href = '/taller_front/index.html';
         }
     } catch (error) {
         console.error('Error al cargar datos de usuario:', error);
-        alert('Error al cargar datos del usuario. Inicie sesión nuevamente.');
-        window.location.href = '../../index.html';
+        window.location.href = '/taller_front/index.html';
     }
 }

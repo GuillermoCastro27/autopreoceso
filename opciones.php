@@ -142,6 +142,15 @@
                     <!-- #END# Notifications -->
                     <!-- Tasks -->
                     <!-- #END# Tasks -->
+                    <!-- Cerrar Sesión -->
+                    <li>
+                        <a href="javascript:void(0);" onclick="cerrarSesion();"
+                           style="padding-top:12px; padding-bottom:12px; display:flex; align-items:center; gap:4px;">
+                            <i class="material-icons" style="color:#e74c3c; vertical-align:middle;">power_settings_new</i>
+                            <span style="color:#fff; font-size:13px; font-weight:600;">Cerrar Sesión</span>
+                        </a>
+                    </li>
+                    <!-- #END# Cerrar Sesión -->
                 </ul>
             </div>
         </div>
@@ -175,27 +184,17 @@
                             <li>
                                 <a href="javascript:void(0);" class="menu-toggle">
                                     <i class="material-icons">trending_down</i>
-                                    <span>Seguridad</span>
-                                </a>
-                                <ul class="ml-menu">
-                                    <li><a href="/taller_front/referenciales/roles"><span>Mantener Roles</span></a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" class="menu-toggle">
-                                    <i class="material-icons">trending_down</i>
                                     <span>Ref_Compras</span>
                                 </a>
                                 <ul class="ml-menu">
                                     <li><a href="/taller_front/referenciales/proveedor"><span>Mantener Proveedores</span></a></li>
                                     <li><a href="/taller_front/referenciales/items"><span>Mantener Items</span></a></li>
-                                    <li><a href="/taller_front/referenciales/tipo_item"><span>Mantener Tipo Items</span></a></li>
-                                    <li><a href="/taller_front/referenciales/marca"><span>Mantener Marca</span></a></li>
-                                    <!--<li><a href="/taller_front/referenciales/item_marca"><span>Mantener Item Marca</span></a></li>-->
-                                    <li><a href="/taller_front/referenciales/modelo"><span>Mantener Modelo</span></a></li>
-                                    <!-- <li><a href="/taller_front/referenciales/item_modelo"><span>Mantener Item Modelo</span></a></li>-->
-                                    <li><a href="/taller_front/referenciales/tipo_impuesto"><span>Mantener Tipo Impuesto</span></a></li>
                                     <li><a href="/taller_front/referenciales/Motivo_ajuste"><span>Mantener Motivo Ajuste</span></a></li>
+                                    <li><a href="/taller_front/referenciales/tipo_item"><span>Mantener Tipo Items</span></a></li>
+                                    <li><a href="/taller_front/referenciales/tipo_impuesto"><span>Mantener Tipo Impuesto</span></a></li>
+                                    <li><a href="/taller_front/referenciales/marca"><span>Mantener Marca</span></a></li>
+                                    <li><a href="/taller_front/referenciales/modelo"><span>Mantener Modelo</span></a></li>
+                                    <li><a href="/taller_front/referenciales/deposito"><span>Mantener Depósitos</span></a></li>
                                 </ul>
                             </li>
                             <li>
@@ -205,11 +204,11 @@
                                 </a>
                                 <ul class="ml-menu">
                                     <li><a href="/taller_front/referenciales/tipo_servicio"><span>Mantener Tipo Servicio</span></a></li>
-                                    <li><a href="/taller_front/referenciales/tipo_vehiculo"><span>Mantener Tipo Vehículo</span></a></li>
-                                    <li><a href="/taller_front/referenciales/Tipo_diagnostico"><span>Mantener Tipo Diagnostico</span></a></li>
                                     <li><a href="/taller_front/referenciales/tipo_promociones"><span>Mantener Tipo Promociones</span></a></li>
                                     <li><a href="/taller_front/referenciales/tipo_descuentos"><span>Mantener Tipo Descuentos</span></a></li>
+                                    <li><a href="/taller_front/referenciales/Tipo_diagnostico"><span>Mantener Tipo Diagnostico</span></a></li>
                                     <li><a href="/taller_front/referenciales/equipo_trabajo"><span>Mantener Equipo de Trabajo</span></a></li>
+                                    <li><a href="/taller_front/referenciales/tipo_vehiculo"><span>Mantener Tipo Vehículo</span></a></li>
                                     <li><a href="/taller_front/referenciales/tipo_contrato"><span>Mantener Tipo de Contrato</span></a></li>
                                 </ul>
                             </li>
@@ -219,11 +218,25 @@
                                     <span>Ref_Ventas</span>
                                 </a>
                                 <ul class="ml-menu">
+                                    <li><a href="/taller_front/referenciales/clientes"><span>Clientes</span></a></li>
                                     <li><a href="/taller_front/referenciales/caja"><span>Mantener Caja</span></a></li>
                                     <li><a href="/taller_front/referenciales/entidad_emisora"><span>Mantener Entidad Emisora</span></a></li>
                                     <li><a href="/taller_front/referenciales/marca_tarjeta"><span>Mantener Marca de Tarjeta</span></a></li>
-                                    <li><a href="/taller_front/referenciales/entidad_adherida"><span>Mantener Entidad Adherida</span></a></li>
                                     <li><a href="/taller_front/referenciales/forma_cobro"><span>Mantener Forma de Cobro</span></a></li>
+                                    <li><a href="/taller_front/referenciales/entidad_adherida"><span>Mantener Entidad Adherida</span></a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    <i class="material-icons">trending_down</i>
+                                    <span>Seguridad</span>
+                                </a>
+                                <ul class="ml-menu">
+                                    <li><a href="/taller_front/referenciales/acceso"><span>Mantener Accesos</span></a></li>
+                                    <li><a href="/taller_front/referenciales/users"><span>Mantener Usuarios</span></a></li>
+                                    <li><a href="/taller_front/referenciales/permisos"><span>Mantener Permisos</span></a></li>
+                                    <li><a href="/taller_front/referenciales/roles"><span>Mantener Roles</span></a></li>
+                                    <li><a href="/taller_front/referenciales/modulos"><span>Mantener Módulos</span></a></li>
                                 </ul>
                             </li>
                             <li>
@@ -232,11 +245,10 @@
                                     <span>Ref_varios</span>
                                 </a>
                                 <ul class="ml-menu">
-                                    <li><a href="/taller_front/referenciales/paises"><span>Paises</span></a></li>
-                                    <li><a href="/taller_front/referenciales/ciudades"><span>Ciudades</span></a></li>
-                                    <li><a href="/taller_front/referenciales/nacionalidad"><span>Nacionalidad</span></a></li>
-                                    <li><a href="/taller_front/referenciales/clientes"><span>Clientes</span></a></li>
                                     <li><a href="/taller_front/referenciales/funcionario"><span>Funcionarios</span></a></li>
+                                    <li><a href="/taller_front/referenciales/ciudades"><span>Ciudades</span></a></li>
+                                    <li><a href="/taller_front/referenciales/paises"><span>Paises</span></a></li>
+                                    <li><a href="/taller_front/referenciales/nacionalidad"><span>Nacionalidad</span></a></li>
                                     <li><a href="/taller_front/referenciales/empresa"><span>Empresa</span></a></li>
                                     <li><a href="/taller_front/referenciales/sucursal"><span>Sucursal</span></a></li>
                                 </ul>
@@ -298,6 +310,8 @@
                         </a>
                         <ul class="ml-menu">
                             <li><a href="/taller_front/compras/Informes_Compra"><span>Informes Web Compras</span></a></li>
+                            <li><a href="/taller_front/Servicio/Informes_Servicio"><span>Informes Web Servicio</span></a></li>
+                            <li><a href="/taller_front/Ventas/Informes_Ventas"><span>Informes Web Ventas</span></a></li>
                         </ul>
                     </li>
                 </ul>
@@ -474,3 +488,11 @@
         </aside>
         <!-- #END# Right Sidebar -->
     </section>
+
+<script>
+function cerrarSesion() {
+    localStorage.removeItem('datosSesion');
+    localStorage.removeItem('2fa_email');
+    window.location.href = '/taller_front/index.html';
+}
+</script>

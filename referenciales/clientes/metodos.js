@@ -1,4 +1,4 @@
-listar();
+﻿listar();
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -139,7 +139,7 @@ function mensajeOperacion(titulo,mensaje,tipo) {
 
 function listar(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/clientes/read",
+        url:getUrl() + "clientes/read",
         method:"GET",
         dataType: "json"
     })
@@ -214,7 +214,7 @@ function seleccionCliente(id, ciudad_id,pais_id,nacionalidad_id,pais_descrpcion,
 }
 function buscarPaises(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/paises/read",
+        url:getUrl() + "paises/read",
         method:"GET",
         dataType: "json",
         data: {
@@ -245,7 +245,7 @@ function seleccionPais(id,descri){
 }
 function buscarCiudades(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/ciudades/read",
+        url:getUrl() + "ciudades/read",
         method: "GET",
         dataType: "json"
     })
@@ -275,7 +275,7 @@ function seleccionCiudad(id, ciu_descripcion) {
 
 function buscarNacionalidades(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/nacionalidad/read",
+        url:getUrl() + "nacionalidad/read",
         method:"GET",
         dataType: "json"
     })
@@ -303,18 +303,29 @@ function seleccionNacionalidad(id,nacio_descripcion){
 }
 
 function grabar(){
+    var op = parseInt($("#txtOperacion").val());
+
+    if (op !== 3) {
+        var nombre = $("#cli_nombre").val().trim();
+        var ruc    = $("#cli_ruc").val().trim();
+        if (!nombre || !ruc) {
+            swal('Error', 'Nombre y RUC son obligatorios.', 'error');
+            return;
+        }
+    }
+
     var endpoint = "clientes/create";
     var metodo = "POST";
-    if($("#txtOperacion").val()==2){
+    if(op===2){
         endpoint = "clientes/update/"+$("#id").val();
         metodo = "PUT";
     }
-    if($("#txtOperacion").val()==3){
+    if(op===3){
         endpoint = "clientes/delete/"+$("#id").val();
         metodo = "DELETE";
     }
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/"+endpoint,
+        url:getUrl() + ""+endpoint,
         method:metodo,
         dataType: "json",
         data: { 
@@ -343,8 +354,20 @@ function grabar(){
             }
         });
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
-    })
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        if (xhr.status === 422) {
+            var msg = '';
+            if (res && res.errors) {
+                $.each(res.errors, function(k, v){ msg += v[0] + '\n'; });
+            } else {
+                msg = 'Ningún campo debe estar vacío.';
+            }
+            swal('Error de validación', msg, 'error');
+        } else if (xhr.status === 500 && xhr.responseText.indexOf('SQLSTATE[23') !== -1) {
+            swal('Error', 'Este cliente está en uso y no puede ser eliminado.', 'error');
+        } else {
+            swal('Error', res ? (res.mensaje || res.message || 'Error inesperado.') : 'Error inesperado.', 'error');
+        }
+    });
 }

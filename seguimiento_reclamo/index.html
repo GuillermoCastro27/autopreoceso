@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguimiento de Reclamo — AutoProcesos</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ─── HEADER ─── */
+        header {
+            background: #2c3e50;
+            color: #fff;
+            padding: 18px 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        header h1 { font-size: 20px; font-weight: 700; }
+        header p  { font-size: 13px; color: #bdc3c7; margin-top: 2px; }
+
+        /* ─── MAIN ─── */
+        main {
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 40px 16px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 640px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: #34495e;
+            color: #fff;
+            padding: 20px 28px;
+        }
+        .card-header h2 { font-size: 17px; font-weight: 600; }
+        .card-header p  { font-size: 13px; color: #bdc3c7; margin-top: 4px; }
+
+        .card-body { padding: 28px; }
+
+        /* ─── BÚSQUEDA ─── */
+        .search-group {
+            display: flex;
+            gap: 10px;
+        }
+        .search-group input {
+            flex: 1;
+            padding: 11px 14px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color .2s;
+        }
+        .search-group input:focus { border-color: #2c3e50; }
+        .search-group button {
+            padding: 11px 22px;
+            background: #2c3e50;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .2s;
+            white-space: nowrap;
+        }
+        .search-group button:hover { background: #1a252f; }
+
+        .hint {
+            font-size: 12px;
+            color: #888;
+            margin-top: 8px;
+        }
+
+        /* ─── ESTADO (badge) ─── */
+        .badge {
+            display: inline-block;
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: .5px;
+        }
+        .badge-PENDIENTE   { background: #fff3cd; color: #856404; border: 1px solid #ffc107; }
+        .badge-EN-PROCESO  { background: #cfe2ff; color: #084298; border: 1px solid #0d6efd; }
+        .badge-RESUELTO    { background: #d1e7dd; color: #0a3622; border: 1px solid #198754; }
+        .badge-ANULADO     { background: #f8d7da; color: #58151c; border: 1px solid #dc3545; }
+
+        /* ─── RESULTADO ─── */
+        #resultado { margin-top: 28px; display: none; }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #eee;
+        }
+        .result-header h3 { font-size: 16px; color: #2c3e50; }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        @media (max-width: 480px) {
+            .info-grid { grid-template-columns: 1fr; }
+            .search-group { flex-direction: column; }
+        }
+
+        .info-item label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            color: #888;
+            margin-bottom: 3px;
+        }
+        .info-item span {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .observacion-box {
+            margin-top: 18px;
+            background: #f8f9fa;
+            border-left: 4px solid #2c3e50;
+            border-radius: 4px;
+            padding: 14px 18px;
+        }
+        .observacion-box label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            color: #888;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .observacion-box p {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* ─── TIMELINE ─── */
+        .timeline { margin-top: 24px; }
+        .timeline h4 { font-size: 13px; text-transform: uppercase; letter-spacing: .5px; color: #888; margin-bottom: 14px; }
+        .steps { display: flex; gap: 0; }
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: #dee2e6;
+            z-index: 0;
+        }
+        .step.done:not(:last-child)::after { background: #198754; }
+        .step-dot {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: #dee2e6;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 6px;
+            position: relative;
+            z-index: 1;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .step.done   .step-dot { background: #198754; }
+        .step.active .step-dot { background: #0d6efd; box-shadow: 0 0 0 3px #cfe2ff; }
+        .step.cancel .step-dot { background: #dc3545; }
+        .step-label {
+            font-size: 11px;
+            color: #888;
+            font-weight: 600;
+        }
+        .step.done   .step-label { color: #198754; }
+        .step.active .step-label { color: #0d6efd; }
+        .step.cancel .step-label { color: #dc3545; }
+
+        /* ─── ERROR / LOADING ─── */
+        #error   { display: none; margin-top: 20px; padding: 14px 18px; background: #f8d7da; border-radius: 6px; color: #58151c; font-size: 14px; }
+        #loading { display: none; margin-top: 20px; text-align: center; color: #666; font-size: 14px; }
+
+        /* ─── FOOTER ─── */
+        footer {
+            background: #ecf0f1;
+            text-align: center;
+            padding: 14px;
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div>
+        <h1>AutoProcesos</h1>
+        <p>Sistema de Gestión de Talleres</p>
+    </div>
+</header>
+
+<main>
+    <div class="card">
+
+        <div class="card-header">
+            <h2>Seguimiento de Reclamo</h2>
+            <p>Consulte el estado actual de su reclamo ingresando el código de seguimiento.</p>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Búsqueda -->
+            <div class="search-group">
+                <input type="text" id="tokenInput" placeholder="Ingrese el código de seguimiento..." />
+                <button onclick="buscarReclamo()">Consultar</button>
+            </div>
+            <p class="hint">El código de seguimiento fue enviado a su correo electrónico al momento de registrar el reclamo.</p>
+
+            <!-- Loading / Error -->
+            <div id="loading">Consultando, por favor espere...</div>
+            <div id="error"></div>
+
+            <!-- Resultado -->
+            <div id="resultado">
+
+                <div class="result-header">
+                    <h3 id="tituloReclamo"></h3>
+                    <span id="badgeEstado" class="badge"></span>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Cliente</label>
+                        <span id="rCliente"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>RUC / CI</label>
+                        <span id="rRuc"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Empresa</label>
+                        <span id="rEmpresa"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Sucursal</label>
+                        <span id="rSucursal"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Prioridad</label>
+                        <span id="rPrioridad"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Fecha de Registro</label>
+                        <span id="rFecha"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Inicio de Atención</label>
+                        <span id="rInicio"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Fecha de Cierre</label>
+                        <span id="rFin"></span>
+                    </div>
+                </div>
+
+                <div class="observacion-box" id="boxObservacion" style="display:none;">
+                    <label>Observación</label>
+                    <p id="rObservacion"></p>
+                </div>
+
+                <!-- Timeline de estados -->
+                <div class="timeline">
+                    <h4>Progreso del Reclamo</h4>
+                    <div class="steps" id="timelineSteps"></div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<footer>
+    &copy; <span id="anio"></span> AutoProcesos — Todos los derechos reservados.
+</footer>
+
+<script src="../js/ruta.js"></script>
+<script>
+    document.getElementById('anio').textContent = new Date().getFullYear();
+
+    const API = getUrl() + 'reclamoclicab/seguimiento/';
+
+    // Leer token desde la URL si viene del email (?token=xxx)
+    window.addEventListener('DOMContentLoaded', function () {
+        const params = new URLSearchParams(window.location.search);
+        const token  = params.get('token');
+        if (token) {
+            document.getElementById('tokenInput').value = token;
+            buscarReclamo();
+        }
+    });
+
+    document.getElementById('tokenInput').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') buscarReclamo();
+    });
+
+    function buscarReclamo() {
+        const token = document.getElementById('tokenInput').value.trim();
+
+        if (!token) {
+            mostrarError('Ingrese el código de seguimiento.');
+            return;
+        }
+
+        ocultarTodo();
+        document.getElementById('loading').style.display = 'block';
+
+        fetch(API + encodeURIComponent(token))
+            .then(function (res) {
+                if (!res.ok) throw new Error('not_found');
+                return res.json();
+            })
+            .then(function (data) {
+                document.getElementById('loading').style.display = 'none';
+                mostrarResultado(data);
+            })
+            .catch(function () {
+                document.getElementById('loading').style.display = 'none';
+                mostrarError('No se encontró ningún reclamo con ese código. Verifique e intente nuevamente.');
+            });
+    }
+
+    function mostrarResultado(d) {
+        // Título y badge
+        document.getElementById('tituloReclamo').textContent = 'Reclamo N° ' + String(d.id).padStart(7, '0');
+
+        const badge = document.getElementById('badgeEstado');
+        badge.textContent = d.estado;
+        badge.className   = 'badge badge-' + d.estado.replace(' ', '-');
+
+        // Datos
+        document.getElementById('rCliente').textContent  = d.cli_nombre + ' ' + d.cli_apellido;
+        document.getElementById('rRuc').textContent      = d.cli_ruc    || '—';
+        document.getElementById('rEmpresa').textContent  = d.emp_razon_social  || '—';
+        document.getElementById('rSucursal').textContent = d.suc_razon_social  || '—';
+        document.getElementById('rPrioridad').textContent= d.prioridad  || '—';
+        document.getElementById('rFecha').textContent    = d.fecha_registro || '—';
+        document.getElementById('rInicio').textContent   = d.fecha_inicio   || '—';
+        document.getElementById('rFin').textContent      = d.fecha_fin      || '—';
+
+        // Observación
+        if (d.observacion) {
+            document.getElementById('rObservacion').textContent = d.observacion;
+            document.getElementById('boxObservacion').style.display = 'block';
+        }
+
+        // Timeline
+        renderTimeline(d.estado);
+
+        document.getElementById('resultado').style.display = 'block';
+    }
+
+    function renderTimeline(estado) {
+        const PASOS = ['PENDIENTE', 'EN PROCESO', 'RESUELTO'];
+        const IDX   = { 'PENDIENTE': 0, 'EN PROCESO': 1, 'RESUELTO': 2 };
+        const LABELS= ['Pendiente', 'En Proceso', 'Resuelto'];
+
+        const contenedor = document.getElementById('timelineSteps');
+        contenedor.innerHTML = '';
+
+        if (estado === 'ANULADO') {
+            contenedor.innerHTML = `
+                <div class="step cancel" style="flex:none; width:100%; display:flex; align-items:center; gap:12px; text-align:left;">
+                    <div class="step-dot" style="flex-shrink:0;">✕</div>
+                    <div>
+                        <div class="step-label" style="font-size:14px;">ANULADO</div>
+                        <div style="font-size:12px; color:#888;">Este reclamo fue anulado.</div>
+                    </div>
+                </div>`;
+            return;
+        }
+
+        const idxActual = IDX[estado] ?? 0;
+
+        PASOS.forEach(function (paso, i) {
+            const div = document.createElement('div');
+            div.className = 'step ' + (i < idxActual ? 'done' : i === idxActual ? 'active' : '');
+
+            div.innerHTML = `
+                <div class="step-dot">${i < idxActual ? '✓' : (i + 1)}</div>
+                <div class="step-label">${LABELS[i]}</div>
+            `;
+            contenedor.appendChild(div);
+        });
+    }
+
+    function mostrarError(msg) {
+        const el = document.getElementById('error');
+        el.textContent = msg;
+        el.style.display = 'block';
+        document.getElementById('resultado').style.display = 'none';
+    }
+
+    function ocultarTodo() {
+        document.getElementById('error').style.display = 'none';
+        document.getElementById('resultado').style.display = 'none';
+        document.getElementById('boxObservacion').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>

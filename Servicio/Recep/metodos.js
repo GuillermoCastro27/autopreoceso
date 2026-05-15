@@ -1,4 +1,4 @@
-cargarUserIdLogueado();
+﻿cargarFuncionarioIdLogueado();
 listar();
 campoFecha();
 function formatoTabla(){
@@ -234,7 +234,7 @@ function listar() {
             lista += "<td>" + (rs.solicitudes || '') + "</td>";
             lista += "<td>" + (rs.recep_cab_fecha || '') + "</td>";
             lista += "<td>" + (rs.recep_cab_estado || '') + "</td>";
-            lista += "<td>" + (rs.encargado || '') + "</td>";
+            lista += "<td>" + (rs.funcionario || rs.name || rs.encargado || '-') + "</td>";
 
             lista += "</tr>";
         }
@@ -322,7 +322,7 @@ function buscarSolicitud() {
         method: "POST",
         dataType: "json",
         data: {
-            "user_id": $("#user_id").val(),
+            "funcionario_id": $("#funcionario_id").val(),
             "name": $("#solicitud").val()
         }
     })
@@ -419,7 +419,7 @@ function buscarTipoVehiculoPorMarca() {
     }
 
     $.ajax({
-        url: "http://127.0.0.1:8000/Proyecto_tp/tipo-vehiculo/buscarPorMarca",
+        url: getUrl() + "tipo-vehiculo/buscarPorMarca",
         method: "GET",
         data: { marca_id: marca_id, texto: texto },
         dataType: "json"
@@ -481,7 +481,7 @@ function buscarMarcasVehiculo() {
     let texto = $("#marc_nom_veh").val();
 
     $.ajax({
-        url: "http://127.0.0.1:8000/Proyecto_tp/marca/buscarVehiculo",
+        url: getUrl() + "marca/buscarVehiculo",
         method: "POST",
         data: { texto: texto },
         dataType: "json"
@@ -592,7 +592,7 @@ function grabar(){
             'recep_cab_prioridad': $("#recep_cab_prioridad").val(),  
             'recep_cab_kilometraje': $("#recep_cab_kilometraje").val(),  
             'recep_cab_nivel_combustible': $("#recep_cab_nivel_combustible").val(),
-            'user_id': $("#user_id").val(), 
+            'funcionario_id': $("#funcionario_id").val(), 
             'recep_cab_estado': estado,
             'clientes_id': $("#clientes_id").val(),
             'tipo_servicio_id': $("#tipo_servicio_id").val(),
@@ -924,13 +924,13 @@ function seleccionRecepcionDet(item_id, item_decripcion, recep_det_cantidad, rec
 
     $(".form-line").attr("class","form-line focused");
 }
-function cargarUserIdLogueado() {
+function cargarFuncionarioIdLogueado() {
     try {
-        const datosSesion = JSON.parse(sessionStorage.getItem('datosSesion'));
+        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
         
-        if (datosSesion && datosSesion.user && datosSesion.user.id) {
-            $('#user_id').val(datosSesion.user.id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.id);
+        if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
+            $('#funcionario_id').val(datosSesion.user.funcionario_id);
+            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
             console.error('No se encontraron datos de sesión válidos');
             alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');

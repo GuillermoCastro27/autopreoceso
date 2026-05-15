@@ -1,4 +1,4 @@
-listar();
+﻿listar();
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -137,7 +137,7 @@ function mensajeOperacion(titulo,mensaje,tipo) {
 
 function listar(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/proveedores/read",
+        url:getUrl() + "proveedores/read",
         method:"GET",
         dataType: "json"
     })
@@ -194,7 +194,7 @@ function seleccionProveedor(id,pais_id, ciudad_id, nacionalidad_id, prov_razonso
 }
 function buscarPaises(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/paises/read",
+        url:getUrl() + "paises/read",
         method: "GET",
         dataType: "json"
     })
@@ -223,7 +223,7 @@ function seleccionPais(id, pais_descrpcion) {
 }
 function buscarCiudades(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/ciudades/read",
+        url:getUrl() + "ciudades/read",
         method: "GET",
         dataType: "json"
     })
@@ -253,7 +253,7 @@ function seleccionCiudad(id, ciu_descripcion) {
 
 function buscarNacionalidades(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/nacionalidad/read",
+        url:getUrl() + "nacionalidad/read",
         method:"GET",
         dataType: "json"
     })
@@ -281,19 +281,30 @@ function seleccionNacionalidad(id,nacio_descripcion){
 }
 
 function grabar() {
+    var op = parseInt($("#txtOperacion").val());
+
+    if (op !== 3) {
+        var razon = $("#prov_razonsocial").val().trim();
+        var ruc   = $("#prov_ruc").val().trim();
+        if (!razon || !ruc) {
+            swal('Error', 'Razón social y RUC son obligatorios.', 'error');
+            return;
+        }
+    }
+
     var endpoint = "proveedores/create";
     var metodo = "POST";
-    if($("#txtOperacion").val() == 2) {
+    if (op === 2) {
         endpoint = "proveedores/update/" + $("#id").val();
         metodo = "PUT";
     }
-    if($("#txtOperacion").val() == 3) {
+    if (op === 3) {
         endpoint = "proveedores/delete/" + $("#id").val();
         metodo = "DELETE";
     }
 
     $.ajax({
-        url: "http://127.0.0.1:8000/Proyecto_tp/" + endpoint,
+        url: getUrl() + "" + endpoint,
         method: metodo,
         dataType: "json",
         data: { 
@@ -348,11 +359,7 @@ function grabar() {
                 type: "error"
             });
         } else {
-            swal({
-                title: "Error",
-                text: "El RUC ya existe.",
-                type: "error"
-            });
+            swal('Error', respuesta ? (respuesta.mensaje || respuesta.message || 'Error inesperado.') : 'Error inesperado.', 'error');
         }
         console.log(xhr.responseText);
     });

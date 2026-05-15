@@ -1,7 +1,22 @@
-// Cargar user_id del usuario logueado
-cargarUserIdLogueado();
+﻿// Cargar funcionario_id del usuario logueado
+cargarFuncionarioIdLogueado();
 listar();
 campoFecha();
+
+var listaDepositos = [];
+function cargarDepositos() {
+    $.ajax({ url: getUrl()+'deposito/read', method:'GET', dataType:'json', success:function(data){ listaDepositos=data; } });
+}
+cargarDepositos();
+function getSelectDeposito(id_sel) {
+    var opts = '<option value="">-- Depósito --</option>';
+    listaDepositos.forEach(function(d){ opts += '<option value="'+d.id+'"'+(d.id==id_sel?' selected':'')+'>'+d.dep_nombre+'</option>'; });
+    return opts;
+}
+function getNombreDeposito(id) {
+    var d = listaDepositos.find(function(x){ return x.id==id; });
+    return d ? d.dep_nombre : '-';
+}
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -196,7 +211,7 @@ function listar(){
             lista += `<td>${rs.ped_ven_vence}</td>`;
             lista += `<td>${rs.ped_ven_observaciones}</td>`;
             lista += `<td>${rs.cli_nombre}</td>`;
-            lista += `<td>${rs.name}</td>`;
+            lista += `<td>${rs.funcionario || rs.name || rs.encargado || '-'}</td>`;
             lista += `<td>${rs.ped_ven_estado}</td>`;
             lista += `</tr>`;
         }
@@ -361,7 +376,7 @@ function grabar(){
             ped_ven_observaciones: observaciones,
             ped_ven_estado: estado,
 
-            user_id: $("#user_id").val(),
+            funcionario_id: $("#funcionario_id").val(),
             empresa_id: $("#empresa_id").val(),
             sucursal_id: $("#sucursal_id").val(),
             clientes_id: $("#clientes_id").val(),
@@ -410,7 +425,8 @@ function agregarDetalle() {
     $("#txtOperacionDetalle").val(1);
     $("#item_decripcion").removeAttr("disabled");
     $("#det_cantidad").removeAttr("disabled");
-    $("#cantidad_stock").val(""); // Limpiar la cantidad de stock al agregar un nuevo detalle
+    $("#cantidad_stock").val("");
+    $("#deposito_id_det").html(getSelectDeposito(null)).removeAttr("disabled");
 
     $("#btnAgregarDetalle").attr("style", "display:none");
     $("#btnEditarDetalle").attr("style", "display:none");
@@ -422,6 +438,7 @@ function editarDetalle() {
     $("#txtOperacionDetalle").val(2);
     $("#item_decripcion").removeAttr("disabled");
     $("#det_cantidad").removeAttr("disabled");
+    $("#deposito_id_det").removeAttr("disabled");
 
     $("#btnAgregarDetalle").attr("style", "display:none");
     $("#btnEditarDetalle").attr("style", "display:none");
@@ -459,7 +476,8 @@ $.ajax({
         "pedidos_ventas_id":$("#id").val(),
         "item_id":$("#item_id").val(),
         "det_cantidad":$("#det_cantidad").val(),
-        "cantidad_stock":$("#cantidad_stock").val()
+        "cantidad_stock":$("#cantidad_stock").val(),
+        "deposito_id":$("#deposito_id_det").val() || null
     }
 })
 
@@ -481,6 +499,7 @@ $("#txtOperacionDetalle").val(1);
 $("#item_decripcion").val("");
 $("#det_cantidad").val("");
 $("#cantidad_stock").val("");
+$("#deposito_id_det").html(getSelectDeposito(null)).attr("disabled","disabled");
 }
 
 function buscarProductos() {
@@ -531,11 +550,12 @@ function listarDetalles(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionDetalle("+rs.item_id+",'"+rs.item_decripcion+"',"+rs.det_cantidad+","+rs.cantidad_stock+");\">";
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionDetalle("+rs.item_id+",'"+rs.item_decripcion+"',"+rs.det_cantidad+","+rs.cantidad_stock+","+(rs.deposito_id||0)+");\">";
                 lista = lista + "<td>" + rs.item_id + "</td>";
                 lista = lista + "<td>" + rs.item_decripcion + "</td>";
                 lista = lista + "<td>" + rs.det_cantidad + "</td>";
                 lista = lista + "<td>" + rs.cantidad_stock + "</td>";
+                lista = lista + "<td>" + getNombreDeposito(rs.deposito_id) + "</td>";
             lista = lista + "</tr>";
             cantidadDetalle++;
         }
@@ -552,18 +572,19 @@ function listarDetalles(){
         console.error(xhr.responseText);
     })
 }
-function seleccionDetalle(item_id, item_decripcion, det_cantidad, cantidad_stock) {
+function seleccionDetalle(item_id, item_decripcion, det_cantidad, cantidad_stock, deposito_id) {
     console.log("Seleccionado item_id:", item_id);
-    $("#original_item_id").val(item_id); // Guarda el item_id original
+    $("#original_item_id").val(item_id);
     $("#item_id").val(item_id);
     $("#item_decripcion").val(item_decripcion);
     $("#det_cantidad").val(det_cantidad);
     $("#cantidad_stock").val(cantidad_stock);
+    $("#deposito_id_det").html(getSelectDeposito(deposito_id));
 }
 
 function buscarEmpresas() {
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/empresa/read",
+        url:getUrl() + "empresa/read",
         method:"GET",
         dataType: "json"
     })
@@ -596,14 +617,14 @@ function seleccionEmpresa(id, emp_razon_social, emp_direccion, emp_telef, emp_co
 
 function buscarSucursal(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/sucursal/read",
+        url:getUrl() + "sucursal/read",
         method:"GET",
         dataType: "json"
     })
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.empresa_id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
         }
         lista += "</ul>";
         $("#listaSucursal").html(lista);
@@ -626,14 +647,14 @@ function seleccionSucursal(empresa_id,suc_razon_social,suc_direccion,suc_telefon
     $("#listaSucursal").attr("style","display:none;");
 }
 
-// Función para cargar el user_id real del usuario logueado
-function cargarUserIdLogueado() {
+// Función para cargar el funcionario_id del usuario logueado
+function cargarFuncionarioIdLogueado() {
     try {
-        const datosSesion = JSON.parse(sessionStorage.getItem('datosSesion'));
+        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
         
-        if (datosSesion && datosSesion.user && datosSesion.user.id) {
-            $('#user_id').val(datosSesion.user.id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.id);
+        if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
+            $('#funcionario_id').val(datosSesion.user.funcionario_id);
+            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
             console.error('No se encontraron datos de sesión válidos');
             alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');

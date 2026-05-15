@@ -201,8 +201,8 @@
     <script src="../../plugins/autosize/autosize.js"></script>
     <script src="../../plugins/momentjs/moment.js"></script>
     <script src="../../plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
-    <script src="../../js/admin.js"></script>
+    <script src="../../js/admin.js?v=3"></script>
     <script src="../../js/demo.js"></script>
-    <script src="metodos.js"></script>
+    <script src="metodos.js?v=2"></script>
 </body>
 </html>

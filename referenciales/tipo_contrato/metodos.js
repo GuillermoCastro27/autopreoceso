@@ -1,4 +1,4 @@
-listar();
+﻿listar();
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -141,7 +141,7 @@ function resumirTexto(texto, limite = 60){
 }
 function listar(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/tipo_contrato/read",
+        url:getUrl() + "tipo_contrato/read",
         method:"GET",
         dataType: "json"
     })
@@ -278,7 +278,7 @@ function grabar(){
     }
 
     $.ajax({
-        url: "http://127.0.0.1:8000/Proyecto_tp/" + endpoint,
+        url: getUrl() + "" + endpoint,
         method: metodo,
         dataType: "json",
         data: dataSend
@@ -294,15 +294,20 @@ function grabar(){
             }
         });
     })
-    .fail(function(a) {
-        // Si es validación de Laravel (422), mostrar mensajes
-        if (a.status === 422 && a.responseJSON && a.responseJSON.errors) {
-            let msg = Object.values(a.responseJSON.errors).flat().join("\n");
-            swal("Error", msg, "error");
-            return;
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        if (xhr.status === 422) {
+            var msg = '';
+            if (res && res.errors) {
+                $.each(res.errors, function(k, v){ msg += v[0] + '\n'; });
+            } else {
+                msg = 'Ningún campo debe estar vacío.';
+            }
+            swal('Error de validación', msg, 'error');
+        } else if (xhr.status === 500 && xhr.responseText.indexOf('SQLSTATE[23') !== -1) {
+            swal('Error', 'Este registro está en uso y no puede ser eliminado.', 'error');
+        } else {
+            swal('Error', res ? (res.mensaje || res.message || 'Error inesperado.') : 'Error inesperado.', 'error');
         }
-
-        // Otros errores
-        swal("Error", "Ocurrió un error al procesar la operación.", "error");
     });
 }

@@ -1,0 +1,210 @@
+var listaSucursales = [];
+
+function cargarSucursales() {
+    $.ajax({
+        url: getUrl() + 'sucursal/read',
+        method: 'GET',
+        dataType: 'json'
+    })
+    .done(function(data) {
+        listaSucursales = data;
+        var opts = '<option value="" disabled selected>Seleccione sucursal...</option>';
+        data.forEach(function(s) {
+            opts += '<option value="' + s.id + '">' + s.suc_razon_social + '</option>';
+        });
+        $('#sucursal_id').html(opts);
+        listar();
+    });
+}
+
+function getNombreSucursal(id) {
+    var s = listaSucursales.find(function(x) { return x.id == id; });
+    return s ? s.suc_razon_social : '-';
+}
+
+cargarSucursales();
+
+function formatoTabla() {
+    $('.js-exportable').DataTable({
+        dom: 'Bfrtip',
+        responsive: true,
+        buttons: [
+            { extend: 'copy',    text: 'COPIAR',   className: 'btn btn-primary waves-effect',  title: 'Listado de Depósitos' },
+            { extend: 'excel',   text: 'EXCEL',    className: 'btn btn-success waves-effect',  title: 'Listado de Depósitos' },
+            { extend: 'pdf',     text: 'PDF',      className: 'btn btn-danger waves-effect',   title: 'Listado de Depósitos' },
+            { extend: 'print',   text: 'IMPRIMIR', className: 'btn btn-warning waves-effect',  title: 'Listado de Depósitos' }
+        ],
+        iDisplayLength: 10,
+        language: {
+            sSearch: 'Buscar: ',
+            sInfo: 'Mostrando resultados del _START_ al _END_ de un total de _TOTAL_ registros',
+            sInfoFiltered: '(filtrado de entre _MAX_ registros)',
+            sZeroRecords: 'No se encontraron resultados',
+            sInfoEmpty: 'Mostrando resultado del 0 al 0 de un total de 0 registros',
+            oPaginate: { sNext: 'Siguiente', sPrevious: 'Anterior' }
+        }
+    });
+}
+
+function cancelar() {
+    location.reload(true);
+}
+
+function agregar() {
+    $("#txtOperacion").val(1);
+    $("#txtCodigo").val(0);
+    $("#dep_nombre").removeAttr("disabled");
+    $("#sucursal_id").removeAttr("disabled");
+
+    $("#btnAgregar").attr("disabled", "true");
+    $("#btnEditar").attr("disabled", "true");
+    $("#btnEliminar").attr("disabled", "true");
+
+    $("#btnGrabar").removeAttr("disabled");
+    $("#btnCancelar").removeAttr("disabled");
+
+    $(".form-line").attr("class", "form-line focused");
+}
+
+function editar() {
+    $("#txtOperacion").val(2);
+    $("#dep_nombre").removeAttr("disabled");
+    $("#sucursal_id").removeAttr("disabled");
+
+    $("#btnAgregar").attr("disabled", "true");
+    $("#btnEditar").attr("disabled", "true");
+    $("#btnEliminar").attr("disabled", "true");
+
+    $("#btnGrabar").removeAttr("disabled");
+    $("#btnCancelar").removeAttr("disabled");
+
+    $(".form-line").attr("class", "form-line focused");
+}
+
+function eliminar() {
+    $("#txtOperacion").val(3);
+
+    $("#btnAgregar").attr("disabled", "true");
+    $("#btnEditar").attr("disabled", "true");
+    $("#btnEliminar").attr("disabled", "true");
+
+    $("#btnGrabar").removeAttr("disabled");
+    $("#btnCancelar").removeAttr("disabled");
+}
+
+function confirmarOperacion() {
+    var oper = parseInt($("#txtOperacion").val());
+    var titulo = "AGREGAR";
+    var pregunta = "¿DESEA GRABAR EL NUEVO REGISTRO?";
+
+    if (oper === 2) {
+        titulo = "EDITAR";
+        pregunta = "¿DESEA EDITAR EL REGISTRO SELECCIONADO?";
+    }
+    if (oper === 3) {
+        titulo = "ELIMINAR";
+        pregunta = "¿DESEA ELIMINAR EL REGISTRO SELECCIONADO?";
+    }
+    swal({
+        title: titulo,
+        text: pregunta,
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#458E49",
+        confirmButtonText: "SI",
+        cancelButtonText: "NO",
+        closeOnConfirm: false
+    }, function() {
+        grabar();
+    });
+}
+
+function listar() {
+    $.ajax({
+        url: getUrl() + 'deposito/read',
+        method: 'GET',
+        dataType: 'json'
+    })
+    .done(function(resultado) {
+        var lista = "";
+        for (var rs of resultado) {
+            lista += "<tr class=\"item-list\" onclick=\"seleccionDeposito(" + rs.id + ",'" + rs.dep_nombre + "'," + (rs.sucursal_id || 0) + ");\">";
+            lista += "<td>" + rs.id + "</td>";
+            lista += "<td>" + rs.dep_nombre + "</td>";
+            lista += "<td>" + getNombreSucursal(rs.sucursal_id) + "</td>";
+            lista += "</tr>";
+        }
+        $("#tableBody").html(lista);
+        formatoTabla();
+    })
+    .fail(function(a, b, c) {
+        alert(c);
+    });
+}
+
+function seleccionDeposito(codigo, dep_nombre, sucursal_id) {
+    $("#txtCodigo").val(codigo);
+    $("#dep_nombre").val(dep_nombre);
+    $("#sucursal_id").val(sucursal_id);
+
+    $("#btnAgregar").attr("disabled", "true");
+    $("#btnEditar").removeAttr("disabled");
+    $("#btnEliminar").removeAttr("disabled");
+    $("#btnGrabar").attr("disabled", "true");
+    $("#btnCancelar").removeAttr("disabled");
+
+    $(".form-line").attr("class", "form-line focused");
+}
+
+function grabar() {
+    var dep_nombre = $("#dep_nombre").val().trim();
+
+    if (dep_nombre === "") {
+        swal({ title: "Error", text: "El nombre del depósito no debe estar vacío.", type: "error" });
+        return;
+    }
+
+    var endpoint = "deposito/create";
+    var metodo = "POST";
+    if ($("#txtOperacion").val() == 2) {
+        endpoint = "deposito/update/" + $("#txtCodigo").val();
+        metodo = "PUT";
+    }
+    if ($("#txtOperacion").val() == 3) {
+        endpoint = "deposito/delete/" + $("#txtCodigo").val();
+        metodo = "DELETE";
+    }
+
+    $.ajax({
+        url: getUrl() + endpoint,
+        method: metodo,
+        dataType: "json",
+        data: {
+            'id': $("#txtCodigo").val(),
+            'dep_nombre': dep_nombre,
+            'sucursal_id': $("#sucursal_id").val()
+        }
+    })
+    .done(function(resultado) {
+        swal({ title: "Respuesta", text: resultado.mensaje, type: resultado.tipo }, function() {
+            if (resultado.tipo == "success") {
+                location.reload(true);
+            }
+        });
+    })
+    .fail(function(xhr) {
+        var respuesta = xhr.responseJSON;
+        if (xhr.status === 400) {
+            swal({ title: "Error", text: respuesta.mensaje, type: "error" });
+        } else if (xhr.status === 422) {
+            var errores = "";
+            $.each(respuesta.errors, function(key, value) { errores += value + "\n"; });
+            swal({ title: "Error de validación", text: errores, type: "error" });
+        } else if (xhr.status === 500 && xhr.responseText.includes("SQLSTATE[23503]")) {
+            swal({ title: "Error", text: "No se puede eliminar el depósito porque está siendo utilizado en otra parte del sistema.", type: "error" });
+        } else {
+            swal({ title: "Error", text: "Ocurrió un error inesperado.", type: "error" });
+        }
+        console.log(xhr.responseText);
+    });
+}

@@ -1,4 +1,4 @@
-cargarUserIdLogueado();
+﻿cargarFuncionarioIdLogueado();
 listar();
 campoFecha();
 function formatoTabla(){
@@ -176,7 +176,7 @@ function listar() {
                 + rs.id + ", " 
                 + rs.empresa_id + ", "
                 + rs.sucursal_id + ", "
-                + rs.user_id + ", "
+                + rs.funcionario_id + ", "
                 + rs.tipo_descuentos_id + ", '"
                 + rs.emp_razon_social + "', '"
                 + rs.suc_razon_social + "', '"
@@ -194,7 +194,7 @@ function listar() {
             lista += "<td>" + rs.emp_razon_social + "</td>";
             lista += "<td>" + rs.suc_razon_social + "</td>";
             lista += "<td>" + rs.desc_cab_nombre + "</td>";
-            lista += "<td>" + rs.name + "</td>";
+            lista += "<td>" + (rs.funcionario || rs.name || rs.encargado || '-') + "</td>";
             lista += "<td>" + rs.desc_cab_observaciones + "</td>";
             lista += "<td>" + rs.desc_cab_fecha_registro + "</td>";
             lista += "<td>" + rs.desc_cab_fecha_inicio + "</td>";
@@ -214,7 +214,7 @@ function listar() {
 }
 
 function seleccionPromocion(
-    id, empresa_id, sucursal_id, user_id, tipo_descuentos_id,
+    id, empresa_id, sucursal_id, funcionario_id, tipo_descuentos_id,
     emp_razon_social, suc_razon_social, encargado,
     desc_cab_nombre, desc_cab_observaciones,
     desc_cab_fecha_registro, desc_cab_fecha_inicio, desc_cab_fecha_fin,desc_cab_porcentaje,
@@ -223,7 +223,7 @@ function seleccionPromocion(
     $("#id").val(id);
     $("#empresa_id").val(empresa_id);
     $("#sucursal_id").val(sucursal_id);
-    $("#user_id").val(user_id);
+    $("#funcionario_id").val(funcionario_id);
     $("#tipo_descuentos_id").val(tipo_descuentos_id);
 
     $("#emp_razon_social").val(emp_razon_social);
@@ -311,7 +311,7 @@ function grabar(){
             'desc_cab_fecha_registro': $("#desc_cab_fecha_registro").val(),  
             'desc_cab_fecha_inicio': $("#desc_cab_fecha_inicio").val(),
             'desc_cab_fecha_fin': $("#desc_cab_fecha_fin").val(),
-            'user_id': $("#user_id").val(), 
+            'funcionario_id': $("#funcionario_id").val(), 
             'desc_cab_estado': estado,
             'desc_cab_porcentaje': $("#desc_cab_porcentaje").val(),
             'tipo_descuentos_id': $("#tipo_descuentos_id").val(),
@@ -628,7 +628,7 @@ function seleccionSolicitudDet(item_id, item_decripcion, desc_det_cantidad, desc
 }
 function buscarEmpresas() {
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/empresa/read",
+        url:getUrl() + "empresa/read",
         method:"GET",
         dataType: "json"
     })
@@ -661,14 +661,14 @@ function seleccionEmpresa(id, emp_razon_social, emp_direccion, emp_telef, emp_co
 
 function buscarSucursal(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/sucursal/read",
+        url:getUrl() + "sucursal/read",
         method:"GET",
         dataType: "json"
     })
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.empresa_id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
         }
         lista += "</ul>";
         $("#listaSucursal").html(lista);
@@ -692,7 +692,7 @@ function seleccionSucursal(empresa_id,suc_razon_social,suc_direccion,suc_telefon
 }
 function buscarTipoDescuento(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/tipo-descuentos/read",
+        url:getUrl() + "tipo-descuentos/read",
         method:"GET",
         dataType: "json"
     })
@@ -718,13 +718,13 @@ function seleccionTipoDesc(tipo_descuentos_id,tipo_desc_nombre){
     $("#listaTipoDesc").html("");
     $("#listaTipoDesc").attr("style","display:none;");
 }
-function cargarUserIdLogueado() {
+function cargarFuncionarioIdLogueado() {
     try {
-        const datosSesion = JSON.parse(sessionStorage.getItem('datosSesion'));
+        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
         
-        if (datosSesion && datosSesion.user && datosSesion.user.id) {
-            $('#user_id').val(datosSesion.user.id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.id);
+        if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
+            $('#funcionario_id').val(datosSesion.user.funcionario_id);
+            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
             console.error('No se encontraron datos de sesión válidos');
             alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');

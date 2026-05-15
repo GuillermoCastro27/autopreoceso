@@ -1,4 +1,4 @@
-listar();
+﻿listar();
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -120,7 +120,7 @@ function mensajeOperacion(titulo,mensaje,tipo) {
 
 function listar(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/item-marca/read",
+        url:getUrl() + "item-marca/read",
         method:"GET",
         dataType: "json"
     })
@@ -168,7 +168,7 @@ function seleccionItemMarca(marca_id,marc_nom,item_id, item_decripcion, item_mar
 
 function buscarProductos(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/items/buscar",
+        url:getUrl() + "items/buscar",
         method: "POST",
         dataType: "json",
         data:{
@@ -202,7 +202,7 @@ function seleccionProducto(item_id, item_decripcion) {
 
 function buscarMarca(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/marca/read",
+        url:getUrl() + "marca/read",
         method:"GET",
         dataType: "json",
         data: {
@@ -231,56 +231,34 @@ function seleccionMarca(id, nombre) {
     $("#listaMarcas").attr("style", "display:none;");
 }
 function grabar() {
-    var descripcion = $("#item_marca_descrip").val().trim();
-    var producto = $("#item_decripcion").val().trim();
-    var marca = $("#marc_nom").val().trim();
+    var op = parseInt($("#txtOperacion").val());
 
-    // Validar que el campo descripción no esté vacío
-    if (descripcion === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return; 
+    if (op !== 3) {
+        if (!$("#item_decripcion").val().trim() || !$("#marc_nom").val().trim() || !$("#item_marca_descrip").val().trim()) {
+            swal('Error', 'Producto, marca y descripción son obligatorios.', 'error');
+            return;
+        }
     }
-    if (producto === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return; 
-    }
-    if (marca === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return; 
-    }
-    var endpoint = "item-marca/create"; // Esto es para agregar
+
+    var endpoint = "item-marca/create";
     var metodo = "POST";
-    
-    if ($("#txtOperacion").val() == 2) { // Para actualizar
+    if (op === 2) {
         endpoint = "item-marca/update/" + $("#marca_id").val() + "/" + $("#item_id").val();
         metodo = "PUT";
     }
-    if ($("#txtOperacion").val() == 3) { // Para eliminar
+    if (op === 3) {
         endpoint = "item-marca/delete/" + $("#marca_id").val() + "/" + $("#item_id").val();
         metodo = "DELETE";
     }
 
     $.ajax({
-        url: "http://127.0.0.1:8000/Proyecto_tp/" + endpoint,
+        url: getUrl() + "" + endpoint,
         method: metodo,
         dataType: "json",
         data: {
-            'item_id': $("#item_id").val(),  
-            'marca_id': $("#marca_id").val(), 
-            'item_marca_descrip': $("#item_marca_descrip").val(), 
-            'operacion': $("#txtOperacion").val()
+            'item_id': $("#item_id").val(),
+            'marca_id': $("#marca_id").val(),
+            'item_marca_descrip': $("#item_marca_descrip").val()
         }
     })
     .done(function(resultado) {
@@ -294,8 +272,20 @@ function grabar() {
             }
         });
     })
-    .fail(function(a, b, c) {
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        if (xhr.status === 422) {
+            var msg = '';
+            if (res && res.errors) {
+                $.each(res.errors, function(k, v){ msg += v[0] + '\n'; });
+            } else {
+                msg = 'Ningún campo debe estar vacío.';
+            }
+            swal('Error de validación', msg, 'error');
+        } else if (xhr.status === 500 && xhr.responseText.indexOf('SQLSTATE[23') !== -1) {
+            swal('Error', 'Este registro está en uso y no puede ser eliminado.', 'error');
+        } else {
+            swal('Error', res ? (res.mensaje || res.message || 'Error inesperado.') : 'Error inesperado.', 'error');
+        }
     });
 }

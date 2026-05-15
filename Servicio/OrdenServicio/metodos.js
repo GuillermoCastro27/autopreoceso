@@ -1,4 +1,4 @@
-cargarUserIdLogueado();
+﻿cargarFuncionarioIdLogueado();
 listar();
 campoFecha();
 function formatoTabla(){
@@ -233,7 +233,7 @@ function listar() {
                 <td>${rs.ord_serv_observaciones || "N/A"}</td>
                 <td>${rs.ord_serv_estado || "N/A"}</td>
                 <td>${rs.ord_serv_tipo || "N/A"}</td>
-                <td>${rs.encargado || ""}</td>
+                <td>${rs.funcionario || rs.name || rs.encargado || '-'}</td>
             </tr>`;
         });
 
@@ -329,12 +329,12 @@ function seleccionOrdenServicio(
 }
 function buscarPresupuestoServ() {
     const texto = $("#presupuesto_serv").val();
-    const user_id = $("#user_id").val();
+    const funcionario_id = $("#funcionario_id").val();
 
     $.ajax({
         url: getUrl() + "presupuestoservcab/buscar",
         method: "POST",
-        data: { texto: texto, user_id: user_id },
+        data: { texto: texto, funcionario_id: funcionario_id },
         dataType: "json"
     })
     .done(function(resultado) {
@@ -458,7 +458,7 @@ function seleccionarPresupuestoServ(
 
 function buscarEquipoTrabajo(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/equipo_trabajo/read",
+        url:getUrl() + "equipo_trabajo/read",
         method:"GET",
         dataType: "json"
     })
@@ -554,7 +554,7 @@ console.log("=============================");
             'sucursal_id': sucursal,
             'presupuesto_serv_cab_id': presupuesto,
             'clientes_id': cliente,
-            'user_id': $("#user_id").val(),
+            'funcionario_id': $("#funcionario_id").val(),
             'equipo_trabajo_id': $("#equipo_trabajo_id").val(),
             'diagnostico_cab_id': $("#diagnostico_cab_id").val(),
             'tipo_diagnostico_id': $("#tipo_diagnostico_id").val(),
@@ -624,13 +624,13 @@ function listarDetalles(){
         console.error(xhr.responseText);
     })
 }
-function cargarUserIdLogueado() {
+function cargarFuncionarioIdLogueado() {
     try {
-        const datosSesion = JSON.parse(sessionStorage.getItem('datosSesion'));
+        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
         
-        if (datosSesion && datosSesion.user && datosSesion.user.id) {
-            $('#user_id').val(datosSesion.user.id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.id);
+        if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
+            $('#funcionario_id').val(datosSesion.user.funcionario_id);
+            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
             console.error('No se encontraron datos de sesión válidos');
             alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');

@@ -1,5 +1,5 @@
-// Cargar user_id del usuario logueado
-cargarUserIdLogueado();
+﻿// Cargar funcionario_id del usuario logueado
+cargarFuncionarioIdLogueado();
 listar();
 campoFecha();
 function formatoTabla(){
@@ -186,7 +186,7 @@ function listar() {
                     <td>${rs.suc_razon_social}</td>
                     <td>${rs.nota_remi_vent_fecha_formato}</td>
                     <td>${rs.nota_remi_vent_observaciones}</td>
-                    <td>${rs.name}</td>
+                    <td>${rs.funcionario || rs.name || rs.encargado || '-'}</td>
                     <td>${rs.nota_remi_vent_estado}</td>
                 </tr>
             `;
@@ -442,7 +442,7 @@ function grabar() {
             ventas_cab_id: $("#ventas_cab_id").val(),
             clientes_id: $("#clientes_id").val(),
 
-            user_id: $("#user_id").val(),
+            funcionario_id: $("#funcionario_id").val(),
             empresa_id: $("#empresa_id").val(),
             sucursal_id: $("#sucursal_id").val(),
 
@@ -539,14 +539,14 @@ function listarDetalles() {
 }
 
 
-// Función para cargar el user_id real del usuario logueado
-function cargarUserIdLogueado() {
+// Función para cargar el funcionario_id del usuario logueado
+function cargarFuncionarioIdLogueado() {
     try {
-        const datosSesion = JSON.parse(sessionStorage.getItem('datosSesion'));
+        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
         
-        if (datosSesion && datosSesion.user && datosSesion.user.id) {
-            $('#user_id').val(datosSesion.user.id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.id);
+        if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
+            $('#funcionario_id').val(datosSesion.user.funcionario_id);
+            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
             console.error('No se encontraron datos de sesión válidos');
             alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');

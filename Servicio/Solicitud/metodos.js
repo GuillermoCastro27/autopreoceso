@@ -1,4 +1,4 @@
-cargarUserIdLogueado();
+﻿cargarFuncionarioIdLogueado();
 listar();
 campoFecha();
 function formatoTabla(){
@@ -304,7 +304,7 @@ function grabar(){
             'soli_cab_fecha_estimada': $("#soli_cab_fecha_estimada").val(), 
             'soli_cab_observaciones': $("#soli_cab_observaciones").val(),  
             'soli_cab_prioridad': $("#soli_cab_prioridad").val(),
-            'user_id': $("#user_id").val(), 
+            'funcionario_id': $("#funcionario_id").val(), 
             'soli_cab_estado': estado,
             'clientes_id': $("#clientes_id").val(),
             'tipo_servicio_id': $("#tipo_servicio_id").val(),
@@ -635,7 +635,7 @@ function seleccionSolicitudDet(item_id, item_decripcion, soli_det_cantidad, soli
 }
 function buscarEmpresas() {
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/empresa/read",
+        url:getUrl() + "empresa/read",
         method:"GET",
         dataType: "json"
     })
@@ -668,14 +668,14 @@ function seleccionEmpresa(id, emp_razon_social, emp_direccion, emp_telef, emp_co
 
 function buscarSucursal(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/sucursal/read",
+        url:getUrl() + "sucursal/read",
         method:"GET",
         dataType: "json"
     })
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.empresa_id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
         }
         lista += "</ul>";
         $("#listaSucursal").html(lista);
@@ -699,7 +699,7 @@ function seleccionSucursal(empresa_id,suc_razon_social,suc_direccion,suc_telefon
 }
 function buscarTipoServicio(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/tipo-servicio/read",
+        url:getUrl() + "tipo-servicio/read",
         method:"GET",
         dataType: "json"
     })
@@ -764,13 +764,13 @@ function seleccionCliente(clientes_id,cli_nombre,cli_apellido,cli_ruc,cli_direcc
 
     $(".form-line").attr("class","form-line focused");
 }
-function cargarUserIdLogueado() {
+function cargarFuncionarioIdLogueado() {
     try {
-        const datosSesion = JSON.parse(sessionStorage.getItem('datosSesion'));
+        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
         
-        if (datosSesion && datosSesion.user && datosSesion.user.id) {
-            $('#user_id').val(datosSesion.user.id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.id);
+        if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
+            $('#funcionario_id').val(datosSesion.user.funcionario_id);
+            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
             console.error('No se encontraron datos de sesión válidos');
             alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');

@@ -21,17 +21,95 @@ function formatoTabla(titulo = "Listado") {
                 text: 'PDF',
                 className: 'btn btn-danger waves-effect',
                 title: titulo,
-                orientation: 'landscape', // ✅ HOJA HORIZONTAL
+                orientation: 'landscape',
                 pageSize: 'A4',
-                exportOptions: {
-                    columns: ':visible'
-                },
+                exportOptions: { columns: ':visible' },
                 customize: function (doc) {
-                    // Ajustar fuente y tamaño de tabla
-                    doc.defaultStyle.fontSize = 8;
-                    doc.styles.tableHeader.fontSize = 9;
-                    doc.styles.tableHeader.alignment = 'center';
-                    doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                    var desdeVal = document.getElementById('fecha_desde').value;
+                    var hastaVal = document.getElementById('fecha_hasta').value;
+
+                    function fmtFecha(s) {
+                        if (!s) return '';
+                        var p = s.split('-');
+                        return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : s;
+                    }
+
+                    var periodo  = 'Período: ' + fmtFecha(desdeVal) + ' al ' + fmtFecha(hastaVal);
+                    var generado = 'Generado el ' + new Date().toLocaleString('es-PY');
+
+                    doc.pageMargins = [20, 20, 20, 35];
+                    doc.defaultStyle.fontSize = 7.5;
+
+                    // Reemplazar título plano por bloque con estilo
+                    doc.content.splice(0, 1,
+                        {
+                            margin: [0, 0, 0, 2],
+                            table: {
+                                widths: ['*'],
+                                body: [[{
+                                    text: titulo,
+                                    fontSize: 14,
+                                    bold: true,
+                                    color: '#ffffff',
+                                    fillColor: '#2d3436',
+                                    alignment: 'center',
+                                    margin: [0, 8, 0, 8]
+                                }]]
+                            },
+                            layout: 'noBorders'
+                        },
+                        {
+                            margin: [0, 0, 0, 10],
+                            table: {
+                                widths: ['*'],
+                                body: [[{
+                                    text: periodo,
+                                    fontSize: 9,
+                                    color: '#2d3436',
+                                    alignment: 'center',
+                                    fillColor: '#f1f2f6',
+                                    margin: [0, 4, 0, 4]
+                                }]]
+                            },
+                            layout: 'noBorders'
+                        }
+                    );
+
+                    // La tabla de datos quedó en content[2]
+                    var tbl  = doc.content[2].table;
+                    var body = tbl.body;
+                    var cols = body[0].length;
+
+                    // Cabecera: fondo oscuro, texto blanco
+                    body[0].forEach(function (cell) {
+                        cell.fillColor = '#2d3436';
+                        cell.color     = '#ffffff';
+                        cell.bold      = true;
+                        cell.fontSize  = 8;
+                        cell.alignment = 'center';
+                    });
+
+                    // Filas alternadas blanco / gris claro
+                    for (var i = 1; i < body.length; i++) {
+                        var fill = i % 2 === 0 ? '#f1f2f6' : '#ffffff';
+                        body[i].forEach(function (cell) {
+                            cell.fillColor = fill;
+                        });
+                    }
+
+                    // Columnas de igual ancho
+                    tbl.widths = Array(cols + 1).join('*').split('');
+
+                    // Pie de página con timestamp y numeración
+                    doc.footer = function (currentPage, pageCount) {
+                        return {
+                            margin: [20, 5, 20, 0],
+                            columns: [
+                                { text: generado,                                      fontSize: 7, color: '#636e72' },
+                                { text: 'Página ' + currentPage + ' de ' + pageCount, fontSize: 7, color: '#636e72', alignment: 'right' }
+                            ]
+                        };
+                    };
                 }
             },
             {
@@ -41,309 +119,90 @@ function formatoTabla(titulo = "Listado") {
                 title: titulo
             }
         ],
-        iDisplayLength: 3,
+        iDisplayLength: 25,
         language: {
             sSearch: 'Buscar: ',
             sInfo: 'Mostrando resultados del _START_ al _END_ de un total de _TOTAL_ registros',
             sInfoFiltered: '(filtrado de entre _MAX_ registros)',
             sZeroRecords: 'No se encontraron resultados',
             sInfoEmpty: 'Mostrando resultado del 0 al 0 de un total de 0 registros',
-            oPaginate: {
-                sNext: 'Siguiente',
-                sPrevious: 'Anterior'
-            }
+            oPaginate: { sNext: 'Siguiente', sPrevious: 'Anterior' }
         }
     });
 }
 
+function renderizarTotales(totales) {
+    var contenedor = document.getElementById("resumen_totales");
+    if (!contenedor) return;
+    if (!totales || Object.keys(totales).length === 0) {
+        contenedor.style.display = "none";
+        return;
+    }
+    contenedor.style.display = "block";
+    contenedor.innerHTML = Object.entries(totales)
+        .map(function (entry) {
+            return '<span style="display:inline-block;background:#2d3436;color:#fff;' +
+                   'padding:4px 12px;border-radius:4px;margin-right:8px;font-size:13px;">' +
+                   '<b>' + entry[0] + ':</b> ' + entry[1] + '</span>';
+        })
+        .join('');
+}
+
 function buscarInforme() {
-    const desde = document.getElementById("fecha_desde").value;
-    const hasta = document.getElementById("fecha_hasta").value;
-    const tipo = document.getElementById("tipo").value;
+    var desde = document.getElementById("fecha_desde").value;
+    var hasta = document.getElementById("fecha_hasta").value;
+    var tipo  = document.getElementById("tipo").value;
 
     if (!desde || !hasta) {
-        alert("Debe seleccionar ambas fechas");
+        swal("Advertencia", "Debe seleccionar ambas fechas.", "warning");
         return;
     }
 
-    let url = "";
-    let titulo = "";
-    let columnas = "";
+    if (desde > hasta) {
+        swal("Advertencia", "La fecha 'Desde' no puede ser mayor que la fecha 'Hasta'.", "warning");
+        return;
+    }
 
-    // 🔥 Destruir DataTable si ya existe para evitar conflicto al cambiar tipo
     if ($.fn.DataTable.isDataTable('.js-exportable')) {
         $('.js-exportable').DataTable().clear().destroy();
     }
 
-    // 🧹 Limpiar contenido anterior
     document.getElementById("tabla_informes").innerHTML = "";
     document.getElementById("cabecera_tabla").innerHTML = "";
 
-    if (tipo === "pedidos") {
-        url = getUrl() + "pedidos/buscar-informe?desde=" + desde + "&hasta=" + hasta;
-        titulo = "Listado de Pedidos";
-        columnas = `
-            <th>Código</th>
-            <th>Empresa</th>
-            <th>Sucursal</th>
-            <th>Fecha</th>
-            <th>Entrega</th>
-            <th>Observaciones</th>
-            <th>Encargado</th>
-            <th>Estado</th>
-        `;
-    } else if (tipo === "presupuestos") {
-        url = getUrl() + "presupuestos/buscar-informe?desde=" + desde + "&hasta=" + hasta;
-        titulo = "Listado de Presupuestos";
-        columnas = `
-            <th>Código</th>
-            <th>Empresa</th>
-            <th>Sucursal</th>
-            <th>Fecha</th>
-            <th>Plazo de Entrega</th>
-            <th>Observaciones</th>
-            <th>proveedor</th>
-            <th>ruc</th>
-            <th>Encargado</th>
-            <th>Estado</th>
-            <th>Pedido</th>
-        `;
-    } else if (tipo === "ordenes_compras") {
-        url = getUrl() + "ordenes_compras/buscar-informe?desde=" + desde + "&hasta=" + hasta;
-        titulo = "Listado de Órdenes de Compra";
-        columnas = `
-            <th>Código</th>
-            <th>Fecha</th>
-            <th>proveedor</th>
-            <th>ruc</th>
-            <th>Intervalo Fecha de Vencimiento</th>
-            <th>Estado</th>
-            <th>Condición</th>
-            <th>Cuotas</th>
-            <th>Encargado</th>
-            <th>Empresa</th>
-            <th>Sucursal</th>
-            <th>Presupuesto</th>
-        `;
-    } else if (tipo === "compras") {
-        url = getUrl() + "compras/buscar-informe?desde=" + desde + "&hasta=" + hasta;
-        titulo = "Listado de Compras";
-        columnas = `
-            <th>Código</th>
-            <th>Empresa</th>
-            <th>Sucursal</th>
-            <th>Fecha</th>
-            <th>Intervalo Fecha de Vencimiento</th>
-            <th>proveedor</th>
-            <th>ruc</th>
-            <th>Condición</th>
-            <th>Cuotas</th>
-            <th>Encargado</th>
-            <th>Estado</th>
-            <th>Orden de Compra</th>
-        `;
-    } else if (tipo === "libro_compras") {
-        url = getUrl() + "libro_compras/buscar-informe?desde=" + desde + "&hasta=" + hasta;
-        titulo = "Libro de Compras";
-        columnas = `
-            <th>Código</th>
-            <th>Fecha</th>
-            <th>Tipo Nota</th>
-            <th>Proveedor</th>
-            <th>RUC</th>
-            <th>Condición</th>
-            <th>Tipo de Impuesto</th>
-            <th>Monto</th>
-            <th>Cuota</th>
-        `;
-    } else if (tipo === "notas_remision") {
-        url = getUrl() + "notaremicomp/buscar-informe?desde=" + desde + "&hasta=" + hasta;
-        titulo = "Listado de Notas de Remisión";
-        columnas = `
-            <th>Código</th>
-            <th>Fecha</th>
-            <th>Observaciones</th>
-            <th>Estado</th>
-            <th>Encargado</th>
-            <th>Empresa</th>
-            <th>Sucursal</th>
-        `;
-    } else if (tipo === "ajuste_inventario") {
-        url = getUrl() + "ajus_cab/buscar-informe?desde=" + desde + "&hasta=" + hasta;
-        titulo = "Listado de Ajustes de Inventario";
-        columnas = `
-            <th>Código</th>
-            <th>Fecha</th>
-            <th>Motivo</th>
-            <th>Tipo</th>
-            <th>Estado</th>
-            <th>Encargado</th>
-            <th>Empresa</th>
-            <th>Sucursal</th>
-        `;
-    }else if (tipo === "notas_compra") {
-        url = getUrl() + "notacompcab/buscar-informe?desde=" + desde + "&hasta=" + hasta;
-        titulo = "Listado de Notas de Compra";
-        columnas = `
-            <th>Código</th>
-            <th>Empresa</th>
-            <th>Sucursal</th>
-            <th>Fecha</th>
-            <th>Entrega</th>
-            <th>Tipo</th>
-            <th>Proveedor</th>
-            <th>RUC</th>
-            <th>Condición</th>
-            <th>Cuotas</th>
-            <th>Encargado</th>
-            <th>Estado</th>
-            <th>Compra</th>
-        `;
-    }else {
-        alert("Tipo de informe no implementado aún.");
-        return;
-    }
+    var url = getUrl() + "informes/compras?tipo=" + tipo + "&desde=" + desde + "&hasta=" + hasta;
 
-    document.getElementById("cabecera_tabla").innerHTML = columnas;
     document.getElementById("contenedor_tabla").style.display = "block";
 
-    fetch(url)
-        .then(res => {
-            if (!res.ok) throw new Error("Error en la respuesta del servidor");
-            return res.json();
-        })
-        .then(data => {
-            let html = "";
-            data.forEach(row => {
-                if (tipo === "pedidos") {
-                    html += `
-                        <tr>
-                            <td>${row.id}</td>
-                            <td>${row.empresa}</td>
-                            <td>${row.sucursal}</td>
-                            <td>${row.fecha}</td>
-                            <td>${row.entrega}</td>
-                            <td>${row.observaciones}</td>
-                            <td>${row.encargado}</td>
-                            <td>${row.estado}</td>
-                        </tr>
-                    `;
-                } else if (tipo === "presupuestos") {
-                    html += `
-                        <tr>
-                            <td>${row.id}</td>
-                            <td>${row.empresa}</td>
-                            <td>${row.sucursal}</td>
-                            <td>${row.fecha}</td>
-                            <td>${row.entrega}</td>
-                            <td>${row.observaciones}</td>
-                            <td>${row.proveedor}</td>
-                            <td>${row.ruc}</td>
-                            <td>${row.encargado}</td>
-                            <td>${row.estado}</td>
-                            <td>${row.pedido}</td>
-                        </tr>
-                    `;
-                } else if (tipo === "ordenes_compras") {
-                    html += `
-                        <tr>
-                            <td>${row.id}</td>
-                            <td>${row.fecha}</td>
-                            <td>${row.proveedor}</td>
-                            <td>${row.ruc}</td>
-                            <td>${row.entrega}</td>
-                            <td>${row.estado}</td>
-                            <td>${row.condicion_pago}</td>
-                            <td>${row.cuotas}</td>
-                            <td>${row.encargado}</td>
-                            <td>${row.empresa}</td>
-                            <td>${row.sucursal}</td>
-                            <td>${row.presupuesto}</td>
-                        </tr>
-                    `;
-                } else if (tipo === "compras") {
-                    html += `
-                        <tr>
-                            <td>${row.id}</td>
-                            <td>${row.empresa}</td>
-                            <td>${row.sucursal}</td>
-                            <td>${row.fecha}</td>
-                            <td>${row.entrega}</td>
-                            <td>${row.proveedor}</td>
-                            <td>${row.ruc}</td>
-                            <td>${row.condicion_pago}</td>
-                            <td>${row.cuotas}</td>
-                            <td>${row.encargado}</td>
-                            <td>${row.estado}</td>
-                            <td>${row.ordencompra}</td>
-                        </tr>
-                    `;
-                } else if (tipo === "libro_compras") {
-                    html += `
-                        <tr>
-                            <td>${row.id}</td>
-                            <td>${row.fecha}</td>
-                            <td>${row.tipo_nota}</td>
-                            <td>${row.proveedor}</td>
-                            <td>${row.ruc}</td>
-                            <td>${row.condicion_pago}</td>
-                            <td>${row.impuesto}</td>
-                            <td>${row.monto}</td>
-                            <td>${row.cuota}</td>
-                        </tr>
-                    `;
-                }else if (tipo === "notas_remision") {
-                    html += `
-                        <tr>
-                            <td>${row.id}</td>
-                            <td>${row.fecha}</td>
-                            <td>${row.observaciones}</td>
-                            <td>${row.estado}</td>
-                            <td>${row.encargado}</td>
-                            <td>${row.empresa}</td>
-                            <td>${row.sucursal}</td>
-                        </tr>
-                    `;
-                }else if (tipo === "ajuste_inventario") {
-                    html += `
-                        <tr>
-                            <td>${row.id}</td>
-                            <td>${row.fecha}</td>
-                            <td>${row.motivo}</td>
-                            <td>${row.tipo}</td>
-                            <td>${row.estado}</td>
-                            <td>${row.encargado}</td>
-                            <td>${row.empresa}</td>
-                            <td>${row.sucursal}</td>
-                        </tr>
-                    `;
-                }else if (tipo === "notas_compra") {
-                    html += `
-                        <tr>
-                            <td>${row.id}</td>
-                            <td>${row.empresa}</td>
-                            <td>${row.sucursal}</td>
-                            <td>${row.fecha}</td>
-                            <td>${row.entrega}</td>
-                            <td>${row.tipo}</td>
-                            <td>${row.proveedor}</td>
-                            <td>${row.ruc}</td>
-                            <td>${row.condicion_pago}</td>
-                            <td>${row.cuotas}</td>
-                            <td>${row.encargado}</td>
-                            <td>${row.estado}</td>
-                            <td>${row.compra}</td>
-                        </tr>
-                    `;
-                }
-            });
+    $.ajax({
+        url: url,
+        method: 'GET',
+        success: function (resp) {
+            // Cabecera dinámica desde el backend
+            var cabecera = resp.columnas.map(function (c) {
+                return '<th>' + c.label + '</th>';
+            }).join('');
+            document.getElementById("cabecera_tabla").innerHTML = cabecera;
+
+            // Filas usando las keys del config
+            var keys = resp.columnas.map(function (c) { return c.key; });
+            var html = resp.data.map(function (row) {
+                var celdas = keys.map(function (k) {
+                    return '<td>' + (row[k] !== null && row[k] !== undefined ? row[k] : '') + '</td>';
+                }).join('');
+                return '<tr>' + celdas + '</tr>';
+            }).join('');
 
             document.getElementById("tabla_informes").innerHTML = html;
-            formatoTabla(titulo);
-        })
-        .catch(error => {
-            console.error("Error al cargar el informe:", error);
-            alert("Hubo un problema al cargar los datos.");
-        });
-}
 
+            renderizarTotales(resp.totales);
+            formatoTabla(resp.titulo);
+        },
+        error: function (xhr) {
+            document.getElementById("contenedor_tabla").style.display = "none";
+            if (xhr.status !== 403) {
+                swal('Error', 'No se pudo cargar el informe.', 'error');
+            }
+        }
+    });
+}

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -24,66 +24,6 @@
     <!-- AdminBSB -->
     <link href="../../css/style.css" rel="stylesheet">
     <link href="../../css/themes/all-themes.css" rel="stylesheet" />
-
-    <!-- ===== ESTILO INDUSTRIAL ===== -->
-    <style>
-        body { background-color: #f1f1f1; }
-
-        .card-industrial {
-            border-left: 6px solid #ff6f00;
-            border-radius: 6px;
-            box-shadow: 0 5px 14px rgba(0,0,0,.12);
-            background: #ffffff;
-        }
-
-        .card-industrial .header {
-            background: #2f3542;
-            color: #fff;
-            padding: 15px 20px;
-        }
-
-        .card-industrial .header h2 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        .card-industrial .header small {
-            color: #ced6e0;
-        }
-
-        .section-box {
-            background: #f8f9fa;
-            border: 1px solid #dcdde1;
-            border-radius: 4px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-size: 13px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #2f3542;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #ced6e0;
-            padding-bottom: 5px;
-        }
-
-        .btn-toolbar-left button {
-            margin-right: 6px;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        .table thead {
-            background: #2f3542;
-            color: #fff;
-            font-size: 13px;
-        }
-
-        .table tbody { font-size: 13px; }
-    </style>
 </head>
 
 <body class="theme-red">
@@ -214,6 +154,7 @@
 <!-- JS -->
 <script src="../../plugins/jquery/jquery.min.js"></script>
 <script src="../../plugins/bootstrap/js/bootstrap.js"></script>
+<script src="../../plugins/bootstrap-select/js/bootstrap-select.js"></script>
 <script src="../../plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
 <script src="../../plugins/node-waves/waves.js"></script>
 <script src="../../plugins/sweetalert/sweetalert.min.js"></script>
@@ -228,8 +169,9 @@
 <script src="../../plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
 <script src="../../plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
 
-<script src="../../js/admin.js"></script>
-<script src="metodos.js"></script>
+<script src="../../js/admin.js?v=3"></script>
+<script src="../../js/demo.js"></script>
+<script src="metodos.js?v=2"></script>
 
 </body>
 </html>

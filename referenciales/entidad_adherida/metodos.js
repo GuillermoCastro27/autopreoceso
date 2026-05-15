@@ -307,16 +307,20 @@ function grabar() {
             }
         });
     })
-    .fail(function (xhr) {
-
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
         if (xhr.status === 422) {
-            let errores = "";
-            $.each(xhr.responseJSON.errors, function (k, v) {
-                errores += v[0] + "\n";
-            });
-            swal("Error", errores, "error");
+            var msg = '';
+            if (res && res.errors) {
+                $.each(res.errors, function(k, v){ msg += v[0] + '\n'; });
+            } else {
+                msg = 'Ningún campo debe estar vacío.';
+            }
+            swal('Error de validación', msg, 'error');
+        } else if (xhr.status === 500 && xhr.responseText.indexOf('SQLSTATE[23') !== -1) {
+            swal('Error', 'Este registro está en uso y no puede ser eliminado.', 'error');
         } else {
-            swal("Error", "Ocurrió un error inesperado.", "error");
+            swal('Error', res ? (res.mensaje || res.message || 'Error inesperado.') : 'Error inesperado.', 'error');
         }
     });
 }

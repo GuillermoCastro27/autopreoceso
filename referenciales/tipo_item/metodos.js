@@ -1,4 +1,4 @@
-listar();
+﻿listar();
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -170,7 +170,7 @@ function seleccionPais(codigo, descripcion, gentilicio, siglas){
 
 function listar(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/tipo/read",
+        url:getUrl() + "tipo/read",
         method:"GET",
         dataType: "json"
     })
@@ -246,7 +246,7 @@ function grabar() {
     }
 
     $.ajax({
-        url: "http://127.0.0.1:8000/Proyecto_tp/" + endpoint,
+        url: getUrl() + "" + endpoint,
         method: metodo,
         dataType: "json",
         data: { 

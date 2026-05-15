@@ -1,5 +1,5 @@
-// Cargar user_id del usuario logueado
-cargarUserIdLogueado();
+﻿// Cargar funcionario_id del usuario logueado
+cargarFuncionarioIdLogueado();
 listar();
 campoFecha();
 function formatoTabla(){
@@ -282,7 +282,7 @@ function calcularMontoCierre() {
 
 function buscarEmpresas() {
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/empresa/read",
+        url:getUrl() + "empresa/read",
         method:"GET",
         dataType: "json"
     })
@@ -315,14 +315,14 @@ function seleccionEmpresa(id, emp_razon_social, emp_direccion, emp_telef, emp_co
 
 function buscarSucursal(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/sucursal/read",
+        url:getUrl() + "sucursal/read",
         method:"GET",
         dataType: "json"
     })
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.empresa_id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
         }
         lista += "</ul>";
         $("#listaSucursal").html(lista);
@@ -346,7 +346,7 @@ function seleccionSucursal(empresa_id,suc_razon_social,suc_direccion,suc_telefon
 }
 function buscarCaja(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/caja/read",
+        url:getUrl() + "caja/read",
         method:"GET",
         dataType: "json"
     })
@@ -398,7 +398,7 @@ function grabar(){
         let caja  = $("#caja_id").val().trim();
         let suc   = $("#sucursal_id").val().trim();
         let emp   = $("#empresa_id").val().trim();
-        let user  = $("#user_id").val().trim();
+        let user  = $("#funcionario_id").val().trim();
 
         if (!fecha || !caja || !suc || !emp || !user) {
             swal("Error", "Todos los campos son obligatorios para abrir caja.", "error");
@@ -411,7 +411,7 @@ function grabar(){
             empresa_id: emp,
             sucursal_id: suc,
             caja_id: caja,
-            user_id: user,
+            funcionario_id: user,
             fecha_apertura: fecha,
             monto_apertura: montoApertura
         };
@@ -491,14 +491,14 @@ function campoFecha(){
     });
 }
 
-// Función para cargar el user_id real del usuario logueado
-function cargarUserIdLogueado() {
+// Función para cargar el funcionario_id del usuario logueado
+function cargarFuncionarioIdLogueado() {
     try {
-        const datosSesion = JSON.parse(sessionStorage.getItem('datosSesion'));
+        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
         
-        if (datosSesion && datosSesion.user && datosSesion.user.id) {
-            $('#user_id').val(datosSesion.user.id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.id);
+        if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
+            $('#funcionario_id').val(datosSesion.user.funcionario_id);
+            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
             console.error('No se encontraron datos de sesión válidos');
             alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');

@@ -159,12 +159,12 @@
     <script src="../../plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
 
     <!-- Custom Js -->
-    <script src="../../js/admin.js"></script>
+    <script src="../../js/admin.js?v=3"></script>
 
     <!-- Demo Js -->
     <script src="../../js/demo.js"></script>
 
-    <script src="metodos.js"></script>
+    <script src="metodos.js?v=2"></script>
 </body>
 
 </html>

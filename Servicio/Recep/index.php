@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -23,53 +23,6 @@
 <!-- AdminBSB -->
 <link href="../../css/style.css" rel="stylesheet">
 <link href="../../css/themes/all-themes.css" rel="stylesheet" />
-
-<!-- ESTILO INDUSTRIAL (IGUAL A SOLICITUDES) -->
-<style>
-body { background:#f1f2f6; }
-
-.card-industrial {
-    border-left: 6px solid #0984e3;
-    border-radius: 6px;
-    box-shadow: 0 6px 14px rgba(0,0,0,.12);
-    background: #fff;
-}
-
-.card-industrial .header {
-    background: #2d3436;
-    color: #fff;
-    padding: 15px 20px;
-}
-
-.section-box {
-    background: #f8f9fa;
-    border: 1px solid #dcdde1;
-    border-radius: 4px;
-    padding: 15px;
-    margin-bottom: 20px;
-}
-
-.section-title {
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: #2d3436;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #ced6e0;
-}
-
-.btn-toolbar-left button {
-    margin-right: 6px;
-    margin-bottom: 6px;
-    font-weight: 600;
-}
-
-.table thead {
-    background: #2d3436;
-    color: #fff;
-    font-size: 13px;
-}
-</style>
 </head>
 
 <body class="theme-red">
@@ -94,7 +47,7 @@ Recepción de Vehículos
 <div class="body">
 
 <input type="hidden" id="txtOperacion" value="0">
-<input type="hidden" id="user_id">
+<input type="hidden" id="funcionario_id">
 <input type="hidden" id="recep_cab_estado" value="PENDIENTE">
 
 <!-- ================= DATOS GENERALES ================= -->
@@ -273,66 +226,25 @@ Recepción de Vehículos
 
             <input type="hidden" id="txtOperacionDetalle" value="0"/>
 
-            <!-- CÓDIGO ITEM -->
             <div class="col-sm-1">
-                <div class="form-group form-float">
-                    <div class="form-line">
-                        <input type="text" id="item_id" class="form-control" disabled>
-                        <label class="form-label">Código</label>
-                    </div>
-                </div>
+                <input type="text" id="item_id" class="form-control" disabled placeholder="Código">
             </div>
-
-            <!-- PRODUCTO -->
             <div class="col-sm-5">
-                <div class="form-group form-float">
-                    <div class="form-line">
-                        <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();">
-                        <label class="form-label">Producto</label>
-                    </div>
-                    <div id="listaProductos" style="display:none;"></div>
-                </div>
+                <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
+                <div id="listaProductos" style="display:none;"></div>
             </div>
-
-            <!-- TIPO IMPUESTO -->
             <div class="col-sm-2">
-                <div class="form-group form-float">
-                    <div class="form-line">
-                        <input type="text" id="tip_imp_nom" class="form-control" disabled>
-                        <label class="form-label">Tipo impuesto</label>
-                    </div>
-                    <input type="hidden" id="tipo_impuesto_id" name="tipo_impuesto_id">
-                </div>
+                <input type="text" id="tip_imp_nom" class="form-control" disabled placeholder="Tipo impuesto">
+                <input type="hidden" id="tipo_impuesto_id" name="tipo_impuesto_id">
             </div>
-
-            <!-- CANTIDAD DISPONIBLE -->
             <div class="col-sm-2">
-                <div class="form-group form-float">
-                    <div class="form-line">
-                        <input type="text" id="recep_det_cantidad_stock" class="form-control" disabled>
-                        <label class="form-label">Cantidad Disponible</label>
-                    </div>
-                </div>
+                <input type="text" id="recep_det_cantidad_stock" class="form-control" disabled placeholder="Cant. Disponible">
             </div>
-
-            <!-- CANTIDAD -->
             <div class="col-sm-2">
-                <div class="form-group form-float">
-                    <div class="form-line">
-                        <input type="text" id="recep_det_cantidad" class="form-control" disabled>
-                        <label class="form-label">Cantidad</label>
-                    </div>
-                </div>
+                <input type="text" id="recep_det_cantidad" class="form-control" disabled placeholder="Cantidad">
             </div>
-
-            <!-- COSTO -->
             <div class="col-sm-2">
-                <div class="form-group form-float">
-                    <div class="form-line">
-                        <input type="text" id="recep_det_costo" class="form-control" disabled>
-                        <label class="form-label">Precio</label>
-                    </div>
-                </div>
+                <input type="text" id="recep_det_costo" class="form-control" disabled placeholder="Precio">
             </div>
 
             <!-- BOTONES DETALLE -->
@@ -443,10 +355,10 @@ Recepción de Vehículos
 <script src="../../plugins/momentjs/moment.js"></script>
 <script src="../../plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
 
-<script src="../../js/admin.js"></script>
+<script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js"></script>
-<script src="metodos.js"></script>
+<script src="metodos.js?v=2"></script>
 
 </body>
 </html>

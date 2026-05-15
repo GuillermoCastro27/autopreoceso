@@ -1,8 +1,24 @@
-// Lista los registros de pedidos utilizando DataTables
-// Cargar user_id del usuario logueado
-cargarUserIdLogueado();
+﻿// Lista los registros de pedidos utilizando DataTables
+// Cargar funcionario_id del usuario logueado
+cargarFuncionarioIdLogueado();
 listar();
 campoFecha();
+
+var listaDepositos = [];
+function cargarDepositos() {
+    $.ajax({ url: getUrl()+'deposito/read', method:'GET', dataType:'json', success:function(data){ listaDepositos=data; } });
+}
+cargarDepositos();
+function getSelectDeposito(id_sel) {
+    var opts = '<option value="">-- Depósito --</option>';
+    listaDepositos.forEach(function(d){ opts += '<option value="'+d.id+'"'+(d.id==id_sel?' selected':'')+'>'+d.dep_nombre+'</option>'; });
+    return opts;
+}
+function getNombreDeposito(id) {
+    var d = listaDepositos.find(function(x){ return x.id==id; });
+    return d ? d.dep_nombre : '-';
+}
+
 // Configura el formato de la tabla para exportar en diferentes formatos
 function formatoTabla(){
     //Exportable table
@@ -62,6 +78,7 @@ function agregar() {
     $("#comp_fecha").removeAttr("disabled");
     $("#comp_estado").removeAttr("disabled");
     $("#comp_cant_cuota").attr("disabled", "true");
+    $("#comp_timbrado").removeAttr("disabled");
     $("#ordencompra").removeAttr("disabled");
     $("#condicion_pago").attr("disabled", "true");
     $("#emp_razon_social").attr("disabled", "true");
@@ -86,6 +103,7 @@ function editar() {
     $("#comp_fecha").removeAttr("disabled");
     $("#comp_estado").removeAttr("disabled");
     $("#comp_cant_cuota").attr("disabled", "true");
+    $("#comp_timbrado").removeAttr("disabled");
     $("#ordencompra").removeAttr("disabled");
     $("#condicion_pago").attr("disabled", "true");
     $("#emp_razon_social").attr("disabled", "true");
@@ -175,14 +193,15 @@ function listar() {
     .done(function(resultado) {
         var lista = "";
         for (rs of resultado) {
-            lista += "<tr class=\"item-list\" onclick=\"seleccionCompra(" + rs.id + "," + rs.proveedor_id + "," + rs.empresa_id + "," + rs.sucursal_id + "," + rs.orden_compra_cab_id + ",'" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.ordencompra + "','" + rs.comp_intervalo_fecha_vence + "','" + rs.comp_fecha + "','" + rs.comp_estado + "','" + rs.comp_cant_cuota + "','" + rs.encargado + "','" + rs.prov_razonsocial + "','" + rs.prov_ruc + "','" + rs.prov_telefono + "','" + rs.prov_correo + "','" + rs.condicion_pago + "');\">";
-            lista += "<td>" + rs.id + "</td>";  // Código de la orden de compra
-            lista += "<td>" + rs.comp_intervalo_fecha_vence + "</td>";  // Intervalo de fecha de vencimiento
-            lista += "<td>" + rs.comp_fecha + "</td>";  // Fecha
-            lista += "<td>" + rs.ordencompra + "</td>";  // Presupuesto
-            lista += "<td>" + rs.encargado + "</td>";  // Encargado
-            lista += "<td>" + rs.comp_cant_cuota + "</td>";  // Cantidad de cuota
-            lista += "<td>" + rs.comp_estado + "</td>";  // Estado
+            lista += "<tr class=\"item-list\" onclick=\"seleccionCompra(" + rs.id + "," + rs.proveedor_id + "," + rs.empresa_id + "," + rs.sucursal_id + "," + rs.orden_compra_cab_id + ",'" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.ordencompra + "','" + rs.comp_intervalo_fecha_vence + "','" + rs.comp_fecha + "','" + rs.comp_estado + "','" + rs.comp_cant_cuota + "','" + rs.encargado + "','" + rs.prov_razonsocial + "','" + rs.prov_ruc + "','" + rs.prov_telefono + "','" + rs.prov_correo + "','" + rs.condicion_pago + "','" + (rs.comp_timbrado || '') + "');\">";
+            lista += "<td>" + rs.id + "</td>";
+            lista += "<td>" + (rs.comp_timbrado || '-') + "</td>";
+            lista += "<td>" + rs.comp_intervalo_fecha_vence + "</td>";
+            lista += "<td>" + rs.comp_fecha + "</td>";
+            lista += "<td>" + rs.ordencompra + "</td>";
+            lista += "<td>" + (rs.funcionario || rs.name || rs.encargado || '-') + "</td>";
+            lista += "<td>" + rs.comp_cant_cuota + "</td>";
+            lista += "<td>" + rs.comp_estado + "</td>";
             lista += "</tr>";
         }
         $("#tableBody").html(lista);
@@ -195,9 +214,7 @@ function listar() {
 }
 
 // Rellena el formulario con los datos de un pedido seleccionado.
-function seleccionCompra(id_compra_cab, proveedor_id,empresa_id, sucursal_id, orden_compra_cab_id, emp_razon_social, suc_razon_social, ordencompra, comp_intervalo_fecha_vence, comp_fecha, comp_estado, comp_cant_cuota, encargado, prov_razonsocial, prov_ruc, prov_telefono, prov_correo,condicion_pago) {
-    console.log("Condición de pago: " + condicion_pago);  // Verifica el valor de la condición de pago
-
+function seleccionCompra(id_compra_cab, proveedor_id, empresa_id, sucursal_id, orden_compra_cab_id, emp_razon_social, suc_razon_social, ordencompra, comp_intervalo_fecha_vence, comp_fecha, comp_estado, comp_cant_cuota, encargado, prov_razonsocial, prov_ruc, prov_telefono, prov_correo, condicion_pago, comp_timbrado) {
     $("#id").val(id_compra_cab);
     $("#proveedor_id").val(proveedor_id);
     $("#empresa_id").val(empresa_id);
@@ -216,6 +233,7 @@ function seleccionCompra(id_compra_cab, proveedor_id,empresa_id, sucursal_id, or
     $("#prov_telefono").val(prov_telefono);
     $("#prov_correo").val(prov_correo);
     $("#condicion_pago").val(condicion_pago);
+    $("#comp_timbrado").val(comp_timbrado);
     
     // Mostrar y ocultar secciones según sea necesario
     $("#registros").attr("style", "display:none;");
@@ -298,14 +316,15 @@ function listarDetalles() {
                     totalConImpuesto = subtotal / 21; // Dividimos por 21 para IVA5
                 }
 
-                lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" + rs.item_id + "," + rs.tipo_impuesto_id + ",'" + rs.item_decripcion + "','" + (rs.tip_imp_nom || 'No definido') + "'," + cantidad + ", " + costo + ", '" + formatearNumero(subtotal) + "', '" + formatearNumero(totalConImpuesto) + "');\">";
+                lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" + rs.item_id + "," + rs.tipo_impuesto_id + ",'" + rs.item_decripcion + "','" + (rs.tip_imp_nom || 'No definido') + "'," + cantidad + ", " + costo + ", '" + formatearNumero(subtotal) + "', '" + formatearNumero(totalConImpuesto) + "'," + (rs.deposito_id||0) + ");\">";
                 lista += "<td>" + rs.item_id + "</td>";
                 lista += "<td>" + rs.item_decripcion + "</td>";
                 lista += "<td>" + cantidad + "</td>";
                 lista += "<td class='text-right'>" + (costo ? formatearNumero(costo) : 'No definido') + "</td>";
-                lista += "<td>" + (rs.tip_imp_nom || 'No definido') + "</td>"; // Manejar caso donde no se defina el tipo de impuesto
-                lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>"; // Mostrar subtotal
-                lista += "<td class='text-right'>" + formatearNumero(totalConImpuesto) + "</td>"; // Mostrar total con impuestos
+                lista += "<td>" + (rs.tip_imp_nom || 'No definido') + "</td>";
+                lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>";
+                lista += "<td class='text-right'>" + formatearNumero(totalConImpuesto) + "</td>";
+                lista += "<td>" + getNombreDeposito(rs.deposito_id) + "</td>";
                 lista += "</tr>";
 
                 cantidadDetalle++;
@@ -342,7 +361,7 @@ function buscarOrdenCompra() {
         method: "POST",
         dataType: "json",
         data:{
-            "user_id":$("#user_id").val(),
+            "funcionario_id":$("#funcionario_id").val(),
             "name":$("#ordencompra").val()
         }
     })
@@ -421,7 +440,8 @@ function grabar() {
             'comp_estado': estado,
             'comp_cant_cuota': $("#comp_cant_cuota").val(),
             'condicion_pago': $("#condicion_pago").val(),
-            'user_id': $("#user_id").val(), // Asumiendo que tienes un campo para el ID de usuario
+            'comp_timbrado': $("#comp_timbrado").val(),
+            'funcionario_id': $("#funcionario_id").val(),
             'orden_compra_cab_id': $("#orden_compra_cab_id").val(),
             'proveedor_id': $("#proveedor_id").val(),
             'empresa_id': $("#empresa_id").val(),
@@ -453,7 +473,7 @@ function grabar() {
 }
 function buscarEmpresas() {
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/empresa/read",
+        url:getUrl() + "empresa/read",
         method:"GET",
         dataType: "json"
     })
@@ -486,14 +506,14 @@ function seleccionEmpresa(id, emp_razon_social, emp_direccion, emp_telefono, emp
 
 function buscarSucursal(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/sucursal/read",
+        url:getUrl() + "sucursal/read",
         method:"GET",
         dataType: "json"
     })
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.empresa_id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
         }
         lista += "</ul>";
         $("#listaSucursal").html(lista);
@@ -516,14 +536,14 @@ function seleccionSucursal(empresa_id,suc_razon_social,suc_direccion,suc_telefon
     $("#listaSucursal").attr("style","display:none;");
 }
 
-// Función para cargar el user_id real del usuario logueado
-function cargarUserIdLogueado() {
+// Función para cargar el funcionario_id del usuario logueado
+function cargarFuncionarioIdLogueado() {
     try {
-        const datosSesion = JSON.parse(sessionStorage.getItem('datosSesion'));
+        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
         
-        if (datosSesion && datosSesion.user && datosSesion.user.id) {
-            $('#user_id').val(datosSesion.user.id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.id);
+        if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
+            $('#funcionario_id').val(datosSesion.user.funcionario_id);
+            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
             console.error('No se encontraron datos de sesión válidos');
             alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');

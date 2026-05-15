@@ -1,8 +1,24 @@
-// Lista los registros de pedidos utilizando DataTables
-// Cargar user_id del usuario logueado
-cargarUserIdLogueado();
+﻿// Lista los registros de pedidos utilizando DataTables
+// Cargar funcionario_id del usuario logueado
+cargarFuncionarioIdLogueado();
 listar();
 campoFecha();
+
+var listaDepositos = [];
+function cargarDepositos() {
+    $.ajax({ url: getUrl()+'deposito/read', method:'GET', dataType:'json', success:function(data){ listaDepositos=data; } });
+}
+cargarDepositos();
+function getSelectDeposito(id_sel) {
+    var opts = '<option value="">-- Depósito --</option>';
+    listaDepositos.forEach(function(d){ opts += '<option value="'+d.id+'"'+(d.id==id_sel?' selected':'')+'>'+d.dep_nombre+'</option>'; });
+    return opts;
+}
+function getNombreDeposito(id) {
+    var d = listaDepositos.find(function(x){ return x.id==id; });
+    return d ? d.dep_nombre : '-';
+}
+
 // Configura el formato de la tabla para exportar en diferentes formatos
 function formatoTabla(){
     //Exportable table
@@ -67,6 +83,7 @@ function agregar() {
     $("#suc_razon_social").attr("disabled", "true");
     $("#nota_comp_tipo").removeAttr("disabled");
     $("#nota_comp_observaciones").removeAttr("disabled");
+    $("#nota_comp_timbrado").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled", "true");
     $("#btnEditar").attr("disabled", "true");
@@ -92,6 +109,7 @@ function editar(){
     $("#suc_razon_social").attr("disabled", "true");
     $("#nota_comp_tipo").removeAttr("disabled");
     $("#nota_comp_observaciones").removeAttr("disabled");
+    $("#nota_comp_timbrado").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -178,12 +196,12 @@ function listar() {
         console.log(resultado); // Verifica el contenido de la respuesta
         var lista = "";
         for (rs of resultado) {
-            lista += "<tr class=\"item-list\" onclick=\"seleccionNotaComp(" + rs.id + "," + rs.proveedor_id + "," + rs.empresa_id + "," + rs.sucursal_id + "," + rs.compra_cab_id + ",'" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.compra + "','" + rs.nota_comp_intervalo_fecha_vence + "','" + rs.nota_comp_fecha + "','" + rs.nota_comp_estado + "','" + rs.nota_comp_cant_cuota + "','" + rs.nota_comp_tipo + "','" + rs.nota_comp_observaciones + "','" + rs.encargado + "','" + rs.prov_razonsocial + "','" + rs.prov_ruc + "','" + rs.prov_telefono + "','" + rs.prov_correo + "','" + rs.nota_comp_condicion_pago + "');\">";
+            lista += "<tr class=\"item-list\" onclick=\"seleccionNotaComp(" + rs.id + "," + rs.proveedor_id + "," + rs.empresa_id + "," + rs.sucursal_id + "," + rs.compra_cab_id + ",'" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.compra + "','" + rs.nota_comp_intervalo_fecha_vence + "','" + rs.nota_comp_fecha + "','" + rs.nota_comp_estado + "','" + rs.nota_comp_cant_cuota + "','" + rs.nota_comp_tipo + "','" + rs.nota_comp_observaciones + "','" + rs.encargado + "','" + rs.prov_razonsocial + "','" + rs.prov_ruc + "','" + rs.prov_telefono + "','" + rs.prov_correo + "','" + rs.nota_comp_condicion_pago + "','" + (rs.nota_comp_timbrado||'') + "','" + (rs.comp_timbrado||'') + "');\">";
             lista += "<td>" + rs.id + "</td>";  // Código de la orden de compra
             lista += "<td>" + rs.nota_comp_intervalo_fecha_vence + "</td>";  // Intervalo de fecha de vencimiento
             lista += "<td>" + rs.nota_comp_fecha + "</td>";  // Fecha
             lista += "<td>" + rs.compra + "</td>";  // Compra
-            lista += "<td>" + rs.encargado + "</td>";  // Encargado
+            lista += "<td>" + (rs.funcionario || rs.name || rs.encargado || '-') + "</td>";  // Encargado
             lista += "<td>" + rs.nota_comp_cant_cuota + "</td>";  // Cantidad de cuota
             lista += "<td>" + rs.nota_comp_tipo + "</td>";  // Cantidad de cuota
             lista += "<td>" + rs.nota_comp_observaciones + "</td>";  // Cantidad de cuota
@@ -200,9 +218,7 @@ function listar() {
 }
 
 // Rellena el formulario con los datos de un pedido seleccionado.
-function seleccionNotaComp(id_nota_compra_cab, proveedor_id, empresa_id, sucursal_id, compra_cab_id, emp_razon_social, suc_razon_social, compra_cab, nota_comp_intervalo_fecha_vence, nota_comp_fecha, nota_comp_estado, nota_comp_cant_cuota, nota_comp_tipo, nota_comp_observaciones, encargado, prov_razonsocial, prov_ruc, prov_telefono, prov_correo, nota_comp_condicion_pago) {
-    console.log("Condición de pago: " + nota_comp_condicion_pago);  // Verifica el valor de la condición de pago
-    
+function seleccionNotaComp(id_nota_compra_cab, proveedor_id, empresa_id, sucursal_id, compra_cab_id, emp_razon_social, suc_razon_social, compra_cab, nota_comp_intervalo_fecha_vence, nota_comp_fecha, nota_comp_estado, nota_comp_cant_cuota, nota_comp_tipo, nota_comp_observaciones, encargado, prov_razonsocial, prov_ruc, prov_telefono, prov_correo, nota_comp_condicion_pago, nota_comp_timbrado, comp_timbrado) {
     // Asigna los valores al formulario
     $("#id").val(id_nota_compra_cab);
     $("#empresa_id").val(empresa_id);
@@ -223,6 +239,8 @@ function seleccionNotaComp(id_nota_compra_cab, proveedor_id, empresa_id, sucursa
     $("#prov_telefono").val(prov_telefono);
     $("#prov_correo").val(prov_correo);
     $("#encargado").val(encargado);
+    $("#nota_comp_timbrado").val(nota_comp_timbrado || '');
+    $("#comp_timbrado").val(comp_timbrado || '');
 
     // Asignar la condición de pago (CONTADO o CRÉDITO)
     $("#nota_comp_condicion_pago").val(nota_comp_condicion_pago);
@@ -298,19 +316,20 @@ function grabar() {
         url: getUrl() + endpoint,
         method: metodo,
         dataType: "json",
-        data: { 
-            'id': $("#id").val(), 
-            'nota_comp_intervalo_fecha_vence': formattedIntervaloFechaVence, 
-            'nota_comp_fecha': $("#nota_comp_fecha").val(), 
+        data: {
+            'id': $("#id").val(),
+            'nota_comp_intervalo_fecha_vence': formattedIntervaloFechaVence,
+            'nota_comp_fecha': $("#nota_comp_fecha").val(),
             'nota_comp_cant_cuota': condicionPago === 'CONTADO' ? null : $("#nota_comp_cant_cuota").val(),
-            'nota_comp_tipo': $("#nota_comp_tipo").val(), 
+            'nota_comp_tipo': $("#nota_comp_tipo").val(),
             'nota_comp_observaciones': $("#nota_comp_observaciones").val(),
-            'user_id': $("#user_id").val(),
-            'compra_cab_id': $("#compra_cab_id").val(), 
-            'proveedor_id': $("#proveedor_id").val(), 
+            'nota_comp_timbrado': $("#nota_comp_timbrado").val() || null,
+            'funcionario_id': $("#funcionario_id").val(),
+            'compra_cab_id': $("#compra_cab_id").val(),
+            'proveedor_id': $("#proveedor_id").val(),
             'empresa_id': $("#empresa_id").val(),
             'sucursal_id': $("#sucursal_id").val(),
-            'nota_comp_condicion_pago': condicionPago, // Asegúrate de enviar la condición de pago
+            'nota_comp_condicion_pago': condicionPago,
             'nota_comp_estado': estado,
             'operacion': $("#txtOperacion").val()
         }
@@ -363,7 +382,8 @@ function editarDetalle(){
     $("#item_decripcion").removeAttr("disabled");
     $("#notas_comp_det_cantidad").removeAttr("disabled");
     $("#tip_imp_nom").removeAttr("disabled");
-    $("#item_costo").removeAttr("disabled"); // Habilitar el campo de costo
+    $("#item_costo").removeAttr("disabled");
+    $("#deposito_id_det").removeAttr("disabled");
     $("#btnAgregarDetalle").attr("style","display:none");
     $("#btnEditarDetalle").attr("style","display:none");
     $("#btnEliminarDetalle").attr("style","display:none");
@@ -410,7 +430,8 @@ function grabarDetalle() {
             "item_id": itemId,
             "tipo_impuesto_id": $("#tipo_impuesto_id").val(),
             "notas_comp_det_cantidad": cantidad,
-            "notas_comp_det_costo": costo // Asegúrate de enviar el costo aquí
+            "notas_comp_det_costo": costo,
+            "deposito_id": $("#deposito_id_det").val()
         }
     })
     .done(function(respuesta) {
@@ -509,7 +530,7 @@ function seleccionProducto(item_id, item_decripcion, tipo_impuesto_id, item_cost
 
 function buscarTipoImpuestos(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/tipo-impuesto/read",
+        url:getUrl() + "tipo-impuesto/read",
         method:"GET",
         dataType: "json"
     })
@@ -577,15 +598,15 @@ function listarDetalles() {
                     totalConImpuesto = subtotal / 21; // Dividimos por 21 para IVA5
                 }
 
-                // Usar la función formatearNumero para formatear los valores
-                lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" + rs.item_id + "," + rs.tipo_impuesto_id + ",'" + rs.item_decripcion + "','" + (rs.tip_imp_nom || 'No definido') + "'," + cantidad + ", " + costo + ", '" + formatearNumero(subtotal) + "', '" + formatearNumero(totalConImpuesto) + "');\">";
+                lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" + rs.item_id + "," + rs.tipo_impuesto_id + ",'" + rs.item_decripcion + "','" + (rs.tip_imp_nom || 'No definido') + "'," + cantidad + ", " + costo + ", '" + formatearNumero(subtotal) + "', '" + formatearNumero(totalConImpuesto) + "'," + (rs.deposito_id||0) + ");\">";
                 lista += "<td>" + rs.item_id + "</td>";
                 lista += "<td>" + rs.item_decripcion + "</td>";
                 lista += "<td>" + cantidad + "</td>";
                 lista += "<td class='text-right'>" + (costo ? formatearNumero(costo) : 'No definido') + "</td>";
-                lista += "<td>" + (rs.tip_imp_nom || 'No definido') + "</td>"; // Manejar caso donde no se defina el tipo de impuesto
-                lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>"; // Mostrar subtotal
-                lista += "<td class='text-right'>" + formatearNumero(totalConImpuesto) + "</td>"; // Mostrar total con impuestos
+                lista += "<td>" + (rs.tip_imp_nom || 'No definido') + "</td>";
+                lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>";
+                lista += "<td class='text-right'>" + formatearNumero(totalConImpuesto) + "</td>";
+                lista += "<td>" + getNombreDeposito(rs.deposito_id) + "</td>";
                 lista += "</tr>";
 
                 cantidadDetalle++;
@@ -618,17 +639,16 @@ function listarDetalles() {
 }
 
 // Selecciona un detalle de un pedido y actualiza el formulario
-function seleccionDetalle(item_id, tipo_impuesto_id, item_decripcion, tip_imp_nom, notas_comp_det_cantidad, costo, subtotal, totalConImpuesto) {
+function seleccionDetalle(item_id, tipo_impuesto_id, item_decripcion, tip_imp_nom, notas_comp_det_cantidad, costo, subtotal, totalConImpuesto, deposito_id) {
     $("#item_id").val(item_id);
     $("#tipo_impuesto_id").val(tipo_impuesto_id);
     $("#item_decripcion").val(item_decripcion);
     $("#tip_imp_nom").val(tip_imp_nom);
     $("#notas_comp_det_cantidad").val(notas_comp_det_cantidad);
-    
-    // Rellenar los campos de costo, subtotal y total con impuesto
-    $("#item_costo").val(costo); // Asegúrate de que este sea el ID del campo de costo
-    $("#subtotal").val(subtotal); // Asegúrate de que este sea el ID del campo de subtotal
-    $("#total_con_impuesto").val(totalConImpuesto); // Asegúrate de que este sea el ID del campo de total con impuesto
+    $("#item_costo").val(costo);
+    $("#subtotal").val(subtotal);
+    $("#total_con_impuesto").val(totalConImpuesto);
+    $("#deposito_id_det").html(getSelectDeposito(deposito_id));
 
     $("#listaProductos").html("");
     $("#listaProductos").attr("style", "display:none;");
@@ -654,7 +674,7 @@ function buscarCompra() {
         method: "POST",
         dataType: "json",
         data: {
-            "user_id": $("#user_id").val(),   // Obtener user_id del input correspondiente
+            "funcionario_id": $("#funcionario_id").val(),   // Obtener user_id del input correspondiente
             "name": $("#compra").val()        // Obtener el nombre de la compra
         }
     })
@@ -664,8 +684,8 @@ function buscarCompra() {
 
         for (var rs of resultado) {
             lista += "<li class=\"list-group-item\" onclick=\"seleccionCompra("
-                + rs.compra_cab_id + ", " 
-                + rs.empresa_id + ", " 
+                + rs.compra_cab_id + ", "
+                + rs.empresa_id + ", "
                 + rs.sucursal_id + ", '"
                 + rs.compra + "', "
                 + rs.proveedor_id + ", '"
@@ -674,10 +694,11 @@ function buscarCompra() {
                 + rs.prov_razonsocial + "', '"
                 + rs.prov_ruc + "', '"
                 + rs.prov_telefono + "', '"
-                + rs.prov_correo + "', '"                        
-                + rs.comp_intervalo_fecha_vence + "', '"         
+                + rs.prov_correo + "', '"
+                + rs.comp_intervalo_fecha_vence + "', '"
                 + rs.comp_cant_cuota + "', '"
-                + rs.condicion_pago + "')\">"
+                + rs.condicion_pago + "', '"
+                + (rs.comp_timbrado||'') + "')\">"
                 + rs.compra + "</li>";   
         }
 
@@ -690,9 +711,8 @@ function buscarCompra() {
 function seleccionCompra(
     compra_cab_id, empresa_id, sucursal_id, compra, proveedor_id,
     emp_razon_social, suc_razon_social, prov_razonsocial, prov_ruc,
-    prov_telefono, prov_correo, comp_intervalo_fecha_vence, comp_cant_cuota, condicion_pago
+    prov_telefono, prov_correo, comp_intervalo_fecha_vence, comp_cant_cuota, condicion_pago, comp_timbrado
 ) {
-    // Asignar valores a los campos del formulario para autocompletar
     $("#compra_cab_id").val(compra_cab_id);
     $("#empresa_id").val(empresa_id);
     $("#emp_razon_social").val(emp_razon_social);
@@ -701,27 +721,24 @@ function seleccionCompra(
     $("#nota_comp_intervalo_fecha_vence").val(comp_intervalo_fecha_vence);
     $("#nota_comp_cant_cuota").val(comp_cant_cuota);
     $("#nota_comp_condicion_pago").val(condicion_pago);
-    $("#compra_cab").val(compra);  // Asigna el nombre de la compra
+    $("#compra_cab").val(compra);
+    $("#comp_timbrado").val(comp_timbrado || '');
 
-    // Autocompletar los detalles del proveedor
     $("#proveedor_id").val(proveedor_id);
     $("#prov_razonsocial").val(prov_razonsocial);
     $("#prov_ruc").val(prov_ruc);
     $("#prov_telefono").val(prov_telefono);
     $("#prov_correo").val(prov_correo);
 
-    // Ocultar la lista de compras después de seleccionar
     $("#listaCompra").html("");
     $("#listaCompra").attr("style", "display:none;");
-
-    // Añadir el estilo de "focused" al campo del formulario
     $(".form-line").addClass("focused");
 }
 
 
 function buscarEmpresas() {
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/empresa/read",
+        url:getUrl() + "empresa/read",
         method:"GET",
         dataType: "json"
     })
@@ -754,14 +771,14 @@ function seleccionEmpresa(id, emp_razon_social, emp_direccion, emp_telefono, emp
 
 function buscarSucursal(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/sucursal/read",
+        url:getUrl() + "sucursal/read",
         method:"GET",
         dataType: "json"
     })
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.empresa_id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
         }
         lista += "</ul>";
         $("#listaSucursal").html(lista);
@@ -784,14 +801,14 @@ function seleccionSucursal(empresa_id,suc_razon_social,suc_direccion,suc_telefon
     $("#listaSucursal").attr("style","display:none;");
 }
 
-// Función para cargar el user_id real del usuario logueado
-function cargarUserIdLogueado() {
+// Función para cargar el funcionario_id del usuario logueado
+function cargarFuncionarioIdLogueado() {
     try {
-        const datosSesion = JSON.parse(sessionStorage.getItem('datosSesion'));
+        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
         
-        if (datosSesion && datosSesion.user && datosSesion.user.id) {
-            $('#user_id').val(datosSesion.user.id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.id);
+        if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
+            $('#funcionario_id').val(datosSesion.user.funcionario_id);
+            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
             console.error('No se encontraron datos de sesión válidos');
             alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');

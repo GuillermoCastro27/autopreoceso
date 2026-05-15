@@ -1,4 +1,4 @@
-listar();
+﻿listar();
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -129,7 +129,7 @@ function mensajeOperacion(titulo,mensaje,tipo) {
 
 function listar(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/empresa/read",
+        url:getUrl() + "empresa/read",
         method:"GET",
         dataType: "json"
     })
@@ -173,19 +173,28 @@ function seleccionEmpresa(id, emp_razon_social, emp_telefono, emp_direccion, emp
 }
 
 function grabar(){
+    var op = parseInt($("#txtOperacion").val());
+
+    if (op !== 3) {
+        if (!$("#emp_razon_social").val().trim()) {
+            swal('Error', 'La razón social es obligatoria.', 'error');
+            return;
+        }
+    }
+
     var endpoint = "empresa/create";
     var metodo = "POST";
-    if($("#txtOperacion").val() == 2){
+    if(op === 2){
         endpoint = "empresa/update/" + $("#id").val();
         metodo = "PUT";
     }
-    if($("#txtOperacion").val() == 3){
+    if(op === 3){
         endpoint = "empresa/delete/" + $("#id").val();
         metodo = "DELETE";
     }
 
     $.ajax({
-        url: "http://127.0.0.1:8000/Proyecto_tp/" + endpoint,
+        url: getUrl() + "" + endpoint,
         method: metodo,
         dataType: "json",
         data: { 
@@ -207,34 +216,20 @@ function grabar(){
             }
         });
     })
-    .fail(function(xhr, status, error){
-        var respuesta = xhr.responseJSON;
-
-        // Verificar si es un error de validación o duplicado
-        if (xhr.status === 400) {
-            swal({
-                title: "Error",
-                text: respuesta.mensaje,  // Mostrar el mensaje específico del error
-                type: "error"
-            });
-        } else if (xhr.status === 422) {
-            // Errores de validación
-            let errores = "";
-            $.each(respuesta.errors, function(key, value){
-                errores += value + "\n";
-            });
-            swal({
-                title: "Error de validación",
-                text: "Ningun campo debe estar vacio",
-                type: "error"
-            });
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        if (xhr.status === 422) {
+            var msg = '';
+            if (res && res.errors) {
+                $.each(res.errors, function(k, v){ msg += v[0] + '\n'; });
+            } else {
+                msg = 'Ningún campo debe estar vacío.';
+            }
+            swal('Error de validación', msg, 'error');
+        } else if (xhr.status === 500 && xhr.responseText.indexOf('SQLSTATE[23') !== -1) {
+            swal('Error', 'Esta empresa está en uso y no puede ser eliminada.', 'error');
         } else {
-            swal({
-                title: "Error",
-                text: "El RUC ya existe",
-                type: "error"
-            });
+            swal('Error', res ? (res.mensaje || res.message || 'Error inesperado.') : 'Error inesperado.', 'error');
         }
-        console.log(xhr.responseText);
     });
 }

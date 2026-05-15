@@ -1,5 +1,21 @@
-listar();
+﻿listar();
 campoFecha();
+
+var listaDepositos = [];
+function cargarDepositos() {
+    $.ajax({ url: getUrl()+'deposito/read', method:'GET', dataType:'json', success:function(data){ listaDepositos=data; } });
+}
+cargarDepositos();
+function getSelectDeposito(id_sel) {
+    var opts = '<option value="">-- Depósito --</option>';
+    listaDepositos.forEach(function(d){ opts += '<option value="'+d.id+'"'+(d.id==id_sel?' selected':'')+'>'+d.dep_nombre+'</option>'; });
+    return opts;
+}
+function getNombreDeposito(id) {
+    var d = listaDepositos.find(function(x){ return x.id==id; });
+    return d ? d.dep_nombre : '-';
+}
+
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -177,7 +193,7 @@ function listar(){
             lista += "<td>" + rs.suc_razon_social + "</td>";
             lista += "<td>" + rs.nota_remi_fecha + "</td>";
             lista += "<td>" + rs.nota_remi_observaciones + "</td>";
-            lista += "<td>" + rs.name + "</td>";
+            lista += "<td>" + (rs.funcionario || rs.name || rs.encargado || '-') + "</td>";
             lista += "<td>" + rs.nota_remi_estado + "</td>";
             lista += "</tr>";
         }
@@ -282,7 +298,7 @@ function grabar(){
             'id': $("#id").val(), 
             'nota_remi_fecha': $("#nota_remi_fecha").val(),
             'nota_remi_observaciones': $("#nota_remi_observaciones").val(), 
-            'user_id': $("#user_id").val(), 
+            'funcionario_id': $("#funcionario_id").val(), 
             'nota_remi_estado': estado,
             'empresa_id': $("#empresa_id").val(),
             'sucursal_id': $("#sucursal_id").val(),
@@ -324,7 +340,8 @@ function agregarDetalle() {
     $("#txtOperacionDetalle").val(1);
     $("#item_decripcion").removeAttr("disabled");
     $("#nota_remi_com_det_cantidad").removeAttr("disabled");
-   
+    $("#deposito_id_det").html(getSelectDeposito(null)).removeAttr("disabled");
+
     $("#btnAgregarDetalle").attr("style", "display:none");
     $("#btnEditarDetalle").attr("style", "display:none");
     $("#btnEliminarDetalle").attr("style", "display:none");
@@ -335,6 +352,7 @@ function editarDetalle() {
     $("#txtOperacionDetalle").val(2);
     $("#item_decripcion").removeAttr("disabled");
     $("#nota_remi_com_det_cantidad").removeAttr("disabled");
+    $("#deposito_id_det").removeAttr("disabled");
 
     $("#btnAgregarDetalle").attr("style", "display:none");
     $("#btnEditarDetalle").attr("style", "display:none");
@@ -377,7 +395,8 @@ $.ajax({
     data: {
         "nota_remi_comp_id":$("#id").val(),
         "item_id":$("#item_id").val(),
-        "nota_remi_com_det_cantidad":cantidad
+        "nota_remi_com_det_cantidad":cantidad,
+        "deposito_id":$("#deposito_id_det").val()
     }
 })
 
@@ -445,10 +464,11 @@ function listarDetalles(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionDetalle("+rs.item_id+",'"+rs.item_decripcion+"',"+rs.nota_remi_com_det_cantidad+");\">";
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionDetalle("+rs.item_id+",'"+rs.item_decripcion+"',"+rs.nota_remi_com_det_cantidad+","+(rs.deposito_id||0)+");\">";
                 lista = lista + "<td>" + rs.item_id + "</td>";
                 lista = lista + "<td>" + rs.item_decripcion + "</td>";
                 lista = lista + "<td>" + rs.nota_remi_com_det_cantidad + "</td>";
+                lista = lista + "<td>" + getNombreDeposito(rs.deposito_id) + "</td>";
             lista = lista + "</tr>";
             cantidadDetalle++;
         }
@@ -465,10 +485,11 @@ function listarDetalles(){
         console.error(xhr.responseText);
     })
 }
-function seleccionDetalle(item_id, item_decripcion, nota_remi_com_det_cantidad) {
+function seleccionDetalle(item_id, item_decripcion, nota_remi_com_det_cantidad, deposito_id) {
     $("#item_id").val(item_id);
     $("#item_decripcion").val(item_decripcion);
     $("#nota_remi_com_det_cantidad").val(nota_remi_com_det_cantidad);
+    $("#deposito_id_det").html(getSelectDeposito(deposito_id));
 
     $("#listaProductos").html("");
     $("#listaProductos").attr("style","display:none;");
@@ -477,7 +498,7 @@ function seleccionDetalle(item_id, item_decripcion, nota_remi_com_det_cantidad) 
 
 function buscarEmpresas() {
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/empresa/read",
+        url:getUrl() + "empresa/read",
         method:"GET",
         dataType: "json"
     })
@@ -510,14 +531,14 @@ function seleccionEmpresa(id, emp_razon_social, emp_direccion, emp_telef, emp_co
 
 function buscarSucursal(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/sucursal/read",
+        url:getUrl() + "sucursal/read",
         method:"GET",
         dataType: "json"
     })
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.empresa_id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
         }
         lista += "</ul>";
         $("#listaSucursal").html(lista);

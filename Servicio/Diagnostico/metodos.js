@@ -1,4 +1,4 @@
-cargarUserIdLogueado();
+﻿cargarFuncionarioIdLogueado();
 listar();
 campoFecha();
 function formatoTabla(){
@@ -234,7 +234,7 @@ function listar() {
             lista += "<td>" + rs.id + "</td>";
             lista += "<td>" + (rs.emp_razon_social || '') + "</td>";
             lista += "<td>" + (rs.suc_razon_social || '') + "</td>";
-            lista += "<td>" + (rs.encargado || '') + "</td>";
+            lista += "<td>" + (rs.funcionario || rs.name || rs.encargado || '-') + "</td>";
             lista += "<td>" + (rs.recepcion || '') + "</td>";
             lista += "<td>" + (rs.diag_cab_fecha || '') + "</td>";
             lista += "<td>" + (rs.diag_cab_estado || '') + "</td>";
@@ -346,7 +346,7 @@ function buscarRecepcion() {
         method: "POST",
         dataType: "json",
         data: {
-            "user_id": $("#user_id").val(),
+            "funcionario_id": $("#funcionario_id").val(),
             "name": $("#recepcion").val()
         }
     })
@@ -474,7 +474,7 @@ function seleccionRecepcion(
 
 function buscarTipoDiagnostico(){
     $.ajax({
-        url:"http://127.0.0.1:8000/Proyecto_tp/tipo-diagnostico/read",
+        url:getUrl() + "tipo-diagnostico/read",
         method:"GET",
         dataType: "json"
     })
@@ -552,7 +552,7 @@ function grabar(){
             'diag_cab_prioridad': $("#diag_cab_prioridad").val(),  
             'diag_cab_kilometraje': $("#diag_cab_kilometraje").val(),  
             'diag_cab_nivel_combustible': $("#diag_cab_nivel_combustible").val(),
-            'user_id': $("#user_id").val(), 
+            'funcionario_id': $("#funcionario_id").val(), 
             'diag_cab_estado': estado,
             'clientes_id': $("#clientes_id").val(),
             'tipo_diagnostico_id': $("#tipo_diagnostico_id").val(),
@@ -885,13 +885,13 @@ function seleccionRecepcionDet(item_id, item_decripcion, diag_det_cantidad, diag
 
     $(".form-line").attr("class","form-line focused");
 }
-function cargarUserIdLogueado() {
+function cargarFuncionarioIdLogueado() {
     try {
-        const datosSesion = JSON.parse(sessionStorage.getItem('datosSesion'));
+        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
         
-        if (datosSesion && datosSesion.user && datosSesion.user.id) {
-            $('#user_id').val(datosSesion.user.id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.id);
+        if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
+            $('#funcionario_id').val(datosSesion.user.funcionario_id);
+            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
             console.error('No se encontraron datos de sesión válidos');
             alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');
