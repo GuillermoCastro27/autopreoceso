@@ -3,5 +3,5 @@ function getUrl(){
 }
 
 function getFrontUrl(){
-    return "https://remarkable-axolotl-f9d663.netlify.app/";
+    return "https://axolotl-extraordinario-f9d663.netlify.app/";
 }
