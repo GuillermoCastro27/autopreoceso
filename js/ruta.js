@@ -3,5 +3,5 @@ function getUrl(){
 }
 
 function getFrontUrl(){
-    return "https://web-production-f58ca.up.railway.app/Proyecto_tp/";
+    return "https://remarkable-axolotl-f9d663.netlify.app/";
 }
