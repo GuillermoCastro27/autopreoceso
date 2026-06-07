@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿<?php header('Cache-Control: no-store, no-cache, must-revalidate'); header('Pragma: no-cache'); ?>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -76,10 +77,12 @@
 
                 <div class="col-sm-3">
                     <input type="text" id="ped_fecha" class="datetimepicker form-control" disabled placeholder="Fecha">
+                    <small id="avisoFechaPed" style="color:#e74c3c;display:none;"></small>
                 </div>
 
                 <div class="col-sm-3">
                     <input type="text" id="ped_vence" class="datetimepicker form-control" disabled placeholder="Plazo de Entrega">
+                    <small id="avisoVencePed" style="color:#e74c3c;display:none;"></small>
                 </div>
 
                 <div class="col-sm-6">
@@ -108,6 +111,9 @@
             <button id="btnCancelar" class="btn btn-warning" onclick="cancelar();" disabled>
                 <i class="material-icons">close</i> Cancelar
             </button>
+            <button id="btnImprimir" class="btn btn-info waves-effect" onclick="imprimirPedido();" style="display:none;" disabled>
+                <i class="material-icons">print</i> Imprimir
+            </button>
         </div>
 
     </div>
@@ -124,30 +130,48 @@
     <div class="body">
 
         <input type="hidden" id="txtOperacionDetalle" value="0">
+        <input type="hidden" id="marca_id_det">
+        <input type="hidden" id="modelo_id_det">
 
         <div class="section-box">
             <div class="section-title">Productos</div>
 
+            <!-- Fila 1: ítem, marca, modelo -->
             <div class="row clearfix">
                 <div class="col-sm-1">
-                    <input type="text" id="item_id" class="form-control" disabled placeholder="ID">
+                    <input type="text" id="item_id" class="form-control" disabled placeholder="Cód">
                 </div>
 
-                <div class="col-sm-6">
+                <div class="col-sm-5">
                     <input type="text" id="item_decripcion" class="form-control" disabled
                            onkeyup="buscarProductos();" placeholder="Producto">
                     <div id="listaProductos" style="display:none;"></div>
                 </div>
 
-                <div class="col-sm-2">
-                    <input type="text" id="cantidad_stock" class="form-control" disabled placeholder="Disponible">
-                </div>
-
-                <div class="col-sm-2">
-                    <input type="text" id="det_cantidad" class="form-control" disabled placeholder="Cantidad">
+                <div class="col-sm-3">
+                    <select class="form-control" id="marca_det" disabled onchange="cargarModelosPedido();">
+                        <option value="">-- Marca --</option>
+                    </select>
                 </div>
 
                 <div class="col-sm-3">
+                    <select class="form-control" id="modelo_det" disabled>
+                        <option value="">-- Modelo --</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Fila 2: stock, cantidad, depósito -->
+            <div class="row clearfix" style="margin-top:6px;">
+                <div class="col-sm-2">
+                    <input type="text" id="cantidad_stock" class="form-control" disabled placeholder="Stock disponible">
+                </div>
+
+                <div class="col-sm-2">
+                    <input type="text" id="det_cantidad" class="form-control" disabled placeholder="Cantidad a pedir">
+                </div>
+
+                <div class="col-sm-4">
                     <select class="form-control" id="deposito_id_det" disabled>
                         <option value="">-- Depósito --</option>
                     </select>
@@ -156,44 +180,23 @@
         </div>
 
         <!-- BOTONES DETALLE -->
-       <div class="col-sm-3">
-    <div class="icon-button-demo">
-
-        <button type="button" id="btnAgregarDetalle"
-                class="btn btn-success waves-effect"
-                onclick="agregarDetalle();">
-            <i class="material-icons">add</i>
-        </button>
-
-        <button type="button" id="btnEditarDetalle"
-                class="btn btn-warning waves-effect"
-                onclick="editarDetalle();">
-            <i class="material-icons">mode_edit</i>
-        </button>
-
-        <button type="button" id="btnEliminarDetalle"
-                class="btn btn-danger waves-effect"
-                onclick="eliminarDetalle();">
-            <i class="material-icons">clear</i>
-        </button>
-
-        <button type="button" id="btnGrabarDetalle"
-                class="btn btn-default waves-effect"
-                style="display:none;"
-                onclick="grabarDetalle();">
-            <i class="material-icons">save</i>
-        </button>
-
-    </div>
-</div>
+        <div class="btn-toolbar-left">
+            <button type="button" id="btnAgregarDetalle"  class="btn btn-success waves-effect" onclick="agregarDetalle();"><i class="material-icons">add</i></button>
+            <button type="button" id="btnEditarDetalle"   class="btn btn-warning waves-effect" onclick="editarDetalle();"><i class="material-icons">mode_edit</i></button>
+            <button type="button" id="btnEliminarDetalle" class="btn btn-danger waves-effect"  onclick="eliminarDetalle();"><i class="material-icons">clear</i></button>
+            <button type="button" id="btnGrabarDetalle"   class="btn btn-default waves-effect" onclick="grabarDetalle();"   style="display:none;"><i class="material-icons">save</i></button>
+            <button type="button" id="btnCancelarDetalle" class="btn btn-warning waves-effect" onclick="cancelarDetalle();" style="display:none;"><i class="material-icons">close</i></button>
+        </div>
 
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th>Código</th>
                     <th>Producto</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
                     <th>Cantidad</th>
-                    <th>Cantidad Disponible</th>
+                    <th>Stock Disp.</th>
                     <th>Depósito</th>
                 </tr>
             </thead>
@@ -238,7 +241,6 @@
 <!-- ================= JS ================= -->
 <script src="../../plugins/jquery/jquery.min.js"></script>
 <script src="../../plugins/bootstrap/js/bootstrap.js"></script>
-<script src="../../plugins/bootstrap-select/js/bootstrap-select.js"></script>
 <script src="../../plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
 <script src="../../plugins/node-waves/waves.js"></script>
 <script src="../../plugins/sweetalert/sweetalert.min.js"></script>
@@ -258,8 +260,8 @@
 
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
-<script src="../../js/ruta.js"></script>
-<script src="metodos.js?v=3"></script>
+<script src="../../js/ruta.js?v=2"></script>
+<script src="metodos.js?v=20260601k"></script>
 
 </body>
 </html>

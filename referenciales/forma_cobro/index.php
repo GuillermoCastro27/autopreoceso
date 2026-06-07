@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>GUI FORMA DE COBRO</title>
+    <title>Forma de Cobro</title>
 
     <link rel="icon" href="../../images.ico" type="image/x-icon">
 
@@ -41,13 +41,14 @@
         <h2>
             <i class="material-icons">payments</i>
             Mantener Forma de Cobro
-            <small>CRUD de Forma de Cobro</small>
+            <small>Gestión de Forma de Cobro</small>
         </h2>
     </div>
 
     <div class="body">
 
         <input type="hidden" value="0" id="txtOperacion"/>
+        <input type="hidden" id="for_cob_estado" value="activo"/>
 
         <!-- DATOS -->
         <div class="section-box">
@@ -84,8 +85,8 @@
                 <i class="material-icons">edit</i> Modificar
             </button>
 
-            <button id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();" disabled>
-                <i class="material-icons">delete</i> Eliminar
+            <button id="btnEstado" class="btn btn-danger waves-effect" onclick="confirmarCambioEstado();" disabled>
+                <i class="material-icons">block</i> <span id="lblEstado">Desactivar</span>
             </button>
 
             <button id="btnGrabar" class="btn btn-default waves-effect" onclick="confirmarOperacion();" disabled>
@@ -113,6 +114,7 @@
                     <tr>
                         <th>Código</th>
                         <th>Descripción</th>
+                        <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
@@ -120,6 +122,7 @@
                     <tr>
                         <th>Código</th>
                         <th>Descripción</th>
+                        <th>Estado</th>
                     </tr>
                 </tfoot>
             </table>
@@ -152,7 +155,7 @@
 
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
-<script src="metodos.js?v=2"></script>
+<script src="metodos.js?v=3"></script>
 
 </body>
 </html>

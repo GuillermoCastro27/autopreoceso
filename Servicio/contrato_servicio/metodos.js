@@ -72,17 +72,18 @@ function agregar(){
     $("#contrato_limitacion").removeAttr("disabled");
     $("#contrato_fuerza_mayor").removeAttr("disabled");
     $("#contrato_jurisdiccion").removeAttr("disabled");
+    $("#contrato_representante").removeAttr("disabled");
+    $("#orden_buscar").removeAttr("disabled");
     buscarEmpresas();
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
     $("#btnEliminar").attr("disabled","true");
     $("#btnConfirmar").attr("disabled","true");
+    $("#btnRenovar").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
-    $("#btnBuscarPromociones").removeAttr("disabled");
-    $("#btnBuscarDescuentos").removeAttr("disabled");
     $(".form-line").attr("class","form-line focused");
     $("#registros").attr("style","display:none;");
 
@@ -111,11 +112,14 @@ function editar(){
     $("#contrato_limitacion").removeAttr("disabled");
     $("#contrato_fuerza_mayor").removeAttr("disabled");
     $("#contrato_jurisdiccion").removeAttr("disabled");
+    $("#contrato_representante").removeAttr("disabled");
+    $("#orden_buscar").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
     $("#btnEliminar").attr("disabled","true");
     $("#btnConfirmar").attr("disabled","true");
+    $("#btnRenovar").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -209,7 +213,12 @@ function listar() {
 
         for (let rs of resultado) {
 
-            lista += "<tr class='item-list' onclick=\"seleccionContratoServicio("
+                const partesFin = (rs.contrato_fecha_fin || '').split('/');
+            const fechaFin = partesFin.length === 3 ? new Date(+partesFin[2], +partesFin[1]-1, +partesFin[0]) : null;
+            const diasRestantes = fechaFin ? Math.floor((fechaFin - new Date()) / 86400000) : null;
+            const colorFila = diasRestantes === null ? '' : diasRestantes < 0 ? ' style="background-color:#ffcccc;"' : diasRestantes <= 30 ? ' style="background-color:#fff3cd;"' : '';
+
+            lista += "<tr class='item-list'" + colorFila + " onclick=\"seleccionContratoServicio("
                 + rs.id + ","
                 + rs.empresa_id + ","
                 + rs.sucursal_id + ","
@@ -247,7 +256,10 @@ function listar() {
 
                 + esc(rs.contrato_observacion || '') + "', '"
                 + esc(rs.contrato_estado || '') + "', '"
-                + esc(rs.encargado || '') + "');\">";
+                + esc(rs.funcionario || '') + "', '"
+                + esc(rs.contrato_representante || '') + "', '"
+                + esc(rs.contrato_numero || '') + "', "
+                + (rs.orden_serv_cab_id || 0) + ")\">";
 
                 lista += `<td>${rs.id}</td>`;                    // Código
                 lista += `<td>${rs.emp_razon_social}</td>`;     // Empresa
@@ -266,6 +278,9 @@ function listar() {
 
         $("#tableBody").html(lista);
         formatoTabla();
+    })
+    .fail(function(xhr) {
+        mostrarErrores(xhr);
     });
 }
 function seleccionContratoServicio(
@@ -277,7 +292,8 @@ function seleccionContratoServicio(
     tipo_serv_nombre, contrato_condicion_pago, contrato_cuotas,
     contrato_objeto, contrato_alcance, contrato_responsabilidad,
     contrato_garantia, contrato_limitacion, contrato_fuerza_mayor,
-    contrato_jurisdiccion, contrato_observacion, contrato_estado, encargado
+    contrato_jurisdiccion, contrato_observacion, contrato_estado, encargado,
+    contrato_representante, contrato_numero, orden_serv_cab_id
 ) {
 
     $("#id").val(id);
@@ -331,6 +347,14 @@ function seleccionContratoServicio(
     $("#contrato_observacion").val(contrato_observacion);
     $("#contrato_estado").val(contrato_estado);
     $("#encargado").val(encargado);
+    $("#contrato_representante").val(contrato_representante || '');
+    $("#contrato_numero").val(contrato_numero || '');
+    $("#orden_serv_cab_id").val(orden_serv_cab_id || '');
+    if (orden_serv_cab_id) {
+        $("#orden_texto").val('ORDEN Nº: ' + String(orden_serv_cab_id).padStart(7, '0'));
+    } else {
+        $("#orden_texto").val('');
+    }
 
     $("#registros").hide();
     $("#detalle").show();
@@ -345,9 +369,9 @@ function seleccionContratoServicio(
     }
 
     if (contrato_estado === "CONFIRMADO") {
-        $("#btnImprimir").prop("disabled", false);
+        $("#btnImprimir, #btnRenovar").prop("disabled", false);
     } else {
-        $("#btnImprimir").prop("disabled", true);
+        $("#btnImprimir, #btnRenovar").prop("disabled", true);
     }
 
     $(".form-line").addClass("focused");
@@ -368,9 +392,8 @@ function buscarTipoServicio(){
         $("#listaTipoServ").html(lista);
         $("#listaTipoServ").attr("style","display:block; position:absolute; z-index:2000;");
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr) {
+        mostrarErrores(xhr);
     })
 }
 
@@ -399,13 +422,11 @@ function buscarCliente(){
         $("#listaClientes").html(lista);
         $("#listaClientes").attr("style","display:block; position: absolute; z-index: 2000;");
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr) {
+        mostrarErrores(xhr);
     });
 }
 
-// Rellena el formulario con los datos de un proveedor seleccionado.
 function seleccionCliente(clientes_id,cli_nombre,cli_apellido,cli_ruc,cli_direccion,cli_telefono,cli_correo){
     $("#clientes_id").val(clientes_id);
     $("#cli_nombre").val(cli_nombre);
@@ -459,9 +480,8 @@ function buscarTipoContrato(){
             "display:block; position:absolute; z-index:2000; width:100%;"
         );
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr) {
+        mostrarErrores(xhr);
     });
 }
 
@@ -588,7 +608,9 @@ function grabar() {
             tipo_servicio_id: tipoServicio,
             funcionario_id: user,
 
-            operacion: $("#txtOperacion").val()
+            operacion: $("#txtOperacion").val(),
+            contrato_representante: $("#contrato_representante").val(),
+            orden_serv_cab_id: $("#orden_serv_cab_id").val() || null
         }
     })
     .done(function (resultado) {
@@ -600,16 +622,19 @@ function grabar() {
 
             if (resultado.tipo === "success") {
 
-                // ✅ Asignar ID generado
                 if (resultado.registro && resultado.registro.id) {
                     $("#id").val(resultado.registro.id);
                 }
+                if (resultado.registro && resultado.registro.contrato_numero) {
+                    $("#contrato_numero").val(resultado.registro.contrato_numero);
+                }
+                if (resultado.registro && resultado.registro.contrato_estado) {
+                    $("#contrato_estado").val(resultado.registro.contrato_estado);
+                }
 
-                // ✅ MOSTRAR PANEL DE DETALLE (igual que diagnóstico)
                 $("#detalle").attr("style", "display:block;");
                 listarDetalles();
 
-                // 🔄 Solo recargar si NO queda pendiente
                 if (resultado.registro.contrato_estado !== "PENDIENTE"
                     || $("#txtOperacion").val() == 2) {
                     location.reload(true);
@@ -617,9 +642,8 @@ function grabar() {
             }
         });
     })
-    .fail(function (a, b, c) {
-        alert("Error: " + c);
-        console.error(a.responseText);
+    .fail(function(xhr) {
+        mostrarErrores(xhr);
     });
 }
 function campoFecha(){
@@ -677,13 +701,14 @@ function agregarDetalle() {
     $("#item_decripcion").removeAttr("disabled");
     $("#tip_imp_nom").attr("disabled","true");
     $("#contrato_serv_det_cantidad_stock").attr("disabled","true");
-    $("#contrato_serv_det_cantidad").removeAttr("disabled"); 
-    $("#contrato_serv_det_costo").attr("disabled","true"); 
+    $("#contrato_serv_det_cantidad").removeAttr("disabled");
+    $("#contrato_serv_det_costo").attr("disabled","true");
 
     $("#btnAgregarDetalle").attr("style", "display:none");
     $("#btnEditarDetalle").attr("style", "display:none");
     $("#btnEliminarDetalle").attr("style", "display:none");
     $("#btnGrabarDetalle").attr("style", "display:inline");
+    $("#btnCancelarDetalle").attr("style", "display:inline");
 }
 
 function editarDetalle() {
@@ -691,72 +716,102 @@ function editarDetalle() {
     $("#item_decripcion").removeAttr("disabled");
     $("#tip_imp_nom").attr("disabled","true");
     $("#contrato_serv_det_cantidad_stock").attr("disabled","true");
-    $("#contrato_serv_det_cantidad").removeAttr("disabled"); 
+    $("#contrato_serv_det_cantidad").removeAttr("disabled");
     $("#contrato_serv_det_costo").attr("disabled","true");
 
     $("#btnAgregarDetalle").attr("style", "display:none");
     $("#btnEditarDetalle").attr("style", "display:none");
     $("#btnEliminarDetalle").attr("style", "display:none");
     $("#btnGrabarDetalle").attr("style", "display:inline");
+    $("#btnCancelarDetalle").attr("style", "display:inline");
 }
 
-function eliminarDetalle(){
+function eliminarDetalle() {
     $("#txtOperacionDetalle").val(3);
     $("#btnAgregarDetalle").attr("style","display:none");
     $("#btnEditarDetalle").attr("style","display:none");
     $("#btnEliminarDetalle").attr("style","display:none");
     $("#btnGrabarDetalle").attr("style","display:inline");
+    $("#btnCancelarDetalle").attr("style","display:inline");
 }
-function grabarDetalle(){
-
-    var endpoint = "contratoservdet/create";
-    var metodo = "POST";
-
-if($("#txtOperacionDetalle").val()==2){
-    endpoint = "contratoservdet/update/"+$("#id").val();
-    metodo = "PUT";
+function cancelarDetalle() {
+    $("#btnAgregarDetalle").attr("style","display:inline");
+    $("#btnEditarDetalle").attr("style","display:inline");
+    $("#btnEliminarDetalle").attr("style","display:inline");
+    $("#btnGrabarDetalle").attr("style","display:none");
+    $("#btnCancelarDetalle").attr("style","display:none");
+    $("#txtOperacionDetalle").val(1);
+    $("#item_id").val("");
+    $("#original_item_id").val("");
+    $("#item_decripcion").val("");
+    $("#tip_imp_nom").val("");
+    $("#tipo_impuesto_id").val("");
+    $("#contrato_serv_det_cantidad_stock").val("");
+    $("#contrato_serv_det_cantidad").val("");
+    $("#contrato_serv_det_costo").val("");
 }
-if($("#txtOperacionDetalle").val()==3){
-    endpoint = "contratoservdet/delete/"+$("#id").val()+"/"+$("#item_id").val();
-    metodo = "DELETE";
 
-}
+function grabarDetalle() {
+    var operacion = parseInt($("#txtOperacionDetalle").val());
+    var endpoint  = "contratoservdet/create";
+    var metodo    = "POST";
 
-$.ajax({
-    url:getUrl()+endpoint,
-    method: metodo,
-    dataType: "json",
-    data: {
-        "contrato_serv_cab_id":$("#id").val(),
-        "item_id":$("#item_id").val(),
-        "original_item_id": $("#original_item_id").val(),
-        "tipo_impuesto_id":$("#tipo_impuesto_id").val(),
-        "contrato_serv_det_cantidad":$("#contrato_serv_det_cantidad").val(),
-        "contrato_serv_det_costo":$("#contrato_serv_det_costo").val(),
-        "contrato_serv_det_cantidad_stock":$("#contrato_serv_det_cantidad_stock").val()
+    if (operacion === 2) {
+        endpoint = "contratoservdet/update/" + $("#id").val();
+        metodo   = "PUT";
     }
-})
+    if (operacion === 3) {
+        swal({
+            title: "ELIMINAR",
+            text: "¿DESEA ELIMINAR EL DETALLE SELECCIONADO?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d9534f",
+            confirmButtonText: "SI",
+            cancelButtonText: "NO",
+            closeOnConfirm: false
+        }, function() {
+            $.ajax({
+                url: getUrl() + "contratoservdet/delete/" + $("#id").val() + "/" + $("#item_id").val(),
+                method: "DELETE",
+                dataType: "json"
+            })
+            .done(function(respuesta) {
+                swal({ title: "Respuesta", text: respuesta.mensaje, type: respuesta.tipo }, function() {
+                    cancelarDetalle();
+                    listarDetalles();
+                });
+            })
+            .fail(function(xhr) {
+                mostrarErrores(xhr);
+            });
+        });
+        return;
+    }
 
-.done(function(respuesta){
-listarDetalles();
-})
-.fail(function(a,b,c){
-    alert(c);
-    console.log(a.responseText);
-})
-
-$("#btnAgregarDetalle").attr("style","display:inline");
-$("#btnEditarDetalle").attr("style","display:inline");
-$("#btnEliminarDetalle").attr("style","display:inline");
-$("#btnGrabarDetalle").attr("style","display:none");
-
-$("#txtOperacionDetalle").val(1);
-
-$("#item_decripcion").val("");
-$("#tip_imp_nom").val("");
-$("#contrato_serv_det_cantidad_stock").val("");
-$("#contrato_serv_det_cantidad").val("");
-$("#contrato_serv_det_costo").val("");
+    $.ajax({
+        url: getUrl() + endpoint,
+        method: metodo,
+        dataType: "json",
+        data: {
+            "contrato_serv_cab_id":          $("#id").val(),
+            "item_id":                       $("#item_id").val(),
+            "original_item_id":              $("#original_item_id").val(),
+            "tipo_impuesto_id":              $("#tipo_impuesto_id").val(),
+            "contrato_serv_det_cantidad":    $("#contrato_serv_det_cantidad").val(),
+            "contrato_serv_det_costo":       $("#contrato_serv_det_costo").val(),
+            "contrato_serv_det_cantidad_stock": $("#contrato_serv_det_cantidad_stock").val()
+        }
+    })
+    .done(function(respuesta) {
+        swal({ title: "Respuesta", text: respuesta.mensaje, type: respuesta.tipo }, function() {
+            cancelarDetalle();
+            listarDetalles();
+        });
+    })
+    .fail(function(xhr) {
+        mostrarErrores(xhr);
+    });
 }
 
 function buscarProductos(){
@@ -785,13 +840,11 @@ function buscarProductos(){
         $("#listaProductos").html(lista);
         $("#listaProductos").attr("style","display:block; position: absolute; z-index: 2000;");
     })
-    .fail(function(a, b, c){
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr) {
+        mostrarErrores(xhr);
     });
 }
 
-// Rellena el campo de producto seleccionado.
 function seleccionProducto(item_id, item_decripcion, tipo_impuesto_id, item_costo, tip_imp_nom, tipo_imp_tasa, cantidad_disponible){
     // Asignar valores a los campos del detalle
     $("#item_id").val(item_id);
@@ -821,8 +874,9 @@ function seleccionProducto(item_id, item_decripcion, tipo_impuesto_id, item_cost
 
 function listarDetalles() {
     var cantidadDetalle = 0;
-    var TotalGral = 0;          // Total comprobante (sin IVA)
-    var TotalIVA = 0;           // Total IVA
+    var TotalGral  = 0;
+    var TotalIva10 = 0;
+    var TotalIva5  = 0;
 
     $.ajax({
         url: getUrl() + "contratoservdet/read/" + $("#id").val(),
@@ -838,11 +892,16 @@ function listarDetalles() {
                 const costo = parseFloat(rs.contrato_serv_det_costo) || 0;
                 const subtotal = cantidad * costo;
 
+                const imp = (rs.tip_imp_nom || '').toUpperCase();
                 let iva = 0;
-                if (rs.tip_imp_nom === "IVA10") {
-                    iva = subtotal / 11;
-                } else if (rs.tip_imp_nom === "IVA5") {
-                    iva = subtotal / 21;
+                if (imp.indexOf('EXENT') !== -1) {
+                    iva = 0;
+                } else if (imp.indexOf('5') !== -1) {
+                    iva = Math.round(subtotal / 21);
+                    TotalIva5 += iva;
+                } else {
+                    iva = Math.round(subtotal / 11);
+                    TotalIva10 += iva;
                 }
 
                 // Generar fila
@@ -868,7 +927,6 @@ function listarDetalles() {
 
                 cantidadDetalle++;
                 TotalGral += subtotal;
-                TotalIVA += iva;
             }
 
             $("#tableDetalle").html(lista);
@@ -876,9 +934,10 @@ function listarDetalles() {
             $("#tableDetalle").html("<tr><td colspan='8' class='text-center'>No se encontraron detalles.</td></tr>");
         }
 
-        // Actualizar totales en el pie
+        $("#txtIva10").text(formatearNumero(TotalIva10));
+        $("#txtIva5").text(formatearNumero(TotalIva5));
+        $("#txtTotalConImpuesto").text(formatearNumero(TotalIva10 + TotalIva5));
         $("#txtTotalGral").text(formatearNumero(TotalGral));
-        $("#txtTotalConImpuesto").text(formatearNumero(TotalIVA));
 
         // Activar o desactivar Confirmar
        if ($("#contrato_estado").val() === "PENDIENTE" && cantidadDetalle > 0) {
@@ -887,9 +946,8 @@ function listarDetalles() {
             $("#btnConfirmar").attr("disabled", "true");
         }
     })
-    .fail(function(xhr, status, error) {
-        alert("Error: " + error);
-        console.error(xhr.responseText);
+    .fail(function(xhr) {
+        mostrarErrores(xhr);
     });
 }
 
@@ -933,9 +991,8 @@ function buscarEmpresas() {
             seleccionEmpresa(primeraEmpresa.id, primeraEmpresa.emp_razon_social, primeraEmpresa.emp_direccion, primeraEmpresa.emp_telef, primeraEmpresa.emp_correo);
         }
     })
-    .fail(function(a,b,c) {
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr) {
+        mostrarErrores(xhr);
     });
 }
 
@@ -965,9 +1022,8 @@ function buscarSucursal(){
         $("#listaSucursal").html(lista);
         $("#listaSucursal").attr("style","display:block; position:absolute; z-index:2000;");
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr){
+        mostrarErrores(xhr);
     })
 }
 
@@ -987,16 +1043,80 @@ function cargarFuncionarioIdLogueado() {
         
         if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
             $('#funcionario_id').val(datosSesion.user.funcionario_id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
-            console.error('No se encontraron datos de sesión válidos');
             alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');
             window.location.href = '../../index.html';
         }
     } catch (error) {
-        console.error('Error al cargar datos de usuario:', error);
         alert('Error al cargar datos del usuario. Inicie sesión nuevamente.');
         window.location.href = '../../index.html';
     }
 }
 
+function renovarContrato() {
+    var id = $("#id").val();
+    if (!id) { swal("Error", "No hay contrato seleccionado.", "error"); return; }
+    swal({
+        title: "¿Renovar contrato?",
+        text: "Se creará un nuevo contrato en estado PENDIENTE copiando todos los datos y detalles.",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, renovar",
+        cancelButtonText: "Cancelar"
+    }, function (confirmado) {
+        if (!confirmado) return;
+        $.ajax({
+            url: getUrl() + "contratoservcab/renovar/" + id,
+            method: "PUT",
+            dataType: "json"
+        })
+        .done(function (resultado) {
+            swal({ title: "Respuesta", text: resultado.mensaje, type: resultado.tipo });
+            listar();
+        })
+        .fail(function (xhr) { mostrarErrores(xhr); });
+    });
+}
+
+function buscarOrdenParaContrato() {
+    var texto = $("#orden_buscar").val();
+    $.ajax({
+        url: getUrl() + "ordenserviciocab/buscar-para-contrato",
+        method: "POST",
+        dataType: "json",
+        data: { texto: texto }
+    })
+    .done(function (resultado) {
+        var lista = "<ul class='list-group'>";
+        for (var rs of resultado) {
+            lista += "<li class='list-group-item' onclick=\"seleccionOrdenContrato("
+                + rs.id + ", '" + (rs.orden_texto || '').replace(/'/g, "\'") + "');\">"
+                + rs.orden_texto + " — " + (rs.cli_nombre || '') + " " + (rs.cli_apellido || '')
+                + "</li>";
+        }
+        lista += "</ul>";
+        $("#lista_orden").html(lista);
+    })
+    .fail(function (xhr) { mostrarErrores(xhr); });
+}
+
+function seleccionOrdenContrato(id, texto) {
+    $("#orden_serv_cab_id").val(id);
+    $("#orden_texto").val(texto);
+    $("#lista_orden").html('');
+    $("#orden_buscar").val('');
+}
+
+function mostrarErrores(xhr) {
+    let mensaje = 'Ocurrió un error inesperado.';
+    if (xhr.responseJSON) {
+        if (xhr.responseJSON.message) {
+            mensaje = xhr.responseJSON.message;
+        }
+        if (xhr.responseJSON.errors) {
+            const errores = xhr.responseJSON.errors;
+            mensaje = Object.values(errores).flat().join('\n');
+        }
+    }
+    swal({ title: 'Error', text: mensaje, type: 'error' });
+}

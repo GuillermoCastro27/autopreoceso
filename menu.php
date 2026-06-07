@@ -297,6 +297,19 @@
                     </a>
                 </div>
 
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="padding:0 8px;">
+                    <a href="/taller_front/Ventas/cobros/" class="kpi-card">
+                        <div class="kpi-inner">
+                            <div class="kpi-icon" style="background:#06b6d4;"><i class="material-icons">payments</i></div>
+                            <div class="kpi-body">
+                                <div class="kpi-value" id="kpi-cobros">—</div>
+                                <div class="kpi-label">Cobros del Mes</div>
+                                <div class="kpi-trend trend-neu">cobros confirmados</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
             </div><!-- /KPI row -->
 
             <!-- ── Gráficos fila 1 ───────────────────────────── -->
@@ -328,7 +341,24 @@
 
             </div>
 
-            <!-- ── Gráficos fila 2 ───────────────────────────── -->
+            <!-- ── Gráficos fila 2: Ventas vs Compras ──────────── -->
+            <div class="row">
+
+                <div class="col-md-12" style="padding:0 8px;">
+                    <div class="dash-card">
+                        <div class="dash-card-header">
+                            <h3>Ventas vs Compras últimos 6 meses</h3>
+                            <span>total en Gs.</span>
+                        </div>
+                        <div class="dash-card-body">
+                            <canvas id="chartVsCompras" height="60"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ── Gráficos fila 3 ───────────────────────────── -->
             <div class="row">
 
                 <div class="col-md-5 col-sm-12" style="padding:0 8px;">
@@ -410,6 +440,7 @@
         var chartVentas     = null;
         var chartProductos  = null;
         var chartSucursal   = null;
+        var chartVsCompras  = null;
 
         function destruir(c) { if (c) c.destroy(); }
 
@@ -422,6 +453,7 @@
                     $('#kpi-reclamos').text(d.reclamos_abiertos);
                     $('#kpi-presup').text(d.presupuestos_viejos);
                     $('#kpi-ventas').text(gs(d.ventas_mes_actual));
+                    $('#kpi-cobros').text(gs(d.cobros_mes));
 
                     var ant = d.ventas_mes_anterior;
                     var act = d.ventas_mes_actual;
@@ -584,6 +616,68 @@
                 });
         }
 
+        /* ── Barras agrupadas: Ventas vs Compras ───────────────── */
+        function cargarVentasVsCompras() {
+            $.get(getUrl() + 'dashboard/ventas-vs-compras')
+                .done(function (rows) {
+                    destruir(chartVsCompras);
+                    var labels   = rows.map(function (r) { return MESES[r.mes_num] + ' ' + r.anio; });
+                    var ventas   = rows.map(function (r) { return parseFloat(r.ventas); });
+                    var compras  = rows.map(function (r) { return parseFloat(r.compras); });
+
+                    chartVsCompras = new Chart(document.getElementById('chartVsCompras'), {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                {
+                                    label: 'Ventas',
+                                    data: ventas,
+                                    backgroundColor: 'rgba(16,185,129,.75)',
+                                    borderColor: '#10b981',
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: 'Compras',
+                                    data: compras,
+                                    backgroundColor: 'rgba(239,68,68,.65)',
+                                    borderColor: '#ef4444',
+                                    borderWidth: 1
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            legend: { position: 'top', labels: { fontSize: 12, padding: 16 } },
+                            tooltips: {
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    label: function (item, data) {
+                                        return ' ' + data.datasets[item.datasetIndex].label +
+                                               ': ' + gsExacto(item.yLabel);
+                                    }
+                                }
+                            },
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                        fontSize: 10,
+                                        callback: function (v) { return gs(v); }
+                                    },
+                                    gridLines: { color: 'rgba(0,0,0,.05)' }
+                                }],
+                                xAxes: [{
+                                    gridLines: { display: false },
+                                    ticks: { fontSize: 11 }
+                                }]
+                            }
+                        }
+                    });
+                });
+        }
+
         /* ── Tabla: presupuestos sin convertir ──────────────── */
         function cargarPresupuestos() {
             $.get(getUrl() + 'dashboard/presupuestos-detalle')
@@ -622,6 +716,7 @@
             cargarVentasMes();
             cargarTopProductos();
             cargarSucursal();
+            cargarVentasVsCompras();
             cargarPresupuestos();
         };
 

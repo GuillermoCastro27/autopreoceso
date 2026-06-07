@@ -182,6 +182,10 @@ Recepción de Vehículos
         <input type="text" id="tip_veh_observacion" class="form-control" disabled placeholder="Observación">
     </div>
 
+    <div class="col-sm-3">
+        <input type="text" id="recep_cab_num_chasis" class="form-control" disabled placeholder="Nro. Chasis">
+    </div>
+
     <div class="col-sm-4">
         <input type="text" id="marc_nom" class="form-control" disabled onkeyup="buscarMarcasVehiculo();" placeholder="Marca">
         <input type="hidden" id="marca_id">
@@ -204,6 +208,8 @@ Recepción de Vehículos
 <button id="btnEditar" class="btn btn-primary" onclick="editar();" disabled><i class="material-icons">edit</i> Modificar</button>
 <button id="btnEliminar" class="btn btn-danger" onclick="eliminar();" disabled><i class="material-icons">delete</i> Anular</button>
 <button id="btnConfirmar" class="btn btn-success" onclick="confirmar();" disabled><i class="material-icons">check_circle</i> Confirmar</button>
+<button id="btnTicket" class="btn btn-purple waves-effect" onclick="generarTicket();" disabled><i class="material-icons">print</i> Ticket</button>
+<button id="btnSalida" class="btn btn-info" onclick="confirmarSalida();" disabled><i class="material-icons">exit_to_app</i> Registrar Salida</button>
 <button id="btnGrabar" class="btn btn-default" onclick="confirmarOperacion();" disabled><i class="material-icons">save</i> Grabar</button>
 <button id="btnCancelar" class="btn btn-warning" onclick="cancelar();" disabled><i class="material-icons">close</i> Cancelar</button>
 </div>
@@ -225,6 +231,7 @@ Recepción de Vehículos
         <div class="row clearfix" id="formDetalles">
 
             <input type="hidden" id="txtOperacionDetalle" value="0"/>
+            <input type="hidden" id="original_item_id"/>
 
             <div class="col-sm-1">
                 <input type="text" id="item_id" class="form-control" disabled placeholder="Código">
@@ -245,6 +252,16 @@ Recepción de Vehículos
             </div>
             <div class="col-sm-2">
                 <input type="text" id="recep_det_costo" class="form-control" disabled placeholder="Precio">
+            </div>
+            <div class="col-sm-2">
+                <select class="form-control" id="marca_det_mm" disabled>
+                    <option value="">-- Marca --</option>
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <select class="form-control" id="modelo_det_mm" disabled>
+                    <option value="">-- Modelo --</option>
+                </select>
             </div>
 
             <!-- BOTONES DETALLE -->
@@ -277,12 +294,12 @@ Recepción de Vehículos
             <table class="table table-bordered table-striped table-hover dataTable">
                 <thead>
                     <tr>
-                        <th>Código</th>
                         <th>Producto</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
                         <th>Cantidad</th>
-                        <th>Cantidad Disponible</th>
+                        <th>Stock</th>
                         <th>Precio</th>
-                        <th>Tipo impuesto</th>
                         <th>Sub Total</th>
                         <th>IVA</th>
                     </tr>
@@ -292,12 +309,20 @@ Recepción de Vehículos
 
                 <tfoot>
                     <tr>
-                        <th colspan="7" class="text-right">Total Comprobante</th>
-                        <th class="text-right" id="txtTotalGral">0</th>
+                        <th colspan="7" class="text-right">IVA 10%</th>
+                        <th class="text-right" id="txtIva10">0</th>
+                    </tr>
+                    <tr>
+                        <th colspan="7" class="text-right">IVA 5%</th>
+                        <th class="text-right" id="txtIva5">0</th>
                     </tr>
                     <tr>
                         <th colspan="7" class="text-right">Total IVA</th>
                         <th class="text-right" id="txtTotalConImpuesto">0</th>
+                    </tr>
+                    <tr>
+                        <th colspan="7" class="text-right" style="font-weight:bold;">Total Comprobante</th>
+                        <th class="text-right" id="txtTotalGral" style="font-weight:bold;">0</th>
                     </tr>
                 </tfoot>
             </table>
@@ -318,9 +343,11 @@ Recepción de Vehículos
 <th>Código</th>
 <th>Cliente</th>
 <th>Vehículo</th>
+<th>Chasis</th>
 <th>Solicitud</th>
 <th>Fecha</th>
 <th>Estado</th>
+<th>Situación</th>
 <th>Encargado</th>
 </tr>
 </thead>
@@ -358,7 +385,8 @@ Recepción de Vehículos
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js"></script>
-<script src="metodos.js?v=2"></script>
+<script src="../../js/marcaModelo.js"></script>
+<script src="metodos.js?v=3"></script>
 
 </body>
 </html>

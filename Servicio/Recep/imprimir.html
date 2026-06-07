@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket de Recepción</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; font-size: 13px; color: #222; background: #e8ecf0; }
+
+        .action-bar {
+            background: #2c3e50; padding: 10px 20px; display: flex;
+            gap: 10px; align-items: center; position: sticky; top: 0; z-index: 100;
+        }
+        .action-bar span { color: #bdc3c7; font-size: 13px; margin-right: auto; }
+        .btn-act {
+            padding: 7px 18px; border: none; border-radius: 4px; cursor: pointer;
+            font-size: 13px; font-weight: bold; display: flex; align-items: center; gap: 5px;
+        }
+        .btn-print  { background: #7f8c8d; color: #fff; }
+        .btn-pdf    { background: #c0392b; color: #fff; }
+        .btn-email  { background: #27ae60; color: #fff; }
+        .btn-act:hover { opacity: 0.88; }
+        .btn-act:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .page { max-width: 720px; margin: 24px auto 40px; background: #fff;
+            border-radius: 6px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,.15); }
+
+        .rec-header { background: #2c3e50; padding: 22px 30px; text-align: center; }
+        .rec-header h1 { color: #fff; font-size: 20px; margin-bottom: 2px; }
+        .rec-header p  { color: #bdc3c7; font-size: 12px; margin: 2px 0; }
+
+        .rec-docnum { background: #34495e; padding: 12px 30px; display: flex;
+            justify-content: space-between; align-items: center; }
+        .rec-docnum .nro { color: #fff; font-size: 16px; font-weight: bold; letter-spacing: 2px; }
+        .badge { display: inline-block; padding: 4px 14px; border-radius: 20px;
+            font-size: 12px; font-weight: bold; letter-spacing: 1px; }
+        .badge-pendiente  { background: #f39c12; color: #fff; }
+        .badge-confirmado { background: #27ae60; color: #fff; }
+        .badge-anulado    { background: #c0392b; color: #fff; }
+
+        .rec-body { padding: 24px 30px; }
+
+        .two-col { display: flex; gap: 16px; margin-bottom: 16px; }
+        .two-col .col { flex: 1; }
+
+        .info-box { border: 1px solid #e0e0e0; border-radius: 5px; padding: 12px 14px;
+            background: #fafafa; height: 100%; }
+        .info-box h4 { font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+            color: #888; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 8px; }
+        .info-box table { width: 100%; border-collapse: collapse; }
+        .info-box td { padding: 3px 0; font-size: 12.5px; vertical-align: top; }
+        .info-box td:first-child { color: #777; width: 120px; }
+        .info-box td:last-child  { font-weight: 600; color: #2c3e50; }
+
+        .section { margin-bottom: 18px; }
+        .section-title { font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+            color: #888; border-bottom: 2px solid #2c3e50; padding-bottom: 4px; margin-bottom: 10px; }
+
+        table.data { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+        table.data thead th { background: #2c3e50; color: #fff; padding: 7px 9px;
+            font-size: 10px; text-transform: uppercase; letter-spacing: 1px; text-align: left; }
+        table.data tbody tr:nth-child(even) { background: #f7f7f7; }
+        table.data tbody td { padding: 6px 9px; border-bottom: 1px solid #eee; }
+        table.data tfoot td { padding: 8px 9px; font-weight: bold; border-top: 2px solid #2c3e50;
+            background: #f0f2f5; }
+        .tr { text-align: right; }
+        .tc { text-align: center; }
+
+        .firma-section { display: flex; gap: 30px; margin-top: 24px; margin-bottom: 8px; }
+        .firma-box { flex: 1; text-align: center; }
+        .firma-line { border-top: 1px solid #999; margin-top: 50px; padding-top: 6px;
+            font-size: 11px; color: #777; }
+
+        #toast {
+            position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+            min-width: 280px; max-width: 420px; padding: 14px 20px;
+            border-radius: 8px; font-size: 13.5px; font-weight: 500;
+            color: #fff; box-shadow: 0 6px 24px rgba(0,0,0,.25);
+            display: flex; align-items: center; gap: 10px;
+            opacity: 0; transition: opacity .3s ease, transform .3s ease;
+            z-index: 9999; pointer-events: none;
+        }
+        #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        #toast.success { background: #27ae60; }
+        #toast.warning { background: #f39c12; }
+        #toast.error   { background: #c0392b; }
+
+        .rec-footer { background: #f5f5f5; border-top: 1px solid #ddd; padding: 12px 30px;
+            text-align: center; font-size: 11px; color: #999; }
+
+        @media print {
+            body { background: #fff; }
+            .action-bar { display: none; }
+            .page { margin: 0; box-shadow: none; border-radius: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<div class="action-bar">
+    <span id="lblDocNum">Ticket de Recepción</span>
+    <button class="btn-act btn-print" onclick="window.print()">
+        &#128424; Imprimir
+    </button>
+    <button class="btn-act btn-pdf" id="btnPDF" onclick="descargarPDF()">
+        &#128196; Descargar PDF
+    </button>
+    <button class="btn-act btn-email" id="btnEmail" onclick="enviarCorreo()">
+        &#9993; Enviar por correo
+    </button>
+</div>
+
+<div class="page" id="ticket">
+
+    <div class="rec-header">
+        <h1 id="empNombre">AutoProcesos</h1>
+        <p id="empDireccion"></p>
+        <p id="empTelefono"></p>
+    </div>
+
+    <div class="rec-docnum">
+        <span class="nro" id="docNro">RECEPCIÓN N° 0000000</span>
+        <span id="docEstado"></span>
+    </div>
+
+    <div class="rec-body">
+
+        <div class="two-col">
+            <div class="col">
+                <div class="info-box">
+                    <h4>Datos de Recepción</h4>
+                    <table>
+                        <tr><td>Fecha</td><td id="recepFecha"></td></tr>
+                        <tr><td>Fecha Estimada</td><td id="recepFechaEst"></td></tr>
+                        <tr><td>Prioridad</td><td id="recepPrioridad"></td></tr>
+                        <tr><td>Kilometraje</td><td id="recepKm"></td></tr>
+                        <tr><td>Combustible</td><td id="recepCombustible"></td></tr>
+                        <tr><td>Sucursal</td><td id="recepSucursal"></td></tr>
+                        <tr><td>Encargado</td><td id="recepEncargado"></td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="col">
+                <div class="info-box">
+                    <h4>Cliente</h4>
+                    <table>
+                        <tr><td>Nombre</td><td id="cliNombre"></td></tr>
+                        <tr><td>RUC</td><td id="cliRuc"></td></tr>
+                        <tr><td>Teléfono</td><td id="cliTelefono"></td></tr>
+                        <tr><td>Dirección</td><td id="cliDireccion"></td></tr>
+                        <tr><td>Correo</td><td id="cliCorreo"></td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Vehículo</div>
+            <div class="info-box">
+                <table>
+                    <tr><td style="width:120px;color:#777;">Descripción</td><td id="vehiculoInfo" style="font-weight:600;color:#2c3e50;"></td></tr>
+                    <tr id="rowChasis" style="display:none;"><td style="color:#777;">Chasis</td><td id="vehiculoChasis" style="font-weight:600;color:#2c3e50;"></td></tr>
+                    <tr id="rowServicio" style="display:none;"><td style="color:#777;">Tipo Servicio</td><td id="tipoServicio" style="font-weight:600;color:#2c3e50;"></td></tr>
+                    <tr id="rowObs" style="display:none;"><td style="color:#777;">Observaciones</td><td id="recepObs" style="color:#555;"></td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Repuestos / Materiales</div>
+            <table class="data">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th class="tc">Cant.</th>
+                        <th class="tr">Precio</th>
+                        <th class="tc">Imp.</th>
+                        <th class="tr">Subtotal</th>
+                        <th class="tr">IVA</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaDetalles"></tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="tr">Total Comprobante</td>
+                        <td class="tr" id="totalGral">0,00</td>
+                        <td class="tr" id="totalIva">0,00</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="firma-section">
+            <div class="firma-box"><div class="firma-line">Firma del Cliente</div></div>
+            <div class="firma-box"><div class="firma-line">Firma del Recepcionista</div></div>
+        </div>
+
+    </div>
+
+    <div class="rec-footer">
+        <p>Documento generado el <span id="fechaHoy"></span> — Este es un comprobante de recepción de vehículo.</p>
+        <p>&copy; AutoProcesos — Sistema de Gestión de Talleres</p>
+    </div>
+
+</div>
+
+<script src="../../js/ruta.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+    var recepId = null;
+
+    function getToken() {
+        try {
+            var s = JSON.parse(localStorage.getItem('datosSesion'));
+            return (s && s.token) ? s.token : null;
+        } catch (e) { return null; }
+    }
+
+    var _toastTimer = null;
+    function showToast(msg, tipo) {
+        var t = document.getElementById('toast');
+        var icons = {
+            success: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',
+            warning: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+            error:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>'
+        };
+        t.className = 'show ' + (tipo || 'success');
+        t.innerHTML = (icons[tipo] || icons.success) + '<span>' + msg + '</span>';
+        if (_toastTimer) clearTimeout(_toastTimer);
+        _toastTimer = setTimeout(function() { t.classList.remove('show'); }, 4000);
+    }
+
+    function fmt(n) {
+        var num = parseFloat(n);
+        if (isNaN(num)) num = 0;
+        return num.toLocaleString('es-PY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function badgeClass(estado) {
+        if (estado === 'CONFIRMADO') return 'badge-confirmado';
+        if (estado === 'ANULADO')    return 'badge-anulado';
+        return 'badge-pendiente';
+    }
+
+    function cargarDatos(id) {
+        var token = getToken();
+        if (!token) {
+            document.body.innerHTML = '<p style="padding:40px;color:#c0392b;font-size:16px;">Sin sesión activa. Por favor iniciá sesión.</p>';
+            return;
+        }
+
+        fetch(getUrl() + 'recepcab/imprimir/' + id, {
+            headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/json' }
+        })
+        .then(function(r) {
+            if (!r.ok) throw new Error('Error ' + r.status);
+            return r.json();
+        })
+        .then(function(data) { renderizar(data); })
+        .catch(function(e) {
+            document.body.innerHTML = '<p style="padding:40px;color:#c0392b;font-size:16px;">' + e.message + '</p>';
+        });
+    }
+
+    function renderizar(data) {
+        var cab      = data.cab      || {};
+        var detalles = data.detalles || [];
+
+        document.getElementById('empNombre').textContent    = cab.emp_razon_social || 'AutoProcesos';
+        document.getElementById('empDireccion').textContent = cab.emp_direccion || '';
+        document.getElementById('empTelefono').textContent  = cab.emp_telefono ? 'Tel: ' + cab.emp_telefono : '';
+
+        var nroTxt = 'RECEPCIÓN N° ' + String(cab.id).padStart(7, '0');
+        document.getElementById('docNro').textContent     = nroTxt;
+        document.getElementById('lblDocNum').textContent  = nroTxt;
+        document.getElementById('docEstado').innerHTML =
+            '<span class="badge ' + badgeClass(cab.recep_cab_estado) + '">' + (cab.recep_cab_estado || '') + '</span>';
+
+        document.getElementById('recepFecha').textContent      = cab.recep_cab_fecha || '';
+        document.getElementById('recepFechaEst').textContent   = cab.recep_cab_fecha_estimada || '';
+        document.getElementById('recepPrioridad').textContent  = cab.recep_cab_prioridad || '';
+        document.getElementById('recepKm').textContent         = (cab.recep_cab_kilometraje || 0) + ' km';
+        document.getElementById('recepCombustible').textContent= cab.recep_cab_nivel_combustible || '';
+        document.getElementById('recepSucursal').textContent   = cab.suc_razon_social || '';
+        document.getElementById('recepEncargado').textContent  = cab.encargado || '';
+
+        document.getElementById('cliNombre').textContent    = (cab.cli_nombre || '') + ' ' + (cab.cli_apellido || '');
+        document.getElementById('cliRuc').textContent       = cab.cli_ruc       || '';
+        document.getElementById('cliTelefono').textContent  = cab.cli_telefono  || '';
+        document.getElementById('cliDireccion').textContent = cab.cli_direccion || '';
+        document.getElementById('cliCorreo').textContent    = cab.cli_correo    || '';
+
+        document.getElementById('vehiculoInfo').textContent = cab.vehiculo_info || '';
+        if (cab.recep_cab_num_chasis) {
+            document.getElementById('rowChasis').style.display = '';
+            document.getElementById('vehiculoChasis').textContent = cab.recep_cab_num_chasis;
+        }
+        if (cab.tipo_serv_nombre) {
+            document.getElementById('rowServicio').style.display = '';
+            document.getElementById('tipoServicio').textContent = cab.tipo_serv_nombre;
+        }
+        if (cab.recep_cab_observaciones) {
+            document.getElementById('rowObs').style.display = '';
+            document.getElementById('recepObs').textContent = cab.recep_cab_observaciones;
+        }
+
+        var totalGral = 0, totalIva = 0, fd = '';
+        detalles.forEach(function(d) {
+            var sub = (parseFloat(d.cantidad) || 0) * (parseFloat(d.precio) || 0);
+            var iva = 0;
+            if (d.tip_imp_nom === 'IVA10') iva = sub / 11;
+            else if (d.tip_imp_nom === 'IVA5') iva = sub / 21;
+            totalGral += sub;
+            totalIva  += iva;
+            fd += '<tr>'
+                + '<td>' + (d.item_decripcion || '') + '</td>'
+                + '<td class="tc">' + (d.cantidad || 0) + '</td>'
+                + '<td class="tr">' + fmt(d.precio) + '</td>'
+                + '<td class="tc">' + (d.tip_imp_nom || '') + '</td>'
+                + '<td class="tr">' + fmt(sub) + '</td>'
+                + '<td class="tr">' + fmt(iva) + '</td>'
+                + '</tr>';
+        });
+        document.getElementById('tablaDetalles').innerHTML = fd ||
+            '<tr><td colspan="6" style="text-align:center;color:#aaa;padding:14px;">Sin detalle de repuestos</td></tr>';
+        document.getElementById('totalGral').textContent = fmt(totalGral);
+        document.getElementById('totalIva').textContent  = fmt(totalIva);
+
+        document.getElementById('fechaHoy').textContent =
+            new Date().toLocaleDateString('es-PY', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function descargarPDF() {
+        var btn = document.getElementById('btnPDF');
+        btn.disabled = true;
+        btn.textContent = 'Generando...';
+
+        var el = document.getElementById('ticket');
+        html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#ffffff' }).then(function(canvas) {
+            var { jsPDF } = window.jspdf;
+            var pdf = new jsPDF('p', 'mm', 'a4');
+            var imgData  = canvas.toDataURL('image/png');
+            var pdfW     = pdf.internal.pageSize.getWidth();
+            var pdfH     = pdf.internal.pageSize.getHeight();
+            var imgH     = (canvas.height * pdfW) / canvas.width;
+            var posY     = 0;
+            while (posY < imgH) {
+                if (posY > 0) pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, -posY, pdfW, imgH);
+                posY += pdfH;
+            }
+            pdf.save('ticket-recepcion-' + String(recepId).padStart(7, '0') + '.pdf');
+            btn.disabled = false;
+            btn.innerHTML = '&#128196; Descargar PDF';
+        }).catch(function() {
+            btn.disabled = false;
+            btn.innerHTML = '&#128196; Descargar PDF';
+        });
+    }
+
+    function enviarCorreo() {
+        var token = getToken();
+        if (!token) { showToast('Sin sesión activa. Por favor iniciá sesión.', 'error'); return; }
+
+        var btn = document.getElementById('btnEmail');
+        btn.disabled = true;
+        btn.textContent = 'Enviando...';
+
+        fetch(getUrl() + 'recepcab/enviar-ticket/' + recepId, {
+            method: 'GET',
+            headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/json' }
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            showToast(data.mensaje, data.tipo || 'success');
+            btn.disabled = false;
+            btn.innerHTML = '&#9993; Enviar por correo';
+        })
+        .catch(function() {
+            showToast('Error al enviar el correo. Intentá de nuevo.', 'error');
+            btn.disabled = false;
+            btn.innerHTML = '&#9993; Enviar por correo';
+        });
+    }
+
+    var params = new URLSearchParams(window.location.search);
+    recepId = params.get('id');
+
+    if (recepId) {
+        cargarDatos(recepId);
+    } else {
+        document.body.innerHTML = '<p style="padding:40px;color:#c0392b;font-size:16px;">ID de recepción no especificado.</p>';
+    }
+</script>
+</body>
+</html>

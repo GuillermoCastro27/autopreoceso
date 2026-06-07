@@ -124,9 +124,10 @@
             <div class="section-title">Datos del Diagnóstico</div>
 
             <div class="row clearfix">
-                <div class="col-sm-6">
-                    <input type="text" id="diag_cab_observaciones" class="form-control" disabled
-                           placeholder="Observaciones">
+                <div class="col-sm-9">
+                    <textarea id="diag_cab_observaciones" class="form-control" rows="4" disabled
+                              placeholder="Observaciones (describa los problemas del vehículo)"
+                              style="resize:vertical;"></textarea>
                 </div>
 
                 <div class="col-sm-2">
@@ -261,6 +262,7 @@
                         <div class="body">
                             <div class="row clearfix" id="formDetalles">
                                 <input type="hidden" value="0" id="txtOperacionDetalle"/>
+                                <input type="hidden" id="original_item_id"/>
 
                                 <div class="col-sm-1">
                                     <input type="text" id="item_id" class="form-control" disabled placeholder="Código">
@@ -281,6 +283,16 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" id="diag_det_costo" class="form-control" disabled placeholder="Precio">
+                                </div>
+                                <div class="col-sm-2" style="margin-top:10px;">
+                                    <select class="form-control" id="marca_det_mm" disabled>
+                                        <option value="">-- Marca --</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2" style="margin-top:10px;">
+                                    <select class="form-control" id="modelo_det_mm" disabled>
+                                        <option value="">-- Modelo --</option>
+                                    </select>
                                 </div>
                                 <div class="col-sm-3" style="margin-top:10px;">
                                     <div class="icon-button-demo">
@@ -305,25 +317,33 @@
                                 <table class="table table-bordered table-striped table-hover dataTable ">
                                     <thead>
                                         <tr>
-                                            <th>Código</th>
                                             <th>Producto</th>
+                                            <th>Marca</th>
+                                            <th>Modelo</th>
                                             <th>Cantidad</th>
-                                            <th>Cantidad Disponible</th>
+                                            <th>Stock</th>
                                             <th>Precio</th>
-                                            <th>Tipo impuesto</th>
                                             <th>Sub Total</th>
-                                            <th>IVA</th> <!-- Agregado para mostrar el total con impuesto -->
+                                            <th>IVA</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableDetalle"></tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="5" class="text-right">Total Comprobante</th>
-                                            <th class="text-right" id="txtTotalGral">0</th> <!-- Total sin impuestos -->
+                                            <th colspan="5" class="text-right">IVA 10%</th>
+                                            <th class="text-right" id="txtIva10">0</th>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="5" class="text-right">IVA 5%</th>
+                                            <th class="text-right" id="txtIva5">0</th>
                                         </tr>
                                         <tr>
                                             <th colspan="5" class="text-right">Total IVA</th>
-                                            <th class="text-right" id="txtTotalConImpuesto">0</th> <!-- Total con impuestos -->
+                                            <th class="text-right" id="txtTotalConImpuesto">0</th>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="5" class="text-right" style="font-weight:bold;">Total Comprobante</th>
+                                            <th class="text-right" id="txtTotalGral" style="font-weight:bold;">0</th>
                                         </tr>
                                     </tfoot>    
                                 </table>
@@ -435,8 +455,8 @@
 
     <!-- Ruta Js -->
     <script src="../../js/ruta.js"></script>
-
-    <script src="metodos.js?v=2"></script>
+    <script src="../../js/marcaModelo.js"></script>
+    <script src="metodos.js?v=3"></script>
 </body>
 
 </html>

@@ -12,32 +12,32 @@ function formatoTabla(){
                 extend:'copy',
                 text:'COPIAR',
                 className:'btn btn-primary waves-effect',
-                title:'Listado de Pedidos'
+                title:'Apertura/Cierre de Caja'
             },
             {
                 extend:'excel',
                 text:'EXCEL',
                 className:'btn btn-success waves-effect',
-                title:'Listado de Pedidos'
+                title:'Apertura/Cierre de Caja'
             },
             {
                 extend:'pdf',
                 text:'PDF',
                 className:'btn btn-danger waves-effect',
-                title:'Listado de Pedidos'
+                title:'Apertura/Cierre de Caja'
             },
             {
                 extend:'print',
                 text:'IMPRIMIR',
                 className:'btn btn-warning waves-effect',
-                title:'Listado de Pedidos'
+                title:'Apertura/Cierre de Caja'
             }
         ],
         iDisplayLength:3,
         language:{
             sSearch: 'Buscar: ',
-            sInfo: 'Mostrando resultados del START al END de un total de TOTAL registros',
-            sInfoFiltered: '(filtrado de entre MAX registros)',
+            sInfo: 'Mostrando resultados del _START_ al _END_ de un total de _TOTAL_ registros',
+            sInfoFiltered: '(filtrado de entre _MAX_ registros)',
             sZeroRecords: 'No se encontraron resultados',
             sInfoEmpty: 'Mostrando resultado del 0 al 0 de un total de 0 registros',
             oPaginate:{
@@ -167,7 +167,6 @@ function listar(){
         let lista = "";
 
         for (let rs of resultado) {
-console.log("monto_apertura:", rs.monto_apertura);
 
             lista += `<tr class="item-list"
             onclick="seleccionAperturaCaja(
@@ -197,8 +196,7 @@ console.log("monto_apertura:", rs.monto_apertura);
         formatoTabla();
     })
     .fail(function(xhr){
-        console.error(xhr.responseText);
-        alert("Error al listar aperturas de caja");
+        mostrarErrores(xhr);
     });
 }
 function seleccionAperturaCaja(
@@ -296,9 +294,8 @@ function buscarEmpresas() {
             seleccionEmpresa(primeraEmpresa.id, primeraEmpresa.emp_razon_social, primeraEmpresa.emp_direccion, primeraEmpresa.emp_telef, primeraEmpresa.emp_correo);
         }
     })
-    .fail(function(a,b,c) {
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr) {
+        swal("Error", "No se pudo cargar las sucursales.", "error");
     });
 }
 
@@ -328,9 +325,8 @@ function buscarSucursal(){
         $("#listaSucursal").html(lista);
         $("#listaSucursal").attr("style","display:block; position:absolute; z-index:2000;");
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr){
+        swal("Error", "No se pudo cargar las sucursales.", "error");
     })
 }
 
@@ -359,9 +355,8 @@ function buscarCaja(){
         $("#listaCaja").html(lista);
         $("#listaCaja").attr("style","display:block; position:absolute; z-index:2000;");
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr){
+        swal("Error", "No se pudo cargar las cajas.", "error");
     })
 }
 
@@ -477,8 +472,7 @@ function grabar(){
 
     })
     .fail(function (xhr) {
-        console.error(xhr.responseText);
-        swal("Error", "No se pudo completar la operación.", "error");
+        mostrarErrores(xhr);
     });
 }
 
@@ -493,20 +487,11 @@ function campoFecha(){
 
 // Función para cargar el funcionario_id del usuario logueado
 function cargarFuncionarioIdLogueado() {
-    try {
-        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
-        
-        if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
-            $('#funcionario_id').val(datosSesion.user.funcionario_id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
-        } else {
-            console.error('No se encontraron datos de sesión válidos');
-            alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');
-            window.location.href = '../../index.html';
-        }
-    } catch (error) {
-        console.error('Error al cargar datos de usuario:', error);
-        alert('Error al cargar datos del usuario. Inicie sesión nuevamente.');
+    const datosSesion = JSON.parse(localStorage.getItem('datosSesion') || '{}');
+    if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
+        $('#funcionario_id').val(datosSesion.user.funcionario_id);
+    } else {
+        swal("Sesión expirada", "No se puede identificar al usuario. Inicie sesión nuevamente.", "error");
         window.location.href = '../../index.html';
     }
 }

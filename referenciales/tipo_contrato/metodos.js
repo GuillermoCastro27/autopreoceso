@@ -9,25 +9,25 @@ function formatoTabla(){
                 extend:'copy',
                 text:'COPIAR',
                 className:'btn btn-primary waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Tipos de Contrato'
             },
             {
                 extend:'excel',
                 text:'EXCEL',
                 className:'btn btn-success waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Tipos de Contrato'
             },
             {
                 extend:'pdf',
                 text:'PDF',
                 className:'btn btn-danger waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Tipos de Contrato'
             },
             {
                 extend:'print',
                 text:'IMPRIMIR',
                 className:'btn btn-warning waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Tipos de Contrato'
             }
         ],
         iDisplayLength:3,
@@ -62,7 +62,7 @@ function agregar(){
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -83,7 +83,7 @@ function editar(){
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -91,13 +91,11 @@ function editar(){
     $(".form-line").attr("class","form-line focused");
 }
 
-function eliminar(){
-    $("#txtOperacion").val(3);
-
+function confirmarCambioEstado(){
+    $("#txtOperacion").val(4);
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
-
+    $("#btnEstado").attr("disabled","true");
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
 }
@@ -112,9 +110,12 @@ function confirmarOperacion() {
         titulo = "EDITAR";
         pregunta = "¿DESEA EDITAR EL REGISTRO SELECCIONADO?";
     }
-    if(oper===3){
-        titulo = "ELIMINAR";
-        pregunta = "¿DESEA ELIMINAR EL REGISTRO SELECCIONADO?";
+    if(oper===4){
+        var estado = $("#tip_con_estado").val();
+        titulo   = (estado || '').toLowerCase() === 'activo' ? 'DESACTIVAR' : 'ACTIVAR';
+        pregunta = (estado || '').toLowerCase() === 'activo'
+            ? '¿Desea desactivar este registro? No aparecerá en búsquedas.'
+            : '¿Desea activar este registro nuevamente?';
     }
     swal({
         title: titulo,
@@ -148,6 +149,11 @@ function listar(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
+            var estado = (rs.tip_con_estado || 'activo').toLowerCase();
+            var activo = (estado || '').toLowerCase() === 'activo';
+            var badge  = activo
+                ? '<span class="badge" style="background:#27ae60;">Activo</span>'
+                : '<span class="badge" style="background:#c0392b;">Inactivo</span>';
             lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipoContrato("
                 + rs.tipo_contrato_id + ",'"
                 + rs.tip_con_nombre + "','"
@@ -158,11 +164,11 @@ function listar(){
                 + rs.tip_con_limitacion + "','"
                 + rs.tip_con_fuerza_mayor + "','"
                 + rs.tip_con_jurisdiccion + "','"
-                + rs.tip_con_estado + "');\">";
+                + estado + "');\">";
 
             lista += "<td>" + rs.tipo_contrato_id + "</td>";
             lista += "<td>" + rs.tip_con_nombre + "</td>";
-            lista += "<td>" + rs.tip_con_estado + "</td>";
+            lista += "<td>" + badge + "</td>";
 
             // 👇 SOLO VISUAL (resumido)
             lista += "<td>" + resumirTexto(rs.tip_con_objeto) + "</td>";
@@ -198,24 +204,24 @@ function seleccionTipoContrato(
     $("#tip_con_fuerza_mayor").val(tip_con_fuerza_mayor);
     $("#tip_con_jurisdiccion").val(tip_con_jurisdiccion);
 
+    $("#tip_con_estado").val((tip_con_estado || 'activo').toLowerCase());
+    var activo = (tip_con_estado || '').toLowerCase() === 'activo';
+    if (activo) {
+        $("#btnEstado").removeClass("btn-success").addClass("btn-danger");
+        $("#lblEstado").text("Desactivar");
+        $("#btnEstado").find("i").text("block");
+    } else {
+        $("#btnEstado").removeClass("btn-danger").addClass("btn-success");
+        $("#lblEstado").text("Activar");
+        $("#btnEstado").find("i").text("check_circle");
+    }
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").removeAttr("disabled");
+    $("#btnEstado").removeAttr("disabled");
     $("#btnGrabar").attr("disabled","true");
-    $("#btnCancelar").attr("disabled","true");
-    $("#btnEliminar").removeAttr("disabled");
-    
     $("#btnCancelar").removeAttr("disabled");
-    
-    if (tip_con_estado === "ACTIVO") {
-        $("#btnEditar").removeAttr("disabled");
-        $("#btnEliminar").removeAttr("disabled");
-    }
-    if (tip_con_estado === "INACTIVO") {
-        $("#btnEditar").attr("disabled","true");
-        $("#btnEliminar").attr("disabled","true");
-    }
+
     $(".form-line").attr("class","form-line focused");
-    
 }
 
 function grabar(){
@@ -230,32 +236,47 @@ function grabar(){
 
     // ✅ Validar campos obligatorios (solo en alta/edición)
     const oper = parseInt($("#txtOperacion").val(), 10);
+    if (oper === 4) { cambiarEstado(); return; }
 
     if (oper !== 3) {
-        if (!nombre || !objeto || !alcance || !garantia || !responsabilidad || !limitacion || !fuerzaMayor || !jurisdiccion) {
-            swal({
-                title: "Error",
-                text: "Todos los campos obligatorios deben estar completos.",
-                type: "error"
-            });
-            return;
+        var camposReq = [
+            { val: nombre,          label: 'Nombre' },
+            { val: objeto,          label: 'Objeto del contrato' },
+            { val: alcance,         label: 'Alcance' },
+            { val: garantia,        label: 'Garantía' },
+            { val: responsabilidad, label: 'Responsabilidad' },
+            { val: limitacion,      label: 'Limitación' },
+            { val: fuerzaMayor,     label: 'Fuerza mayor' },
+            { val: jurisdiccion,    label: 'Jurisdicción' }
+        ];
+        for (var i = 0; i < camposReq.length; i++) {
+            if (!camposReq[i].val) {
+                swal('Error', 'El campo "' + camposReq[i].label + '" es obligatorio.', 'error');
+                return;
+            }
+        }
+        var CHARS_INVALIDOS = /[*<>{}|]/;
+        var camposTexto = {
+            'Nombre': nombre, 'Objeto': objeto, 'Alcance': alcance,
+            'Garantía': garantia, 'Responsabilidad': responsabilidad,
+            'Limitación': limitacion, 'Fuerza mayor': fuerzaMayor, 'Jurisdicción': jurisdiccion
+        };
+        for (var campo in camposTexto) {
+            if (CHARS_INVALIDOS.test(camposTexto[campo])) {
+                swal('Caracteres no permitidos', 'El campo "' + campo + '" no puede contener: * < > { } |', 'error');
+                return;
+            }
         }
     }
 
     let endpoint = "tipo_contrato/create";
     let metodo = "POST";
 
-    // ✅ Estado correcto para este módulo
-    let estado = "ACTIVO";
+    let estado = "activo";
 
     if (oper === 2) {
         endpoint = "tipo_contrato/update/" + $("#txtCodigo").val();
         metodo = "PUT";
-    }
-
-    if (oper === 3) {
-        endpoint = "tipo_contrato/delete/" + $("#txtCodigo").val();
-        metodo = "DELETE";
     }
 
     // ✅ Armar data
@@ -271,11 +292,6 @@ function grabar(){
         'tip_con_jurisdiccion': $("#tip_con_jurisdiccion").val(),
         'tip_con_estado': estado
     };
-
-    // ✅ Si es delete lógico, no hace falta mandar todo (opcional)
-    if (oper === 3) {
-        dataSend = {}; // tu destroy ya pone INACTIVO en backend
-    }
 
     $.ajax({
         url: getUrl() + "" + endpoint,
@@ -309,5 +325,22 @@ function grabar(){
         } else {
             swal('Error', res ? (res.mensaje || res.message || 'Error inesperado.') : 'Error inesperado.', 'error');
         }
+    });
+}
+
+function cambiarEstado() {
+    var id = $("#txtCodigo").val();
+    $.ajax({
+        url: getUrl() + 'tipo_contrato/estado/' + id,
+        method: 'PATCH',
+        dataType: 'json'
+    })
+    .done(function(res) {
+        swal({ title: 'Respuesta', text: res.mensaje, type: res.tipo },
+            function() { if (res.tipo === 'success') location.reload(true); });
+    })
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        swal('Error', res && res.mensaje ? res.mensaje : 'Error inesperado.', 'error');
     });
 }

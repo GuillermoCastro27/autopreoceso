@@ -124,6 +124,30 @@
                 </div>
 
             </div>
+
+            <!-- TIMBRADO -->
+            <div class="row clearfix" style="margin-top:8px;">
+                <div class="col-sm-3">
+                    <div class="input-group">
+                        <span class="input-group-addon" style="font-size:11px;white-space:nowrap;">Timbrado</span>
+                        <input type="text" id="tim_numero_display" class="form-control" disabled placeholder="(auto)">
+                        <input type="hidden" id="timbrado_id">
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="input-group">
+                        <span class="input-group-addon" style="font-size:11px;white-space:nowrap;">Nro. Comprobante</span>
+                        <input type="text" id="nota_vent_nro_comprobante" class="form-control" disabled placeholder="—">
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="input-group">
+                        <span class="input-group-addon" style="font-size:11px;white-space:nowrap;">Vence</span>
+                        <input type="text" id="tim_vence_display" class="form-control" disabled placeholder="—">
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <!-- ================= DATOS DE LA NOTA ================= -->
@@ -143,9 +167,10 @@
 
                 <!-- TIPO NOTA -->
                 <div class="col-sm-2">
-                    <select id="nota_vent_tipo" class="form-control" disabled>
-                        <option>Crédito</option>
-                        <option>Débito</option>
+                    <select id="nota_vent_tipo" class="form-control" disabled onchange="cargarTimbrado();">
+                        <option value="">-- Tipo --</option>
+                        <option value="Crédito">Crédito</option>
+                        <option value="Débito">Débito</option>
                     </select>
                 </div>
 
@@ -353,6 +378,14 @@
                                         <tr>
                                             <th colspan="6" class="text-right">Total Comprobante</th>
                                             <th class="text-right" id="txtTotalGral">0</th>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="6" class="text-right">IVA 10%</th>
+                                            <th class="text-right" id="txtIva10">0</th>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="6" class="text-right">IVA 5%</th>
+                                            <th class="text-right" id="txtIva5">0</th>
                                         </tr>
                                         <tr>
                                             <th colspan="6" class="text-right">Total IVA</th>

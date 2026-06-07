@@ -73,20 +73,20 @@
                     </div>
                 </div>
 
-                <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="txtGentilicio" class="form-control" disabled>
-                            <label class="form-label">Gentilicio</label>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="col-sm-2">
                     <div class="form-group form-float">
                         <div class="form-line">
                             <input type="text" id="txtSiglas" class="form-control" disabled>
                             <label class="form-label">Siglas</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input type="text" id="txtNacionalidad" class="form-control" disabled>
+                            <label class="form-label">Nacionalidad (ej: Paraguayo/a)</label>
                         </div>
                     </div>
                 </div>
@@ -129,8 +129,8 @@
                     <tr>
                         <th>Código</th>
                         <th>Descripción</th>
-                        <th>Gentilicio</th>
                         <th>Siglas</th>
+                        <th>Nacionalidad vinculada</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
@@ -138,8 +138,8 @@
                     <tr>
                         <th>Código</th>
                         <th>Descripción</th>
-                        <th>Gentilicio</th>
                         <th>Siglas</th>
+                        <th>Nacionalidad vinculada</th>
                     </tr>
                 </tfoot>
             </table>

@@ -181,6 +181,13 @@ function grabar(){
         });
         return;  // Salir de la función si la validación falla
     }
+
+    var CHARS_INVALIDOS = /[*<>{}|]/;
+    if (CHARS_INVALIDOS.test(descripcion)) {
+        swal('Caracteres no permitidos', 'El campo no puede contener los caracteres: * < > { } |', 'error');
+        return;
+    }
+
     var endpoint = "ciudades/create";
     var metodo = "POST";
     if($("#txtOperacion").val()==2){

@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; font-size: 13px; color: #222; background: #e8ecf0; }
+
+        .action-bar {
+            background: #2c3e50; padding: 10px 20px; display: flex;
+            gap: 10px; align-items: center; position: sticky; top: 0; z-index: 100; flex-wrap: wrap;
+        }
+        .action-bar .ab-title { color: #bdc3c7; font-size: 13px; margin-right: auto; }
+        .btn-act {
+            padding: 7px 18px; border: none; border-radius: 4px; cursor: pointer;
+            font-size: 13px; font-weight: bold;
+        }
+        .btn-print { background: #7f8c8d; color: #fff; }
+        .btn-pdf   { background: #c0392b; color: #fff; }
+        .btn-act:hover { opacity: 0.88; }
+
+        /* TIPO BADGE */
+        .tipo-badge {
+            padding: 5px 16px; border-radius: 20px; font-size: 12px;
+            font-weight: bold; letter-spacing: 1px;
+        }
+        .badge-contado { background: #27ae60; color: #fff; }
+        .badge-credito { background: #e67e22; color: #fff; }
+
+        /* PÁGINA */
+        .page {
+            max-width: 760px; margin: 24px auto 40px; background: #fff;
+            border-radius: 6px; overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,.15);
+        }
+
+        /* CABECERA FACTURA */
+        .fact-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            padding: 18px 24px; border-bottom: 3px solid #2c3e50;
+        }
+        .fact-empresa h1 { font-size: 17px; font-weight: bold; color: #2c3e50; }
+        .fact-empresa p  { font-size: 11px; color: #666; margin-top: 2px; }
+
+        .fact-timbrado {
+            text-align: right; border: 2px solid #2c3e50; border-radius: 5px;
+            padding: 10px 14px; min-width: 210px;
+        }
+        .fact-timbrado .nro-factura {
+            font-size: 20px; font-weight: bold; color: #2c3e50; letter-spacing: 2px;
+        }
+        .fact-timbrado .tim-info { font-size: 10px; color: #888; margin-top: 3px; }
+
+        /* DATOS CLIENTE + FECHA */
+        .fact-meta {
+            display: flex; gap: 16px; padding: 14px 24px;
+            border-bottom: 1px solid #e0e0e0; background: #f8f9fa;
+        }
+        .fact-meta .box { flex: 1; }
+        .fact-meta .box h4 {
+            font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+            color: #888; border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-bottom: 6px;
+        }
+        .fact-meta .box table { width: 100%; border-collapse: collapse; }
+        .fact-meta .box td { padding: 2px 0; font-size: 12px; vertical-align: top; }
+        .fact-meta .box td:first-child { color: #777; width: 90px; }
+        .fact-meta .box td:last-child  { font-weight: 600; color: #2c3e50; }
+
+        /* TABLA ÍTEMS */
+        .fact-body { padding: 16px 24px; }
+
+        table.items { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 16px; }
+        table.items thead th {
+            background: #2c3e50; color: #fff; padding: 7px 8px;
+            font-size: 10px; text-transform: uppercase; letter-spacing: .8px; text-align: left;
+        }
+        table.items thead th.tr { text-align: right; }
+        table.items tbody tr:nth-child(even) { background: #f7f7f7; }
+        table.items tbody td { padding: 6px 8px; border-bottom: 1px solid #eee; }
+        table.items tfoot td {
+            padding: 6px 8px; font-weight: bold; background: #ecf0f1;
+            border-top: 2px solid #2c3e50;
+        }
+        .tr { text-align: right; }
+        .tc { text-align: center; }
+
+        /* TOTALES */
+        .fact-totales {
+            display: flex; justify-content: flex-end; margin-bottom: 16px;
+        }
+        .totales-box {
+            border: 1px solid #ddd; border-radius: 5px; min-width: 280px; overflow: hidden;
+        }
+        .totales-box table { width: 100%; border-collapse: collapse; }
+        .totales-box td { padding: 5px 12px; font-size: 12.5px; border-bottom: 1px solid #eee; }
+        .totales-box td:first-child { color: #777; }
+        .totales-box td:last-child  { text-align: right; font-weight: 600; color: #2c3e50; }
+        .totales-box .total-final td { background: #2c3e50; color: #fff !important; font-size: 14px; }
+        .totales-box .total-final td:last-child { color: #fff !important; }
+
+        /* CUOTAS (CRÉDITO) */
+        .credito-section {
+            background: linear-gradient(135deg, #1a252f 0%, #212f3c 100%);
+            border-radius: 5px; padding: 14px 18px; margin-bottom: 16px;
+        }
+        .credito-section h4 {
+            font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px;
+            color: #85c1e9; margin-bottom: 10px; padding-bottom: 6px;
+            border-bottom: 1px solid #2e4057;
+        }
+        table.cuotas { width: 100%; border-collapse: collapse; font-size: 12px; }
+        table.cuotas thead th {
+            background: rgba(255,255,255,.08); color: #85c1e9;
+            padding: 5px 8px; font-size: 10px; text-transform: uppercase; text-align: left;
+        }
+        table.cuotas tbody td { padding: 5px 8px; color: #ecf0f1; border-bottom: 1px solid #2e4057; }
+        .cuota-estado {
+            display: inline-block; padding: 2px 8px; border-radius: 10px;
+            font-size: 10px; font-weight: bold;
+        }
+        .est-pendiente { background: #f39c12; color: #fff; }
+        .est-cobrada   { background: #27ae60; color: #fff; }
+
+        /* RESUMEN CRÉDITO */
+        .credit-summary {
+            background: linear-gradient(135deg, #1a252f 0%, #212f3c 100%);
+            border-radius: 6px; padding: 16px 20px; margin-bottom: 14px; color: #fff;
+        }
+        .credit-summary h4 {
+            font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px;
+            color: #85c1e9; margin-bottom: 12px; padding-bottom: 7px;
+            border-bottom: 1px solid #2e4057;
+        }
+        .credit-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px;
+        }
+        .credit-item .ci-label { font-size: 10px; color: #85c1e9; text-transform: uppercase; letter-spacing: 1px; }
+        .credit-item .ci-val   { font-size: 15px; font-weight: bold; color: #fff; margin-top: 2px; }
+        .credit-item.highlight .ci-label { color: #f0b27a; }
+        .credit-item.highlight .ci-val   { color: #f0b27a; font-size: 17px; }
+        .progress-wrap { margin-top: 12px; padding-top: 10px; border-top: 1px solid #2e4057; }
+        .progress-label { font-size: 10px; color: #85c1e9; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 5px; display: flex; justify-content: space-between; }
+        .progress-bar  { background: #2e4057; border-radius: 4px; height: 8px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 4px; background: #27ae60; }
+
+        /* PIE */
+        .fact-footer {
+            background: #f5f5f5; border-top: 1px solid #ddd;
+            padding: 10px 24px; text-align: center; font-size: 11px; color: #999;
+        }
+
+        /* TOAST */
+        #toast {
+            position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+            min-width: 280px; padding: 14px 20px; border-radius: 8px;
+            font-size: 13px; font-weight: 500; color: #fff;
+            box-shadow: 0 6px 24px rgba(0,0,0,.25); opacity: 0;
+            transition: opacity .3s ease, transform .3s ease;
+            z-index: 9999; pointer-events: none;
+        }
+        #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        #toast.success { background: #27ae60; }
+        #toast.error   { background: #c0392b; }
+
+        @media print {
+            body { background: #fff; }
+            .action-bar { display: none !important; }
+            .page { margin: 0; box-shadow: none; border-radius: 0; }
+            .credito-section { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            table.items thead th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- BARRA ACCIONES -->
+<div class="action-bar no-print">
+    <span class="ab-title" id="lblTitulo">Factura</span>
+    <span class="tipo-badge badge-contado" id="badgeTipo">CONTADO</span>
+    <button class="btn-act btn-print" onclick="window.print()">&#128424; Imprimir</button>
+    <button class="btn-act btn-pdf" id="btnPDF" onclick="descargarPDF()">&#128196; PDF</button>
+</div>
+
+<!-- FACTURA -->
+<div class="page" id="factura">
+
+    <!-- CABECERA -->
+    <div class="fact-header">
+        <div class="fact-empresa">
+            <h1 id="empNombre"></h1>
+            <p id="empDireccion"></p>
+            <p id="empTelefono"></p>
+            <p id="sucNombre"></p>
+        </div>
+        <div class="fact-timbrado">
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:4px;">Factura N°</div>
+            <div class="nro-factura" id="nroFactura">000-000-0000000</div>
+            <div class="tim-info">Timbrado: <strong id="timNumero">—</strong></div>
+            <div class="tim-info">Vence: <strong id="timVence">—</strong></div>
+            <div style="margin-top:6px;" id="estadoBadge"></div>
+        </div>
+    </div>
+
+    <!-- DATOS CLIENTE + FECHA -->
+    <div class="fact-meta">
+        <div class="box">
+            <h4>Cliente</h4>
+            <table>
+                <tr><td>Nombre</td><td id="cliNombre"></td></tr>
+                <tr><td>RUC</td><td id="cliRuc"></td></tr>
+                <tr><td>Dirección</td><td id="cliDireccion"></td></tr>
+                <tr><td>Teléfono</td><td id="cliTelefono"></td></tr>
+            </table>
+        </div>
+        <div class="box">
+            <h4>Datos de la Venta</h4>
+            <table>
+                <tr><td>Fecha</td><td id="ventFecha"></td></tr>
+                <tr><td>Condición</td><td id="ventCondicion"></td></tr>
+                <tr><td>Encargado</td><td id="ventFuncionario"></td></tr>
+                <tr><td>Sucursal</td><td id="ventSucursal"></td></tr>
+                <tr><td>Estado</td><td id="ventEstado"></td></tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- ÍTEMS -->
+    <div class="fact-body">
+
+        <table class="items">
+            <thead>
+                <tr>
+                    <th style="width:40%">Descripción</th>
+                    <th class="tc" style="width:8%">Cant.</th>
+                    <th class="tr" style="width:12%">Precio Unit.</th>
+                    <th class="tr" style="width:12%">Exenta</th>
+                    <th class="tr" style="width:8%">IVA 5%</th>
+                    <th class="tr" style="width:8%">IVA 10%</th>
+                    <th class="tr" style="width:12%">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyItems"></tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3"><strong>TOTALES</strong></td>
+                    <td class="tr" id="tfExenta">0</td>
+                    <td class="tr" id="tfIva5">0</td>
+                    <td class="tr" id="tfIva10">0</td>
+                    <td class="tr" id="tfTotal">0</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <!-- RESUMEN TOTALES -->
+        <div class="fact-totales">
+            <div class="totales-box">
+                <table>
+                    <tr><td>Subtotal Exenta</td><td id="resExenta">0</td></tr>
+                    <tr><td>Subtotal IVA 5%</td><td id="resIva5base">0</td></tr>
+                    <tr><td>IVA 5%</td><td id="resIva5">0</td></tr>
+                    <tr><td>Subtotal IVA 10%</td><td id="resIva10base">0</td></tr>
+                    <tr><td>IVA 10%</td><td id="resIva10">0</td></tr>
+                    <tr class="total-final">
+                        <td>TOTAL</td>
+                        <td id="resTotal">0</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- CRÉDITO (solo visible en ventas a crédito) -->
+        <div id="seccionCredito" style="display:none;">
+
+            <!-- RESUMEN -->
+            <div class="credit-summary">
+                <h4>&#9642; Estado del Crédito</h4>
+                <div class="credit-grid">
+                    <div class="credit-item">
+                        <div class="ci-label">Total financiado</div>
+                        <div class="ci-val" id="crdTotalFinanciado">—</div>
+                    </div>
+                    <div class="credit-item">
+                        <div class="ci-label">Cuotas</div>
+                        <div class="ci-val" id="crdCuotas">—</div>
+                    </div>
+                    <div class="credit-item">
+                        <div class="ci-label">Total cobrado</div>
+                        <div class="ci-val" id="crdTotalCobrado">—</div>
+                    </div>
+                    <div class="credit-item highlight">
+                        <div class="ci-label">Saldo pendiente</div>
+                        <div class="ci-val" id="crdSaldo">—</div>
+                    </div>
+                </div>
+                <div class="progress-wrap">
+                    <div class="progress-label">
+                        <span>Progreso de pago</span>
+                        <span id="crdPorcentaje">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="crdProgressFill" style="width:0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABLA CUOTAS -->
+            <div class="credito-section">
+                <h4>&#9642; Plan de Cuotas</h4>
+                <table class="cuotas">
+                    <thead>
+                        <tr>
+                            <th>Cuota</th>
+                            <th class="tr">Monto</th>
+                            <th>Vencimiento</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyCuotas"></tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- PIE -->
+    <div class="fact-footer">
+        <span id="pieEmpresa"></span> &mdash; Documento generado el <span id="fechaImpresion"></span>
+    </div>
+
+</div><!-- /factura -->
+
+<script>
+    var ventaId = null;
+
+    function getUrl() {
+        return 'http://127.0.0.1:8000/Proyecto_tp/';
+    }
+
+    function getToken() {
+        var s = JSON.parse(localStorage.getItem('datosSesion') || '{}');
+        return (s && s.token) ? s.token : null;
+    }
+
+    function fmt(n) {
+        if (isNaN(n)) return '0';
+        return Number(n).toLocaleString('es-PY', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    }
+
+    function toast(msg, tipo) {
+        var el = document.getElementById('toast');
+        el.textContent = msg;
+        el.className = 'show ' + (tipo || 'success');
+        setTimeout(function(){ el.className = ''; }, 3000);
+    }
+
+    // Cargar datos al abrir la página
+    window.addEventListener('DOMContentLoaded', function() {
+        var params = new URLSearchParams(window.location.search);
+        ventaId = params.get('id');
+        if (!ventaId) {
+            document.body.innerHTML = '<p style="padding:40px;color:#c0392b;">ID de venta no especificado.</p>';
+            return;
+        }
+        var token = getToken();
+        if (!token) {
+            document.body.innerHTML = '<p style="padding:40px;color:#c0392b;">Sin sesión activa.</p>';
+            return;
+        }
+
+        fetch(getUrl() + 'ventas_cab/imprimir/' + ventaId, {
+            headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/json' }
+        })
+        .then(function(r) {
+            if (!r.ok) throw new Error('Error ' + r.status);
+            return r.json();
+        })
+        .then(function(data) {
+            renderizar(data);
+        })
+        .catch(function(e) {
+            document.body.innerHTML = '<p style="padding:40px;color:#c0392b;">' + e.message + '</p>';
+        });
+    });
+
+    function renderizar(data) {
+        var cab     = data.cab     || {};
+        var items   = data.detalles || [];
+        var cuotas  = data.cuotas  || [];
+
+        var esCredito = (cab.condicion_pago === 'CREDITO');
+
+        // ── BARRA ──
+        document.getElementById('lblTitulo').textContent = 'Factura N° ' + (cab.nro_factura || '');
+        var badge = document.getElementById('badgeTipo');
+        if (esCredito) {
+            badge.textContent = 'CRÉDITO';
+            badge.className   = 'tipo-badge badge-credito';
+        } else {
+            badge.textContent = 'CONTADO';
+            badge.className   = 'tipo-badge badge-contado';
+        }
+
+        // ── CABECERA ──
+        document.getElementById('empNombre').textContent    = cab.emp_razon_social || '';
+        document.getElementById('empDireccion').textContent = cab.emp_direccion    || '';
+        document.getElementById('empTelefono').textContent  = cab.emp_telefono     || '';
+        document.getElementById('sucNombre').textContent    = cab.suc_razon_social || '';
+
+        document.getElementById('nroFactura').textContent  = cab.nro_factura  || 'S/N';
+        document.getElementById('timNumero').textContent   = cab.tim_numero   || '—';
+        document.getElementById('timVence').textContent    = cab.tim_fecha_fin || '—';
+
+        var colorEstado = { PENDIENTE: '#f39c12', CONFIRMADO: '#27ae60', ANULADO: '#c0392b' };
+        document.getElementById('estadoBadge').innerHTML =
+            '<span style="display:inline-block;padding:3px 12px;border-radius:12px;font-size:10px;font-weight:bold;' +
+            'background:' + (colorEstado[cab.vent_estado] || '#95a5a6') + ';color:#fff;letter-spacing:1px;">' +
+            (cab.vent_estado || '') + '</span>';
+
+        // ── CLIENTE ──
+        document.getElementById('cliNombre').textContent    = (cab.cli_nombre   || '') + ' ' + (cab.cli_apellido || '');
+        document.getElementById('cliRuc').textContent       = cab.cli_ruc       || '';
+        document.getElementById('cliDireccion').textContent = cab.cli_direccion || '';
+        document.getElementById('cliTelefono').textContent  = cab.cli_telefono  || '';
+
+        // ── DATOS VENTA ──
+        document.getElementById('ventFecha').textContent      = cab.vent_fecha     || '';
+        document.getElementById('ventCondicion').textContent  = cab.condicion_pago || '';
+        document.getElementById('ventFuncionario').textContent = cab.funcionario   || '';
+        document.getElementById('ventSucursal').textContent   = cab.suc_razon_social || '';
+        document.getElementById('ventEstado').textContent     = cab.vent_estado    || '';
+
+        // ── ÍTEMS ──
+        var html = '';
+        var totExenta = 0, totIva5 = 0, totIva10 = 0, totSubtotal = 0;
+        var totIva5base = 0, totIva10base = 0;
+
+        items.forEach(function(it) {
+            var sub    = parseFloat(it.subtotal)    || 0;
+            var exenta = parseFloat(it.monto_exenta)|| 0;
+            var iva5   = parseFloat(it.iva5)        || 0;
+            var iva10  = parseFloat(it.iva10)       || 0;
+
+            totSubtotal += sub;
+            totExenta   += exenta;
+            totIva5     += iva5;
+            totIva10    += iva10;
+            if (iva5  > 0) totIva5base  += sub;
+            if (iva10 > 0) totIva10base += sub;
+
+            html += '<tr>' +
+                '<td>' + (it.item_decripcion || '') + '</td>' +
+                '<td class="tc">' + fmt(it.cantidad) + '</td>' +
+                '<td class="tr">' + fmt(it.precio) + '</td>' +
+                '<td class="tr">' + (exenta > 0 ? fmt(exenta) : '—') + '</td>' +
+                '<td class="tr">' + (iva5   > 0 ? fmt(iva5)   : '—') + '</td>' +
+                '<td class="tr">' + (iva10  > 0 ? fmt(iva10)  : '—') + '</td>' +
+                '<td class="tr">' + fmt(sub) + '</td>' +
+            '</tr>';
+        });
+
+        document.getElementById('tbodyItems').innerHTML = html || '<tr><td colspan="7" style="text-align:center;color:#999;">Sin ítems</td></tr>';
+
+        document.getElementById('tfExenta').textContent = fmt(totExenta);
+        document.getElementById('tfIva5').textContent   = fmt(totIva5);
+        document.getElementById('tfIva10').textContent  = fmt(totIva10);
+        document.getElementById('tfTotal').textContent  = fmt(totSubtotal);
+
+        document.getElementById('resExenta').textContent   = fmt(totExenta);
+        document.getElementById('resIva5base').textContent = fmt(totIva5base);
+        document.getElementById('resIva5').textContent     = fmt(totIva5);
+        document.getElementById('resIva10base').textContent= fmt(totIva10base);
+        document.getElementById('resIva10').textContent    = fmt(totIva10);
+        document.getElementById('resTotal').textContent    = fmt(totSubtotal);
+
+        // ── CRÉDITO: resumen + cuotas ──
+        if (esCredito && cuotas.length > 0) {
+            document.getElementById('seccionCredito').style.display = '';
+
+            var totalFinanciado = 0, totalCobrado = 0;
+            cuotas.forEach(function(c) {
+                totalFinanciado += parseFloat(c.cta_cob_monto) || 0;
+                if (c.cta_cob_estado === 'COBRADA') totalCobrado += parseFloat(c.cta_cob_monto) || 0;
+            });
+            var saldo      = totalFinanciado - totalCobrado;
+            var pct        = totalFinanciado > 0 ? Math.round(totalCobrado / totalFinanciado * 100) : 0;
+            var cobradas   = cuotas.filter(function(c){ return c.cta_cob_estado === 'COBRADA'; }).length;
+
+            document.getElementById('crdTotalFinanciado').textContent = fmt(totalFinanciado);
+            document.getElementById('crdCuotas').textContent          = cobradas + ' / ' + cuotas.length + ' cobradas';
+            document.getElementById('crdTotalCobrado').textContent    = fmt(totalCobrado);
+            document.getElementById('crdSaldo').textContent           = fmt(saldo);
+            document.getElementById('crdPorcentaje').textContent      = pct + '%';
+            document.getElementById('crdProgressFill').style.width    = pct + '%';
+
+            var hc = '';
+            cuotas.forEach(function(c) {
+                var cls = c.cta_cob_estado === 'COBRADA' ? 'est-cobrada' : 'est-pendiente';
+                hc += '<tr>' +
+                    '<td>' + c.nro_cuota + '</td>' +
+                    '<td class="tr">' + fmt(c.cta_cob_monto) + '</td>' +
+                    '<td>' + (c.fecha_vencimiento || '') + '</td>' +
+                    '<td><span class="cuota-estado ' + cls + '">' + (c.cta_cob_estado || '') + '</span></td>' +
+                '</tr>';
+            });
+            document.getElementById('tbodyCuotas').innerHTML = hc;
+        }
+
+        // ── PIE ──
+        document.getElementById('pieEmpresa').textContent = (cab.emp_razon_social || '') + ' | ' + (cab.emp_telefono || '');
+        document.getElementById('fechaImpresion').textContent =
+            new Date().toLocaleDateString('es-PY', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+    }
+
+    function descargarPDF() {
+        toast('Generando PDF…', 'success');
+        var el  = document.getElementById('factura');
+        var btn = document.getElementById('btnPDF');
+        btn.disabled = true;
+
+        var script1 = document.createElement('script');
+        script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+        script1.onload = function() {
+            var script2 = document.createElement('script');
+            script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+            script2.onload = function() {
+                html2canvas(el, { scale: 2, useCORS: true }).then(function(canvas) {
+                    var pdf    = new window.jspdf.jsPDF('p', 'mm', 'a4');
+                    var imgW   = 210;
+                    var imgH   = canvas.height * imgW / canvas.width;
+                    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, imgW, imgH);
+                    pdf.save('factura-' + (ventaId || 'venta') + '.pdf');
+                    btn.disabled = false;
+                });
+            };
+            document.head.appendChild(script2);
+        };
+        document.head.appendChild(script1);
+    }
+</script>
+</body>
+</html>

@@ -51,6 +51,7 @@
         <input type="hidden" id="txtOperacion" value="0">
         <input type="hidden" id="funcionario_id">
         <input type="hidden" id="prom_cab_estado" value="PENDIENTE">
+        <input type="hidden" id="original_item_id">
 
         <!-- ================= DATOS GENERALES ================= -->
         <div class="section-box">
@@ -163,11 +164,23 @@
                 <input type="text" id="prom_det_costo" class="form-control" disabled placeholder="Precio">
             </div>
 
+            <div class="col-sm-2" style="margin-top:8px;">
+                <select id="marca_det_mm" class="form-control" disabled onchange="mmCambiarMarca(this.value);">
+                    <option value="">-- Marca --</option>
+                </select>
+            </div>
+            <div class="col-sm-2" style="margin-top:8px;">
+                <select id="modelo_det_mm" class="form-control" disabled>
+                    <option value="">-- Modelo --</option>
+                </select>
+            </div>
+
             <div class="col-sm-3">
-                <button class="btn btn-success" onclick="agregarDetalle();"><i class="material-icons">add</i></button>
-                <button class="btn btn-warning" onclick="editarDetalle();"><i class="material-icons">mode_edit</i></button>
-                <button class="btn btn-danger" onclick="eliminarDetalle();"><i class="material-icons">clear</i></button>
+                <button id="btnAgregarDetalle" class="btn btn-success" onclick="agregarDetalle();"><i class="material-icons">add</i></button>
+                <button id="btnEditarDetalle" class="btn btn-warning" onclick="editarDetalle();"><i class="material-icons">mode_edit</i></button>
+                <button id="btnEliminarDetalle" class="btn btn-danger" onclick="eliminarDetalle();"><i class="material-icons">clear</i></button>
                 <button class="btn btn-default" id="btnGrabarDetalle" onclick="grabarDetalle();" style="display:none;"><i class="material-icons">save</i></button>
+                <button class="btn btn-warning" id="btnCancelarDetalle" onclick="cancelarDetalle();" style="display:none;"><i class="material-icons">close</i></button>
             </div>
         </div>
 
@@ -184,17 +197,31 @@
                         <th>Tipo impuesto</th>
                         <th>Sub Total</th>
                         <th>IVA</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
                     </tr>
                 </thead>
                 <tbody id="tableDetalle"></tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="5" class="text-right">Total</th>
-                        <th id="txtTotalGral">0</th>
+                        <th colspan="5" class="text-right">IVA 10%</th>
+                        <th id="txtIva10">0</th>
+                        <th colspan="3"></th>
+                    </tr>
+                    <tr>
+                        <th colspan="5" class="text-right">IVA 5%</th>
+                        <th id="txtIva5">0</th>
+                        <th colspan="3"></th>
                     </tr>
                     <tr>
                         <th colspan="5" class="text-right">Total IVA</th>
                         <th id="txtTotalConImpuesto">0</th>
+                        <th colspan="3"></th>
+                    </tr>
+                    <tr>
+                        <th colspan="5" class="text-right" style="font-weight:bold;">Total</th>
+                        <th id="txtTotalGral" style="font-weight:bold;">0</th>
+                        <th colspan="3"></th>
                     </tr>
                 </tfoot>
             </table>
@@ -281,7 +308,8 @@
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js"></script>
-<script src="metodos.js?v=2"></script>
+<script src="../../js/marcaModelo.js"></script>
+<script src="metodos.js?v=3"></script>
 
 </body>
 </html>

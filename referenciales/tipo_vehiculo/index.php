@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>GUI TIPO VEHÍCULO</title>
+    <title>Tipo de Vehículo</title>
 
     <link rel="icon" href="../../images.ico" type="image/x-icon">
 
@@ -35,19 +35,20 @@
 <div class="row clearfix">
 <div class="col-md-12">
 
-<!-- ================= FORMULARIO ================= -->
+<!-- ================= FORMULARIO CABECERA ================= -->
 <div class="card card-industrial">
     <div class="header">
         <h2>
             <i class="material-icons">directions_car</i>
             Tipo de Vehículo
-            <small>CRUD de Tipo de Vehículo</small>
+            <small>Gestión de Tipo de Vehículo</small>
         </h2>
     </div>
 
     <div class="body">
 
         <input type="hidden" id="txtOperacion" value="0">
+        <input type="hidden" id="tip_veh_estado" value="activo"/>
 
         <!-- DATOS GENERALES -->
         <div class="section-box">
@@ -63,11 +64,21 @@
                     </div>
                 </div>
 
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label style="font-size:12px; color:#999;">Uso</label>
+                        <select id="tv_uso" class="form-control" disabled onchange="cambiarUso(this.value);">
+                            <option value="SERVICIO">Servicio</option>
+                            <option value="EMPRESA">Empresa</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="col-sm-4">
                     <div class="form-group form-float">
                         <div class="form-line">
                             <input type="text" id="tip_veh_nombre" class="form-control" disabled>
-                            <label class="form-label">Nombre</label>
+                            <label class="form-label">Nombre del Tipo</label>
                         </div>
                     </div>
                 </div>
@@ -76,7 +87,7 @@
                     <div class="form-group form-float">
                         <div class="form-line">
                             <input type="text" id="tip_veh_capacidad" class="form-control" disabled>
-                            <label class="form-label">Capacidad</label>
+                            <label class="form-label">Capacidad (asientos)</label>
                         </div>
                     </div>
                 </div>
@@ -99,11 +110,29 @@
                     </div>
                 </div>
 
-                <div class="col-sm-6">
+                <div class="col-sm-5">
                     <div class="form-group form-float">
                         <div class="form-line">
                             <input type="text" id="tip_veh_observacion" class="form-control" disabled>
-                            <label class="form-label">Observación</label>
+                            <label class="form-label">Observaciones</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-2" id="col_tv_anio" style="display:none;">
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input type="number" id="tv_anio" class="form-control" disabled min="1900" max="2100">
+                            <label class="form-label">Año</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3" id="col_tv_color" style="display:none;">
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input type="text" id="tv_color" class="form-control" disabled>
+                            <label class="form-label">Color</label>
                         </div>
                     </div>
                 </div>
@@ -138,14 +167,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-2">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="modelo_año" class="form-control" disabled>
-                            <label class="form-label">Año</label>
-                        </div>
-                    </div>
-                </div>
+                <input type="hidden" id="modelo_año">
 
             </div>
         </div>
@@ -158,8 +180,8 @@
             <button id="btnEditar" class="btn btn-primary waves-effect" onclick="editar();" disabled>
                 <i class="material-icons">edit</i> Modificar
             </button>
-            <button id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();" disabled>
-                <i class="material-icons">delete</i> Eliminar
+            <button id="btnEstado" class="btn btn-danger waves-effect" onclick="confirmarCambioEstado();" disabled>
+                <i class="material-icons">block</i> <span id="lblEstado">Desactivar</span>
             </button>
             <button id="btnGrabar" class="btn btn-default waves-effect" onclick="confirmarOperacion();" disabled>
                 <i class="material-icons">save</i> Grabar
@@ -172,7 +194,101 @@
     </div>
 </div>
 
-<!-- ================= TABLA ================= -->
+<!-- ================= DETALLE VEHÍCULOS DE EMPRESA ================= -->
+<div class="card card-industrial" id="cardDetalle" style="display:none;">
+    <div class="header">
+        <h2>
+            <i class="material-icons">commute</i>
+            Vehículos de la Empresa
+            <small>Registros individuales de este tipo de vehículo</small>
+        </h2>
+    </div>
+
+    <div class="body">
+
+        <input type="hidden" id="txtDetOperacion" value="0">
+        <input type="hidden" id="txtDetId" value="0">
+
+        <!-- FORM DETALLE -->
+        <div id="formDetalle" style="display:none;">
+            <div class="section-box" style="border-left: 4px solid #2980b9;">
+                <div class="section-title" style="color:#2980b9;">Datos del Vehículo</div>
+                <div class="row clearfix">
+
+                    <div class="col-sm-3">
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="tv_det_placa" class="form-control">
+                                <label class="form-label">Placa</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="tv_det_num_chasis" class="form-control">
+                                <label class="form-label">Nro. Chasis</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="tv_det_num_motor" class="form-control">
+                                <label class="form-label">Nro. Motor</label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="btn-toolbar-left" style="margin-bottom:15px;">
+                <button class="btn btn-default waves-effect" onclick="grabarDetalle();">
+                    <i class="material-icons">save</i> Grabar Vehículo
+                </button>
+                <button id="btnCancelarDetalle" class="btn btn-warning waves-effect" onclick="cancelarDetalle();">
+                    <i class="material-icons">close</i> Cancelar
+                </button>
+            </div>
+        </div>
+
+        <!-- BOTÓN AGREGAR VEHÍCULO -->
+        <button id="btnAgregarDetalle" class="btn btn-success waves-effect" onclick="agregarDetalle();" style="margin-bottom:10px;">
+            <i class="material-icons">add</i> Agregar Vehículo
+        </button>
+
+        <!-- TABLA DETALLES -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Placa</th>
+                        <th>Nro. Chasis</th>
+                        <th>Nro. Motor</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBodyDet"></tbody>
+                <tfoot>
+                    <tr>
+                        <th>Código</th>
+                        <th>Placa</th>
+                        <th>Nro. Chasis</th>
+                        <th>Nro. Motor</th>
+                        <th>Acciones</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<!-- ================= TABLA PRINCIPAL ================= -->
 <div class="card card-industrial">
     <div class="header">
         <h2>
@@ -187,28 +303,34 @@
                 <thead>
                     <tr>
                         <th>Código</th>
+                        <th>Uso</th>
                         <th>Nombre</th>
                         <th>Capacidad</th>
                         <th>Combustible</th>
                         <th>Categoría</th>
                         <th>Observación</th>
+                        <th>Año</th>
+                        <th>Color</th>
                         <th>Marca</th>
                         <th>Modelo</th>
-                        <th>Año</th>
+                        <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
                 <tfoot>
                     <tr>
                         <th>Código</th>
+                        <th>Uso</th>
                         <th>Nombre</th>
                         <th>Capacidad</th>
                         <th>Combustible</th>
                         <th>Categoría</th>
                         <th>Observación</th>
+                        <th>Año</th>
+                        <th>Color</th>
                         <th>Marca</th>
                         <th>Modelo</th>
-                        <th>Año</th>
+                        <th>Estado</th>
                     </tr>
                 </tfoot>
             </table>
@@ -241,7 +363,8 @@
 
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
-<script src="metodos.js?v=2"></script>
+<script src="../../js/ruta.js"></script>
+<script src="metodos.js?v=5"></script>
 
 </body>
 </html>

@@ -55,7 +55,7 @@
 
             <div class="row clearfix">
 
-                <div class="col-sm-4">
+                <div class="col-sm-1">
                     <div class="form-group form-float">
                         <div class="form-line">
                             <input type="text" id="txtCodigo" class="form-control" disabled>
@@ -64,12 +64,13 @@
                     </div>
                 </div>
 
-                <div class="col-sm-8">
+                <div class="col-sm-11">
                     <div class="form-group form-float">
                         <div class="form-line">
                             <input type="text" id="nacio_descripcion" class="form-control" disabled>
                             <label class="form-label">Descripción</label>
                         </div>
+                        <small style="color:#aaa;font-size:11px;">La nacionalidad se gestiona desde Mantener País</small>
                     </div>
                 </div>
 

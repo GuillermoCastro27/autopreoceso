@@ -71,6 +71,17 @@ function cancelar(){
 }
 
 // Prepara el formulario para agregar un nuevo presupuesto.
+function setAfectaStock(valor) {
+    $('#nota_comp_afecta_stock').val(valor ? '1' : '0');
+    if (valor) {
+        $('#btnAfectaSi').addClass('active btn-success').removeClass('btn-default');
+        $('#btnAfectaNo').removeClass('active btn-success').addClass('btn-default');
+    } else {
+        $('#btnAfectaNo').addClass('active btn-danger').removeClass('btn-default');
+        $('#btnAfectaSi').removeClass('active btn-success').addClass('btn-default');
+    }
+}
+
 function agregar() {
     $("#txtOperacion").val(1);
     $("#id").val(0);
@@ -84,6 +95,10 @@ function agregar() {
     $("#nota_comp_tipo").removeAttr("disabled");
     $("#nota_comp_observaciones").removeAttr("disabled");
     $("#nota_comp_timbrado").removeAttr("disabled");
+    $("#nota_comp_nro_nota").removeAttr("disabled");
+    // Habilitar toggle y resetear a Sí (default)
+    $('#btnAfectaSi, #btnAfectaNo').removeAttr('disabled');
+    setAfectaStock(true);
 
     $("#btnAgregar").attr("disabled", "true");
     $("#btnEditar").attr("disabled", "true");
@@ -99,7 +114,7 @@ function agregar() {
 
 function editar(){
     $("#txtOperacion").val(2);
-    
+
     $("#nota_comp_intervalo_fecha_vence").attr("disabled", "true");
     $("#nota_comp_fecha").removeAttr("disabled");
     $("#nota_comp_cant_cuota").attr("disabled", "true");
@@ -110,6 +125,8 @@ function editar(){
     $("#nota_comp_tipo").removeAttr("disabled");
     $("#nota_comp_observaciones").removeAttr("disabled");
     $("#nota_comp_timbrado").removeAttr("disabled");
+    $("#nota_comp_nro_nota").removeAttr("disabled");
+    $('#btnAfectaSi, #btnAfectaNo').removeAttr('disabled');
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -193,10 +210,9 @@ function listar() {
         dataType: "json"
     })
     .done(function(resultado) {
-        console.log(resultado); // Verifica el contenido de la respuesta
         var lista = "";
         for (rs of resultado) {
-            lista += "<tr class=\"item-list\" onclick=\"seleccionNotaComp(" + rs.id + "," + rs.proveedor_id + "," + rs.empresa_id + "," + rs.sucursal_id + "," + rs.compra_cab_id + ",'" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.compra + "','" + rs.nota_comp_intervalo_fecha_vence + "','" + rs.nota_comp_fecha + "','" + rs.nota_comp_estado + "','" + rs.nota_comp_cant_cuota + "','" + rs.nota_comp_tipo + "','" + rs.nota_comp_observaciones + "','" + rs.encargado + "','" + rs.prov_razonsocial + "','" + rs.prov_ruc + "','" + rs.prov_telefono + "','" + rs.prov_correo + "','" + rs.nota_comp_condicion_pago + "','" + (rs.nota_comp_timbrado||'') + "','" + (rs.comp_timbrado||'') + "');\">";
+            lista += "<tr class=\"item-list\" onclick=\"seleccionNotaComp(" + rs.id + "," + rs.proveedor_id + "," + rs.empresa_id + "," + rs.sucursal_id + "," + rs.compra_cab_id + ",'" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.compra + "','" + rs.nota_comp_intervalo_fecha_vence + "','" + rs.nota_comp_fecha + "','" + rs.nota_comp_estado + "','" + rs.nota_comp_cant_cuota + "','" + rs.nota_comp_tipo + "','" + rs.nota_comp_observaciones + "','" + rs.encargado + "','" + rs.prov_razonsocial + "','" + rs.prov_ruc + "','" + rs.prov_telefono + "','" + rs.prov_correo + "','" + rs.nota_comp_condicion_pago + "','" + (rs.nota_comp_timbrado||'') + "','" + (rs.comp_timbrado||'') + "','" + (rs.nota_comp_nro_nota||'') + "','" + (rs.comp_nro_factura||'') + "'," + (rs.nota_comp_afecta_stock ? 1 : 0) + ")\">";
             lista += "<td>" + rs.id + "</td>";  // Código de la orden de compra
             lista += "<td>" + rs.nota_comp_intervalo_fecha_vence + "</td>";  // Intervalo de fecha de vencimiento
             lista += "<td>" + rs.nota_comp_fecha + "</td>";  // Fecha
@@ -211,14 +227,11 @@ function listar() {
         $("#tableBody").html(lista);
         formatoTabla();
     })    
-    .fail(function(xhr, status, error) {
-        alert("Error: " + error);
-        console.error(xhr.responseText);
-    });
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 
 // Rellena el formulario con los datos de un pedido seleccionado.
-function seleccionNotaComp(id_nota_compra_cab, proveedor_id, empresa_id, sucursal_id, compra_cab_id, emp_razon_social, suc_razon_social, compra_cab, nota_comp_intervalo_fecha_vence, nota_comp_fecha, nota_comp_estado, nota_comp_cant_cuota, nota_comp_tipo, nota_comp_observaciones, encargado, prov_razonsocial, prov_ruc, prov_telefono, prov_correo, nota_comp_condicion_pago, nota_comp_timbrado, comp_timbrado) {
+function seleccionNotaComp(id_nota_compra_cab, proveedor_id, empresa_id, sucursal_id, compra_cab_id, emp_razon_social, suc_razon_social, compra_cab, nota_comp_intervalo_fecha_vence, nota_comp_fecha, nota_comp_estado, nota_comp_cant_cuota, nota_comp_tipo, nota_comp_observaciones, encargado, prov_razonsocial, prov_ruc, prov_telefono, prov_correo, nota_comp_condicion_pago, nota_comp_timbrado, comp_timbrado, nota_comp_nro_nota, comp_nro_factura, nota_comp_afecta_stock) {
     // Asigna los valores al formulario
     $("#id").val(id_nota_compra_cab);
     $("#empresa_id").val(empresa_id);
@@ -240,7 +253,12 @@ function seleccionNotaComp(id_nota_compra_cab, proveedor_id, empresa_id, sucursa
     $("#prov_correo").val(prov_correo);
     $("#encargado").val(encargado);
     $("#nota_comp_timbrado").val(nota_comp_timbrado || '');
+    $("#nota_comp_nro_nota").val(nota_comp_nro_nota || '');
     $("#comp_timbrado").val(comp_timbrado || '');
+    $("#comp_nro_factura").val(comp_nro_factura || '');
+    // Cargar toggle Afecta Stock (deshabilitar — solo lectura al visualizar)
+    setAfectaStock(nota_comp_afecta_stock == '1' || nota_comp_afecta_stock === true);
+    $('#btnAfectaSi, #btnAfectaNo').attr('disabled', true);
 
     // Asignar la condición de pago (CONTADO o CRÉDITO)
     $("#nota_comp_condicion_pago").val(nota_comp_condicion_pago);
@@ -268,6 +286,7 @@ function seleccionNotaComp(id_nota_compra_cab, proveedor_id, empresa_id, sucursa
         $("#btnEditar").removeAttr("disabled");
         $("#btnConfirmar").removeAttr("disabled");
         $("#formDetalles").attr("style","display:block;");
+        mostrarBotonesDetNota('normal');
     }
 
     if(nota_comp_estado === "CONFIRMADO"){
@@ -312,6 +331,35 @@ function grabar() {
         formattedIntervaloFechaVence = null;
     }
 
+    // ── Validaciones agrupadas ──────────────────────────────────────────────
+    var errores = [];
+
+    // Fecha (debe ser hoy)
+    var fechaVal = $('#nota_comp_fecha').val().trim();
+    if (!fechaVal) {
+        errores.push('La fecha es obligatoria.');
+    } else {
+        var mFecha = moment(fechaVal, FMT_NOTA, true);
+        if (!mFecha.isValid()) errores.push('El formato de la fecha es inválido.');
+        else if (!mFecha.clone().startOf('day').isSame(moment().startOf('day')))
+            errores.push('La fecha debe ser la de hoy (' + moment().format('DD/MM/YYYY') + ').');
+    }
+
+    if (!$('#nota_comp_observaciones').val().trim()) errores.push('Las observaciones son obligatorias.');
+    if (!$('#nota_comp_tipo').val())                 errores.push('Seleccione el tipo de nota (Crédito/Débito).');
+    if (!$('#compra_cab_id').val() || $('#compra_cab_id').val() == '0')
+        errores.push('Debe seleccionar la compra relacionada.');
+
+    // Nro. nota: si tiene valor, validar formato
+    var nroNota = $.trim($('#nota_comp_nro_nota').val());
+    if (nroNota && !/^\d{3}-\d{3}-\d{7}$/.test(nroNota))
+        errores.push('El Nro. de Nota debe tener el formato 000-000-0000000.');
+
+    if (errores.length > 0) {
+        swal({ title: 'Datos incompletos', text: errores.map(function(e){ return '• '+e; }).join('\n'), type: 'warning' });
+        return;
+    }
+
     $.ajax({
         url: getUrl() + endpoint,
         method: metodo,
@@ -322,8 +370,10 @@ function grabar() {
             'nota_comp_fecha': $("#nota_comp_fecha").val(),
             'nota_comp_cant_cuota': condicionPago === 'CONTADO' ? null : $("#nota_comp_cant_cuota").val(),
             'nota_comp_tipo': $("#nota_comp_tipo").val(),
+            'nota_comp_afecta_stock':   $('#nota_comp_afecta_stock').val() === '1' ? 1 : 0,
             'nota_comp_observaciones': $("#nota_comp_observaciones").val(),
             'nota_comp_timbrado': $("#nota_comp_timbrado").val() || null,
+            'nota_comp_nro_nota': $("#nota_comp_nro_nota").val() || null,
             'funcionario_id': $("#funcionario_id").val(),
             'compra_cab_id': $("#compra_cab_id").val(),
             'proveedor_id': $("#proveedor_id").val(),
@@ -345,6 +395,8 @@ function grabar() {
                 //location.reload(true);
                 $("#id").val(resultado.registro.id);
                 $("#detalle").attr("style","display:block;");
+                $("#formDetalles").attr("style","display:block;");
+                mostrarBotonesDetNota('normal');
                 listarDetalles();
                 if(resultado.registro.nota_comp_estado!="PENDIENTE"){
                     location.reload(true);
@@ -354,18 +406,51 @@ function grabar() {
     })
     .fail(function(a, b, c) {
         alert(c);
-        console.log(a.responseText); // Mostrar error en la consola
     });
 }
 
 
 // Configura el formato de fecha en ciertos campos usando BootstrapMaterialDatePicker.
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function mostrarErrores(xhr) {
+    if (xhr.status === 403) return;
+    var res = xhr.responseJSON;
+    var titulo = xhr.status === 422 ? 'Datos inválidos' : 'Error';
+    var msg = '';
+    if (res && res.errors) {
+        var lineas = [];
+        $.each(res.errors, function(k, v) { lineas.push('• ' + (Array.isArray(v) ? v[0] : v)); });
+        msg = lineas.join('\n');
+    } else if (res && res.mensaje) { msg = res.mensaje; }
+    else { msg = 'Ocurrió un error inesperado.'; }
+    swal({ title: titulo, text: msg, type: xhr.status === 422 ? 'warning' : 'error' });
+}
+
+var FMT_NOTA = 'YYYY-MM-DD HH:mm:ss';
+
+function validarFechaNota() {
+    var val = $('#nota_comp_fecha').val().trim();
+    var aviso = $('#avisoFechaNota');
+    if (!val) { aviso.hide(); return; }
+    var m = moment(val, FMT_NOTA, true);
+    if (!m.isValid()) {
+        $('#nota_comp_fecha').css('border-color','#e74c3c');
+        aviso.text('Formato de fecha inválido.').show();
+    } else if (!m.clone().startOf('day').isSame(moment().startOf('day'))) {
+        $('#nota_comp_fecha').css('border-color','#e74c3c');
+        aviso.text('La fecha debe ser la de hoy (' + moment().format('DD/MM/YYYY') + ').').show();
+    } else {
+        $('#nota_comp_fecha').css('border-color',''); aviso.hide();
+    }
+}
+
 function campoFecha() {
     $('.datetimepicker').bootstrapMaterialDatePicker({
-        format: 'YYYY-MM-DD HH:mm:ss', // Formato compatible con timestamp en Laravel
+        format: 'YYYY-MM-DD HH:mm:ss',
         clearButton: true,
         weekStart: 1
     });
+    $('#nota_comp_fecha').on('change', function() { validarFechaNota(); });
 }
 function formatearNumero(numero) {
     if (isNaN(numero)) return '0,00';
@@ -375,156 +460,195 @@ function formatearNumero(numero) {
     });
 }
 
-
-// Prepara el formulario para editar un detalle existente del pedido
-function editarDetalle(){
-    $("#txtOperacionDetalle").val(2);
-    $("#item_decripcion").removeAttr("disabled");
-    $("#notas_comp_det_cantidad").removeAttr("disabled");
-    $("#tip_imp_nom").removeAttr("disabled");
-    $("#item_costo").removeAttr("disabled");
-    $("#deposito_id_det").removeAttr("disabled");
-    $("#btnAgregarDetalle").attr("style","display:none");
-    $("#btnEditarDetalle").attr("style","display:none");
-    $("#btnEliminarDetalle").attr("style","display:none");
-    $("#btnGrabarDetalle").attr("style","display:inline");
+function autoFormatoFactura(input) {
+    var digits = input.value.replace(/\D/g, '').slice(0, 13);
+    var formatted = digits;
+    if (digits.length > 6) {
+        formatted = digits.slice(0,3) + '-' + digits.slice(3,6) + '-' + digits.slice(6);
+    } else if (digits.length > 3) {
+        formatted = digits.slice(0,3) + '-' + digits.slice(3);
+    }
+    input.value = formatted;
 }
 
-// Realiza operaciones de creación, edición o eliminación de detalles del pedido.
+
+// ─── HELPERS DETALLE ─────────────────────────────────────────────────────────
+var _timersNota = {};
+function debounceNota(key, fn) { clearTimeout(_timersNota[key]); _timersNota[key] = setTimeout(fn, 300); }
+
+function mostrarBotonesDetNota(modo) {
+    if (modo === 'grabar') {
+        $('#btnAgregarDetalle, #btnEditarDetalle, #btnEliminarDetalle').hide();
+        $('#btnGrabarDetalle, #btnCancelarDetalle').show();
+    } else {
+        $('#btnAgregarDetalle, #btnEditarDetalle, #btnEliminarDetalle').show();
+        $('#btnGrabarDetalle, #btnCancelarDetalle').hide();
+    }
+}
+
+function cargarDepositosNota(selected_id) {
+    var sucId = $('#sucursal_id').val();
+    if (!sucId) return;
+    $.get(getUrl() + 'deposito/read-by-sucursal/' + sucId, function(data) {
+        var opts = '<option value="">-- Depósito --</option>';
+        data.forEach(function(d) {
+            opts += '<option value="' + d.id + '"' + (d.id == selected_id ? ' selected' : '') + '>' + d.dep_nombre + '</option>';
+        });
+        $('#deposito_id_det').html(opts);
+    });
+}
+
+function validarCantidadNota() {
+    var nota_tipo = $('#nota_comp_tipo').val();
+    if (nota_tipo !== 'Crédito') return; // Solo validar stock en NC
+    var cant  = parseFloat($('#notas_comp_det_cantidad').val());
+    var stock = parseFloat($('#stock_disponible_det').val()) || 0;
+    if (!isNaN(cant) && cant > stock) {
+        $('#notas_comp_det_cantidad').css('border-color','#e74c3c');
+        $('#avisoStockNota').text('Stock disponible: ' + stock).show();
+        $('#btnGrabarDetalle').prop('disabled', true);
+    } else {
+        $('#notas_comp_det_cantidad').css('border-color','');
+        $('#avisoStockNota').hide();
+        $('#btnGrabarDetalle').prop('disabled', false);
+    }
+}
+
+function cancelarDetalle() {
+    mmLimpiar();
+    $('#txtOperacionDetalle').val(0);
+    $('#item_id').val('');
+    $('#item_decripcion').val('').prop('disabled', true);
+    $('#notas_comp_det_cantidad').val('').prop('disabled', true).css('border-color','');
+    $('#item_costo').val('').prop('disabled', true);
+    $('#tip_imp_nom_det').val('').prop('disabled', true);
+    $('#tipo_impuesto_id').val('');
+    $('#stock_disponible_det').val(0);
+    $('#avisoStockNota').hide();
+    $('#deposito_id_det').html('<option value="">-- Depósito --</option>').prop('disabled', true);
+    $('#listaProductos').html('').hide();
+    mostrarBotonesDetNota('normal');
+}
+
+function agregarDetalle() {
+    cancelarDetalle();
+    $('#txtOperacionDetalle').val(1);
+    $('#item_decripcion').removeAttr('disabled');
+    $('#notas_comp_det_cantidad').removeAttr('disabled');
+    $('#item_costo').removeAttr('disabled');
+    $('#tip_imp_nom_det').removeAttr('disabled');
+    cargarDepositosNota(null);
+    // Depósito: solo visualización, no editable
+    $('#deposito_id_det').prop('disabled', true);
+    mostrarBotonesDetNota('grabar');
+}
+
+function editarDetalle() {
+    $('#txtOperacionDetalle').val(2);
+    $('#item_decripcion').removeAttr('disabled');
+    $('#notas_comp_det_cantidad').removeAttr('disabled');
+    $('#item_costo').removeAttr('disabled');
+    $('#tip_imp_nom_det').removeAttr('disabled');
+    cargarDepositosNota($('#deposito_id_det').val());
+    // Depósito: solo visualización, no editable
+    $('#deposito_id_det').prop('disabled', true);
+    $('#marca_det_mm, #modelo_det_mm').removeAttr('disabled');
+    mostrarBotonesDetNota('grabar');
+}
+
+function eliminarDetalle() {
+    $('#txtOperacionDetalle').val(3);
+    mostrarBotonesDetNota('grabar');
+}
+
 function grabarDetalle() {
-    // Obtener valores y eliminar espacios en blanco
-    const cantidad = $.trim($("#notas_comp_det_cantidad").val());
-    const costo = $.trim($("#item_costo").val());
-    const itemId = $.trim($("#item_id").val());
+    var oper    = parseInt($('#txtOperacionDetalle').val());
+    var itemId  = $.trim($('#item_id').val());
+    var cantidad = $.trim($('#notas_comp_det_cantidad').val()).replace(/\./g,'').replace(',','.');
+    var costo    = $.trim($('#item_costo').val()).replace(/\./g,'').replace(',','.');
 
-    // Validación simple
-    if (!cantidad || !costo || !itemId) {
-        alert("Por favor, complete todos los campos requeridos.");
+    var errores = [];
+    if (oper !== 3) {
+        if (!itemId)                             errores.push('Seleccione un ítem.');
+        if (!cantidad || isNaN(cantidad) || parseFloat(cantidad) <= 0) errores.push('Cantidad inválida.');
+        if (!costo    || isNaN(costo))           errores.push('Costo inválido.');
+        if (!$('#tipo_impuesto_id').val())        errores.push('El ítem debe tener tipo de impuesto.');
+        var nota_tipo = $('#nota_comp_tipo').val();
+        if (nota_tipo === 'Crédito') {
+            var stock = parseFloat($('#stock_disponible_det').val()) || 0;
+            if (parseFloat(cantidad) > stock) errores.push('La cantidad supera el stock disponible (' + stock + ').');
+        }
+    }
+
+    if (errores.length > 0) {
+        swal({ title: 'Datos incompletos', text: errores.map(function(e){ return '• ' + e; }).join('\n'), type: 'warning' });
         return;
     }
 
-    // Validar que cantidad y costo sean números
-    if (isNaN(cantidad) || isNaN(costo)) {
-        alert("La cantidad y el costo deben ser números válidos.");
-        return;
-    }
-
-    var endpoint = "notacompdet/create";
-    var metodo = "POST";
-
-    if ($("#txtOperacionDetalle").val() == 2) {
-        endpoint = "notacompdet/update/" + $("#id").val() + "/" + itemId;
-        metodo = "PUT";
-    }
-    if ($("#txtOperacionDetalle").val() == 3) {
-        endpoint = "notacompdet/delete/" + $("#id").val() + "/" + itemId;
-        metodo = "DELETE";
-    }
+    var endpoint = 'notacompdet/create';
+    var metodo   = 'POST';
+    if (oper === 2) { endpoint = 'notacompdet/update/' + $('#id').val() + '/' + itemId; metodo = 'PUT'; }
+    if (oper === 3) { endpoint = 'notacompdet/delete/' + $('#id').val() + '/' + itemId; metodo = 'DELETE'; }
 
     $.ajax({
-        url: getUrl() + endpoint,
-        method: metodo,
-        dataType: "json",
+        url: getUrl() + endpoint, method: metodo, dataType: 'json',
         data: {
-            "notas_comp_cab_id": $("#id").val(),
-            "item_id": itemId,
-            "tipo_impuesto_id": $("#tipo_impuesto_id").val(),
-            "notas_comp_det_cantidad": cantidad,
-            "notas_comp_det_costo": costo,
-            "deposito_id": $("#deposito_id_det").val()
+            'notas_comp_cab_id':      $('#id').val(),
+            'item_id':                itemId,
+            'tipo_impuesto_id':       $('#tipo_impuesto_id').val(),
+            'notas_comp_det_cantidad':cantidad,
+            'notas_comp_det_costo':   costo,
+            'deposito_id':            $('#deposito_id_det').val() || null,
+            'marca_id':               _mmMarcaId ? parseInt(_mmMarcaId) : null,
+            'modelo_id':              _mmModeloId ? parseInt(_mmModeloId) : null
         }
     })
-    .done(function(respuesta) {
-        listarDetalles(); // Listar los detalles después de agregar
-
-        // Obtener el debe pendiente (asegúrate de que sea un número válido)
-        const debePendiente = parseFloat($("#debe_pendiente").val()) || 0;
-
-        // Verificar el estado de la orden de compra y el debe pendiente
-        if ($("#nota_comp_estado").val() === "PENDIENTE" && debePendiente >= 0) {
-            $("#btnConfirmar").removeAttr("disabled"); // Habilitar el botón Confirmar
-        } else {
-            $("#btnConfirmar").attr("disabled", "disabled"); // Deshabilitar si no cumple las condiciones
-        }
-    })
-    .fail(function(a, b, c) {
-        alert("Error al agregar el detalle: " + c);
-        console.log(a.responseText);
+    .done(function() { listarDetalles(); })
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        var msg = (res && res.mensaje) ? res.mensaje : 'Error al guardar el detalle.';
+        swal({ title: xhr.status === 422 ? 'Aviso' : 'Error', text: msg, type: xhr.status === 422 ? 'warning' : 'error' });
     });
 
-    // Mostrar y ocultar botones según corresponda
-    $("#btnAgregarDetalle").show();
-    $("#btnEditarDetalle").show();
-    $("#btnEliminarDetalle").show();
-    $("#btnGrabarDetalle").hide();
-
-    // Limpiar campos
-    $("#txtOperacionDetalle").val(1);
-    $("#item_decripcion").val("");
-    $("#notas_comp_det_cantidad").val("");
-    $("#tip_imp_nom").val("");
-    $("#item_costo").val(""); // Limpiar el campo costo después de grabar
-    $("#tipo_impuesto_id").val(""); // Limpiar ID de tipo de impuesto si es necesario
-    $("#subtotal").val("");    // Limpiar subtotal
-    $("#totalConImpuesto").val(""); // Limpiar total con impuesto
+    cancelarDetalle();
 }
 
 
-// Realiza una búsqueda de productos y muestra los resultados.
-function buscarProductos(){
-    $.ajax({
-        url: getUrl()+"items/buscar",
-        method: "POST",
-        dataType: "json",
-        data: {
-            "item_decripcion": $("#item_decripcion").val(),
-            "tipo_descripcion": "PRODUCTO"
-        }
-    })
-    .done(function(resultado){
-        var lista = "<ul class=\"list-group\">";
-        for (let rs of resultado) {
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto("+rs.item_id+",'"+rs.item_decripcion+"',"+rs.tipo_impuesto_id+",'"+rs.item_costo+"','"+rs.tip_imp_nom+"',"+rs.tipo_imp_tasa+")\">"+rs.item_decripcion+"</li>";   
-        }
-        lista += "</ul>";
-        $("#listaProductos").html(lista);
-        $("#listaProductos").attr("style","display:block; position: absolute; z-index: 2000;");
-    })
-    .fail(function(a, b, c){
-        alert(c);
-        console.log(a.responseText);
+function buscarProductos() {
+    var q = $('#item_decripcion').val();
+    if (q.length < 2) { $('#listaProductos').html('').hide(); return; }
+    debounceNota('prod', function() {
+        $.ajax({ url: getUrl() + 'items/buscar', method: 'POST', dataType: 'json',
+                 data: { item_decripcion: q } })
+        .done(function(resultado) {
+            var lista = '<ul class="list-group">';
+            resultado.forEach(function(rs) {
+                var stock = rs.cantidad_disponible || 0;
+                lista += '<li class="list-group-item" onclick="seleccionProducto('
+                    + rs.item_id + ",'" + rs.item_decripcion + "',"
+                    + rs.tipo_impuesto_id + ",'" + (rs.item_costo||0) + "','"
+                    + (rs.tip_imp_nom||'') + "'," + (rs.tipo_imp_tasa||0) + ',' + stock + ')">'
+                    + rs.item_decripcion
+                    + ' <span class="badge" style="background:#3b82f6;color:#fff;">Stock: ' + stock + '</span>'
+                    + '</li>';
+            });
+            lista += '</ul>';
+            $('#listaProductos').html(lista).attr('style','display:block; position:absolute; z-index:2000;');
+        });
     });
 }
 
-// Rellena el campo de producto seleccionado.
-function seleccionProducto(item_id, item_decripcion, tipo_impuesto_id, item_costo, tip_imp_nom, tipo_imp_tasa){
-    $("#item_id").val(item_id);
-    $("#item_decripcion").val(item_decripcion);
-    $("#item_costo").val(item_costo); // Asegúrate de que este campo exista en tu HTML y que esté habilitado
-
-    // Guardar el ID y el nombre del tipo de impuesto
-    $("#tipo_impuesto_id").val(tipo_impuesto_id);
-    $("#tip_imp_nom").val(tip_imp_nom);
-
-    // Convertir a números para cálculos
-    const cantidad = parseFloat($("#notas_comp_det_cantidad").val()) || 0; // Convertir a número
-    const costo = parseFloat(item_costo) || 0; // Convertir a número
-    const tasaImpuesto = parseFloat(tipo_imp_tasa) || 0; // Convertir la tasa a número
-
-    // Calcular subtotal y total con impuesto
-    const subtotal = cantidad * costo;
-    const totalConImpuesto = subtotal + (subtotal * (tasaImpuesto / 100)); // Calcular el impuesto correctamente
-
-    // Actualizar los campos de subtotal y total con impuesto
-    $("#subtotal").val(subtotal); // Asegúrate de que exista el campo 'subtotal' en tu HTML
-    $("#totalConImpuesto").val(totalConImpuesto); // Asegúrate de que exista el campo 'totalConImpuesto'
-
-    // Limpiar la lista de productos
-    $("#listaProductos").html("");
-    $("#listaProductos").attr("style","display:none;");
-
-    // Asegúrate de que las líneas del formulario estén enfocadas correctamente
-    $(".form-line").attr("class","form-line focused");
+function seleccionProducto(item_id, item_decripcion, tipo_impuesto_id, item_costo, tip_imp_nom, tipo_imp_tasa, stock) {
+    $('#item_id').val(item_id);
+    $('#item_decripcion').val(item_decripcion);
+    $('#item_costo').val('' + item_costo);
+    $('#tipo_impuesto_id').val(tipo_impuesto_id);
+    $('#tip_imp_nom_det').val(tip_imp_nom);
+    $('#stock_disponible_det').val(stock || 0);
+    mmCargarMarcas(item_id, null);
+    $('#marca_det_mm').removeAttr('disabled');
+    $('#listaProductos').html('').hide();
+    $(".form-line").addClass("focused");
 }
 
 
@@ -545,7 +669,6 @@ function buscarTipoImpuestos(){
     })
     .fail(function(a,b,c){
         alert(c);
-        console.log(a.responseText);
     })
 }
 
@@ -558,101 +681,87 @@ function seleccionTipoImpuestos(id,tip_imp_nom,tipo_imp_tasa){
     $("#listaTipoImpuestos").attr("style","display:none;");
 }
 
-// Realiza una búsqueda de productos mediante una solicitud AJAX
 function listarDetalles() {
-    var cantidadDetalle = 0;
-    var TotalGral = 0;
-    var TotalConImpuesto = 0; // Variable para total con impuestos
+    var notasCompraId = $('#id').val();
+    var estadoNotas   = $('#nota_comp_estado').val();
+    if (!notasCompraId) return;
 
-    const notasCompraId = $("#id").val(); // Obtener el ID de la orden de compra
-    const estadoNotas = $("#nota_comp_estado").val(); // Obtener el estado de la orden (asegúrate de tener este campo en tu HTML)
-
-    // Comprobar si el ID de la orden de compra es válido
-    if (!notasCompraId) {
-        alert("No se ha definido el ID de la nota de compra.");
-        return;
-    }
-
-    $.ajax({
-        url: getUrl() + "notacompdet/read/" + notasCompraId,
-        method: "GET",
-        dataType: "json"
-    })
+    $.ajax({ url: getUrl() + 'notacompdet/read/' + notasCompraId, method: 'GET', dataType: 'json' })
     .done(function(resultado) {
-        console.log(resultado); // Verificar qué datos llegan del servidor
+        var lista = '';
+        var TotalGral = 0, TotalIva10 = 0, TotalIva5 = 0, cantidadDetalle = 0;
 
-        var lista = "";
-        if (resultado && resultado.length > 0) {
-            // Iterar sobre los detalles si existen
-            for (let rs of resultado) {
-                const cantidad = rs.notas_comp_det_cantidad || 0; // Valor de cantidad, por defecto 0
-                const costo = rs.item_costo || 0; // Valor de costo, por defecto 0
-
-                const subtotal = cantidad * costo; // Cálculo del subtotal
-                let totalConImpuesto = subtotal; // Inicializamos el total con impuesto igual al subtotal
-
-                // Calcular el impuesto según el tipo
-                if (rs.tip_imp_nom === "IVA10") {
-                    totalConImpuesto = subtotal / 11; // Dividimos por 11 para IVA10
-                } else if (rs.tip_imp_nom === "IVA5") {
-                    totalConImpuesto = subtotal / 21; // Dividimos por 21 para IVA5
-                }
-
-                lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" + rs.item_id + "," + rs.tipo_impuesto_id + ",'" + rs.item_decripcion + "','" + (rs.tip_imp_nom || 'No definido') + "'," + cantidad + ", " + costo + ", '" + formatearNumero(subtotal) + "', '" + formatearNumero(totalConImpuesto) + "'," + (rs.deposito_id||0) + ");\">";
-                lista += "<td>" + rs.item_id + "</td>";
-                lista += "<td>" + rs.item_decripcion + "</td>";
-                lista += "<td>" + cantidad + "</td>";
-                lista += "<td class='text-right'>" + (costo ? formatearNumero(costo) : 'No definido') + "</td>";
-                lista += "<td>" + (rs.tip_imp_nom || 'No definido') + "</td>";
-                lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>";
-                lista += "<td class='text-right'>" + formatearNumero(totalConImpuesto) + "</td>";
-                lista += "<td>" + getNombreDeposito(rs.deposito_id) + "</td>";
-                lista += "</tr>";
-
-                cantidadDetalle++;
-                TotalGral += subtotal; // Sumar al total general
-                TotalConImpuesto += totalConImpuesto; // Sumar al total con impuestos
+        resultado.forEach(function(rs) {
+            var cantidad = rs.notas_comp_det_cantidad || 0;
+            var costo    = rs.notas_comp_det_costo    || 0;
+            var subtotal = cantidad * costo;
+            var imp = (rs.tip_imp_nom || '').toUpperCase();
+            var iva = 0;
+            if (imp.indexOf('EXENT') !== -1) {
+                iva = 0;
+            } else if (imp.indexOf('5') !== -1) {
+                iva = Math.round(subtotal / 21);
+                TotalIva5 += iva;
+            } else {
+                iva = Math.round(subtotal / 11);
+                TotalIva10 += iva;
             }
 
-            // Actualizar la tabla con los detalles generados
-            $("#tableDetalle").html(lista);
-        } else {
-            // Si no hay detalles, mostrar un mensaje en la tabla
-            $("#tableDetalle").html("<tr><td colspan='7' class='text-center'>No se encontraron detalles para esta orden de compra.</td></tr>");
-        }
+            lista += '<tr class="item-list" onclick="seleccionDetalle('
+                + rs.item_id + ',' + rs.tipo_impuesto_id + ",'"
+                + rs.item_decripcion + "','" + (rs.tip_imp_nom||'') + "',"
+                + cantidad + ',' + costo + ',' + (rs.deposito_id||0) + ',' + (rs.stock_disponible||0) + ','
+                + (rs.marca_id||0) + ',' + (rs.modelo_id||0) + ')">';
+            lista += '<td>' + rs.item_id + '</td>';
+            lista += '<td>' + rs.item_decripcion + '</td>';
+            lista += '<td>' + (rs.marc_nom||'-') + '</td>';
+            lista += '<td>' + (rs.modelo_nom||'-') + '</td>';
+            lista += '<td>' + cantidad + '</td>';
+            lista += '<td class="text-right">' + formatearNumero(costo) + '</td>';
+            lista += '<td>' + (rs.tip_imp_nom||'-') + '</td>';
+            lista += '<td class="text-right">' + formatearNumero(subtotal) + '</td>';
+            lista += '<td class="text-right">' + formatearNumero(iva) + '</td>';
+            lista += '<td>' + (rs.dep_nombre||'-') + '</td>';
+            lista += '</tr>';
 
-        // Mostrar los totales en la pantalla
-        $("#txtTotalGral").text(formatearNumero(TotalGral)); // Mostrar total general
-        $("#txtTotalConImpuesto").text(formatearNumero(TotalConImpuesto)); // Mostrar total con impuestos
+            cantidadDetalle++;
+            TotalGral += subtotal;
+        });
 
-        // Habilitar el botón Confirmar si hay detalles y la orden está pendiente
-        if (estadoNotas === "PENDIENTE" && cantidadDetalle > 0) {
-            $("#btnConfirmar").removeAttr("disabled");
+        if (!lista) lista = '<tr><td colspan="10" class="text-center text-muted">Sin ítems en el detalle</td></tr>';
+        $('#tableDetalle').html(lista);
+        $('#txtIva10').text(formatearNumero(TotalIva10));
+        $('#txtIva5').text(formatearNumero(TotalIva5));
+        $('#txtTotalConImpuesto').text(formatearNumero(TotalIva10 + TotalIva5));
+        $('#txtTotalGral').text(formatearNumero(TotalGral));
+
+        if (estadoNotas === 'PENDIENTE' && cantidadDetalle > 0) {
+            $('#btnConfirmar').removeAttr('disabled');
         } else {
             $("#btnConfirmar").attr("disabled", "true"); // Deshabilitar si no hay detalles o la orden no está pendiente
         }
     })
     .fail(function(a, b, c) {
         alert("Error al obtener detalles: " + c);
-        console.log(a.responseText);
     });
 }
 
-// Selecciona un detalle de un pedido y actualiza el formulario
-function seleccionDetalle(item_id, tipo_impuesto_id, item_decripcion, tip_imp_nom, notas_comp_det_cantidad, costo, subtotal, totalConImpuesto, deposito_id) {
-    $("#item_id").val(item_id);
-    $("#tipo_impuesto_id").val(tipo_impuesto_id);
-    $("#item_decripcion").val(item_decripcion);
-    $("#tip_imp_nom").val(tip_imp_nom);
-    $("#notas_comp_det_cantidad").val(notas_comp_det_cantidad);
-    $("#item_costo").val(costo);
-    $("#subtotal").val(subtotal);
-    $("#total_con_impuesto").val(totalConImpuesto);
-    $("#deposito_id_det").html(getSelectDeposito(deposito_id));
-
-    $("#listaProductos").html("");
-    $("#listaProductos").attr("style", "display:none;");
-    $(".form-line").attr("class", "form-line focused");
+function seleccionDetalle(item_id, tipo_impuesto_id, item_decripcion, tip_imp_nom, cantidad, costo, deposito_id, stock_disponible, marca_id, modelo_id) {
+    $('#item_id').val(item_id);
+    $('#tipo_impuesto_id').val(tipo_impuesto_id);
+    $('#item_decripcion').val(item_decripcion);
+    $('#tip_imp_nom_det').val(tip_imp_nom);
+    $('#notas_comp_det_cantidad').val(cantidad);
+    $('#item_costo').val(costo);
+    $('#stock_disponible_det').val(stock_disponible || 0);
+    // Limpiar aviso de stock al seleccionar un nuevo ítem
+    $('#notas_comp_det_cantidad').css('border-color', '');
+    $('#avisoStockNota').hide();
+    $('#btnGrabarDetalle').prop('disabled', false);
+    cargarDepositosNota(deposito_id);
+    mmAutocompletar(item_id, marca_id, modelo_id);
+    $('#listaProductos').html('').hide();
+    $(".form-line").addClass("focused");
 }
 
 function actualizarTotales() {
@@ -679,7 +788,6 @@ function buscarCompra() {
         }
     })
     .done(function(resultado) {
-        console.log("Resultados encontrados:", resultado);
         var lista = "<ul class=\"list-group\">";
 
         for (var rs of resultado) {
@@ -698,7 +806,8 @@ function buscarCompra() {
                 + rs.comp_intervalo_fecha_vence + "', '"
                 + rs.comp_cant_cuota + "', '"
                 + rs.condicion_pago + "', '"
-                + (rs.comp_timbrado||'') + "')\">"
+                + (rs.comp_timbrado||'') + "','"
+                + (rs.comp_nro_factura||'') + "')\">"
                 + rs.compra + "</li>";   
         }
 
@@ -711,7 +820,7 @@ function buscarCompra() {
 function seleccionCompra(
     compra_cab_id, empresa_id, sucursal_id, compra, proveedor_id,
     emp_razon_social, suc_razon_social, prov_razonsocial, prov_ruc,
-    prov_telefono, prov_correo, comp_intervalo_fecha_vence, comp_cant_cuota, condicion_pago, comp_timbrado
+    prov_telefono, prov_correo, comp_intervalo_fecha_vence, comp_cant_cuota, condicion_pago, comp_timbrado, comp_nro_factura
 ) {
     $("#compra_cab_id").val(compra_cab_id);
     $("#empresa_id").val(empresa_id);
@@ -723,6 +832,7 @@ function seleccionCompra(
     $("#nota_comp_condicion_pago").val(condicion_pago);
     $("#compra_cab").val(compra);
     $("#comp_timbrado").val(comp_timbrado || '');
+    $("#comp_nro_factura").val(comp_nro_factura || '');
 
     $("#proveedor_id").val(proveedor_id);
     $("#prov_razonsocial").val(prov_razonsocial);
@@ -754,7 +864,6 @@ function buscarEmpresas() {
     })
     .fail(function(a,b,c) {
         alert(c);
-        console.log(a.responseText);
     });
 }
 
@@ -786,7 +895,6 @@ function buscarSucursal(){
     })
     .fail(function(a,b,c){
         alert(c);
-        console.log(a.responseText);
     })
 }
 
@@ -808,14 +916,11 @@ function cargarFuncionarioIdLogueado() {
         
         if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
             $('#funcionario_id').val(datosSesion.user.funcionario_id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
-            console.error('No se encontraron datos de sesión válidos');
             alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');
             window.location.href = '../../index.html';
         }
     } catch (error) {
-        console.error('Error al cargar datos de usuario:', error);
         alert('Error al cargar datos del usuario. Inicie sesión nuevamente.');
         window.location.href = '../../index.html';
     }

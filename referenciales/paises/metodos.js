@@ -52,8 +52,8 @@ function agregar(){
     $("#txtOperacion").val(1);
     $("#txtCodigo").val(0);
     $("#txtDescripcion").removeAttr("disabled");
-    $("#txtGentilicio").removeAttr("disabled");
     $("#txtSiglas").removeAttr("disabled");
+    $("#txtNacionalidad").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -68,8 +68,8 @@ function agregar(){
 function editar(){
     $("#txtOperacion").val(2);
     $("#txtDescripcion").removeAttr("disabled");
-    $("#txtGentilicio").removeAttr("disabled");
     $("#txtSiglas").removeAttr("disabled");
+    $("#txtNacionalidad").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -134,19 +134,12 @@ function listar(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionPais("+rs.id+",'"+rs.pais_descrpcion+"','"+rs.pais_gentilicio+"','"+rs.pais_siglas+"');\">";
-                lista = lista + "<td>";
-                lista = lista + rs.id;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.pais_descrpcion;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.pais_gentilicio;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.pais_siglas;
-                lista = lista +"</td>";
+            var nac = (rs.nacio_descripcion || '').replace(/'/g, "\\'");
+        lista = lista + "<tr class=\"item-list\" onclick=\"seleccionPais("+rs.id+",'"+rs.pais_descrpcion.replace(/'/g,"\\'")+"','"+rs.pais_siglas+"','"+nac+"');\">";
+                lista = lista + "<td>" + rs.id + "</td>";
+                lista = lista + "<td>" + rs.pais_descrpcion + "</td>";
+                lista = lista + "<td>" + rs.pais_siglas + "</td>";
+                lista = lista + "<td>" + (rs.nacio_descripcion || '<span style=\"color:#aaa;\">Sin vincular</span>') + "</td>";
             lista = lista + "</tr>";
         }
         $("#tableBody").html(lista);
@@ -157,11 +150,11 @@ function listar(){
     })
 }
 
-function seleccionPais(codigo, descripcion, gentilicio, siglas){
+function seleccionPais(codigo, descripcion, siglas, nacionalidad){
     $("#txtCodigo").val(codigo);
     $("#txtDescripcion").val(descripcion);
-    $("#txtGentilicio").val(gentilicio);
     $("#txtSiglas").val(siglas);
+    $("#txtNacionalidad").val(nacionalidad || '');
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").removeAttr("disabled");
@@ -186,6 +179,13 @@ function grabar(){
         });
         return;  // Salir de la función si la validación falla
     }
+
+    var CHARS_INVALIDOS = /[*<>{}|]/;
+    if (CHARS_INVALIDOS.test(descripcion)) {
+        swal('Caracteres no permitidos', 'El campo no puede contener los caracteres: * < > { } |', 'error');
+        return;
+    }
+
     var endpoint = "paises/create";
     var metodo = "POST";
     if($("#txtOperacion").val()==2){
@@ -200,11 +200,11 @@ function grabar(){
         url:getUrl() + ""+endpoint,
         method:metodo,
         dataType: "json",
-        data: { 
-            'id': $("#txtCodigo").val(), 
-            'pais_descrpcion': $("#txtDescripcion").val(), 
-            'pais_gentilicio': $("#txtGentilicio").val(), 
-            'pais_siglas': $("#txtSiglas").val()
+        data: {
+            'id'             : $("#txtCodigo").val(),
+            'pais_descrpcion': $("#txtDescripcion").val(),
+            'pais_siglas'    : $("#txtSiglas").val(),
+            'nacio_descripcion': $("#txtNacionalidad").val()
         }
 
     })

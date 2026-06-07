@@ -84,6 +84,7 @@
                 <div class="col-sm-3">
                     <input type="text" id="nota_comp_fecha" class="datetimepicker form-control"
                            readonly placeholder="Fecha">
+                    <small id="avisoFechaNota" style="color:#e74c3c;display:none;"></small>
                 </div>
             </div>
 
@@ -107,7 +108,22 @@
                     </select>
                 </div>
 
-                <div class="col-sm-5">
+                <div class="col-sm-2">
+                    <label style="font-size:11px;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;display:block;">Afecta Stock</label>
+                    <div class="btn-group" id="grupoAfectaStock">
+                        <button type="button" id="btnAfectaSi" class="btn btn-success btn-sm waves-effect active"
+                                onclick="setAfectaStock(true);" disabled>
+                            <i class="material-icons" style="font-size:14px;vertical-align:middle;">check</i> Sí
+                        </button>
+                        <button type="button" id="btnAfectaNo" class="btn btn-default btn-sm waves-effect"
+                                onclick="setAfectaStock(false);" disabled>
+                            <i class="material-icons" style="font-size:14px;vertical-align:middle;">close</i> No
+                        </button>
+                    </div>
+                    <input type="hidden" id="nota_comp_afecta_stock" value="1">
+                </div>
+
+                <div class="col-sm-3">
                     <input type="text" id="nota_comp_observaciones"
                            class="form-control" disabled
                            placeholder="Observaciones">
@@ -149,8 +165,19 @@
                 </div>
 
                 <div class="col-sm-3" style="margin-top:10px;">
+                    <input type="text" id="comp_nro_factura" class="form-control" disabled
+                           placeholder="Nro. Factura de la Compra">
+                </div>
+
+                <div class="col-sm-3" style="margin-top:10px;">
                     <input type="text" id="nota_comp_timbrado" class="form-control" disabled
                            placeholder="Timbrado de la Nota" maxlength="20">
+                </div>
+
+                <div class="col-sm-3" style="margin-top:10px;">
+                    <input type="text" id="nota_comp_nro_nota" class="form-control" disabled
+                           placeholder="Nro. Nota (000-000-0000000)" maxlength="15"
+                           oninput="autoFormatoFactura(this)">
                 </div>
 
             </div>
@@ -189,39 +216,69 @@
 
     <div class="body">
 
-        <div class="row clearfix" id="formDetalles">
+        <div class="section-box" id="formDetalles" style="display:none;">
+            <div class="section-title">Ítems</div>
             <input type="hidden" id="txtOperacionDetalle" value="0">
             <input type="hidden" id="tipo_impuesto_id">
+            <input type="hidden" id="stock_disponible_det" value="0">
 
-            <div class="col-sm-2">
-                <input type="text" id="item_id" class="form-control" disabled placeholder="Código">
+            <div class="row clearfix">
+                <div class="col-sm-1">
+                    <input type="text" id="item_id" class="form-control" disabled placeholder="Cód">
+                </div>
+
+                <div class="col-sm-4">
+                    <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
+                    <div id="listaProductos" style="display:none;"></div>
+                </div>
+
+                <div class="col-sm-1">
+                    <input type="text" id="notas_comp_det_cantidad" class="form-control" disabled placeholder="Cant."
+                           oninput="validarCantidadNota();">
+                    <small id="avisoStockNota" style="color:#e74c3c;display:none;"></small>
+                </div>
+
+                <div class="col-sm-2">
+                    <input type="text" id="item_costo" class="form-control" disabled placeholder="Costo">
+                </div>
+
+                <div class="col-sm-2">
+                    <input type="text" id="tip_imp_nom_det" class="form-control" disabled placeholder="Impuesto">
+                </div>
+
+                <div class="col-sm-2">
+                    <select class="form-control" id="deposito_id_det" disabled>
+                        <option value="">-- Depósito --</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-2">
+                    <select class="form-control" id="marca_det_mm" disabled>
+                        <option value="">-- Marca --</option>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <select class="form-control" id="modelo_det_mm" disabled>
+                        <option value="">-- Modelo --</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="col-sm-4">
-                <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
-                <div id="listaProductos" style="display:none;"></div>
-            </div>
-
-            <div class="col-sm-2">
-                <input type="text" id="notas_comp_det_cantidad" class="form-control" disabled placeholder="Cantidad">
-            </div>
-
-            <div class="col-sm-2">
-                <input type="text" id="item_costo" class="form-control" disabled placeholder="Costo">
-            </div>
-
-            <div class="col-sm-2">
-                <select class="form-control" id="deposito_id_det" disabled>
-                    <option value="">-- Depósito --</option>
-                </select>
-            </div>
-
-            <div class="col-sm-2">
-                <button class="btn btn-warning" onclick="editarDetalle();">
+            <div class="btn-toolbar-left" style="margin-top:10px;">
+                <button id="btnAgregarDetalle"  class="btn btn-success waves-effect" onclick="agregarDetalle();">
+                    <i class="material-icons">add</i>
+                </button>
+                <button id="btnEditarDetalle"   class="btn btn-warning waves-effect" onclick="editarDetalle();">
                     <i class="material-icons">edit</i>
                 </button>
-                <button class="btn btn-default" id="btnGrabarDetalle" style="display:none;" onclick="grabarDetalle();">
+                <button id="btnEliminarDetalle" class="btn btn-danger waves-effect"  onclick="eliminarDetalle();">
+                    <i class="material-icons">clear</i>
+                </button>
+                <button id="btnGrabarDetalle"   class="btn btn-default waves-effect" onclick="grabarDetalle();" style="display:none;">
                     <i class="material-icons">save</i>
+                </button>
+                <button id="btnCancelarDetalle" class="btn btn-warning waves-effect" onclick="cancelarDetalle();" style="display:none;">
+                    <i class="material-icons">close</i>
                 </button>
             </div>
         </div>
@@ -231,6 +288,8 @@
                 <tr>
                     <th>Código</th>
                     <th>Producto</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
                     <th>Cantidad</th>
                     <th>Costo</th>
                     <th>Impuesto</th>
@@ -242,12 +301,20 @@
             <tbody id="tableDetalle"></tbody>
             <tfoot>
                 <tr>
-                    <th colspan="6" class="text-right">Total</th>
-                    <th id="txtTotalGral" class="text-right">0</th>
+                    <th colspan="6" class="text-right">IVA 10%</th>
+                    <th id="txtIva10" class="text-right">0</th>
+                </tr>
+                <tr>
+                    <th colspan="6" class="text-right">IVA 5%</th>
+                    <th id="txtIva5" class="text-right">0</th>
                 </tr>
                 <tr>
                     <th colspan="6" class="text-right">Total IVA</th>
                     <th id="txtTotalConImpuesto" class="text-right">0</th>
+                </tr>
+                <tr>
+                    <th colspan="6" class="text-right" style="font-weight:bold;">Total General</th>
+                    <th id="txtTotalGral" class="text-right" style="font-weight:bold;">0</th>
                 </tr>
             </tfoot>
         </table>
@@ -289,7 +356,6 @@
 <!-- JS -->
 <script src="../../plugins/jquery/jquery.min.js"></script>
 <script src="../../plugins/bootstrap/js/bootstrap.js"></script>
-<script src="../../plugins/bootstrap-select/js/bootstrap-select.js"></script>
 <script src="../../plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
 <script src="../../plugins/node-waves/waves.js"></script>
 <script src="../../plugins/sweetalert/sweetalert.min.js"></script>
@@ -310,7 +376,8 @@
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js"></script>
-<script src="metodos.js?v=3"></script>
+<script src="../../js/marcaModelo.js"></script>
+<script src="metodos.js?v=5"></script>
 
 </body>
 </html>

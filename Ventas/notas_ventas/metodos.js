@@ -14,25 +14,25 @@ function formatoTabla(){
                 extend:'copy',
                 text:'COPIAR',
                 className:'btn btn-primary waves-effect',
-                title:'Listado de Notas de Compras'
+                title:'Notas de Venta'
             },
             {
                 extend:'excel',
                 text:'EXCEL',
                 className:'btn btn-success waves-effect',
-                title:'Listado de Notas de Compras'
+                title:'Notas de Venta'
             },
             {
                 extend:'pdf',
                 text:'PDF',
                 className:'btn btn-danger waves-effect',
-                title:'Listado de Notas de Compras'
+                title:'Notas de Venta'
             },
             {
                 extend:'print',
                 text:'IMPRIMIR',
                 className:'btn btn-warning waves-effect',
-                title:'Listado de Notas de Compras'
+                title:'Notas de Venta'
             }
         ],
         iDisplayLength:3,
@@ -156,7 +156,6 @@ function listar() {
         dataType: "json"
     })
     .done(function (resultado) {
-        console.log(resultado);
 
         let lista = "";
 
@@ -206,9 +205,8 @@ function listar() {
         $("#tableBody").html(lista);
         formatoTabla();
     })
-    .fail(function (xhr, status, error) {
-        alert("Error: " + error);
-        console.error(xhr.responseText);
+    .fail(function (xhr) {
+        mostrarErrores(xhr);
     });
 }
 function seleccionNotaVent(
@@ -254,6 +252,9 @@ function seleccionNotaVent(
     $("#nota_vent_tipo").val(tipo);
     $("#nota_vent_observaciones").val(observaciones);
     $("#nota_vene_condicion_pago").val(condicion_pago);
+
+    // empresa_id, sucursal_id y nota_vent_tipo ya están seteados — buscar timbrado
+    cargarTimbrado();
 
     // ===============================
     // CLIENTE
@@ -316,7 +317,6 @@ function buscarVentas() {
     })
     .done(function (resultado) {
 
-        console.log("Ventas encontradas:", resultado);
 
         let lista = "<ul class='list-group'>";
 
@@ -363,7 +363,6 @@ function buscarVentas() {
             });
     })
     .fail(function (xhr) {
-        console.error("Error al buscar ventas:", xhr.responseText);
     });
 }
 function seleccionVenta(
@@ -401,6 +400,8 @@ function seleccionVenta(
     $("#sucursal_id").val(sucursal_id);
     $("#emp_razon_social").val(emp_razon_social);
     $("#suc_razon_social").val(suc_razon_social);
+
+    cargarTimbrado();
 
     // ===============================
     // CLIENTE
@@ -502,6 +503,8 @@ function grabar() {
             'nota_vent_observaciones'          : $("#nota_vent_observaciones").val(),
             'nota_vene_condicion_pago'         : condicionPago,
             'nota_vent_estado'                : estado,
+            'timbrado_id'                     : $("#timbrado_id").val() || null,
+            'nota_vent_nro_comprobante'       : $("#nota_vent_nro_comprobante").val() || null,
 
             // Control
             'operacion' : $("#txtOperacion").val()
@@ -534,8 +537,7 @@ function grabar() {
         });
     })
     .fail(function (xhr) {
-        console.error(xhr.responseText);
-        alert("Error al grabar la nota de venta");
+        mostrarErrores(xhr);
     });
 }
 
@@ -579,18 +581,11 @@ function grabarDetalle() {
     const itemId   = $.trim($("#item_id").val());
 
     if (!cantidad || !precio || !itemId) {
-        alert("Por favor, complete todos los campos requeridos.");
+        swal("Error", "Complete todos los campos requeridos.", "error");
         return;
     }
-
     if (isNaN(cantidad) || isNaN(precio)) {
-        alert("La cantidad y el precio deben ser números válidos.");
-        return;
-    }
-
-    // Validar que cantidad y costo sean números
-    if (isNaN(cantidad) || isNaN(precio)) {
-        alert("La cantidad y el costo deben ser números válidos.");
+        swal("Error", "La cantidad y el precio deben ser números válidos.", "error");
         return;
     }
 
@@ -619,38 +614,32 @@ function grabarDetalle() {
         }
     })
     .done(function(respuesta) {
-        listarDetalles(); // Listar los detalles después de agregar
+        listarDetalles();
 
-        // Obtener el debe pendiente (asegúrate de que sea un número válido)
         const debePendiente = parseFloat($("#debe_pendiente").val()) || 0;
-
-        // Verificar el estado de la orden de compra y el debe pendiente
         if ($("#nota_vent_estado").val() === "PENDIENTE" && debePendiente >= 0) {
-            $("#btnConfirmar").removeAttr("disabled"); // Habilitar el botón Confirmar
+            $("#btnConfirmar").removeAttr("disabled");
         } else {
-            $("#btnConfirmar").attr("disabled", "disabled"); // Deshabilitar si no cumple las condiciones
+            $("#btnConfirmar").attr("disabled", "disabled");
         }
+
+        $("#btnAgregarDetalle").show();
+        $("#btnEditarDetalle").show();
+        $("#btnEliminarDetalle").show();
+        $("#btnGrabarDetalle").hide();
+
+        $("#txtOperacionDetalle").val(1);
+        $("#item_decripcion").val("");
+        $("#notas_vent_det_cantidad").val("");
+        $("#tip_imp_nom").val("");
+        $("#notas_vent_det_precio").val("");
+        $("#tipo_impuesto_id").val("");
+        $("#subtotal").val("");
+        $("#totalConImpuesto").val("");
     })
-    .fail(function(a, b, c) {
-        alert("Error al agregar el detalle: " + c);
-        console.log(a.responseText);
+    .fail(function(xhr) {
+        mostrarErrores(xhr);
     });
-
-    // Mostrar y ocultar botones según corresponda
-    $("#btnAgregarDetalle").show();
-    $("#btnEditarDetalle").show();
-    $("#btnEliminarDetalle").show();
-    $("#btnGrabarDetalle").hide();
-
-    // Limpiar campos
-    $("#txtOperacionDetalle").val(1);
-    $("#item_decripcion").val("");
-    $("#notas_vent_det_cantidad").val("");
-    $("#tip_imp_nom").val("");
-    $("#notas_vent_det_precio").val(""); // Limpiar el campo costo después de grabar
-    $("#tipo_impuesto_id").val(""); // Limpiar ID de tipo de impuesto si es necesario
-    $("#subtotal").val("");    // Limpiar subtotal
-    $("#totalConImpuesto").val(""); // Limpiar total con impuesto
 }
 
 
@@ -667,7 +656,6 @@ function buscarProductos() {
     })
     .done(function (resultado) {
 
-        console.log("Items encontrados:", resultado);
 
         let lista = "<ul class='list-group'>";
 
@@ -702,8 +690,7 @@ function buscarProductos() {
             });
     })
     .fail(function (xhr) {
-        alert("Error al buscar productos");
-        console.log(xhr.responseText);
+        mostrarErrores(xhr);
     });
 }
 function seleccionProducto(
@@ -737,11 +724,14 @@ function seleccionProducto(
 
     const subtotal = cantidad * precio;
 
+    const _imp = (tip_imp_nom || '').toUpperCase();
     let iva = 0;
-    if (tip_imp_nom === 'IVA10') {
-        iva = subtotal / 11;
-    } else if (tip_imp_nom === 'IVA5') {
-        iva = subtotal / 21;
+    if (_imp.indexOf('EXENT') !== -1) {
+        iva = 0;
+    } else if (_imp.indexOf('5') !== -1) {
+        iva = Math.round(subtotal / 21);
+    } else {
+        iva = Math.round(subtotal / 11);
     }
 
     const totalConImpuesto = subtotal; // Precio ya incluye IVA
@@ -773,9 +763,8 @@ function buscarTipoImpuestos(){
         $("#listaTipoImpuestos").html(lista);
         $("#listaTipoImpuestos").attr("style","display:block; position:absolute; z-index:2000;");
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr){
+        swal("Error", "No se pudo cargar tipos de impuesto.", "error");
     })
 }
 
@@ -792,14 +781,14 @@ function seleccionTipoImpuestos(id,tip_imp_nom,tipo_imp_tasa){
 function listarDetalles() {
 
     let cantidadDetalle = 0;
-    let totalGral = 0;
-    let totalIVA = 0;
+    let totalGral  = 0;
+    let TotalIva10 = 0;
+    let TotalIva5  = 0;
 
     const notaVentId = $("#id").val();
     const estadoNota = $("#nota_vent_estado").val();
 
     if (!notaVentId || notaVentId == 0) {
-        console.warn("No hay ID de nota de venta");
         return;
     }
 
@@ -810,7 +799,6 @@ function listarDetalles() {
     })
     .done(function (resultado) {
 
-        console.log("Detalles nota venta:", resultado);
 
         let lista = "";
 
@@ -826,17 +814,20 @@ function listarDetalles() {
                 // ===============================
                 // IVA INCLUIDO (PARAGUAY)
                 // ===============================
+                const imp = (rs.tip_imp_nom || '').toUpperCase();
                 let iva = 0;
 
-                if (rs.tip_imp_nom === "IVA10") {
-                    iva = subtotal / 11;
-                } 
-                else if (rs.tip_imp_nom === "IVA5") {
-                    iva = subtotal / 21;
+                if (imp.indexOf('EXENT') !== -1) {
+                    iva = 0;
+                } else if (imp.indexOf('5') !== -1) {
+                    iva = Math.round(subtotal / 21);
+                    TotalIva5 += iva;
+                } else {
+                    iva = Math.round(subtotal / 11);
+                    TotalIva10 += iva;
                 }
 
                 totalGral += subtotal;
-                totalIVA  += iva;
 
                 lista += `
                     <tr class="item-list"
@@ -877,7 +868,9 @@ function listarDetalles() {
         // TOTALES
         // ===============================
         $("#txtTotalGral").text(formatearNumero(totalGral));
-        $("#txtTotalConImpuesto").text(formatearNumero(totalIVA));
+        $("#txtIva10").text(formatearNumero(TotalIva10));
+        $("#txtIva5").text(formatearNumero(TotalIva5));
+        $("#txtTotalConImpuesto").text(formatearNumero(TotalIva10 + TotalIva5));
 
         // ===============================
         // BOTÓN CONFIRMAR
@@ -889,8 +882,7 @@ function listarDetalles() {
         }
     })
     .fail(function (xhr) {
-        alert("Error al obtener detalles de la nota de venta");
-        console.log(xhr.responseText);
+        mostrarErrores(xhr);
     });
 }
 
@@ -941,20 +933,54 @@ function actualizarTotalesVenta() {
 
 // Función para cargar el funcionario_id del usuario logueado
 function cargarFuncionarioIdLogueado() {
-    try {
-        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
-        
-        if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
-            $('#funcionario_id').val(datosSesion.user.funcionario_id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
-        } else {
-            console.error('No se encontraron datos de sesión válidos');
-            alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');
-            window.location.href = '../../index.html';
-        }
-    } catch (error) {
-        console.error('Error al cargar datos de usuario:', error);
-        alert('Error al cargar datos del usuario. Inicie sesión nuevamente.');
+    const datosSesion = JSON.parse(localStorage.getItem('datosSesion') || '{}');
+    if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
+        $('#funcionario_id').val(datosSesion.user.funcionario_id);
+    } else {
+        swal("Sesión expirada", "No se puede identificar al usuario. Inicie sesión nuevamente.", "error");
         window.location.href = '../../index.html';
     }
+}
+function cargarTimbrado() {
+    var empId = $("#empresa_id").val();
+    var sucId = $("#sucursal_id").val();
+    var tipo  = $("#nota_vent_tipo").val();
+
+    // Limpiar si falta algún dato
+    if (!empId || !sucId || !tipo) {
+        $("#timbrado_id").val('');
+        $("#nota_vent_nro_comprobante").val('');
+        $("#tim_numero_display").val('(seleccionar empresa, sucursal y tipo)');
+        $("#tim_vence_display").val('—');
+        return;
+    }
+
+    var tipoDocumento = tipo === 'Crédito' ? 'nota_credito' : 'nota_debito';
+
+    $.ajax({
+        url: getUrl() + 'timbrado/para-ventas',
+        method: 'GET',
+        data: { empresa_id: empId, sucursal_id: sucId, tipo_documento: tipoDocumento }
+    })
+    .done(function(res) {
+        $("#timbrado_id").val(res.timbrado_id);
+        $("#nota_vent_nro_comprobante").val(res.nro_comprobante);
+        $("#tim_numero_display").val(res.tim_numero);
+        var vence = res.tim_fecha_fin ? res.tim_fecha_fin.substring(0,10) : '—';
+        $("#tim_vence_display").val(vence);
+        if (res.nros_restantes <= 10) {
+            swal('Atención', 'El timbrado ' + res.tim_numero + ' tiene solo ' + res.nros_restantes + ' números restantes.', 'warning');
+        }
+    })
+    .fail(function(xhr) {
+        $("#timbrado_id").val('');
+        $("#nota_vent_nro_comprobante").val('');
+        var res = xhr.responseJSON;
+        var msg = (res && res.mensaje) ? res.mensaje : 'Sin timbrado activo para este tipo de nota.';
+        $("#tim_numero_display").val(msg);
+        $("#tim_vence_display").val('—');
+        if (xhr.status === 404) {
+            swal('Sin timbrado', msg + ' Registre uno en Referenciales → Timbrado.', 'warning');
+        }
+    });
 }

@@ -40,9 +40,9 @@
 
         <div class="body">
 
-            <input type="hidden" value="0" id="txtOperacion"/>
+            <input type="hidden" value="0" id="txtOperacion">
             <input type="hidden" id="funcionario_id">
-            <input type="hidden" value="PENDIENTE" id="rec_cli_cab_estado"/>
+            <input type="hidden" value="PENDIENTE" id="rec_cli_cab_estado">
 
             <!-- ================= DATOS GENERALES ================= -->
             <div class="section-box">
@@ -53,12 +53,12 @@
                     </div>
                     <div class="col-sm-2">
                         <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
-                        <input type="hidden" id="empresa_id" name="empresa_id">
+                        <input type="hidden" id="empresa_id">
                         <div id="listaEmpresa" style="display:none;"></div>
                     </div>
                     <div class="col-sm-2">
                         <input type="text" id="suc_razon_social" class="form-control" disabled onkeyup="buscarSucursal();" placeholder="Sucursal">
-                        <input type="hidden" id="sucursal_id" name="sucursal_id">
+                        <input type="hidden" id="sucursal_id">
                         <div id="listaSucursal" style="display:none;"></div>
                     </div>
                     <div class="col-sm-3">
@@ -85,13 +85,31 @@
                 </div>
             </div>
 
+            <!-- ================= VENTA VINCULADA ================= -->
+            <div class="section-box">
+                <div class="section-title">Venta / Recibo Vinculado <small style="font-weight:normal;">(opcional)</small></div>
+                <div class="row clearfix">
+                    <div class="col-sm-2">
+                        <input type="text" id="nro_venta_display" class="form-control" disabled onkeyup="buscarVenta();" placeholder="Buscar N° venta o cliente">
+                        <input type="hidden" id="venta_cab_id">
+                        <div id="listaVentas" style="display:none;"></div>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" id="venta_fecha_display" class="form-control" disabled placeholder="Fecha venta">
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" id="encargado" class="form-control" disabled placeholder="Encargado">
+                    </div>
+                </div>
+            </div>
+
             <!-- ================= CLIENTE ================= -->
             <div class="section-box">
                 <div class="section-title">Cliente</div>
                 <div class="row clearfix">
                     <div class="col-sm-2">
                         <input type="text" id="cli_nombre" class="form-control" disabled onkeyup="buscarCliente();" placeholder="Nombre">
-                        <input type="hidden" id="clientes_id" name="clientes_id">
+                        <input type="hidden" id="clientes_id">
                         <div id="listaClientes" style="display:none;"></div>
                     </div>
                     <div class="col-sm-2">
@@ -148,70 +166,109 @@
             <h2><i class="material-icons">playlist_add</i> Detalles del Reclamo de Clientes</h2>
         </div>
         <div class="body">
-            <div class="row clearfix" id="formDetalles">
-                <input type="hidden" value="0" id="txtOperacionDetalle"/>
 
-                <div class="col-sm-1">
-                    <input type="text" id="item_id" class="form-control" disabled placeholder="Código">
+            <!-- FORMULARIO DETALLE -->
+            <div id="formDetalles" style="display:none;">
+                <input type="hidden" value="0" id="txtOperacionDetalle">
+                <input type="hidden" id="original_item_id">
+
+                <div class="row clearfix">
+                    <div class="col-sm-1">
+                        <input type="text" id="item_id" class="form-control" disabled placeholder="Cód.">
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
+                        <div id="listaProductos" style="display:none;"></div>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" id="tip_imp_nom" class="form-control" disabled placeholder="Tipo impuesto">
+                        <input type="hidden" id="tipo_impuesto_id">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" id="rec_cli_det_cantidad_stock" class="form-control" disabled placeholder="Cant. Disponible">
+                    </div>
+                    <div class="col-sm-1">
+                        <input type="text" id="rec_cli_det_cantidad" class="form-control" disabled placeholder="Cantidad">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" id="rec_cli_det_costo" class="form-control" disabled placeholder="Precio">
+                    </div>
                 </div>
-                <div class="col-sm-5">
-                    <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
-                    <div id="listaProductos" style="display:none;"></div>
-                </div>
-                <div class="col-sm-2">
-                    <input type="text" id="tip_imp_nom" class="form-control" disabled placeholder="Tipo impuesto">
-                    <input type="hidden" id="tipo_impuesto_id" name="tipo_impuesto_id">
-                </div>
-                <div class="col-sm-2">
-                    <input type="text" id="rec_cli_det_cantidad_stock" class="form-control" disabled placeholder="Cant. Disponible">
-                </div>
-                <div class="col-sm-2">
-                    <input type="text" id="rec_cli_det_cantidad" class="form-control" disabled placeholder="Cantidad">
-                </div>
-                <div class="col-sm-2">
-                    <input type="text" id="rec_cli_det_costo" class="form-control" disabled placeholder="Precio">
-                </div>
-                <div class="col-sm-3" style="margin-top:10px;">
-                    <div class="icon-button-demo">
-                        <button type="button" id="btnAgregarDetalle" class="btn btn-success waves-effect" onclick="agregarDetalle();">
+
+                <div class="row clearfix" style="margin-top:8px;">
+                    <div class="col-sm-2">
+                        <input type="text" id="subtotal" class="form-control" disabled placeholder="Subtotal">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" id="iva" class="form-control" disabled placeholder="IVA">
+                    </div>
+                    <div class="col-sm-3">
+                        <select id="marca_det_mm" class="form-control" onchange="mmCambioMarca(this.value);">
+                            <option value="">-- Marca --</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3">
+                        <select id="modelo_det_mm" class="form-control">
+                            <option value="">-- Modelo --</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2" style="margin-top:5px;">
+                        <button type="button" id="btnAgregarDetalle" class="btn btn-success btn-sm waves-effect" onclick="agregarDetalle();">
                             <i class="material-icons">add</i>
                         </button>
-                        <button type="button" id="btnEditarDetalle" class="btn btn-warning waves-effect" onclick="editarDetalle();">
+                        <button type="button" id="btnEditarDetalle" class="btn btn-warning btn-sm waves-effect" onclick="editarDetalle();">
                             <i class="material-icons">mode_edit</i>
                         </button>
-                        <button type="button" id="btnEliminarDetalle" class="btn btn-danger waves-effect" onclick="eliminarDetalle();">
+                        <button type="button" id="btnEliminarDetalle" class="btn btn-danger btn-sm waves-effect" onclick="eliminarDetalle();">
                             <i class="material-icons">clear</i>
                         </button>
-                        <button type="button" id="btnGrabarDetalle" class="btn btn-default waves-effect" style="display:none;" onclick="grabarDetalle();">
+                        <button type="button" id="btnGrabarDetalle" class="btn btn-default btn-sm waves-effect" style="display:none;" onclick="grabarDetalle();">
                             <i class="material-icons">save</i>
+                        </button>
+                        <button type="button" id="btnCancelarDetalle" class="btn btn-warning btn-sm waves-effect" style="display:none;" onclick="cancelarDetalle();">
+                            <i class="material-icons">undo</i>
                         </button>
                     </div>
                 </div>
-            </div>
+            </div><!-- fin formDetalles -->
 
-            <div class="table-responsive">
+            <div class="table-responsive" style="margin-top:15px;">
                 <table class="table table-bordered table-striped table-hover dataTable">
                     <thead>
                         <tr>
                             <th>Código</th>
                             <th>Producto</th>
-                            <th>Cantidad</th>
-                            <th>Cantidad Disponible</th>
-                            <th>Precio</th>
+                            <th class="text-right">Cantidad</th>
+                            <th class="text-right">Cant. Disponible</th>
+                            <th class="text-right">Precio</th>
                             <th>Tipo impuesto</th>
-                            <th>Sub Total</th>
-                            <th>IVA</th>
+                            <th class="text-right">Sub Total</th>
+                            <th class="text-right">IVA</th>
+                            <th>Marca</th>
+                            <th>Modelo</th>
                         </tr>
                     </thead>
                     <tbody id="tableDetalle"></tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="7" class="text-right">Total Comprobante</th>
-                            <th class="text-right" id="txtTotalGral">0</th>
+                            <th colspan="6" class="text-right">IVA 10%</th>
+                            <th class="text-right"><span id="txtIva10">0,00</span></th>
+                            <th colspan="3"></th>
                         </tr>
                         <tr>
-                            <th colspan="7" class="text-right">Total IVA</th>
-                            <th class="text-right" id="txtTotalConImpuesto">0</th>
+                            <th colspan="6" class="text-right">IVA 5%</th>
+                            <th class="text-right"><span id="txtIva5">0,00</span></th>
+                            <th colspan="3"></th>
+                        </tr>
+                        <tr>
+                            <th colspan="6" class="text-right">Total IVA</th>
+                            <th class="text-right"><span id="txtTotalConImpuesto">0,00</span></th>
+                            <th colspan="3"></th>
+                        </tr>
+                        <tr>
+                            <th colspan="6" class="text-right" style="font-weight:bold;"><strong>Total Comprobante:</strong></th>
+                            <th class="text-right"><span id="txtTotalGral">0,00</span></th>
+                            <th colspan="3"></th>
                         </tr>
                     </tfoot>
                 </table>
@@ -239,6 +296,7 @@
                             <th>Prioridad</th>
                             <th>Estado</th>
                             <th>Encargado</th>
+                            <th>N° Venta</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
@@ -254,6 +312,7 @@
                             <th>Prioridad</th>
                             <th>Estado</th>
                             <th>Encargado</th>
+                            <th>N° Venta</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -287,7 +346,8 @@
     <script src="../../js/admin.js?v=3"></script>
     <script src="../../js/demo.js"></script>
     <script src="../../js/ruta.js"></script>
-    <script src="metodos.js?v=2"></script>
+    <script src="../../js/marcaModelo.js?v=1"></script>
+    <script src="metodos.js?v=3"></script>
 </body>
 
 </html>

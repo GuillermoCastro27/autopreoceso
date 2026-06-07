@@ -120,41 +120,95 @@
                 </div>
 
             </div>
+
+            <!-- TIMBRADO -->
+            <div class="row clearfix" style="margin-top:8px;">
+                <div class="col-sm-3">
+                    <div class="input-group">
+                        <span class="input-group-addon" style="font-size:11px;white-space:nowrap;">Timbrado</span>
+                        <input type="text" id="tim_numero_display" class="form-control" disabled placeholder="(seleccionar empresa y sucursal)">
+                        <input type="hidden" id="timbrado_id">
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="input-group">
+                        <span class="input-group-addon" style="font-size:11px;white-space:nowrap;">Nro. Comprobante</span>
+                        <input type="text" id="vent_nro_comprobante" class="form-control" disabled placeholder="—">
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="input-group">
+                        <span class="input-group-addon" style="font-size:11px;white-space:nowrap;">Vence</span>
+                        <input type="text" id="tim_vence_display" class="form-control" disabled placeholder="—">
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <!-- ================= ORIGEN DE LA VENTA ================= -->
         <div class="section-box">
-            <div class="section-title">Origen de la Venta <small style="font-weight:400;text-transform:none;">(seleccione pedido o bien orden de servicio — no ambos)</small></div>
+            <div class="section-title">Origen de la Venta <small style="font-weight:400;text-transform:none;">(puede seleccionar pedidos y/u órdenes de servicio)</small></div>
 
-            <!-- Hidden fields para IDs staged -->
-            <input type="hidden" id="pedidos_ventas_id" value="">
-            <input type="hidden" id="orden_serv_cab_id_staged" value="">
-            <input type="hidden" id="contrato_serv_cab_id_staged" value="">
-
-            <div class="row clearfix">
-                <!-- Pedido de ventas -->
-                <div class="col-sm-4">
+            <!-- ─── PEDIDOS PRE-SAVE ─── -->
+            <div class="row clearfix" style="margin-bottom:6px;">
+                <div class="col-sm-6">
                     <label style="font-size:12px;color:#636e72;margin-bottom:4px;">Pedido de Ventas</label>
                     <input type="text" id="pedido_venta" class="form-control"
                            disabled onkeyup="buscarPedidoVentas();"
-                           placeholder="Buscar pedido de ventas...">
+                           placeholder="Buscar pedido de ventas confirmado...">
                     <div id="listaPedidoVentas" style="display:none;"></div>
                 </div>
+            </div>
+            <div class="row clearfix" id="rowPedidosPreSave" style="display:none; margin-bottom:8px;">
+                <div class="col-sm-12">
+                    <table class="table table-bordered table-condensed" style="margin-bottom:0;">
+                        <thead style="background:#eaf4fb;">
+                            <tr>
+                                <th style="width:120px;">Pedido</th>
+                                <th>Cliente</th>
+                                <th>Fecha</th>
+                                <th style="width:50px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablePedidosPreSave">
+                            <tr><td colspan="4" class="text-center text-muted">Sin pedidos seleccionados</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-                <!-- Orden de servicio -->
-                <div class="col-sm-4">
+            <!-- ─── ÓRDENES PRE-SAVE ─── -->
+            <div class="row clearfix" style="margin-bottom:6px;">
+                <div class="col-sm-6">
                     <label style="font-size:12px;color:#636e72;margin-bottom:4px;">Orden de Servicio</label>
                     <input type="text" id="orden_buscar" class="form-control"
                            disabled onkeyup="buscarOrdenServ();"
                            placeholder="Buscar orden de servicio confirmada...">
                     <div id="listaOrdenes" style="display:none;"></div>
                 </div>
-
-                <!-- Contrato (auto-llenado) -->
-                <div class="col-sm-4">
+                <div class="col-sm-6">
                     <label style="font-size:12px;color:#636e72;margin-bottom:4px;">Contrato vinculado</label>
                     <input type="text" id="contrato_descripcion_sel" class="form-control" disabled
                            placeholder="Se llena automáticamente con la orden">
+                </div>
+            </div>
+            <div class="row clearfix" id="rowOrdenesPreSave" style="display:none; margin-bottom:8px;">
+                <div class="col-sm-12">
+                    <table class="table table-bordered table-condensed" style="margin-bottom:0;">
+                        <thead style="background:#f0fbf4;">
+                            <tr>
+                                <th style="width:160px;">Orden</th>
+                                <th>Estado</th>
+                                <th>Cliente</th>
+                                <th>Contrato</th>
+                                <th style="width:50px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableOrdenesPreSave">
+                            <tr><td colspan="5" class="text-center text-muted">Sin órdenes seleccionadas</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -226,10 +280,52 @@
             <button id="btnCancelar" class="btn btn-warning" onclick="cancelar();" disabled>
                 <i class="material-icons">close</i> Cancelar
             </button>
+
+            <button id="btnImprimir" class="btn btn-default" onclick="imprimir();" disabled>
+                <i class="material-icons">print</i> Imprimir Factura
+            </button>
         </div>
 
     </div>
 </div>
+
+                    <!-- ===== PEDIDOS VINCULADOS (visible tras seleccionar/crear venta) ===== -->
+                    <div class="card card-industrial" id="cardPedidosVinculados" style="display:none;">
+                        <div class="header">
+                            <h2><i class="material-icons">receipt</i> Pedidos de Venta vinculados</h2>
+                        </div>
+                        <div class="body">
+                            <div class="row clearfix" id="rowAgregarPedido" style="display:none;">
+                                <div class="col-sm-6">
+                                    <input type="text" id="pedido_buscar_extra" class="form-control"
+                                           onkeyup="buscarPedidoVentasExtra();"
+                                           placeholder="Vincular otro pedido de ventas...">
+                                    <input type="hidden" id="pedidos_ventas_id_extra" value="0">
+                                    <div id="listaPedidosExtra" style="display:none;"></div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <button class="btn btn-info waves-effect" id="btnVincularPedido"
+                                            onclick="agregarPedidoVenta();" disabled>
+                                        <i class="material-icons">link</i> Vincular
+                                    </button>
+                                </div>
+                            </div>
+                            <table class="table table-bordered table-striped" style="margin-top:10px;">
+                                <thead>
+                                    <tr>
+                                        <th>Pedido</th>
+                                        <th>Estado</th>
+                                        <th>Cliente</th>
+                                        <th>Fecha</th>
+                                        <th style="width:50px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablePedidosVinculados">
+                                    <tr><td colspan="5" class="text-center text-muted">Sin pedidos vinculados</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 
                     <!-- ===== ÓRDENES VINCULADAS (visible tras seleccionar/crear venta) ===== -->
                     <div class="card card-industrial" id="cardOrdenesVinculadas" style="display:none;">
@@ -304,6 +400,14 @@
                                             <th class="text-right" id="txtTotalGral">0</th>
                                         </tr>
                                         <tr>
+                                            <th colspan="7" class="text-right">IVA 10%</th>
+                                            <th class="text-right" id="txtIva10">0</th>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="7" class="text-right">IVA 5%</th>
+                                            <th class="text-right" id="txtIva5">0</th>
+                                        </tr>
+                                        <tr>
                                             <th colspan="7" class="text-right">Total IVA</th>
                                             <th class="text-right" id="txtTotalConImpuesto">0</th>
                                         </tr>
@@ -317,11 +421,28 @@
                             <h2>Registros de Ventas</h2>
                         </div>
                         <div class="body">
+                            <!-- Filtro por período -->
+                            <div class="row" style="margin-bottom:12px; align-items:flex-end; display:flex; gap:8px; flex-wrap:wrap;">
+                                <div>
+                                    <label style="font-size:12px; font-weight:600; color:#555;">Desde</label>
+                                    <input type="date" id="filtro_desde" class="form-control" style="width:150px;">
+                                </div>
+                                <div>
+                                    <label style="font-size:12px; font-weight:600; color:#555;">Hasta</label>
+                                    <input type="date" id="filtro_hasta" class="form-control" style="width:150px;">
+                                </div>
+                                <div style="padding-top:18px;">
+                                    <button class="btn btn-primary waves-effect" onclick="listar();">
+                                        <i class="material-icons" style="font-size:16px; vertical-align:middle;">search</i> Filtrar
+                                    </button>
+                                </div>
+                            </div>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
                                         <tr>
                                             <th>Código</th>
+                                            <th>Nro. Factura</th>
                                             <th>Intervalo de fecha Vencimiento</th>
                                             <th>Fecha</th>
                                             <th>Pedido de Ventas</th>
@@ -336,6 +457,7 @@
                                     <tfoot>
                                         <tr>
                                             <th>Código</th>
+                                            <th>Nro. Factura</th>
                                             <th>Intervalo de fecha Vencimiento</th>
                                             <th>Fecha</th>
                                             <th>Pedido de Ventas</th>

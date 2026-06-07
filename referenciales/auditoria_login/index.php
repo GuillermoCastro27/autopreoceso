@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Auditoría de Login</title>
+    <link rel="icon" href="../../images.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&subset=latin,cyrillic-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="../../plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="../../plugins/node-waves/waves.css" rel="stylesheet" />
+    <link href="../../plugins/animate-css/animate.css" rel="stylesheet" />
+    <link href="../../plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <link href="../../plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="../../css/style.css" rel="stylesheet">
+    <link href="../../css/themes/all-themes.css" rel="stylesheet" />
+    <style>
+        .badge-exitoso           { background:#27ae60; color:#fff; padding:3px 10px; border-radius:12px; font-size:12px; }
+        .badge-contrasena        { background:#e67e22; color:#fff; padding:3px 10px; border-radius:12px; font-size:12px; }
+        .badge-bloqueado         { background:#c0392b; color:#fff; padding:3px 10px; border-radius:12px; font-size:12px; }
+        .badge-usuario_no_existe { background:#8e44ad; color:#fff; padding:3px 10px; border-radius:12px; font-size:12px; }
+    </style>
+</head>
+<body class="theme-red">
+
+<?php require_once('../../opciones.php'); ?>
+
+<section class="content">
+<div class="container-fluid">
+<div class="row clearfix">
+<div class="col-md-12">
+
+<div class="card card-industrial">
+    <div class="header">
+        <h2>
+            <i class="material-icons">security</i>
+            Auditoría de Intentos de Login
+            <small>Monitoreo de accesos al sistema</small>
+        </h2>
+    </div>
+
+    <div class="body">
+
+        <!-- FILTROS -->
+        <div class="section-box">
+            <div class="section-title">Filtros</div>
+            <div class="row clearfix">
+                <div class="col-sm-3">
+                    <input type="text" id="filtro_login" class="form-control" placeholder="Usuario...">
+                </div>
+                <div class="col-sm-3">
+                    <select id="filtro_resultado" class="form-control">
+                        <option value="">— Todos los resultados —</option>
+                        <option value="exitoso">Exitoso</option>
+                        <option value="contrasena_incorrecta">Contraseña incorrecta</option>
+                        <option value="usuario_no_existe">Usuario no existe</option>
+                        <option value="bloqueado">Bloqueado</option>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <input type="date" id="filtro_desde" class="form-control" placeholder="Desde">
+                </div>
+                <div class="col-sm-2">
+                    <input type="date" id="filtro_hasta" class="form-control" placeholder="Hasta">
+                </div>
+                <div class="col-sm-2">
+                    <button class="btn btn-primary waves-effect btn-block" onclick="listar();">
+                        <i class="material-icons">search</i> Filtrar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTONES -->
+        <div class="btn-toolbar-left" style="margin-bottom:15px;">
+            <button class="btn btn-default waves-effect" onclick="listar();">
+                <i class="material-icons">refresh</i> Actualizar
+            </button>
+            <button class="btn btn-danger waves-effect" onclick="confirmarLimpiar();">
+                <i class="material-icons">delete_sweep</i> Limpiar registros &gt;90 días
+            </button>
+        </div>
+
+        <!-- RESUMEN -->
+        <div class="row clearfix" id="resumen" style="margin-bottom:15px;"></div>
+
+        <!-- TABLA -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Usuario</th>
+                        <th>Resultado</th>
+                        <th>IP</th>
+                        <th>Navegador</th>
+                        <th>Fecha y Hora</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+                <tfoot>
+                    <tr>
+                        <th>#</th>
+                        <th>Usuario</th>
+                        <th>Resultado</th>
+                        <th>IP</th>
+                        <th>Navegador</th>
+                        <th>Fecha y Hora</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+</div>
+</div>
+</div>
+</section>
+
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.js"></script>
+<script src="../../plugins/bootstrap-select/js/bootstrap-select.js"></script>
+<script src="../../plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+<script src="../../plugins/node-waves/waves.js"></script>
+<script src="../../plugins/sweetalert/sweetalert.min.js"></script>
+<script src="../../plugins/jquery-datatable/jquery.dataTables.js"></script>
+<script src="../../plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
+<script src="../../plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
+<script src="../../plugins/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
+<script src="../../plugins/jquery-datatable/extensions/export/jszip.min.js"></script>
+<script src="../../plugins/jquery-datatable/extensions/export/pdfmake.min.js"></script>
+<script src="../../plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
+<script src="../../plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
+<script src="../../plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
+<script src="../../js/admin.js?v=3"></script>
+<script src="../../js/demo.js"></script>
+<script src="../../js/ruta.js?v=2"></script>
+<script src="metodos.js"></script>
+</body>
+</html>

@@ -12,32 +12,32 @@ function formatoTabla(){
                 extend:'copy',
                 text:'COPIAR',
                 className:'btn btn-primary waves-effect',
-                title:'Listado de Pedidos'
+                title:'Notas de Remisión de Venta'
             },
             {
                 extend:'excel',
                 text:'EXCEL',
                 className:'btn btn-success waves-effect',
-                title:'Listado de Pedidos'
+                title:'Notas de Remisión de Venta'
             },
             {
                 extend:'pdf',
                 text:'PDF',
                 className:'btn btn-danger waves-effect',
-                title:'Listado de Pedidos'
+                title:'Notas de Remisión de Venta'
             },
             {
                 extend:'print',
                 text:'IMPRIMIR',
                 className:'btn btn-warning waves-effect',
-                title:'Listado de Pedidos'
+                title:'Notas de Remisión de Venta'
             }
         ],
         iDisplayLength:3,
         language:{
             sSearch: 'Buscar: ',
-            sInfo: 'Mostrando resultados del START al END de un total de TOTAL registros',
-            sInfoFiltered: '(filtrado de entre MAX registros)',
+            sInfo: 'Mostrando resultados del _START_ al _END_ de un total de _TOTAL_ registros',
+            sInfoFiltered: '(filtrado de entre _MAX_ registros)',
             sZeroRecords: 'No se encontraron resultados',
             sInfoEmpty: 'Mostrando resultado del 0 al 0 de un total de 0 registros',
             oPaginate:{
@@ -196,8 +196,7 @@ function listar() {
         formatoTabla();
     })
     .fail(function (xhr) {
-        console.error(xhr.responseText);
-        alert("Error al listar notas de remisión");
+        mostrarErrores(xhr);
     });
 }
 function seleccionNotaRemi(
@@ -280,7 +279,6 @@ function buscarVentas() {
     })
     .done(function (resultado) {
 
-        console.log("Ventas encontradas:", resultado);
 
         let lista = "<ul class='list-group'>";
 
@@ -319,7 +317,6 @@ function buscarVentas() {
             });
     })
     .fail(function (xhr) {
-        console.error("Error al buscar ventas:", xhr.responseText);
     });
 }
 function seleccionVenta(
@@ -366,21 +363,10 @@ function seleccionVenta(
     $("#nro_venta").attr("disabled", true);
 }
 function grabar() {
-    console.log("===== DEBUG GRABAR NOTA REMISIÓN =====");
-    console.log("Operacion:", $("#txtOperacion").val());
-    console.log("ID Nota:", $("#id").val());
-    console.log("Estado actual:", $("#nota_remi_vent_estado").val());
 
-    console.log("Venta ID:", $("#ventas_cab_id").val());
-    console.log("Cliente ID:", $("#clientes_id").val());
 
-    console.log("Empresa ID:", $("#empresa_id").val());
-    console.log("Sucursal ID:", $("#sucursal_id").val());
 
-    console.log("Fecha visible:", $("#nota_remi_vent_fecha").val());
-    console.log("Observaciones:", $("#nota_remi_vent_observaciones").val());
 
-    console.log("======================================");
 
     let observaciones = $("#nota_remi_vent_observaciones").val().trim();
     let fecha         = $("#nota_remi_vent_fecha").val().trim();
@@ -472,7 +458,6 @@ function grabar() {
         });
     })
     .fail(function (xhr) {
-        console.error(xhr.responseText);
         swal("Error", "Ocurrió un error al grabar la nota de remisión.", "error");
     });
 }
@@ -533,7 +518,6 @@ function listarDetalles() {
         }
     })
     .fail(function (xhr) {
-        console.error(xhr.responseText);
         swal("Error", "No se pudo listar el detalle de la nota de remisión.", "error");
     });
 }
@@ -541,20 +525,11 @@ function listarDetalles() {
 
 // Función para cargar el funcionario_id del usuario logueado
 function cargarFuncionarioIdLogueado() {
-    try {
-        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
-        
-        if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
-            $('#funcionario_id').val(datosSesion.user.funcionario_id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
-        } else {
-            console.error('No se encontraron datos de sesión válidos');
-            alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');
-            window.location.href = '../../index.html';
-        }
-    } catch (error) {
-        console.error('Error al cargar datos de usuario:', error);
-        alert('Error al cargar datos del usuario. Inicie sesión nuevamente.');
+    const datosSesion = JSON.parse(localStorage.getItem('datosSesion') || '{}');
+    if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
+        $('#funcionario_id').val(datosSesion.user.funcionario_id);
+    } else {
+        swal("Sesión expirada", "No se puede identificar al usuario. Inicie sesión nuevamente.", "error");
         window.location.href = '../../index.html';
     }
 }

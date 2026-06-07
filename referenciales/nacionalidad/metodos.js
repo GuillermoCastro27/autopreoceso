@@ -175,13 +175,9 @@ function listar(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionNacionalidad("+rs.id+",'"+rs.nacio_descripcion+"');\">";
-                lista = lista + "<td>";
-                lista = lista + rs.id;
-                lista = lista +"</td>";
-                lista = lista + "<td>";
-                lista = lista + rs.nacio_descripcion;
-                lista = lista +"</td>";
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionNacionalidad("+rs.id+","+(rs.pais_id||0)+",'"+(rs.nacio_descripcion||'').replace(/'/g,"\\'")+"','"+(rs.pais_descrpcion||'').replace(/'/g,"\\'")+"');\">";
+                lista = lista + "<td>" + rs.id + "</td>";
+                lista = lista + "<td>" + rs.nacio_descripcion + "</td>";
             lista = lista + "</tr>";
         }
         $("#tableBody").html(lista);
@@ -191,7 +187,7 @@ function listar(){
         alert(c);
     })
 }
-function seleccionNacionalidad(codigo, nacio_descripcion){
+function seleccionNacionalidad(codigo, pais_id, nacio_descripcion, pais_descrpcion){
     $("#txtCodigo").val(codigo);
     $("#nacio_descripcion").val(nacio_descripcion);
 
@@ -206,6 +202,7 @@ function seleccionNacionalidad(codigo, nacio_descripcion){
     $(".form-line").attr("class","form-line focused");
 }
 
+
 function grabar() {
     var descripcion = $("#nacio_descripcion").val().trim();
 
@@ -217,6 +214,12 @@ function grabar() {
             type: "error"
         });
         return;  // Salir de la función si la validación falla
+    }
+
+    var CHARS_INVALIDOS = /[*<>{}|]/;
+    if (CHARS_INVALIDOS.test(descripcion)) {
+        swal('Caracteres no permitidos', 'El campo no puede contener los caracteres: * < > { } |', 'error');
+        return;
     }
 
     var endpoint = "nacionalidad/create";
@@ -235,8 +238,8 @@ function grabar() {
         url: getUrl() + "" + endpoint,
         method: metodo,
         dataType: "json",
-        data: { 
-            'id': $("#txtCodigo").val(), 
+        data: {
+            'id': $("#txtCodigo").val(),
             'nacio_descripcion': descripcion
         }
 

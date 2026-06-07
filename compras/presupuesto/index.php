@@ -74,10 +74,12 @@
 
                 <div class="col-sm-3">
                     <input type="text" id="pre_fecha" class="datetimepicker form-control" disabled placeholder="Fecha">
+                    <small id="avisoFechaPre" style="color:#e74c3c;display:none;"></small>
                 </div>
 
                 <div class="col-sm-3">
                     <input type="text" id="pre_vence" class="datetimepicker form-control" disabled placeholder="Plazo de Entrega">
+                    <small id="avisoVencePre" style="color:#e74c3c;display:none;"></small>
                 </div>
 
                 <div class="col-sm-5">
@@ -169,26 +171,43 @@
     <div class="body">
 
         <input type="hidden" id="txtOperacionDetalle" value="0">
+            <input type="hidden" id="deposito_id_original">
 
         <div class="section-box">
             <div class="section-title">Ítems</div>
             <div class="row clearfix">
 
-                <div class="col-sm-2">
-                    <input type="text" id="item_id" class="form-control" disabled placeholder="Código">
+                <div class="col-sm-1">
+                    <input type="text" id="item_id" class="form-control" disabled placeholder="Cód">
                 </div>
 
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
                     <div id="listaProductos" style="display:none;"></div>
                 </div>
 
-                <div class="col-sm-2">
-                    <input type="text" id="det_cantidad" class="form-control" disabled placeholder="Cantidad">
+                <div class="col-sm-1">
+                    <input type="text" id="det_cantidad" class="form-control" disabled placeholder="Cant.">
                 </div>
 
                 <div class="col-sm-2">
                     <input type="text" id="det_costo" class="form-control" disabled placeholder="Costo">
+                </div>
+
+                <div class="col-sm-2">
+                    <input type="text" id="cantidad_stock" class="form-control" disabled placeholder="Stock">
+                </div>
+
+                <div class="col-sm-2">
+                    <select class="form-control" id="marca_det_pre" disabled>
+                        <option value="">-- Marca --</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-2">
+                    <select class="form-control" id="modelo_det_pre" disabled>
+                        <option value="">-- Modelo --</option>
+                    </select>
                 </div>
 
                 <div class="col-sm-2">
@@ -197,16 +216,25 @@
                     </select>
                 </div>
 
-                <div class="col-sm-2">
-                    <button id="btnEditarDetalle" class="btn btn-warning waves-effect" onclick="editarDetalle();">
-                        <i class="material-icons">edit</i>
-                    </button>
-                    <button id="btnGrabarDetalle" class="btn btn-default waves-effect" onclick="grabarDetalle();" style="display:none;">
-                        <i class="material-icons">save</i>
-                    </button>
-                </div>
-
             </div>
+        </div>
+
+        <div class="btn-toolbar-left">
+            <button id="btnAgregarDetalle"  class="btn btn-success waves-effect" onclick="agregarDetalle();">
+                <i class="material-icons">add</i>
+            </button>
+            <button id="btnEditarDetalle"   class="btn btn-warning waves-effect" onclick="editarDetalle();">
+                <i class="material-icons">edit</i>
+            </button>
+            <button id="btnEliminarDetalle" class="btn btn-danger waves-effect"  onclick="eliminarDetalle();">
+                <i class="material-icons">clear</i>
+            </button>
+            <button id="btnGrabarDetalle"    class="btn btn-default waves-effect" onclick="grabarDetalle();" style="display:none;">
+                <i class="material-icons">save</i>
+            </button>
+            <button id="btnCancelarDetalle" class="btn btn-warning waves-effect" onclick="cancelarDetalle();" style="display:none;">
+                <i class="material-icons">close</i>
+            </button>
         </div>
 
         <table class="table table-bordered table-striped">
@@ -214,17 +242,32 @@
                 <tr>
                     <th>Código</th>
                     <th>Producto</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
                     <th>Cantidad</th>
                     <th>Costo</th>
                     <th>Sub Total</th>
+                    <th>Impuesto</th>
                     <th>Depósito</th>
                 </tr>
             </thead>
             <tbody id="tableDetalle"></tbody>
             <tfoot>
                 <tr>
-                    <th colspan="5">Total General</th>
-                    <th id="txtTotalGral" class="text-right">0</th>
+                    <th colspan="8" class="text-right">IVA 10%</th>
+                    <th id="txtIva10" class="text-right">0</th>
+                </tr>
+                <tr>
+                    <th colspan="8" class="text-right">IVA 5%</th>
+                    <th id="txtIva5" class="text-right">0</th>
+                </tr>
+                <tr>
+                    <th colspan="8" class="text-right">Total IVA</th>
+                    <th id="txtTotalIva" class="text-right">0</th>
+                </tr>
+                <tr>
+                    <th colspan="8" class="text-right" style="font-weight:bold;">Total General</th>
+                    <th id="txtTotalGral" class="text-right" style="font-weight:bold;">0</th>
                 </tr>
             </tfoot>
         </table>
@@ -284,7 +327,7 @@
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js"></script>
-<script src="metodos.js?v=2"></script>
+<script src="metodos.js?v=4"></script>
 
 </body>
 </html>

@@ -9,25 +9,25 @@ function formatoTabla(){
                 extend:'copy',
                 text:'COPIAR',
                 className:'btn btn-primary waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Tipos de Servicio'
             },
             {
                 extend:'excel',
                 text:'EXCEL',
                 className:'btn btn-success waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Tipos de Servicio'
             },
             {
                 extend:'pdf',
                 text:'PDF',
                 className:'btn btn-danger waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Tipos de Servicio'
             },
             {
                 extend:'print',
                 text:'IMPRIMIR',
                 className:'btn btn-warning waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Tipos de Servicio'
             }
         ],
         iDisplayLength:3,
@@ -56,7 +56,7 @@ function agregar(){
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -71,7 +71,7 @@ function editar(){
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -79,13 +79,11 @@ function editar(){
     $(".form-line").attr("class","form-line focused");
 }
 
-function eliminar(){
-    $("#txtOperacion").val(3);
-
+function confirmarCambioEstado(){
+    $("#txtOperacion").val(4);
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
-
+    $("#btnEstado").attr("disabled","true");
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
 }
@@ -115,9 +113,12 @@ function confirmarOperacion() {
         titulo = "EDITAR";
         pregunta = "¿DESEA EDITAR EL REGISTRO SELECCIONADO?";
     }
-    if(oper===3){
-        titulo = "ELIMINAR";
-        pregunta = "¿DESEA ELIMINAR EL REGISTRO SELECCIONADO?";
+    if(oper===4){
+        var estado = $("#tipo_serv_estado").val();
+        titulo   = (estado || 'activo') === 'activo' ? 'DESACTIVAR' : 'ACTIVAR';
+        pregunta = (estado || 'activo') === 'activo'
+            ? '¿Desea desactivar este registro? No aparecerá en búsquedas.'
+            : '¿Desea activar este registro nuevamente?';
     }
     swal({
         title: titulo,
@@ -147,21 +148,26 @@ function listar() {
         var lista = "";
         for(rs of resultado){
 
-            // 🟢 Formatear precio con puntos
-            const precio = rs.tip_serv_precio 
-                ? parseInt(rs.tip_serv_precio).toLocaleString('es-ES') 
+            // Formatear precio con puntos
+            const precio = rs.tip_serv_precio
+                ? parseInt(rs.tip_serv_precio).toLocaleString('es-ES')
                 : "0";
+
+            var estado = rs.tipo_serv_estado || 'activo';
+            var badge  = estado === 'activo'
+                ? '<span class="badge" style="background:#27ae60;">Activo</span>'
+                : '<span class="badge" style="background:#c0392b;">Inactivo</span>';
 
             lista += "<tr class=\"item-list\" onclick=\"seleccionTipoServicio("
                 + rs.tipo_servicio_id + ",'"
                 + rs.tipo_serv_nombre + "','"
-                + precio + "');\">";
+                + precio + "','"
+                + estado + "');\">";
 
             lista += "<td>" + rs.tipo_servicio_id + "</td>";
             lista += "<td>" + rs.tipo_serv_nombre + "</td>";
-
-            // 🟢 Mostrar precio formateado
             lista += "<td>" + precio + "</td>";
+            lista += "<td>" + badge + "</td>";
 
             lista += "</tr>";
         }
@@ -173,17 +179,26 @@ function listar() {
         alert(c);
     })
 }
-function seleccionTipoServicio(codigo, tipo_serv_nombre,tip_serv_precio){
+function seleccionTipoServicio(codigo, tipo_serv_nombre,tip_serv_precio, estado){
     $("#txtCodigo").val(codigo);
     $("#tipo_serv_nombre").val(tipo_serv_nombre);
     $("#tip_serv_precio").val(tip_serv_precio);
 
+    $("#tipo_serv_estado").val(estado || 'activo');
+    var activo = (estado || 'activo') === 'activo';
+    if (activo) {
+        $("#btnEstado").removeClass("btn-success").addClass("btn-danger");
+        $("#lblEstado").text("Desactivar");
+        $("#btnEstado").find("i").text("block");
+    } else {
+        $("#btnEstado").removeClass("btn-danger").addClass("btn-success");
+        $("#lblEstado").text("Activar");
+        $("#btnEstado").find("i").text("check_circle");
+    }
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").removeAttr("disabled");
+    $("#btnEstado").removeAttr("disabled");
     $("#btnGrabar").attr("disabled","true");
-    $("#btnCancelar").attr("disabled","true");
-    $("#btnEliminar").removeAttr("disabled");
-    
     $("#btnCancelar").removeAttr("disabled");
 
     $(".form-line").attr("class","form-line focused");
@@ -192,24 +207,36 @@ function seleccionTipoServicio(codigo, tipo_serv_nombre,tip_serv_precio){
 function grabar(){
     var descripcion = $("#tipo_serv_nombre").val().trim();
 
-    // Validar que el campo descripción no esté vacío
     if (descripcion === "") {
-        swal({
-            title: "Error",
-            text: "Ningún campo debe estar vacío.",
-            type: "error"
-        });
-        return;  // Salir de la función si la validación falla
+        swal('Error', 'El nombre del tipo de servicio es obligatorio.', 'error');
+        return;
     }
+
+    var CHARS_INVALIDOS = /[*<>{}|]/;
+    if (CHARS_INVALIDOS.test(descripcion)) {
+        swal('Caracteres no permitidos', 'El campo no puede contener los caracteres: * < > { } |', 'error');
+        return;
+    }
+
+    var precioRaw = $("#tip_serv_precio").val().replace(/\./g, "").replace(",", ".").trim();
+    if (precioRaw === "") {
+        swal('Error', 'El precio base es obligatorio.', 'error');
+        return;
+    }
+    var precioNum = parseFloat(precioRaw);
+    if (isNaN(precioNum) || precioNum < 0) {
+        swal('Error', 'El precio debe ser un número mayor o igual a cero.', 'error');
+        return;
+    }
+
+    var op = parseInt($("#txtOperacion").val());
+    if (op === 4) { cambiarEstado(); return; }
+
     var endpoint = "tipo-servicio/create";
     var metodo = "POST";
-    if($("#txtOperacion").val()==2){
+    if(op === 2){
         endpoint = "tipo-servicio/update/"+$("#txtCodigo").val();
         metodo = "PUT";
-    }
-    if($("#txtOperacion").val()==3){
-        endpoint = "tipo-servicio/delete/"+$("#txtCodigo").val();
-        metodo = "DELETE";
     }
     $.ajax({
         url:getUrl() + ""+endpoint,
@@ -249,5 +276,22 @@ function grabar(){
         } else {
             swal('Error', res ? (res.mensaje || res.message || 'Error inesperado.') : 'Error inesperado.', 'error');
         }
+    });
+}
+
+function cambiarEstado() {
+    var id = $("#txtCodigo").val();
+    $.ajax({
+        url: getUrl() + 'tipo-servicio/estado/' + id,
+        method: 'PATCH',
+        dataType: 'json'
+    })
+    .done(function(res) {
+        swal({ title: 'Respuesta', text: res.mensaje, type: res.tipo },
+            function() { if (res.tipo === 'success') location.reload(true); });
+    })
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        swal('Error', res && res.mensaje ? res.mensaje : 'Error inesperado.', 'error');
     });
 }

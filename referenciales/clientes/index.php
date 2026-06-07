@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>GUI CLIENTES</title>
+    <title>Clientes</title>
 
     <link rel="icon" href="../../images.ico" type="image/x-icon">
 
@@ -41,17 +41,18 @@
         <h2>
             <i class="material-icons">people</i>
             Mantener Clientes
-            <small>CRUD de Clientes</small>
+            <small>Gestión de Clientes</small>
         </h2>
     </div>
 
     <div class="body">
 
-        <input type="hidden" value="0" id="txtOperacion"/>
+        <input type="hidden" value="0" id="txtOperacion">
+        <input type="hidden" id="cli_estado" value="activo">
 
-        <!-- DATOS PERSONALES -->
+        <!-- TIPO DE PERSONA -->
         <div class="section-box">
-            <div class="section-title">Datos Personales</div>
+            <div class="section-title">Tipo de Persona</div>
             <div class="row clearfix">
 
                 <div class="col-sm-2">
@@ -63,11 +64,47 @@
                     </div>
                 </div>
 
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label style="font-size:12px; color:#999;">Tipo de Persona</label>
+                        <select id="cli_tipo_persona" class="form-control" disabled
+                                onchange="cambiarTipoPersona(this.value);">
+                            <option value="FISICA">Persona Física</option>
+                            <option value="JURIDICA">Persona Jurídica</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- RAZÓN SOCIAL (solo Jurídica) -->
+        <div id="seccion_razon_social" style="display:none;">
+            <div class="section-box" style="border-left: 4px solid #2980b9;">
+                <div class="section-title" style="color:#2980b9;">Datos de la Empresa</div>
+                <div class="row clearfix">
+                    <div class="col-sm-8">
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="cli_razon_social" class="form-control" disabled>
+                                <label class="form-label">Razón Social / Nombre de la Empresa</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DATOS PERSONALES -->
+        <div class="section-box">
+            <div class="section-title">Datos Personales</div>
+            <div class="row clearfix">
+
                 <div class="col-sm-4">
                     <div class="form-group form-float">
                         <div class="form-line">
                             <input type="text" id="cli_nombre" class="form-control" disabled>
-                            <label class="form-label">Nombre</label>
+                            <label class="form-label" id="lbl_nombre">Nombre</label>
                         </div>
                     </div>
                 </div>
@@ -76,7 +113,7 @@
                     <div class="form-group form-float">
                         <div class="form-line">
                             <input type="text" id="cli_apellido" class="form-control" disabled>
-                            <label class="form-label">Apellido</label>
+                            <label class="form-label" id="lbl_apellido">Apellido</label>
                         </div>
                     </div>
                 </div>
@@ -93,8 +130,9 @@
                     <div class="form-group form-float">
                         <div class="form-line">
                             <input type="text" id="cli_ruc" class="form-control" disabled>
-                            <label class="form-label">RUC</label>
+                            <label class="form-label">Nro. Documento / RUC</label>
                         </div>
+                        <small style="color:#aaa; font-size:11px;">CI: 1234567 &nbsp;|&nbsp; RUC: 80123456-7 &nbsp;|&nbsp; Pasaporte: AA123456</small>
                     </div>
                 </div>
 
@@ -177,8 +215,8 @@
             <button id="btnEditar" class="btn btn-primary waves-effect" onclick="editar();" disabled>
                 <i class="material-icons">edit</i> Modificar
             </button>
-            <button id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();" disabled>
-                <i class="material-icons">delete</i> Eliminar
+            <button id="btnEstado" class="btn btn-danger waves-effect" onclick="confirmarCambioEstado();" disabled>
+                <i class="material-icons">block</i> <span id="lblEstado">Desactivar</span>
             </button>
             <button id="btnGrabar" class="btn btn-default waves-effect" onclick="confirmarOperacion();" disabled>
                 <i class="material-icons">save</i> Grabar
@@ -202,30 +240,36 @@
                 <thead>
                     <tr>
                         <th>Código</th>
+                        <th>Tipo</th>
+                        <th>Razón Social</th>
                         <th>Nombre</th>
                         <th>Apellido</th>
-                        <th>RUC</th>
+                        <th>Nro. Documento</th>
                         <th>Teléfono</th>
                         <th>Dirección</th>
                         <th>Correo</th>
                         <th>País</th>
                         <th>Ciudad</th>
                         <th>Nacionalidad</th>
+                        <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
                 <tfoot>
                     <tr>
                         <th>Código</th>
+                        <th>Tipo</th>
+                        <th>Razón Social</th>
                         <th>Nombre</th>
                         <th>Apellido</th>
-                        <th>RUC</th>
+                        <th>Nro. Documento</th>
                         <th>Teléfono</th>
                         <th>Dirección</th>
                         <th>Correo</th>
                         <th>País</th>
                         <th>Ciudad</th>
                         <th>Nacionalidad</th>
+                        <th>Estado</th>
                     </tr>
                 </tfoot>
             </table>
@@ -258,7 +302,8 @@
 
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
-<script src="metodos.js?v=2"></script>
+<script src="../../js/ruta.js"></script>
+<script src="metodos.js?v=5"></script>
 
 </body>
 </html>

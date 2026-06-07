@@ -87,14 +87,29 @@
 
                 <div class="col-sm-3">
                     <input type="text" id="comp_intervalo_fecha_vence" class="datetimepicker form-control" disabled placeholder="Intervalo Vencimiento">
+                    <small id="avisoIFVComp" style="color:#e74c3c;display:none;"></small>
                 </div>
 
                 <div class="col-sm-2">
                     <input type="text" id="comp_fecha" class="datetimepicker form-control" disabled placeholder="Fecha">
+                    <small id="avisoFechaComp" style="color:#e74c3c;display:none;"></small>
                 </div>
 
                 <div class="col-sm-1">
                     <input type="text" id="comp_cant_cuota" class="form-control" disabled placeholder="Cuota">
+                </div>
+
+                <div class="col-sm-3">
+                    <input type="text" id="comp_nro_factura" class="form-control" disabled
+                           placeholder="Nro. Factura (000-000-0000000)" maxlength="15"
+                           oninput="autoFormatoFactura(this)">
+                </div>
+
+                <div class="col-sm-2">
+                    <input type="text" id="comp_fecha_emision" class="form-control" disabled
+                           placeholder="Fecha Emisión (DD/MM/YYYY)" maxlength="10"
+                           oninput="mascararFechaComp(this); validarFechaEmisionComp();">
+                    <small id="avisoFechaEmisionComp" style="color:#e74c3c;display:none;"></small>
                 </div>
             </div>
         </div>
@@ -171,6 +186,8 @@
                     <tr>
                         <th>Código</th>
                         <th>Producto</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
                         <th>Cantidad</th>
                         <th>Costo</th>
                         <th>Impuesto</th>
@@ -182,12 +199,20 @@
                 <tbody id="tableDetalle"></tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="6" class="text-right">Total</th>
-                        <th id="txtTotalGral">0</th>
+                        <th colspan="6" class="text-right">IVA 10%</th>
+                        <th id="txtIva10" class="text-right">0</th>
+                    </tr>
+                    <tr>
+                        <th colspan="6" class="text-right">IVA 5%</th>
+                        <th id="txtIva5" class="text-right">0</th>
                     </tr>
                     <tr>
                         <th colspan="6" class="text-right">Total IVA</th>
-                        <th id="txtTotalConImpuesto">0</th>
+                        <th id="txtTotalConImpuesto" class="text-right">0</th>
+                    </tr>
+                    <tr>
+                        <th colspan="6" class="text-right" style="font-weight:bold;">Total General</th>
+                        <th id="txtTotalGral" class="text-right" style="font-weight:bold;">0</th>
                     </tr>
                 </tfoot>
             </table>
@@ -204,10 +229,28 @@
     </div>
 
     <div class="body">
+        <!-- Filtro por período -->
+        <div class="row" style="margin-bottom:12px; align-items:flex-end; display:flex; gap:8px; flex-wrap:wrap;">
+            <div>
+                <label style="font-size:12px; font-weight:600; color:#555;">Desde</label>
+                <input type="date" id="filtro_desde" class="form-control" style="width:150px;">
+            </div>
+            <div>
+                <label style="font-size:12px; font-weight:600; color:#555;">Hasta</label>
+                <input type="date" id="filtro_hasta" class="form-control" style="width:150px;">
+            </div>
+            <div style="padding-top:18px;">
+                <button class="btn btn-primary waves-effect" onclick="listar();">
+                    <i class="material-icons" style="font-size:16px; vertical-align:middle;">search</i> Filtrar
+                </button>
+            </div>
+        </div>
+
         <table class="table table-bordered table-striped table-hover dataTable js-exportable">
             <thead>
                 <tr>
                     <th>Código</th>
+                    <th>Nro. Factura</th>
                     <th>Timbrado</th>
                     <th>Intervalo Vencimiento</th>
                     <th>Fecha</th>
@@ -230,7 +273,6 @@
 <!-- ================= JS ================= -->
 <script src="../../plugins/jquery/jquery.min.js"></script>
 <script src="../../plugins/bootstrap/js/bootstrap.js"></script>
-<script src="../../plugins/bootstrap-select/js/bootstrap-select.js"></script>
 <script src="../../plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
 <script src="../../plugins/node-waves/waves.js"></script>
 <script src="../../plugins/sweetalert/sweetalert.min.js"></script>
@@ -251,6 +293,7 @@
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js"></script>
+<script src="../../js/marcaModelo.js"></script>
 <script src="metodos.js?v=2"></script>
 
 <!-- ===== FUNCIÓN ORIGINAL ===== -->

@@ -47,7 +47,7 @@
             <div class="row clearfix">
 
                 <div class="col-md-12">
-                    
+
                     <div class="card card-industrial">
 
     <!-- ================= HEADER ================= -->
@@ -200,54 +200,130 @@
                             <h2>Detalles de Descuentos</h2>
                         </div>
                         <div class="body">
-                            <div class="row clearfix" id="formDetalles">
-                                <input type="hidden" value="0" id="txtOperacionDetalle"/>
 
-                                <div class="col-sm-1">
-                                    <input type="text" id="item_id" class="form-control" disabled placeholder="Código">
+                            <!-- FORMULARIO DETALLE -->
+                            <div id="formDetalles" style="display:none;">
+                                <input type="hidden" id="txtOperacionDetalle" value="0">
+                                <input type="hidden" id="original_item_id">
+
+                                <div class="row clearfix">
+                                    <!-- Producto -->
+                                    <div class="col-sm-1">
+                                        <input type="text" id="item_id" class="form-control" disabled placeholder="Cód.">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="item_decripcion" class="form-control" disabled
+                                               onkeyup="buscarProductos();" placeholder="Producto">
+                                        <div id="listaProductos" style="display:none;"></div>
+                                    </div>
+
+                                    <!-- Impuesto -->
+                                    <div class="col-sm-2">
+                                        <input type="text" id="tip_imp_nom" class="form-control" disabled placeholder="Impuesto">
+                                        <input type="hidden" id="tipo_impuesto_id">
+                                    </div>
+
+                                    <!-- Cantidad -->
+                                    <div class="col-sm-1">
+                                        <input type="text" id="desc_det_cantidad" class="form-control" disabled placeholder="Cantidad">
+                                    </div>
+
+                                    <!-- Costo -->
+                                    <div class="col-sm-2">
+                                        <input type="text" id="desc_det_costo" class="form-control" disabled placeholder="Costo Unit.">
+                                    </div>
                                 </div>
-                                <div class="col-sm-5">
-                                    <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
-                                    <div id="listaProductos" style="display:none;"></div>
-                                </div>
-                                <div class="col-sm-3" style="margin-top:10px;">
-                                    <div class="icon-button-demo">
-                                        <button type="button" id="btnAgregarDetalle" class="btn btn-success waves-effect" onclick="agregarDetalle();">
+
+                                <div class="row clearfix" style="margin-top:8px;">
+                                    <!-- Subtotal -->
+                                    <div class="col-sm-2">
+                                        <input type="text" id="subtotal" class="form-control" disabled placeholder="Subtotal">
+                                    </div>
+
+                                    <!-- IVA -->
+                                    <div class="col-sm-2">
+                                        <input type="text" id="iva" class="form-control" disabled placeholder="IVA">
+                                    </div>
+
+                                    <!-- Marca -->
+                                    <div class="col-sm-3">
+                                        <select id="marca_det_mm" class="form-control" onchange="mmCambioMarca(this.value);">
+                                            <option value="">-- Marca --</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Modelo -->
+                                    <div class="col-sm-3">
+                                        <select id="modelo_det_mm" class="form-control">
+                                            <option value="">-- Modelo --</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Botones detalle -->
+                                    <div class="col-sm-2" style="margin-top:5px;">
+                                        <button type="button" id="btnAgregarDetalle" class="btn btn-success btn-sm waves-effect" onclick="agregarDetalle();">
                                             <i class="material-icons">add</i>
                                         </button>
-                                        <button type="button" id="btnEditarDetalle" class="btn btn-warning waves-effect" onclick="editarDetalle();">
+                                        <button type="button" id="btnEditarDetalle" class="btn btn-warning btn-sm waves-effect" onclick="editarDetalle();">
                                             <i class="material-icons">mode_edit</i>
                                         </button>
-                                        <button type="button" id="btnEliminarDetalle" class="btn btn-danger waves-effect" onclick="eliminarDetalle();">
+                                        <button type="button" id="btnEliminarDetalle" class="btn btn-danger btn-sm waves-effect" onclick="eliminarDetalle();">
                                             <i class="material-icons">clear</i>
                                         </button>
-                                        <button type="button" id="btnGrabarDetalle" class="btn btn-default waves-effect" style="display:none;" onclick="grabarDetalle();">
+                                        <button type="button" id="btnGrabarDetalle" class="btn btn-default btn-sm waves-effect" style="display:none;" onclick="grabarDetalle();">
                                             <i class="material-icons">save</i>
+                                        </button>
+                                        <button type="button" id="btnCancelarDetalle" class="btn btn-warning btn-sm waves-effect" style="display:none;" onclick="cancelarDetalle();">
+                                            <i class="material-icons">undo</i>
                                         </button>
                                     </div>
                                 </div>
-                            </div>
+                            </div><!-- fin formDetalles -->
 
                             <!-- TABLA DETALLE -->
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable ">
+                            <div class="table-responsive" style="margin-top:15px;">
+                                <table class="table table-bordered table-striped table-hover dataTable">
                                     <thead>
                                         <tr>
                                             <th>Código</th>
                                             <th>Producto</th>
+                                            <th class="text-right">Cantidad</th>
+                                            <th class="text-right">Costo Unit.</th>
+                                            <th>Impuesto</th>
+                                            <th class="text-right">Subtotal</th>
+                                            <th class="text-right">IVA</th>
+                                            <th>Marca</th>
+                                            <th>Modelo</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableDetalle"></tbody>
-                                    <thead>
+                                    <tfoot>
                                         <tr>
-                                            <th>Código</th>
-                                            <th>Producto</th>
+                                            <th colspan="5" class="text-right">IVA 10%</th>
+                                            <th class="text-right"><span id="txtIva10">0,00</span></th>
+                                            <th colspan="3"></th>
                                         </tr>
-                                    </thead>
+                                        <tr>
+                                            <th colspan="5" class="text-right">IVA 5%</th>
+                                            <th class="text-right"><span id="txtIva5">0,00</span></th>
+                                            <th colspan="3"></th>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="5" class="text-right">Total IVA</th>
+                                            <th class="text-right"><span id="txtTotalConImpuesto">0,00</span></th>
+                                            <th colspan="3"></th>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="5" class="text-right" style="font-weight:bold;"><strong>TOTAL:</strong></th>
+                                            <th class="text-right"><span id="txtTotalGral">0,00</span></th>
+                                            <th colspan="3"></th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
+
                         </div>
-                    </div>
+                    </div><!-- fin card detalle -->
 
                     <!-- REGISTROS -->
                     <div class="card card-industrial" id="registros">
@@ -289,14 +365,14 @@
                                             <th>Estado</th>
                                             <th>Tipo Descuento</th>
                                         </tr>
-                                    </tfoot>    
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
                     </div>
 
                 </div>
-                
+
             </div>
         </div>
     </section>
@@ -348,7 +424,10 @@
     <!-- Ruta Js -->
     <script src="../../js/ruta.js"></script>
 
-    <script src="metodos.js?v=2"></script>
+    <!-- Marca/Modelo Js -->
+    <script src="../../js/marcaModelo.js?v=1"></script>
+
+    <script src="metodos.js?v=3"></script>
 </body>
 
 </html>

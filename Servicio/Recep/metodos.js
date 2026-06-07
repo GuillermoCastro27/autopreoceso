@@ -11,25 +11,25 @@ function formatoTabla(){
                 extend:'copy',
                 text:'COPIAR',
                 className:'btn btn-primary waves-effect',
-                title:'Listado de Pedidos'
+                title:'Listado de Recepciones de Vehículos'
             },
             {
                 extend:'excel',
                 text:'EXCEL',
                 className:'btn btn-success waves-effect',
-                title:'Listado de Pedidos'
+                title:'Listado de Recepciones de Vehículos'
             },
             {
                 extend:'pdf',
                 text:'PDF',
                 className:'btn btn-danger waves-effect',
-                title:'Listado de Pedidos'
+                title:'Listado de Recepciones de Vehículos'
             },
             {
                 extend:'print',
                 text:'IMPRIMIR',
                 className:'btn btn-warning waves-effect',
-                title:'Listado de Pedidos'
+                title:'Listado de Recepciones de Vehículos'
             }
         ],
         iDisplayLength:3,
@@ -50,6 +50,21 @@ function cancelar(){
     location.reload(true);
 }
 
+function mostrarErrores(xhr) {
+    if (xhr.status === 403) return;
+    var res = xhr.responseJSON;
+    var titulo = xhr.status === 422 ? 'Datos inválidos' : 'Error';
+    var msg = '';
+    if (res && res.errors) {
+        $.each(res.errors, function(k, v) { msg += '• ' + (Array.isArray(v) ? v[0] : v) + '\n'; });
+    } else if (res && res.mensaje) {
+        msg = res.mensaje;
+    } else {
+        msg = 'Ocurrió un error inesperado.';
+    }
+    swal({ title: titulo, text: msg, type: xhr.status === 422 ? 'warning' : 'error' });
+}
+
 function agregar(){
     $("#txtOperacion").val(1);
     $("#id").val(0);
@@ -60,6 +75,7 @@ function agregar(){
     $("#recep_cab_prioridad").attr("disabled","true");
     $("#recep_cab_kilometraje").removeAttr("disabled");
     $("#recep_cab_nivel_combustible").removeAttr("disabled");
+    $("#recep_cab_num_chasis").removeAttr("disabled");
     $("#emp_razon_social").attr("disabled","true");
     $("#suc_razon_social").attr("disabled","true");
     $("#tipo_serv_nombre").attr("disabled","true");
@@ -71,19 +87,19 @@ function agregar(){
     $("#btnEditar").attr("disabled","true");
     $("#btnEliminar").attr("disabled","true");
     $("#btnConfirmar").attr("disabled","true");
+    $("#btnSalida").attr("disabled","true");
+    $("#btnTicket").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
 
     $(".form-line").attr("class","form-line focused");
     $("#registros").attr("style","display:none;");
-
-
 }
 
 function editar(){
     $("#txtOperacion").val(2);
-    
+
     $("#recep_cab_fecha").removeAttr("disabled");
     $("#recep_cab_fecha_estimada").attr("disabled","true");
     $("#solicitud").removeAttr("disabled");
@@ -91,6 +107,7 @@ function editar(){
     $("#recep_cab_prioridad").attr("disabled","true");
     $("#recep_cab_kilometraje").removeAttr("disabled");
     $("#recep_cab_nivel_combustible").removeAttr("disabled");
+    $("#recep_cab_num_chasis").removeAttr("disabled");
     $("#emp_razon_social").attr("disabled","true");
     $("#suc_razon_social").attr("disabled","true");
     $("#tipo_serv_nombre").attr("disabled","true");
@@ -102,6 +119,8 @@ function editar(){
     $("#btnEditar").attr("disabled","true");
     $("#btnEliminar").attr("disabled","true");
     $("#btnConfirmar").attr("disabled","true");
+    $("#btnSalida").attr("disabled","true");
+    $("#btnTicket").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -176,72 +195,71 @@ function listar() {
     })
     .done(function(resultado) {
 
-        const esc = s => (s || '').toString().replace(/'/g, "\\'");
+        var esc = function(s) { return (s || '').toString().replace(/\\/g, '\\\\').replace(/'/g, "\\'"); };
 
-        let lista = "";
+        var lista = "";
 
-        for (let rs of resultado) {
+        for (var i = 0; i < resultado.length; i++) {
+            var rs = resultado[i];
+            var tieneSalida = !!rs.recep_cab_fecha_salida;
+            var badgeSalida = tieneSalida
+                ? "<span class='label label-success'>RETIRADO<br><small>" + rs.recep_cab_fecha_salida + "</small></span>"
+                : "<span class='label label-warning'>EN TALLER</span>";
 
             lista += "<tr class='item-list' onclick=\"seleccionRecepcion("
-
-                // IDs
                 + rs.id + ","
                 + rs.empresa_id + ","
                 + rs.sucursal_id + ","
                 + rs.clientes_id + ","
                 + rs.tipo_servicio_id + ","
-                + rs.tipo_vehiculo_id + ","
-
-                // Empresa - Sucursal
-                + "'" + esc(rs.emp_razon_social) + "', '"
-                + esc(rs.suc_razon_social) + "', '"
-
-                // Otros datos
-                + esc(rs.encargado) + "', '"
-                + esc(rs.solicitudes) + "', '"
-                + esc(rs.recep_cab_fecha) + "', '"
-                + esc(rs.recep_cab_fecha_estimada) + "', '"
-                + esc(rs.recep_cab_estado) + "', '"
-                + esc(rs.recep_cab_observaciones) + "', '"
-                + esc(rs.recep_cab_prioridad) + "', '"
-                + esc(rs.recep_cab_kilometraje) + "', '"
-                + esc(rs.recep_cab_nivel_combustible) + "', '"
-                + esc(rs.tipo_servicio) + "', '"
-                + esc(rs.cli_nombre) + "', '"
-                + esc(rs.cli_apellido) + "', '"
-                + esc(rs.cli_ruc) + "', '"
-                + esc(rs.cli_telefono) + "', '"
-                + esc(rs.cli_direccion) + "', '"
-                + esc(rs.cli_correo) + "', '"
-                + (rs.solicitudes_cab_id || 0) + "',"
-
-                // Vehículo
-                + "'" + esc(rs.tip_veh_nombre) + "', '"
-                + esc(rs.tip_veh_capacidad) + "',  '"
-                + esc(rs.tip_veh_combustible) + "', '"
+                + rs.tipo_vehiculo_id + ",'"
+                + esc(rs.emp_razon_social) + "','"
+                + esc(rs.suc_razon_social) + "','"
+                + esc(rs.encargado) + "','"
+                + esc(rs.solicitudes) + "','"
+                + esc(rs.recep_cab_fecha) + "','"
+                + esc(rs.recep_cab_fecha_estimada) + "','"
+                + esc(rs.recep_cab_estado) + "','"
+                + esc(rs.recep_cab_observaciones) + "','"
+                + esc(rs.recep_cab_prioridad) + "','"
+                + esc(rs.recep_cab_kilometraje) + "','"
+                + esc(rs.recep_cab_nivel_combustible) + "','"
+                + esc(rs.recep_cab_num_chasis) + "','"
+                + esc(rs.recep_cab_fecha_salida) + "','"
+                + esc(rs.tipo_servicio) + "','"
+                + esc(rs.cli_nombre) + "','"
+                + esc(rs.cli_apellido) + "','"
+                + esc(rs.cli_ruc) + "','"
+                + esc(rs.cli_telefono) + "','"
+                + esc(rs.cli_direccion) + "','"
+                + esc(rs.cli_correo) + "',"
+                + (rs.solicitudes_cab_id || 0) + ",'"
+                + esc(rs.tip_veh_nombre) + "','"
+                + esc(rs.tip_veh_capacidad) + "','"
+                + esc(rs.tip_veh_combustible) + "','"
                 + esc(rs.tip_veh_categoria) + "','"
-                + esc(rs.tip_veh_observacion) + "', '"
-                + esc(rs.marc_nom) + "', '"
-                + esc(rs.modelo_nom) + "', '"
+                + esc(rs.tip_veh_observacion) + "','"
+                + esc(rs.marc_nom) + "','"
+                + esc(rs.modelo_nom) + "','"
                 + esc(rs.modelo_año) + "'"
-
                 + ");\">";
 
-            // Columnas visibles
             lista += "<td>" + rs.id + "</td>";
             lista += "<td>" + (rs.cli_nombre + ' ' + rs.cli_apellido) + "</td>";
             lista += "<td>" + (rs.vehiculo_info || '') + "</td>";
+            lista += "<td>" + (rs.recep_cab_num_chasis || '<span style=\"color:#aaa\">-</span>') + "</td>";
             lista += "<td>" + (rs.solicitudes || '') + "</td>";
             lista += "<td>" + (rs.recep_cab_fecha || '') + "</td>";
             lista += "<td>" + (rs.recep_cab_estado || '') + "</td>";
-            lista += "<td>" + (rs.funcionario || rs.name || rs.encargado || '-') + "</td>";
-
+            lista += "<td>" + badgeSalida + "</td>";
+            lista += "<td>" + (rs.encargado || '-') + "</td>";
             lista += "</tr>";
         }
 
         $("#tableBody").html(lista);
         formatoTabla();
-    });
+    })
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 
 function seleccionRecepcion(
@@ -249,9 +267,10 @@ function seleccionRecepcion(
     tipo_vehiculo_id, emp_razon_social, suc_razon_social, encargado, solicitudes,
     recep_cab_fecha, recep_cab_fecha_estimada, recep_cab_estado,
     recep_cab_observaciones, recep_cab_prioridad, recep_cab_kilometraje,
-    recep_cab_nivel_combustible, tipo_servicio, cli_nombre, cli_apellido, cli_ruc,
+    recep_cab_nivel_combustible, recep_cab_num_chasis, recep_cab_fecha_salida,
+    tipo_servicio, cli_nombre, cli_apellido, cli_ruc,
     cli_telefono, cli_direccion, cli_correo, solicitudes_cab_id,
-    tip_veh_nombre, tip_veh_capacidad, tip_veh_combustible, tip_veh_categoria,tip_veh_observacion,
+    tip_veh_nombre, tip_veh_capacidad, tip_veh_combustible, tip_veh_categoria, tip_veh_observacion,
     marc_nom, modelo_nom, modelo_año
 ) {
 
@@ -272,6 +291,7 @@ function seleccionRecepcion(
     $("#recep_cab_prioridad").val(recep_cab_prioridad);
     $("#recep_cab_kilometraje").val(recep_cab_kilometraje);
     $("#recep_cab_nivel_combustible").val(recep_cab_nivel_combustible);
+    $("#recep_cab_num_chasis").val(recep_cab_num_chasis);
     $("#recep_cab_estado").val(recep_cab_estado);
 
     // Cliente
@@ -306,12 +326,17 @@ function seleccionRecepcion(
 
     listarDetalles();
 
-    $("#btnAgregar, #btnEditar, #btnGrabar, #btnCancelar, #btnEliminar, #btnConfirmar").attr("disabled", true);
+    $("#btnAgregar, #btnEditar, #btnGrabar, #btnCancelar, #btnEliminar, #btnConfirmar, #btnSalida, #btnTicket").attr("disabled", true);
     $("#btnCancelar").removeAttr("disabled");
+    $("#btnTicket").removeAttr("disabled");
 
     if (recep_cab_estado === "PENDIENTE") {
         $("#btnEliminar, #btnConfirmar, #btnEditar").removeAttr("disabled");
         $("#formDetalles").show();
+    }
+
+    if (!recep_cab_fecha_salida) {
+        $("#btnSalida").removeAttr("disabled");
     }
 
     $(".form-line").addClass("focused");
@@ -327,8 +352,6 @@ function buscarSolicitud() {
         }
     })
     .done(function(resultado) {
-        console.log("Resultados encontrados:", resultado);
-
         // Si no hay resultados
         if (!resultado || resultado.length === 0) {
             $("#listaSolicitud").html("<li class='list-group-item text-center text-muted'>No se encontraron solicitudes</li>");
@@ -363,9 +386,7 @@ function buscarSolicitud() {
         $("#listaSolicitud").html(lista);
         $("#listaSolicitud").attr("style", "display:block; position:absolute; z-index:2000;");
     })
-    .fail(function(jqXHR, textStatus, errorThrown) {
-        console.error("Error en la búsqueda:", textStatus, errorThrown);
-    });
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 
 function seleccionSolicitud(
@@ -408,11 +429,11 @@ function seleccionSolicitud(
     $(".form-line").attr("class", "form-line focused");
 }
 function buscarTipoVehiculoPorMarca() {
-    let marca_id = $("#marca_id").val();
-    let texto = $("#tip_veh_nombre").val();
+    var marca_id = $("#marca_id").val();
+    var texto    = $("#tip_veh_nombre").val();
 
     if (!marca_id) {
-        $("#listaTipoVeh").html("<li class='list-group-item'>Seleccione primero una marca</li>")
+        $("#listaTipoVeh").html("<ul class='list-group'><li class='list-group-item'>Seleccione primero una marca</li></ul>")
                           .show()
                           .css({position: "absolute", zIndex: 2000});
         return;
@@ -421,44 +442,45 @@ function buscarTipoVehiculoPorMarca() {
     $.ajax({
         url: getUrl() + "tipo-vehiculo/buscarPorMarca",
         method: "GET",
-        data: { marca_id: marca_id, texto: texto },
+        data: { marca_id: marca_id, texto: texto, uso: 'SERVICIO' },
         dataType: "json"
     })
     .done(function(resultado){
+        var esc = function(s) { return (s || '').toString().replace(/\\/g, '\\\\').replace(/'/g, "\\'"); };
         var lista = "<ul class='list-group'>";
 
-        for (let rs of resultado) {
-            let descripcion =
-                rs.tip_veh_nombre + " – " +
-                rs.marca_nombre + " " +
-                rs.modelo_nombre + " " +
-                rs.modelo_año;
+        if (resultado.length === 0) {
+            lista += "<li class='list-group-item text-muted'>No se encontraron tipos de vehículo</li>";
+        } else {
+            for (var i = 0; i < resultado.length; i++) {
+                var rs = resultado[i];
+                var descripcion = (rs.tip_veh_nombre || '') + " – " +
+                                  (rs.marca_nombre || '') + " " +
+                                  (rs.modelo_nombre || '') + " " +
+                                  (rs.modelo_año || '');
 
-            lista += `
-                <li class='list-group-item'
-                    onclick="seleccionTipoVehiculo(
-                        ${rs.tipo_vehiculo_id},
-                        ${rs.marca_id},
-                        ${rs.modelo_id},
-                        '${rs.tip_veh_nombre}',
-                        '${rs.tip_veh_capacidad}',
-                        '${rs.tip_veh_combustible}',
-                        '${rs.tip_veh_categoria}',
-                        '${rs.tip_veh_observacion}',
-                        '${rs.marca_nombre}',
-                        '${rs.modelo_nombre}',
-                        '${rs.modelo_año}'
-                    )">
-                    ${descripcion}
-                </li>
-            `;
+                lista += "<li class='list-group-item' onclick=\"seleccionTipoVehiculo("
+                    + rs.tipo_vehiculo_id + ","
+                    + rs.marca_id + ","
+                    + rs.modelo_id + ",'"
+                    + esc(rs.tip_veh_nombre) + "','"
+                    + esc(rs.tip_veh_capacidad) + "','"
+                    + esc(rs.tip_veh_combustible) + "','"
+                    + esc(rs.tip_veh_categoria) + "','"
+                    + esc(rs.tip_veh_observacion) + "','"
+                    + esc(rs.marca_nombre) + "','"
+                    + esc(rs.modelo_nombre) + "','"
+                    + esc(rs.modelo_año) + "');\">"
+                    + descripcion + "</li>";
+            }
         }
 
         lista += "</ul>";
         $("#listaTipoVeh").html(lista)
                           .show()
                           .css({position: "absolute", zIndex: 2000});
-    });
+    })
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 
 function seleccionTipoVehiculo(tipo_vehiculo_id,marca_id,modelo_id,tip_veh_nombre,tip_veh_capacidad,tip_veh_combustible,tip_veh_categoria,tip_veh_observacion,marca_nombre,modelo_nombre,modelo_año){
@@ -478,7 +500,8 @@ function seleccionTipoVehiculo(tipo_vehiculo_id,marca_id,modelo_id,tip_veh_nombr
     $("#listaTipoVeh").attr("style","display:none;");
 }
 function buscarMarcasVehiculo() {
-    let texto = $("#marc_nom_veh").val();
+    var esc = function(s) { return (s || '').toString().replace(/\\/g, '\\\\').replace(/'/g, "\\'"); };
+    var texto = $("#marc_nom_veh").val();
 
     $.ajax({
         url: getUrl() + "marca/buscarVehiculo",
@@ -487,18 +510,16 @@ function buscarMarcasVehiculo() {
         dataType: "json"
     })
     .done(function(resultado) {
-        let lista = "<ul class='list-group'>";
+        var lista = "<ul class='list-group'>";
 
         if (resultado.length === 0) {
             lista += "<li class='list-group-item'>No se encontraron marcas de vehículo</li>";
         } else {
-            for (let rs of resultado) {
-                lista += `
-                    <li class="list-group-item"
-                        onclick="seleccionMarcaVehiculo(${rs.id}, '${rs.marc_nom}')">
-                        ${rs.marc_nom}
-                    </li>
-                `;
+            for (var i = 0; i < resultado.length; i++) {
+                var rs = resultado[i];
+                lista += "<li class='list-group-item' onclick=\"seleccionMarcaVehiculo("
+                    + rs.id + ",'" + esc(rs.marc_nom) + "');\">"
+                    + esc(rs.marc_nom) + "</li>";
             }
         }
 
@@ -506,7 +527,8 @@ function buscarMarcasVehiculo() {
         $("#listaMarcasVehiculo").html(lista)
                                  .show()
                                  .css({ position:"absolute", zIndex:2000 });
-    });
+    })
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 
 function seleccionMarcaVehiculo(id, nombre) {
@@ -535,98 +557,269 @@ function seleccionMarcaVehiculo(id, nombre) {
     $("#modelo_nom").val("");
     $("#modelo_año").val("");
 
-    console.log("📌 Marca seleccionada:", nombre);
 }
 
 
 
 function grabar(){
+    var op = parseInt($("#txtOperacion").val());
+
+    // Anular y confirmar: solo cambian estado
+    if (op === 3 || op === 4) {
+        var endpoint = op === 3
+            ? "recepcab/anular/"   + $("#id").val()
+            : "recepcab/confirmar/" + $("#id").val();
+        $.ajax({ url: getUrl() + endpoint, method: "PUT", dataType: "json" })
+        .done(function(resultado) {
+            swal({ title: "Respuesta", text: resultado.mensaje, type: resultado.tipo },
+                function() { if (resultado.tipo === "success") location.reload(true); });
+        })
+        .fail(function(xhr) { mostrarErrores(xhr); });
+        return;
+    }
+
+    // Agregar / Editar — validaciones campo por campo
+    var CHARS_INV    = /[*<>{}|]/;
+    var numChasis    = $("#recep_cab_num_chasis").val().trim();
     var observaciones = $("#recep_cab_observaciones").val().trim();
-    var fecha = $("#recep_cab_fecha").val().trim();
-    var plazo = $("#recep_cab_fecha_estimada").val().trim();
-    var prioridad = $("#recep_cab_prioridad").val().trim();
-    var kilometraje = $("#recep_cab_kilometraje").val().trim();
-    var combustible = $("#recep_cab_nivel_combustible").val().trim();
-    var sucursal = $("#suc_razon_social").val().trim();
+    var fecha         = $("#recep_cab_fecha").val().trim();
+    var plazo         = $("#recep_cab_fecha_estimada").val().trim();
+    var prioridad     = $("#recep_cab_prioridad").val();
+    var kilometraje   = $("#recep_cab_kilometraje").val().trim();
+    var combustible   = $("#recep_cab_nivel_combustible").val().trim();
+    var solicitudId   = $("#solicitudes_cab_id").val();
+    var vehiculoId    = $("#tipo_vehiculo_id").val();
 
-    // Validar campos vacíos
-    if (observaciones === ""
-         || fecha === "" || plazo === "" || sucursal === ""
-         || prioridad === ""|| kilometraje === ""|| combustible === "") {
-        swal({
-            title: "Error",
-            text: "Todos los campos son obligatorios.",
-            type: "error"
-        });
-        return; 
+    if (!observaciones)   { swal("Error", "Las observaciones son obligatorias.", "error"); return; }
+    if (CHARS_INV.test(observaciones)) { swal("Caracteres no permitidos", "Las observaciones contienen caracteres no permitidos: * < > { } |", "error"); return; }
+    if (!fecha)           { swal("Error", "La fecha de recepción es obligatoria.", "error"); return; }
+    if (!plazo)           { swal("Error", "La fecha estimada es obligatoria.", "error"); return; }
+    if (moment(plazo, 'DD/MM/YYYY HH:mm:ss', true).isBefore(moment(fecha, 'DD/MM/YYYY HH:mm:ss', true))) {
+        swal("Error", "La fecha estimada no puede ser anterior a la fecha de recepción.", "error"); return;
     }
+    if (!prioridad)       { swal("Error", "Debe seleccionar la prioridad.", "error"); return; }
+    if (!kilometraje)     { swal("Error", "El kilometraje es obligatorio.", "error"); return; }
+    var kmNum = parseFloat(kilometraje);
+    if (isNaN(kmNum) || kmNum < 0) { swal("Error", "El kilometraje debe ser un número mayor o igual a cero.", "error"); return; }
+    if (!combustible)     { swal("Error", "El nivel de combustible es obligatorio.", "error"); return; }
+    if (numChasis && CHARS_INV.test(numChasis)) { swal("Caracteres no permitidos", "El número de chasis contiene caracteres no permitidos: * < > { } |", "error"); return; }
+    if (!solicitudId || solicitudId == '0') { swal("Error", "Debe seleccionar una solicitud.", "error"); return; }
+    if (!vehiculoId  || vehiculoId  == '0') { swal("Error", "Debe seleccionar el tipo de vehículo.", "error"); return; }
 
-    var endpoint = "recepcab/create";
-    var metodo = "POST";
-    var estado = "PENDIENTE";
-    
-    if($("#txtOperacion").val()==2){
-        endpoint = "recepcab/update/"+$("#id").val();
-        metodo = "PUT";
-    }
-    if($("#txtOperacion").val()==3){
-        endpoint = "recepcab/anular/"+$("#id").val();
-        metodo = "PUT";
-        estado = "ANULADO";
-    }
-    if($("#txtOperacion").val()==4){
-        endpoint = "recepcab/confirmar/"+$("#id").val();
-        metodo = "PUT";
-        estado = "CONFIRMADO";
-    }
+    var endpoint = op === 2
+        ? "recepcab/update/" + $("#id").val()
+        : "recepcab/create";
+    var metodo = op === 2 ? "PUT" : "POST";
 
     $.ajax({
-        url:getUrl()+endpoint,
-        method:metodo,
+        url: getUrl() + endpoint,
+        method: metodo,
         dataType: "json",
-        data: { 
-            'id': $("#id").val(), 
-            'recep_cab_fecha': $("#recep_cab_fecha").val(), 
-            'recep_cab_fecha_estimada': $("#recep_cab_fecha_estimada").val(), 
-            'recep_cab_observaciones': $("#recep_cab_observaciones").val(),  
-            'recep_cab_prioridad': $("#recep_cab_prioridad").val(),  
-            'recep_cab_kilometraje': $("#recep_cab_kilometraje").val(),  
-            'recep_cab_nivel_combustible': $("#recep_cab_nivel_combustible").val(),
-            'funcionario_id': $("#funcionario_id").val(), 
-            'recep_cab_estado': estado,
-            'clientes_id': $("#clientes_id").val(),
-            'tipo_servicio_id': $("#tipo_servicio_id").val(),
-            'tipo_vehiculo_id': $("#tipo_vehiculo_id").val(),
-            'solicitudes_cab_id': $("#solicitudes_cab_id").val(),
-            'empresa_id': $("#empresa_id").val(),
-            'sucursal_id': $("#sucursal_id").val(),
-            'operacion': $("#txtOperacion").val()
+        data: {
+            'recep_cab_fecha':             fecha,
+            'recep_cab_fecha_estimada':    plazo,
+            'recep_cab_observaciones':     observaciones,
+            'recep_cab_prioridad':         prioridad,
+            'recep_cab_kilometraje':       kilometraje,
+            'recep_cab_nivel_combustible': combustible,
+            'recep_cab_num_chasis':        numChasis || null,
+            'funcionario_id':              $("#funcionario_id").val(),
+            'clientes_id':                 $("#clientes_id").val(),
+            'tipo_servicio_id':            $("#tipo_servicio_id").val(),
+            'tipo_vehiculo_id':            vehiculoId,
+            'solicitudes_cab_id':          solicitudId,
+            'empresa_id':                  $("#empresa_id").val(),
+            'sucursal_id':                 $("#sucursal_id").val()
         }
-
     })
-    .done(function(resultado){
-        swal({
-            title:"Respuesta",
-            text: resultado.mensaje,
-            type: resultado.tipo
-        },
-        function(){
-            if(resultado.tipo == "success"){
+    .done(function(resultado) {
+        swal({ title: "Respuesta", text: resultado.mensaje, type: resultado.tipo },
+        function() {
+            if (resultado.tipo === "success") {
                 $("#id").val(resultado.registro.id);
-                $("#detalle").attr("style","display:block;");
-                listarDetalles();
-                
-                // 🔄 Recarga si NO es pendiente o si es actualización
-                if(resultado.registro.recep_cab_estado!="PENDIENTE" || $("#txtOperacion").val()==2){
-                    location.reload(true);
-                }
+                $("#detalle").show();
+                if (op === 2) { location.reload(true); }
+                else          { $("#formDetalles").show(); listarDetalles(); }
             }
         });
     })
-    .fail(function(xhr, status, error) {
-        alert("Error: " + error);
-        console.error(xhr.responseText);
+    .fail(function(xhr) { mostrarErrores(xhr); });
+}
+
+function generarTicket() {
+    var id = $("#id").val();
+    if (!id || id == '0') { swal("Error", "Seleccione una recepción.", "error"); return; }
+    window.open('imprimir.html?id=' + id, '_blank');
+}
+
+function _generarTicketLegacy_unused() {
+    var id = $("#id").val();
+    $.ajax({
+        url: getUrl() + "recepcion_det/read/" + id,
+        method: "GET",
+        dataType: "json"
     })
+    .done(function(detalles) {
+        var nroRecep   = String(id).padStart(7, '0');
+        var empresa    = $("#emp_razon_social").val()  || '-';
+        var sucursal   = $("#suc_razon_social").val()  || '-';
+        var fecha      = $("#recep_cab_fecha").val()   || '-';
+        var fechaEst   = $("#recep_cab_fecha_estimada").val() || '-';
+        var prioridad  = $("#recep_cab_prioridad").val()|| '-';
+        var km         = $("#recep_cab_kilometraje").val() || '-';
+        var combustible= $("#recep_cab_nivel_combustible").val() || '-';
+        var chasis     = $("#recep_cab_num_chasis").val() || '-';
+        var obs        = $("#recep_cab_observaciones").val() || '-';
+        var cliente    = ($("#cli_nombre").val() || '') + ' ' + ($("#cli_apellido").val() || '');
+        var ruc        = $("#cli_ruc").val()       || '-';
+        var telefono   = $("#cli_telefono").val()  || '-';
+        var direccion  = $("#cli_direccion").val() || '-';
+        var correo     = $("#cli_correo").val()    || '-';
+        var vehiculo   = $("#tip_veh_nombre").val()|| '-';
+        var marca      = $("#marc_nom").val()      || '-';
+        var modelo     = $("#modelo_nom").val()    || '-';
+        var anio       = $("#modelo_año").val()    || '-';
+        var servicio   = $("#tipo_serv_nombre").val() || '-';
+
+        var filasItems = '';
+        var total = 0;
+        if (detalles && detalles.length > 0) {
+            for (var i = 0; i < detalles.length; i++) {
+                var d = detalles[i];
+                var subtotal = parseFloat(d.recep_det_cantidad || 0) * parseFloat(d.recep_det_costo || 0);
+                total += subtotal;
+                filasItems += '<tr>'
+                    + '<td>' + (d.item_decripcion || '-') + '</td>'
+                    + '<td style="text-align:center">' + (d.recep_det_cantidad || 0) + '</td>'
+                    + '<td style="text-align:right">' + parseFloat(d.recep_det_costo || 0).toLocaleString('es-ES', {minimumFractionDigits:0}) + '</td>'
+                    + '<td style="text-align:right">' + subtotal.toLocaleString('es-ES', {minimumFractionDigits:0}) + '</td>'
+                    + '</tr>';
+            }
+        } else {
+            filasItems = '<tr><td colspan="4" style="text-align:center;color:#999">Sin ítems registrados</td></tr>';
+        }
+
+        var html = '<!DOCTYPE html><html><head>'
+            + '<meta charset="UTF-8">'
+            + '<title>Ticket Recepción NRO ' + nroRecep + '</title>'
+            + '<style>'
+            + 'body{font-family:Arial,sans-serif;font-size:12px;margin:20px;color:#222}'
+            + 'h1{font-size:16px;margin:0}'
+            + 'h2{font-size:13px;margin:4px 0}'
+            + '.header{text-align:center;border-bottom:2px solid #333;padding-bottom:8px;margin-bottom:10px}'
+            + '.nro{font-size:18px;font-weight:bold;color:#333}'
+            + '.section{margin-bottom:10px}'
+            + '.section-title{font-weight:bold;font-size:11px;text-transform:uppercase;color:#555;border-bottom:1px solid #ccc;margin-bottom:4px}'
+            + '.row{display:flex;gap:16px;margin-bottom:3px}'
+            + '.label{color:#666;min-width:110px}'
+            + 'table{width:100%;border-collapse:collapse;margin-top:6px}'
+            + 'th{background:#333;color:#fff;padding:4px 6px;text-align:left;font-size:11px}'
+            + 'td{padding:3px 6px;border-bottom:1px solid #eee;font-size:11px}'
+            + '.total-row td{font-weight:bold;border-top:2px solid #333;border-bottom:none}'
+            + '.firma{margin-top:30px;display:flex;gap:40px}'
+            + '.firma-box{flex:1;text-align:center}'
+            + '.firma-line{border-top:1px solid #333;margin-top:40px;padding-top:4px;font-size:11px;color:#555}'
+            + '.footer{margin-top:20px;text-align:center;font-size:10px;color:#999;border-top:1px solid #ccc;padding-top:6px}'
+            + '@media print{button{display:none}}'
+            + '</style>'
+            + '</head><body>'
+
+            + '<div class="header">'
+            + '<h1>' + empresa + '</h1>'
+            + '<h2>' + sucursal + '</h2>'
+            + '<div class="nro">COMPROBANTE DE RECEPCIÓN NRO: ' + nroRecep + '</div>'
+            + '</div>'
+
+            + '<div style="display:flex;gap:20px">'
+
+            + '<div style="flex:1">'
+            + '<div class="section"><div class="section-title">Cliente</div>'
+            + '<div class="row"><span class="label">Nombre:</span><span>' + cliente.trim() + '</span></div>'
+            + '<div class="row"><span class="label">RUC:</span><span>' + ruc + '</span></div>'
+            + '<div class="row"><span class="label">Teléfono:</span><span>' + telefono + '</span></div>'
+            + '<div class="row"><span class="label">Dirección:</span><span>' + direccion + '</span></div>'
+            + '<div class="row"><span class="label">Correo:</span><span>' + correo + '</span></div>'
+            + '</div>'
+
+            + '<div class="section"><div class="section-title">Vehículo</div>'
+            + '<div class="row"><span class="label">Tipo:</span><span>' + vehiculo + '</span></div>'
+            + '<div class="row"><span class="label">Marca:</span><span>' + marca + '</span></div>'
+            + '<div class="row"><span class="label">Modelo:</span><span>' + modelo + '</span></div>'
+            + '<div class="row"><span class="label">Año:</span><span>' + anio + '</span></div>'
+            + '<div class="row"><span class="label">Nro. Chasis:</span><span>' + chasis + '</span></div>'
+            + '</div>'
+            + '</div>'
+
+            + '<div style="flex:1">'
+            + '<div class="section"><div class="section-title">Datos de Recepción</div>'
+            + '<div class="row"><span class="label">Fecha ingreso:</span><span>' + fecha + '</span></div>'
+            + '<div class="row"><span class="label">Fecha estimada:</span><span>' + fechaEst + '</span></div>'
+            + '<div class="row"><span class="label">Prioridad:</span><span>' + prioridad + '</span></div>'
+            + '<div class="row"><span class="label">Kilometraje:</span><span>' + km + ' km</span></div>'
+            + '<div class="row"><span class="label">Combustible:</span><span>' + combustible + '</span></div>'
+            + '<div class="row"><span class="label">Tipo servicio:</span><span>' + servicio + '</span></div>'
+            + '<div class="row"><span class="label">Observaciones:</span><span>' + obs + '</span></div>'
+            + '</div>'
+            + '</div>'
+
+            + '</div>'
+
+            + '<div class="section"><div class="section-title">Ítems / Repuestos</div>'
+            + '<table><thead><tr>'
+            + '<th>Descripción</th><th style="text-align:center">Cant.</th><th style="text-align:right">Precio Unit.</th><th style="text-align:right">Subtotal</th>'
+            + '</tr></thead><tbody>'
+            + filasItems
+            + '<tr class="total-row"><td colspan="3" style="text-align:right">TOTAL ESTIMADO</td>'
+            + '<td style="text-align:right">' + total.toLocaleString('es-ES', {minimumFractionDigits:0}) + '</td></tr>'
+            + '</tbody></table>'
+            + '</div>'
+
+            + '<div class="firma">'
+            + '<div class="firma-box"><div class="firma-line">Firma del Cliente</div></div>'
+            + '<div class="firma-box"><div class="firma-line">Firma del Recepcionista</div></div>'
+            + '</div>'
+
+            + '<div class="footer">Documento generado el ' + new Date().toLocaleString('es-ES') + ' — Recepción NRO: ' + nroRecep + '</div>'
+
+            + '</body></html>';
+
+        var ventana = window.open('', '_blank', 'width=800,height=700');
+        ventana.document.write(html);
+        ventana.document.close();
+        ventana.focus();
+        setTimeout(function() { ventana.print(); }, 500);
+    })
+    .fail(function(xhr) { mostrarErrores(xhr); });
+}
+
+function confirmarSalida() {
+    var id = $("#id").val();
+    if (!id || id == '0') { swal("Error", "Seleccione una recepción.", "error"); return; }
+    swal({
+        title: "REGISTRAR SALIDA",
+        text: "¿Confirmar la entrega del vehículo al cliente? Esta acción no se puede revertir.",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#1976D2",
+        confirmButtonText: "SÍ, REGISTRAR",
+        cancelButtonText: "CANCELAR",
+        closeOnConfirm: false
+    }, function() {
+        registrarSalida(id);
+    });
+}
+
+function registrarSalida(id) {
+    $.ajax({
+        url: getUrl() + "recepcab/registrar-salida/" + id,
+        method: "PUT",
+        dataType: "json"
+    })
+    .done(function(resultado) {
+        swal({ title: "Salida registrada", text: resultado.mensaje, type: resultado.tipo },
+        function() { location.reload(true); });
+    })
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 
 function campoFecha(){
@@ -680,17 +873,17 @@ function parseNumero(str) {
 }
 
 function agregarDetalle() {
+    mmLimpiar();
     $("#txtOperacionDetalle").val(1);
-    $("#item_decripcion").removeAttr("disabled");
-    $("#tip_imp_nom").attr("disabled","true");
-    $("#recep_det_cantidad_stock").attr("disabled","true");
-    $("#recep_det_cantidad").removeAttr("disabled"); 
-    $("#recep_det_costo").attr("disabled","true"); 
+    $("#item_id").val('');
+    $("#item_decripcion").val('').removeAttr("disabled");
+    $("#tip_imp_nom").val('').attr("disabled","true");
+    $("#recep_det_cantidad_stock").val('').attr("disabled","true");
+    $("#recep_det_cantidad").val('').removeAttr("disabled");
+    $("#recep_det_costo").val('').attr("disabled","true");
 
-    $("#btnAgregarDetalle").attr("style", "display:none");
-    $("#btnEditarDetalle").attr("style", "display:none");
-    $("#btnEliminarDetalle").attr("style", "display:none");
-    $("#btnGrabarDetalle").attr("style", "display:inline");
+    $("#btnAgregarDetalle, #btnEditarDetalle, #btnEliminarDetalle").hide();
+    $("#btnGrabarDetalle").show();
 }
 
 function editarDetalle() {
@@ -698,72 +891,89 @@ function editarDetalle() {
     $("#item_decripcion").removeAttr("disabled");
     $("#tip_imp_nom").attr("disabled","true");
     $("#recep_det_cantidad_stock").attr("disabled","true");
-    $("#recep_det_cantidad").removeAttr("disabled"); 
-    $("#recep_det_costo").attr("disabled","true")
+    $("#recep_det_cantidad").removeAttr("disabled");
+    $("#recep_det_costo").attr("disabled","true");
+    $("#marca_det_mm, #modelo_det_mm").removeAttr("disabled");
 
-    $("#btnAgregarDetalle").attr("style", "display:none");
-    $("#btnEditarDetalle").attr("style", "display:none");
-    $("#btnEliminarDetalle").attr("style", "display:none");
-    $("#btnGrabarDetalle").attr("style", "display:inline");
+    $("#btnAgregarDetalle, #btnEditarDetalle, #btnEliminarDetalle").hide();
+    $("#btnGrabarDetalle").show();
+}
+
+function cancelarDetalle() {
+    mmLimpiar();
+    $("#txtOperacionDetalle").val(0);
+    $("#item_id").val('');
+    $("#item_decripcion").val('').prop('disabled', true);
+    $("#tip_imp_nom").val('').prop('disabled', true);
+    $("#recep_det_cantidad_stock").val('').prop('disabled', true);
+    $("#recep_det_cantidad").val('').prop('disabled', true);
+    $("#recep_det_costo").val('').prop('disabled', true);
+    $("#listaProductos").html('').hide();
+
+    $("#btnAgregarDetalle, #btnEditarDetalle, #btnEliminarDetalle").show();
+    $("#btnGrabarDetalle").hide();
 }
 
 function eliminarDetalle(){
-    $("#txtOperacionDetalle").val(3);
-    $("#btnAgregarDetalle").attr("style","display:none");
-    $("#btnEditarDetalle").attr("style","display:none");
-    $("#btnEliminarDetalle").attr("style","display:none");
-    $("#btnGrabarDetalle").attr("style","display:inline");
+    if (!$("#item_id").val()) {
+        swal("Aviso", "Seleccione un ítem de la tabla para eliminar.", "warning");
+        return;
+    }
+    swal({
+        title: "Eliminar ítem",
+        text: "¿Desea eliminar \"" + $("#item_decripcion").val() + "\" del detalle?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#e74c3c",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+        closeOnConfirm: false
+    }, function() {
+        $.ajax({
+            url: getUrl() + "recepcion_det/delete/" + $("#id").val() + "/" + $("#item_id").val(),
+            method: "DELETE",
+            dataType: "json"
+        })
+        .done(function() {
+            swal({ title: "Eliminado", text: "Ítem eliminado del detalle.", type: "success", timer: 1500, showConfirmButton: false });
+            cancelarDetalle();
+            listarDetalles();
+        })
+        .fail(function(xhr) { mostrarErrores(xhr); });
+    });
 }
+
 function grabarDetalle(){
+    var op = parseInt($("#txtOperacionDetalle").val());
+
+    if (op !== 3) {
+        if (!$("#item_id").val()) { swal("Error", "Seleccione un ítem.", "error"); return; }
+        var cant = parseFloat($("#recep_det_cantidad").val());
+        if (isNaN(cant) || cant <= 0) { swal("Error", "La cantidad debe ser mayor a cero.", "error"); return; }
+    }
 
     var endpoint = "recepcion_det/create";
     var metodo = "POST";
+    if (op === 2) { endpoint = "recepcion_det/update/" + $("#id").val(); metodo = "PUT"; }
+    if (op === 3) { endpoint = "recepcion_det/delete/" + $("#id").val() + "/" + $("#item_id").val(); metodo = "DELETE"; }
 
-if($("#txtOperacionDetalle").val()==2){
-    endpoint = "recepcion_det/update/"+$("#id").val();
-    metodo = "PUT";
-}
-if($("#txtOperacionDetalle").val()==3){
-    endpoint = "recepcion_det/delete/"+$("#id").val()+"/"+$("#item_id").val();
-    metodo = "DELETE";
-
-}
-
-$.ajax({
-    url:getUrl()+endpoint,
-    method: metodo,
-    dataType: "json",
-    data: {
-        "recep_cab_id":$("#id").val(),
-        "item_id":$("#item_id").val(),
-        "original_item_id": $("#original_item_id").val(),
-        "tipo_impuesto_id":$("#tipo_impuesto_id").val(),
-        "recep_det_cantidad":$("#recep_det_cantidad").val(),
-        "recep_det_costo":$("#recep_det_costo").val(),
-        "recep_det_cantidad_stock":$("#recep_det_cantidad_stock").val()
-    }
-})
-
-.done(function(respuesta){
-listarDetalles();
-})
-.fail(function(a,b,c){
-    alert(c);
-    console.log(a.responseText);
-})
-
-$("#btnAgregarDetalle").attr("style","display:inline");
-$("#btnEditarDetalle").attr("style","display:inline");
-$("#btnEliminarDetalle").attr("style","display:inline");
-$("#btnGrabarDetalle").attr("style","display:none");
-
-$("#txtOperacionDetalle").val(1);
-
-$("#item_decripcion").val("");
-$("#tip_imp_nom").val("");
-$("#recep_det_cantidad_stock").val("");
-$("#recep_det_cantidad").val("");
-$("#recep_det_costo").val("");
+    $.ajax({
+        url: getUrl() + endpoint,
+        method: metodo,
+        dataType: "json",
+        data: {
+            "recep_cab_id":            $("#id").val(),
+            "item_id":                 $("#item_id").val(),
+            "tipo_impuesto_id":        $("#tipo_impuesto_id").val(),
+            "recep_det_cantidad":      $("#recep_det_cantidad").val(),
+            "recep_det_costo":         $("#recep_det_costo").val(),
+            "recep_det_cantidad_stock":$("#recep_det_cantidad_stock").val(),
+            "marca_id":                _mmMarcaId  ? parseInt(_mmMarcaId)  : null,
+            "modelo_id":               _mmModeloId ? parseInt(_mmModeloId) : null
+        }
+    })
+    .done(function() { cancelarDetalle(); listarDetalles(); })
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 
 function buscarProductos(){
@@ -792,44 +1002,29 @@ function buscarProductos(){
         $("#listaProductos").html(lista);
         $("#listaProductos").attr("style","display:block; position: absolute; z-index: 2000;");
     })
-    .fail(function(a, b, c){
-        alert(c);
-        console.log(a.responseText);
-    });
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 
-// Rellena el campo de producto seleccionado.
 function seleccionProducto(item_id, item_decripcion, tipo_impuesto_id, item_costo, tip_imp_nom, tipo_imp_tasa, cantidad_disponible){
-    // Asignar valores a los campos del detalle
     $("#item_id").val(item_id);
     $("#item_decripcion").val(item_decripcion);
-    $("#recep_det_costo").val(item_costo); // <- Asignar el costo al campo del detalle
+    $("#recep_det_costo").val(item_costo);
     $("#tipo_impuesto_id").val(tipo_impuesto_id);
     $("#tip_imp_nom").val(tip_imp_nom);
-    
-    // Asignar cantidad disponible al campo correspondiente
     $("#recep_det_cantidad_stock").val(cantidad_disponible);
 
-    // Cálculo de subtotal y total con impuesto (opcional)
-    const cantidad = parseFloat($("#recep_det_cantidad").val()) || 0;
-    const costo = parseFloat(item_costo) || 0;
-    const tasaImpuesto = parseFloat(tipo_imp_tasa) || 0;
+    mmCargarMarcas(item_id, null);
+    $("#marca_det_mm").removeAttr("disabled");
 
-    const subtotal = cantidad * costo;
-    const totalConImpuesto = subtotal + (subtotal * (tasaImpuesto / 100));
-
-    $("#subtotal").val(subtotal);
-    $("#totalConImpuesto").val(totalConImpuesto);
-
-    // Ocultar lista de productos y enfocar formulario
-    $("#listaProductos").html("").attr("style","display:none;");
-    $(".form-line").attr("class","form-line focused");
+    $("#listaProductos").html("").hide();
+    $(".form-line").addClass("focused");
 }
 
 function listarDetalles() {
     var cantidadDetalle = 0;
-    var TotalGral = 0;          // Total comprobante (sin IVA)
-    var TotalIVA = 0;           // Total IVA
+    var TotalGral  = 0;
+    var TotalIva10 = 0;
+    var TotalIva5  = 0;
 
     $.ajax({
         url: getUrl() + "recepcion_det/read/" + $("#id").val(),
@@ -845,47 +1040,54 @@ function listarDetalles() {
                 const costo = parseFloat(rs.recep_det_costo) || 0;
                 const subtotal = cantidad * costo;
 
+                const imp = (rs.tip_imp_nom || '').toUpperCase();
                 let iva = 0;
-                if (rs.tip_imp_nom === "IVA10") {
-                    iva = subtotal / 11;
-                } else if (rs.tip_imp_nom === "IVA5") {
-                    iva = subtotal / 21;
+                if (imp.indexOf('EXENT') !== -1) {
+                    iva = 0;
+                } else if (imp.indexOf('5') !== -1) {
+                    iva = Math.round(subtotal / 21);
+                    TotalIva5 += iva;
+                } else {
+                    iva = Math.round(subtotal / 11);
+                    TotalIva10 += iva;
                 }
 
                 // Generar fila
                 lista += "<tr class='item-list' onclick=\"seleccionRecepcionDet("
                     + rs.item_id + ", '"
-                    + rs.item_decripcion + "', "
+                    + (rs.item_decripcion || '').replace(/'/g,"\\'") + "', "
                     + cantidad + ", "
                     + rs.recep_det_cantidad_stock + ", "
                     + costo + ", "
                     + rs.tipo_impuesto_id + ", '"
-                    + rs.tip_imp_nom + "'"
+                    + rs.tip_imp_nom + "', "
+                    + (rs.marca_id  || 0) + ", "
+                    + (rs.modelo_id || 0)
                     + ");\">";
 
-                lista += "<td>" + rs.item_id + "</td>";
                 lista += "<td>" + rs.item_decripcion + "</td>";
+                lista += "<td>" + (rs.marc_nom   || '-') + "</td>";
+                lista += "<td>" + (rs.modelo_nom || '-') + "</td>";
                 lista += "<td class='text-right'>" + cantidad + "</td>";
                 lista += "<td class='text-right'>" + rs.recep_det_cantidad_stock + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(costo) + "</td>";
-                lista += "<td>" + rs.tip_imp_nom + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(iva) + "</td>";
                 lista += "</tr>";
 
                 cantidadDetalle++;
                 TotalGral += subtotal;
-                TotalIVA += iva;
             }
 
             $("#tableDetalle").html(lista);
         } else {
-            $("#tableDetalle").html("<tr><td colspan='8' class='text-center'>No se encontraron detalles.</td></tr>");
+            $("#tableDetalle").html("<tr><td colspan='10' class='text-center text-muted'>Sin ítems en el detalle.</td></tr>");
         }
 
-        // Actualizar totales en el pie
+        $("#txtIva10").text(formatearNumero(TotalIva10));
+        $("#txtIva5").text(formatearNumero(TotalIva5));
+        $("#txtTotalConImpuesto").text(formatearNumero(TotalIva10 + TotalIva5));
         $("#txtTotalGral").text(formatearNumero(TotalGral));
-        $("#txtTotalConImpuesto").text(formatearNumero(TotalIVA));
 
         // Activar o desactivar Confirmar
         if ($("#recep_cab_estado").val() === "PENDIENTE" && cantidadDetalle > 0) {
@@ -894,13 +1096,10 @@ function listarDetalles() {
             $("#btnConfirmar").attr("disabled", "true");
         }
     })
-    .fail(function(xhr, status, error) {
-        alert("Error: " + error);
-        console.error(xhr.responseText);
-    });
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 
-function seleccionRecepcionDet(item_id, item_decripcion, recep_det_cantidad, recep_det_cantidad_stock, recep_det_costo, tipo_impuesto_id, tip_imp_nom) {
+function seleccionRecepcionDet(item_id, item_decripcion, recep_det_cantidad, recep_det_cantidad_stock, recep_det_costo, tipo_impuesto_id, tip_imp_nom, marca_id, modelo_id) {
     $("#original_item_id").val(item_id);
     $("#item_id").val(item_id);
     $("#item_decripcion").val(item_decripcion);
@@ -910,36 +1109,22 @@ function seleccionRecepcionDet(item_id, item_decripcion, recep_det_cantidad, rec
     $("#tipo_impuesto_id").val(tipo_impuesto_id);
     $("#tip_imp_nom").val(tip_imp_nom);
 
-    // Calcular subtotal y IVA para mostrar en el formulario si quieres
-    const subtotal = recep_det_cantidad * recep_det_costo;
-    let iva = 0;
-    if (tip_imp_nom === "IVA10") {
-        iva = subtotal / 11;
-    } else if (tip_imp_nom === "IVA5") {
-        iva = subtotal / 21;
-    }
-
-    $("#subtotal").val(formatearNumero(subtotal));
-    $("#iva").val(formatearNumero(iva));
-
-    $(".form-line").attr("class","form-line focused");
+    mmAutocompletar(item_id, marca_id, modelo_id);
+    $(".form-line").addClass("focused");
 }
 function cargarFuncionarioIdLogueado() {
     try {
-        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
-        
+        var datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
+
         if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
             $('#funcionario_id').val(datosSesion.user.funcionario_id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
-            console.error('No se encontraron datos de sesión válidos');
-            alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');
-            window.location.href = '../../index.html';
+            swal("Error de sesión", "No se puede identificar al usuario. Inicie sesión nuevamente.", "error");
+            setTimeout(function() { window.location.href = '../../index.html'; }, 2000);
         }
     } catch (error) {
-        console.error('Error al cargar datos de usuario:', error);
-        alert('Error al cargar datos del usuario. Inicie sesión nuevamente.');
-        window.location.href = '../../index.html';
+        swal("Error", "Error al cargar datos del usuario. Inicie sesión nuevamente.", "error");
+        setTimeout(function() { window.location.href = '../../index.html'; }, 2000);
     }
 }
 

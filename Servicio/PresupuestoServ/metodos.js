@@ -175,7 +175,7 @@ function listar() {
     })
     .done(function (resultado) {
 
-        const esc = s => (s || '').toString().replace(/'/g, "\\'");
+        const esc = s => (s || '').toString().replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 
         let lista = "";
 
@@ -244,10 +244,7 @@ function listar() {
         $("#tableBody").html(lista);
         formatoTabla();
     })
-    .fail(function (xhr, status, error) {
-        alert("Error: " + error);
-        console.error(xhr.responseText);
-    });
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 
 
@@ -365,42 +362,38 @@ function buscarDiagnostico() {
         if (resultado.length === 0) {
             lista = "<div class='list-group-item'>No se encontraron diagnósticos</div>";
         } else {
-            for (let rs of resultado) {
-                lista += `
-                    <div class="list-group-item" style="cursor:pointer"
-                        onclick="seleccionarDiagnostico(
-                            ${rs.diagnostico_cab_id},
-                            '${rs.diagnostico}',
-                            ${rs.empresa_id}, '${rs.emp_razon_social}',
-                            ${rs.sucursal_id}, '${rs.suc_razon_social}',
-                            ${rs.tipo_diagnostico_id || 0}, '${rs.tipo_diag_nombre || ''}',
-                            ${rs.tipo_servicio_id || 0}, '${rs.tipo_serv_nombre || ''}',
-                            ${rs.clientes_id}, '${rs.cli_nombre}', '${rs.cli_apellido}', 
-                            '${rs.cli_ruc}', '${rs.cli_telefono}', '${rs.cli_direccion}', '${rs.cli_correo}',
-                            ${rs.tipo_vehiculo_id || 0},
-                            '${rs.tip_veh_nombre}',
-                            '${rs.tip_veh_capacidad}',
-                            '${rs.tip_veh_combustible}',
-                            '${rs.tip_veh_categoria}',
-                            '${rs.marc_nom}',
-                            '${rs.modelo_nom}'
-                        );">
-                        <b>${rs.diagnostico}</b><br>
-                        Servicio: <b>${rs.tipo_serv_nombre || 'N/A'}</b><br>
-                        Estado: ${rs.diag_cab_estado} – Prioridad: ${rs.diag_cab_prioridad}
-                    </div>
-                `;
-
+            var esc2 = function(s) { return (s || '').toString().replace(/\\/g, '\\\\').replace(/'/g, "\\'"); };
+            for (var i = 0; i < resultado.length; i++) {
+                var rs = resultado[i];
+                lista += "<div class='list-group-item' style='cursor:pointer' onclick=\"seleccionarDiagnostico("
+                    + rs.diagnostico_cab_id + ",'"
+                    + esc2(rs.diagnostico) + "',"
+                    + rs.empresa_id + ",'" + esc2(rs.emp_razon_social) + "',"
+                    + rs.sucursal_id + ",'" + esc2(rs.suc_razon_social) + "',"
+                    + (rs.tipo_diagnostico_id || 0) + ",'" + esc2(rs.tipo_diag_nombre) + "',"
+                    + (rs.tipo_servicio_id || 0) + ",'" + esc2(rs.tipo_serv_nombre) + "',"
+                    + rs.clientes_id + ",'" + esc2(rs.cli_nombre) + "','" + esc2(rs.cli_apellido) + "',"
+                    + "'" + esc2(rs.cli_ruc) + "','" + esc2(rs.cli_telefono) + "','" + esc2(rs.cli_direccion) + "','" + esc2(rs.cli_correo) + "',"
+                    + (rs.tipo_vehiculo_id || 0) + ","
+                    + "'" + esc2(rs.tip_veh_nombre) + "','" + esc2(rs.tip_veh_capacidad) + "',"
+                    + "'" + esc2(rs.tip_veh_combustible) + "','" + esc2(rs.tip_veh_categoria) + "',"
+                    + "'" + esc2(rs.marc_nom) + "','" + esc2(rs.modelo_nom) + "'"
+                    + ");\">"
+                    + (function(p) {
+                        var c = p === 'ALTA' ? '#c0392b' : p === 'MEDIA' ? '#e67e22' : '#27ae60';
+                        return '<span style="background:' + c + ';color:#fff;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:bold;float:right;">' + (p || '?') + '</span>';
+                    })(rs.diag_cab_prioridad)
+                    + "<b>" + (rs.diagnostico || '') + "</b><br>"
+                    + "Servicio: <b>" + (rs.tipo_serv_nombre || 'N/A') + "</b> &nbsp;|&nbsp; "
+                    + "Estado: " + (rs.diag_cab_estado || '')
+                    + "</div>";
             }
         }
 
         $("#listaDiagnostico").html(lista).show();
         $("#listaDiagnostico").attr("style", "display:block; position:absolute; z-index:2000;");
     })
-    .fail(function(xhr) {
-        console.error(xhr.responseText);
-        alert("Error al buscar diagnósticos.");
-    });
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 function seleccionarDiagnostico(
     id, diagnostico,
@@ -480,10 +473,7 @@ function buscarPromociones() {
         $("#listaPromociones").html(lista).show();
         $("#listaPromociones").attr("style", "display:block; position:absolute; z-index:2000;");
     })
-    .fail(function(xhr) {
-        console.error(xhr.responseText);
-        alert("Error al buscar promociones.");
-    });
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 function seleccionarPromocion(id, nombre, fecha_inicio, fecha_fin, tipo_prom_nombre) {
     // Autocompleta los campos principales
@@ -528,10 +518,7 @@ function buscarDescuentos() {
         $("#listaDescuentos").html(lista).show();
         $("#listaDescuentos").attr("style", "display:block; position:absolute; z-index:2000;");
     })
-    .fail(function(xhr) {
-        console.error(xhr.responseText);
-        alert("Error al buscar descuentos.");
-    });
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 function seleccionarDescuento(id, nombre, porcentaje, fecha_inicio, fecha_fin, tipo_desc_nombre) {
     $("#desc_cab_nombre").val(nombre + " (" + porcentaje + "% - " + fecha_inicio + " al " + fecha_fin + ")");
@@ -571,123 +558,101 @@ function cargarPresupuesto(id) {
 
         $(".form-line").addClass("focused");
     })
-    .fail(function(xhr) {
-        console.error("Error cargarPresupuesto:", xhr.responseText);
-    });
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 function grabar() {
-    const observaciones = ($("#pres_serv_cab_observaciones").val() || "").trim();
-    const fecha = ($("#pres_serv_cab_fecha").val() || "").trim();
-    const fechaVence = ($("#pres_serv_cab_fecha_vence").val() || "").trim();
+    var op = $("#txtOperacion").val();
 
-    const empresa = parseInt($("#empresa_id").val()) || 0;
-    const sucursal = parseInt($("#sucursal_id").val()) || 0;
-    const diagnostico = parseInt($("#diagnostico_cab_id").val()) || 0;
-    const cliente = parseInt($("#clientes_id").val()) || 0;
-    const tipoServicio = parseInt($("#tipo_servicio_id").val()) || 0;
-    const tipoVehiculo = parseInt($("#tipo_vehiculo_id").val()) || 0;
-    console.log("🔍 Datos a enviar:", {
-        observaciones,
-        fecha,
-        fechaVence,
-        empresa,
-        sucursal,
-        diagnostico,
-        cliente,
-        tipoServicio,
-        tipoVehiculo
-    });
-    if (
-        !observaciones ||
-        !fecha ||
-        !fechaVence ||
-        empresa <= 0 ||
-        sucursal <= 0 ||
-        diagnostico <= 0 ||
-        cliente <= 0 ||
-        tipoServicio <= 0 ||
-        tipoVehiculo <= 0
-    ) {
-        swal({
-            title: "Error",
-            text: "Todos los campos obligatorios deben estar completos.",
-            type: "error"
-        });
+    // Anular y confirmar: solo cambian estado
+    if (op === "3" || op === "4") {
+        var endpoint = op === "3"
+            ? "presupuestoservcab/anular/"   + $("#id").val()
+            : "presupuestoservcab/confirmar/" + $("#id").val();
+        $.ajax({ url: getUrl() + endpoint, method: "PUT", dataType: "json" })
+        .done(function(resultado) {
+            swal({ title: "Respuesta", text: resultado.mensaje, type: resultado.tipo },
+                function() { if (resultado.tipo === "success") location.reload(true); });
+        })
+        .fail(function(xhr) { mostrarErrores(xhr); });
         return;
     }
-    let endpoint = "presupuestoservcab/create";
-    let metodo = "POST";
-    let estado = "PENDIENTE";
 
-    switch ($("#txtOperacion").val()) {
-        case "2": // EDITAR
-            endpoint = "presupuestoservcab/update/" + $("#id").val();
-            metodo = "PUT";
-            break;
+    // Agregar / Editar — validaciones campo por campo
+    var CHARS_INV    = /[*<>{}|]/;
+    var observaciones = ($("#pres_serv_cab_observaciones").val() || "").trim();
+    var fecha         = ($("#pres_serv_cab_fecha").val()       || "").trim();
+    var fechaVence    = ($("#pres_serv_cab_fecha_vence").val() || "").trim();
+    var empresa       = parseInt($("#empresa_id").val())       || 0;
+    var sucursal      = parseInt($("#sucursal_id").val())      || 0;
+    var diagnostico   = parseInt($("#diagnostico_cab_id").val())|| 0;
+    var cliente       = parseInt($("#clientes_id").val())      || 0;
+    var tipoServicio  = parseInt($("#tipo_servicio_id").val()) || 0;
+    var tipoVehiculo  = parseInt($("#tipo_vehiculo_id").val()) || 0;
 
-        case "3": // ANULAR
-            endpoint = "presupuestoservcab/anular/" + $("#id").val();
-            metodo = "PUT";
-            estado = "ANULADO";
-            break;
-
-        case "4": // CONFIRMAR
-            endpoint = "presupuestoservcab/confirmar/" + $("#id").val();
-            metodo = "PUT";
-            estado = "CONFIRMADO";
-            break;
+    if (!observaciones)  { swal("Error", "Las observaciones son obligatorias.", "error"); return; }
+    if (CHARS_INV.test(observaciones)) { swal("Caracteres no permitidos", "Las observaciones contienen caracteres no permitidos: * < > { } |", "error"); return; }
+    if (!fecha)          { swal("Error", "La fecha del presupuesto es obligatoria.", "error"); return; }
+    if (!fechaVence)     { swal("Error", "La fecha de vencimiento es obligatoria.", "error"); return; }
+    if (moment(fechaVence, 'DD/MM/YYYY HH:mm:ss', true).isBefore(moment(fecha, 'DD/MM/YYYY HH:mm:ss', true))) {
+        swal("Error", "La fecha de vencimiento no puede ser anterior a la fecha del presupuesto.", "error"); return;
     }
-    const promociones = $("#promociones_cab_id").val() || null;
-    const descuentos = $("#descuentos_cab_id").val() || null;
+    if (empresa <= 0)    { swal("Error", "La empresa es obligatoria.", "error"); return; }
+    if (sucursal <= 0)   { swal("Error", "La sucursal es obligatoria.", "error"); return; }
+    if (diagnostico <= 0){ swal("Error", "Debe seleccionar un diagnóstico.", "error"); return; }
+    if (cliente <= 0)    { swal("Error", "Debe seleccionar un cliente.", "error"); return; }
+    if (tipoServicio <= 0){ swal("Error", "Debe seleccionar el tipo de servicio.", "error"); return; }
+    if (tipoVehiculo <= 0){ swal("Error", "Debe seleccionar el tipo de vehículo.", "error"); return; }
+
+    var endpoint = op === "2"
+        ? "presupuestoservcab/update/" + $("#id").val()
+        : "presupuestoservcab/create";
+    var metodo = op === "2" ? "PUT" : "POST";
+
     $.ajax({
         url: getUrl() + endpoint,
         method: metodo,
         dataType: "json",
         data: {
-            id: ($("#txtOperacion").val() == "1") ? null : $("#id").val(),
-
-            pres_serv_cab_fecha: fecha,
-            pres_serv_cab_fecha_vence: fechaVence,
+            pres_serv_cab_fecha:         fecha,
+            pres_serv_cab_fecha_vence:   fechaVence,
             pres_serv_cab_observaciones: observaciones,
-            pres_serv_cab_estado: estado,
-
-            empresa_id: empresa,
-            sucursal_id: sucursal,
-            diagnostico_cab_id: diagnostico,
-            clientes_id: cliente,
-            tipo_servicio_id: tipoServicio,
-            tipo_vehiculo_id: tipoVehiculo,
-
-            promociones_cab_id: promociones,
-            descuentos_cab_id: descuentos,
-
-            funcionario_id: $("#funcionario_id").val()
+            empresa_id:                  empresa,
+            sucursal_id:                 sucursal,
+            diagnostico_cab_id:          diagnostico,
+            clientes_id:                 cliente,
+            tipo_servicio_id:            tipoServicio,
+            tipo_vehiculo_id:            tipoVehiculo,
+            promociones_cab_id:          $("#promociones_cab_id").val() || null,
+            descuentos_cab_id:           $("#descuentos_cab_id").val()  || null,
+            funcionario_id:              $("#funcionario_id").val()
         }
     })
-    .done(function (resultado) {
-
-        swal({
-            title: "Respuesta",
-            text: resultado.mensaje,
-            type: resultado.tipo
-        }, function () {
-
+    .done(function(resultado) {
+        swal({ title: "Respuesta", text: resultado.mensaje, type: resultado.tipo },
+        function() {
             if (resultado.tipo !== "success") return;
-            if ($("#txtOperacion").val() == "1") {
-                cargarPresupuesto(resultado.registro.id);
-                return;
-            }
-            location.reload(true);
+            if (op === "1") { cargarPresupuesto(resultado.registro.id); }
+            else            { location.reload(true); }
         });
     })
-
-
-    .fail(function (xhr, status, error) {
-        console.error("❌ Error AJAX:", xhr.responseText);
-        swal("Error", "Ocurrió un error al procesar la solicitud.", "error");
-    });
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 
+
+function mostrarErrores(xhr) {
+    if (xhr.status === 403) return;
+    var res = xhr.responseJSON;
+    var titulo = xhr.status === 422 ? 'Datos inválidos' : 'Error';
+    var msg = '';
+    if (res && res.errors) {
+        $.each(res.errors, function(k, v) { msg += '• ' + (Array.isArray(v) ? v[0] : v) + '\n'; });
+    } else if (res && res.mensaje) {
+        msg = res.mensaje;
+    } else {
+        msg = 'Ocurrió un error inesperado.';
+    }
+    swal({ title: titulo, text: msg, type: xhr.status === 422 ? 'warning' : 'error' });
+}
 
 function campoFecha(){
     $('.datetimepicker').bootstrapMaterialDatePicker({
@@ -740,17 +705,17 @@ function parseNumero(str) {
 }
 
 function agregarDetalle() {
+    mmLimpiar();
     $("#txtOperacionDetalle").val(1);
-    $("#item_decripcion").removeAttr("disabled");
-    $("#tip_imp_nom").attr("disabled","true");
-    $("#pres_serv_det_cantidad_stock").attr("disabled","true");
-    $("#pres_serv_det_cantidad").removeAttr("disabled"); 
-    $("#pres_serv_det_costo").attr("disabled","true"); 
+    $("#item_id").val('');
+    $("#item_decripcion").val('').removeAttr("disabled");
+    $("#tip_imp_nom").val('').attr("disabled","true");
+    $("#pres_serv_det_cantidad_stock").val('').attr("disabled","true");
+    $("#pres_serv_det_cantidad").val('').removeAttr("disabled");
+    $("#pres_serv_det_costo").val('').attr("disabled","true");
 
-    $("#btnAgregarDetalle").attr("style", "display:none");
-    $("#btnEditarDetalle").attr("style", "display:none");
-    $("#btnEliminarDetalle").attr("style", "display:none");
-    $("#btnGrabarDetalle").attr("style", "display:inline");
+    $("#btnAgregarDetalle, #btnEditarDetalle, #btnEliminarDetalle").hide();
+    $("#btnGrabarDetalle").show();
 }
 
 function editarDetalle() {
@@ -758,72 +723,89 @@ function editarDetalle() {
     $("#item_decripcion").removeAttr("disabled");
     $("#tip_imp_nom").attr("disabled","true");
     $("#pres_serv_det_cantidad_stock").attr("disabled","true");
-    $("#pres_serv_det_cantidad").removeAttr("disabled"); 
-    $("#pres_serv_det_costo").attr("disabled","true")
+    $("#pres_serv_det_cantidad").removeAttr("disabled");
+    $("#pres_serv_det_costo").attr("disabled","true");
+    $("#marca_det_mm, #modelo_det_mm").removeAttr("disabled");
 
-    $("#btnAgregarDetalle").attr("style", "display:none");
-    $("#btnEditarDetalle").attr("style", "display:none");
-    $("#btnEliminarDetalle").attr("style", "display:none");
-    $("#btnGrabarDetalle").attr("style", "display:inline");
+    $("#btnAgregarDetalle, #btnEditarDetalle, #btnEliminarDetalle").hide();
+    $("#btnGrabarDetalle").show();
+}
+
+function cancelarDetalle() {
+    mmLimpiar();
+    $("#txtOperacionDetalle").val(0);
+    $("#item_id").val('');
+    $("#item_decripcion").val('').prop('disabled', true);
+    $("#tip_imp_nom").val('').prop('disabled', true);
+    $("#pres_serv_det_cantidad_stock").val('').prop('disabled', true);
+    $("#pres_serv_det_cantidad").val('').prop('disabled', true);
+    $("#pres_serv_det_costo").val('').prop('disabled', true);
+    $("#listaProductos").html('').hide();
+
+    $("#btnAgregarDetalle, #btnEditarDetalle, #btnEliminarDetalle").show();
+    $("#btnGrabarDetalle").hide();
 }
 
 function eliminarDetalle(){
-    $("#txtOperacionDetalle").val(3);
-    $("#btnAgregarDetalle").attr("style","display:none");
-    $("#btnEditarDetalle").attr("style","display:none");
-    $("#btnEliminarDetalle").attr("style","display:none");
-    $("#btnGrabarDetalle").attr("style","display:inline");
+    if (!$("#item_id").val()) {
+        swal("Aviso", "Seleccione un ítem de la tabla para eliminar.", "warning");
+        return;
+    }
+    swal({
+        title: "Eliminar ítem",
+        text: "¿Desea eliminar \"" + $("#item_decripcion").val() + "\" del detalle?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#e74c3c",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+        closeOnConfirm: false
+    }, function() {
+        $.ajax({
+            url: getUrl() + "presupuesto_serv_det/delete/" + $("#id").val() + "/" + $("#item_id").val(),
+            method: "DELETE",
+            dataType: "json"
+        })
+        .done(function() {
+            swal({ title: "Eliminado", text: "Ítem eliminado.", type: "success", timer: 1500, showConfirmButton: false });
+            cancelarDetalle();
+            listarDetalles();
+        })
+        .fail(function(xhr) { mostrarErrores(xhr); });
+    });
 }
+
 function grabarDetalle(){
+    var op = parseInt($("#txtOperacionDetalle").val());
+
+    if (op !== 3) {
+        if (!$("#item_id").val()) { swal("Error", "Seleccione un ítem.", "error"); return; }
+        var cant = parseFloat($("#pres_serv_det_cantidad").val());
+        if (isNaN(cant) || cant <= 0) { swal("Error", "La cantidad debe ser mayor a cero.", "error"); return; }
+    }
 
     var endpoint = "presupuesto_serv_det/create";
     var metodo = "POST";
+    if (op === 2) { endpoint = "presupuesto_serv_det/update/" + $("#id").val(); metodo = "PUT"; }
+    if (op === 3) { endpoint = "presupuesto_serv_det/delete/" + $("#id").val() + "/" + $("#item_id").val(); metodo = "DELETE"; }
 
-if($("#txtOperacionDetalle").val()==2){
-    endpoint = "presupuesto_serv_det/update/"+$("#id").val();
-    metodo = "PUT";
-}
-if($("#txtOperacionDetalle").val()==3){
-    endpoint = "presupuesto_serv_det/delete/"+$("#id").val()+"/"+$("#item_id").val();
-    metodo = "DELETE";
-
-}
-
-$.ajax({
-    url:getUrl()+endpoint,
-    method: metodo,
-    dataType: "json",
-    data: {
-        "presupuesto_serv_cab_id":$("#id").val(),
-        "item_id":$("#item_id").val(),
-        "original_item_id": $("#original_item_id").val(),
-        "tipo_impuesto_id":$("#tipo_impuesto_id").val(),
-        "pres_serv_det_cantidad":$("#pres_serv_det_cantidad").val(),
-        "pres_serv_det_costo":$("#pres_serv_det_costo").val(),
-        "pres_serv_det_cantidad_stock":$("#pres_serv_det_cantidad_stock").val()
-    }
-})
-
-.done(function(respuesta){
-listarDetalles();
-})
-.fail(function(a,b,c){
-    alert(c);
-    console.log(a.responseText);
-})
-
-$("#btnAgregarDetalle").attr("style","display:inline");
-$("#btnEditarDetalle").attr("style","display:inline");
-$("#btnEliminarDetalle").attr("style","display:inline");
-$("#btnGrabarDetalle").attr("style","display:none");
-
-$("#txtOperacionDetalle").val(1);
-
-$("#item_decripcion").val("");
-$("#tip_imp_nom").val("");
-$("#pres_serv_det_cantidad_stock").val("");
-$("#pres_serv_det_cantidad").val("");
-$("#pres_serv_det_costo").val("");
+    $.ajax({
+        url: getUrl() + endpoint,
+        method: metodo,
+        dataType: "json",
+        data: {
+            "presupuesto_serv_cab_id":    $("#id").val(),
+            "item_id":                    $("#item_id").val(),
+            "tipo_impuesto_id":           $("#tipo_impuesto_id").val(),
+            "pres_serv_det_cantidad":     $("#pres_serv_det_cantidad").val(),
+            "pres_serv_det_costo":        $("#pres_serv_det_costo").val(),
+            "pres_serv_det_cantidad_stock":$("#pres_serv_det_cantidad_stock").val(),
+            "marca_id":                   _mmMarcaId  ? parseInt(_mmMarcaId)  : null,
+            "modelo_id":                  _mmModeloId ? parseInt(_mmModeloId) : null
+        }
+    })
+    .done(function() { cancelarDetalle(); listarDetalles(); })
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 
 function buscarProductos(){
@@ -853,43 +835,28 @@ function buscarProductos(){
         $("#listaProductos").html(lista);
         $("#listaProductos").attr("style","display:block; position: absolute; z-index: 2000;");
     })
-    .fail(function(a, b, c){
-        alert(c);
-        console.log(a.responseText);
-    });
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 
-// Rellena el campo de producto seleccionado.
 function seleccionProducto(item_id, item_decripcion, tipo_impuesto_id, item_costo, tip_imp_nom, tipo_imp_tasa, cantidad_disponible){
-    // Asignar valores a los campos del detalle
     $("#item_id").val(item_id);
     $("#item_decripcion").val(item_decripcion);
-    $("#pres_serv_det_costo").val(item_costo); // <- Asignar el costo al campo del detalle
+    $("#pres_serv_det_costo").val(item_costo);
     $("#tipo_impuesto_id").val(tipo_impuesto_id);
     $("#tip_imp_nom").val(tip_imp_nom);
-    
-    // Asignar cantidad disponible al campo correspondiente
     $("#pres_serv_det_cantidad_stock").val(cantidad_disponible);
 
-    // Cálculo de subtotal y total con impuesto (opcional)
-    const cantidad = parseFloat($("#pres_serv_det_cantidad").val()) || 0;
-    const costo = parseFloat(item_costo) || 0;
-    const tasaImpuesto = parseFloat(tipo_imp_tasa) || 0;
+    mmCargarMarcas(item_id, null);
+    $("#marca_det_mm").removeAttr("disabled");
 
-    const subtotal = cantidad * costo;
-    const totalConImpuesto = subtotal + (subtotal * (tasaImpuesto / 100));
-
-    $("#subtotal").val(subtotal);
-    $("#totalConImpuesto").val(totalConImpuesto);
-
-    // Ocultar lista de productos y enfocar formulario
-    $("#listaProductos").html("").attr("style","display:none;");
-    $(".form-line").attr("class","form-line focused");
+    $("#listaProductos").html("").hide();
+    $(".form-line").addClass("focused");
 }
 function listarDetalles() {
 
-    let TotalItems = 0;      // Suma total de los ítems sin IVA
-    let TotalIVA = 0;        // Suma total del IVA de los ítems
+    let TotalItems = 0;
+    let TotalIva10 = 0;
+    let TotalIva5  = 0;
     let cantidadDetalle = 0;
 
     let precioMO = parseFloat($("#tip_serv_precio").val()) || 0;
@@ -930,32 +897,42 @@ function listarDetalles() {
                 let totalItemNeto = subtotal - descMonto - promoMonto;
 
                 // IVA SOBRE EL NETO
+                const imp = (rs.tip_imp_nom || '').toUpperCase();
                 let ivaItem = 0;
-                if (rs.tip_imp_nom === "IVA10") ivaItem = totalItemNeto / 11;
-                else if (rs.tip_imp_nom === "IVA5") ivaItem = totalItemNeto / 21;
+                if (imp.indexOf('EXENT') !== -1) {
+                    ivaItem = 0;
+                } else if (imp.indexOf('5') !== -1) {
+                    ivaItem = Math.round(totalItemNeto / 21);
+                    TotalIva5 += ivaItem;
+                } else {
+                    ivaItem = Math.round(totalItemNeto / 11);
+                    TotalIva10 += ivaItem;
+                }
 
                 // SUMAR TOTALES
                 TotalItems += totalItemNeto;
-                TotalIVA += ivaItem;
                 cantidadDetalle++;
 
                 // FILA HTML
+                var itmDesc = (rs.item_decripcion || '').replace(/'/g, "\\'");
                 lista += `
                     <tr class='item-list' onclick="seleccionPresupuestoDet(
                         ${rs.item_id},
-                        '${rs.item_decripcion}',
+                        '${itmDesc}',
                         ${cantidad},
                         ${rs.pres_serv_det_cantidad_stock},
                         ${costo},
                         ${rs.tipo_impuesto_id},
-                        '${rs.tip_imp_nom}'
+                        '${rs.tip_imp_nom}',
+                        ${rs.marca_id  || 0},
+                        ${rs.modelo_id || 0}
                     )">
-                        <td>${rs.item_id}</td>
                         <td>${rs.item_decripcion}</td>
+                        <td>${rs.marc_nom   || '-'}</td>
+                        <td>${rs.modelo_nom || '-'}</td>
                         <td class='text-right'>${cantidad}</td>
                         <td class='text-right'>${rs.pres_serv_det_cantidad_stock}</td>
                         <td class='text-right'>${formatearNumero(costo)}</td>
-                        <td>${rs.tip_imp_nom}</td>
                         <td class='text-right'>${formatearNumero(subtotal)}</td>
                         <td class='text-right'>${descPct}%</td>
                         <td>${promoModo}</td>
@@ -970,16 +947,18 @@ function listarDetalles() {
             $("#tableDetalle").html(lista);
 
         } else {
-            $("#tableDetalle").html("<tr><td colspan='16' class='text-center'>No se encontraron detalles.</td></tr>");
+            $("#tableDetalle").html("<tr><td colspan='17' class='text-center text-muted'>Sin ítems en el detalle.</td></tr>");
         }
 
-        let ivaMO = precioMO > 0 ? precioMO / 11 : 0;
+        let ivaMO = precioMO > 0 ? Math.round(precioMO / 11) : 0;
+        TotalIva10 += ivaMO;
 
         let totalSinIVA = TotalItems + precioMO;
-        let totalIVA = TotalIVA + ivaMO;
 
+        $("#txtIva10").text(formatearNumero(TotalIva10));
+        $("#txtIva5").text(formatearNumero(TotalIva5));
+        $("#txtTotalConImpuesto").text(formatearNumero(TotalIva10 + TotalIva5));
         $("#txtTotalGral").text(formatearNumero(totalSinIVA));
-        $("#txtTotalConImpuesto").text(formatearNumero(totalIVA));
 
         const estado = ($("#pres_serv_cab_estado").val() || "").trim().toUpperCase();
 
@@ -988,7 +967,8 @@ function listarDetalles() {
         } else {
             $("#btnConfirmar").prop("disabled", true);
         }
-    });
+    })
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 
 function seleccionPresupuestoDet(
@@ -998,7 +978,9 @@ function seleccionPresupuestoDet(
     pres_serv_det_cantidad_stock,
     pres_serv_det_costo,
     tipo_impuesto_id,
-    tip_imp_nom
+    tip_imp_nom,
+    marca_id,
+    modelo_id
 ) {
     $("#original_item_id").val(item_id);
     $("#item_id").val(item_id);
@@ -1037,25 +1019,24 @@ function seleccionPresupuestoDet(
     $("#promocion").val(formatearNumero(promoMonto));
     $("#total_final").val(formatearNumero(baseIVA));
 
+    mmAutocompletar(item_id, marca_id, modelo_id);
+
     $(".form-line").addClass("focused");
 }
 
 function cargarFuncionarioIdLogueado() {
     try {
-        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
-        
+        var datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
+
         if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
             $('#funcionario_id').val(datosSesion.user.funcionario_id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
-            console.error('No se encontraron datos de sesión válidos');
-            alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');
-            window.location.href = '../../index.html';
+            swal("Error de sesión", "No se puede identificar al usuario. Inicie sesión nuevamente.", "error");
+            setTimeout(function() { window.location.href = '../../index.html'; }, 2000);
         }
     } catch (error) {
-        console.error('Error al cargar datos de usuario:', error);
-        alert('Error al cargar datos del usuario. Inicie sesión nuevamente.');
-        window.location.href = '../../index.html';
+        swal("Error", "Error al cargar datos del usuario. Inicie sesión nuevamente.", "error");
+        setTimeout(function() { window.location.href = '../../index.html'; }, 2000);
     }
 }
 

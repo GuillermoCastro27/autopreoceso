@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>GUI ENTIDAD ADHERIDA</title>
+    <title>Entidad Adherida</title>
 
     <link rel="icon" href="../../images.ico" type="image/x-icon">
 
@@ -41,13 +41,14 @@
         <h2>
             <i class="material-icons">credit_card</i>
             Mantener Entidad Adherida
-            <small>CRUD de Entidad Adherida</small>
+            <small>Gestión de Entidad Adherida</small>
         </h2>
     </div>
 
     <div class="body">
 
         <input type="hidden" value="0" id="txtOperacion"/>
+        <input type="hidden" value="ACTIVO" id="ent_adh_estado"/>
 
         <!-- DATOS GENERALES -->
         <div class="section-box">
@@ -67,7 +68,7 @@
                     <div class="form-group form-float">
                         <div class="form-line">
                             <input type="text" id="ent_adh_nombre" class="form-control" disabled>
-                            <label class="form-label">Nombre</label>
+                            <label class="form-label">Nombre de la Entidad</label>
                         </div>
                     </div>
                 </div>
@@ -139,8 +140,8 @@
             <button id="btnEditar" class="btn btn-primary waves-effect" onclick="editar();" disabled>
                 <i class="material-icons">edit</i> Modificar
             </button>
-            <button id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();" disabled>
-                <i class="material-icons">delete</i> Eliminar
+            <button id="btnEstado" class="btn btn-danger waves-effect" onclick="confirmarCambioEstado();" disabled>
+                <i class="material-icons">block</i> <span id="lblEstado">Desactivar</span>
             </button>
             <button id="btnGrabar" class="btn btn-default waves-effect" onclick="confirmarOperacion();" disabled>
                 <i class="material-icons">save</i> Grabar
@@ -170,6 +171,7 @@
                         <th>Correo</th>
                         <th>Entidad Emisora</th>
                         <th>Marca Tarjeta</th>
+                        <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
@@ -182,6 +184,7 @@
                         <th>Correo</th>
                         <th>Entidad Emisora</th>
                         <th>Marca Tarjeta</th>
+                        <th>Estado</th>
                     </tr>
                 </tfoot>
             </table>
@@ -215,7 +218,7 @@
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js"></script>
-<script src="metodos.js?v=2"></script>
+<script src="metodos.js?v=4"></script>
 
 </body>
 </html>

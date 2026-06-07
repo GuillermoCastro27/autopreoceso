@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>GUI MARCA DE TARJETA</title>
+    <title>Marca de Tarjeta</title>
 
     <link rel="icon" href="../../images.ico" type="image/x-icon">
 
@@ -41,7 +41,7 @@
                     <div class="header">
                         <h2>
                             Mantener datos de Marca detarjeta
-                            <small>CRUD de Marca de tarjeta</small>
+                            <small>Gestión de Marca de Tarjeta</small>
                         </h2>
                     </div>
 
@@ -50,6 +50,7 @@
                         <!-- CAMPOS -->
                         <div class="row clearfix">
                             <input type="hidden" value="0" id="txtOperacion"/>
+                            <input type="hidden" id="marca_estado" value="activo"/>
 
                             <div class="col-sm-1">
                                 <div class="form-group form-float">
@@ -66,7 +67,7 @@
                                     <div class="form-line">
                                         <input type="text" id="marca_nombre"
                                                class="form-control" disabled>
-                                        <label class="form-label">Nombre</label>
+                                        <label class="form-label">Nombre de la Marca</label>
                                     </div>
                                 </div>
                             </div>
@@ -91,10 +92,10 @@
                                         MODIFICAR
                                     </button>
 
-                                    <button type="button" id="btnEliminar"
+                                    <button type="button" id="btnEstado"
                                         class="btn btn-danger waves-effect"
-                                        onclick="eliminar();" disabled>
-                                        ELIMINAR
+                                        onclick="confirmarCambioEstado();" disabled>
+                                        <i class="material-icons">block</i> <span id="lblEstado">Desactivar</span>
                                     </button>
 
                                     <button type="button" id="btnGrabar"
@@ -133,6 +134,7 @@
                                     <tr>
                                         <th>Código</th>
                                         <th>Nombre</th>
+                                        <th>Estado</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody"></tbody>
@@ -140,6 +142,7 @@
                                     <tr>
                                         <th>Código</th>
                                         <th>Nombre</th>
+                                        <th>Estado</th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -172,7 +175,7 @@
 
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
-<script src="metodos.js?v=2"></script>
+<script src="metodos.js?v=4"></script>
 
 </body>
 </html>

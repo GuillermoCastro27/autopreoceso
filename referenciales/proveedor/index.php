@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>GUI PROVEEDORES</title>
+    <title>Proveedor</title>
 
     <link rel="icon" href="../../images.ico" type="image/x-icon">
 
@@ -41,13 +41,14 @@
         <h2>
             <i class="material-icons">local_shipping</i>
             Mantener Proveedores
-            <small>CRUD de Proveedores</small>
+            <small>Gestión de Proveedores</small>
         </h2>
     </div>
 
     <div class="body">
 
         <input type="hidden" value="0" id="txtOperacion"/>
+        <input type="hidden" id="prov_estado" value="activo"/>
 
         <!-- DATOS GENERALES -->
         <div class="section-box">
@@ -76,8 +77,9 @@
                     <div class="form-group form-float">
                         <div class="form-line">
                             <input type="text" id="prov_ruc" class="form-control" disabled>
-                            <label class="form-label">RUC</label>
+                            <label class="form-label">Nro. Documento</label>
                         </div>
+                        <small style="color:#aaa; font-size:11px;">CI: 1234567 &nbsp;|&nbsp; RUC: 80123456-7 &nbsp;|&nbsp; Pasaporte: AA123456</small>
                     </div>
                 </div>
 
@@ -168,8 +170,8 @@
             <button id="btnEditar" class="btn btn-primary waves-effect" onclick="editar();" disabled>
                 <i class="material-icons">edit</i> Modificar
             </button>
-            <button id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();" disabled>
-                <i class="material-icons">delete</i> Eliminar
+            <button id="btnEstado" class="btn btn-danger waves-effect" onclick="confirmarCambioEstado();" disabled>
+                <i class="material-icons">block</i> <span id="lblEstado">Desactivar</span>
             </button>
             <button id="btnGrabar" class="btn btn-default waves-effect" onclick="confirmarOperacion();" disabled>
                 <i class="material-icons">save</i> Grabar
@@ -194,13 +196,14 @@
                     <tr>
                         <th>Código</th>
                         <th>Razón Social</th>
-                        <th>RUC</th>
+                        <th>Nro. Documento</th>
                         <th>Teléfono</th>
                         <th>Dirección</th>
                         <th>Correo</th>
                         <th>País</th>
                         <th>Ciudad</th>
                         <th>Nacionalidad</th>
+                        <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
@@ -208,13 +211,14 @@
                     <tr>
                         <th>Código</th>
                         <th>Razón Social</th>
-                        <th>RUC</th>
+                        <th>Nro. Documento</th>
                         <th>Teléfono</th>
                         <th>Dirección</th>
                         <th>Correo</th>
                         <th>País</th>
                         <th>Ciudad</th>
                         <th>Nacionalidad</th>
+                        <th>Estado</th>
                     </tr>
                 </tfoot>
             </table>
@@ -247,7 +251,7 @@
 
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
-<script src="metodos.js?v=2"></script>
+<script src="metodos.js?v=4"></script>
 
 </body>
 </html>

@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recibo de Cobro</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; font-size: 13px; color: #222; background: #e8ecf0; }
+
+        /* BARRA DE ACCIONES */
+        .action-bar {
+            background: #2c3e50; padding: 10px 20px; display: flex;
+            gap: 10px; align-items: center; position: sticky; top: 0; z-index: 100; flex-wrap: wrap;
+        }
+        .action-bar .ab-title { color: #bdc3c7; font-size: 13px; margin-right: auto; }
+        .btn-act {
+            padding: 7px 18px; border: none; border-radius: 4px; cursor: pointer;
+            font-size: 13px; font-weight: bold; display: flex; align-items: center; gap: 5px;
+        }
+        .btn-print  { background: #7f8c8d; color: #fff; }
+        .btn-pdf    { background: #c0392b; color: #fff; }
+        .btn-email  { background: #27ae60; color: #fff; }
+        .btn-act:hover { opacity: 0.88; }
+        .btn-act:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* PÁGINA */
+        .page { max-width: 720px; margin: 24px auto 40px; background: #fff;
+            border-radius: 6px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,.15); }
+
+        /* CABECERA */
+        .rec-header { padding: 22px 30px; text-align: center; }
+        .rec-header.contado { background: #2c3e50; }
+        .rec-header.credito { background: #1a252f; }
+        .rec-header h1 { color: #fff; font-size: 20px; margin-bottom: 2px; }
+        .rec-header p  { color: #bdc3c7; font-size: 12px; margin: 2px 0; }
+        .rec-header .tipo-badge {
+            display: inline-block; margin-top: 8px; padding: 3px 14px;
+            border-radius: 20px; font-size: 11px; font-weight: bold; letter-spacing: 1px;
+        }
+        .tipo-badge.contado-tipo { background: #27ae60; color: #fff; }
+        .tipo-badge.credito-tipo { background: #e67e22; color: #fff; }
+
+        /* NÚMERO DE DOCUMENTO */
+        .rec-docnum { padding: 12px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .rec-docnum.contado { background: #34495e; }
+        .rec-docnum.credito { background: #212f3c; }
+        .rec-docnum .nro { color: #fff; font-size: 16px; font-weight: bold; letter-spacing: 2px; }
+        .badge { display: inline-block; padding: 4px 14px; border-radius: 20px;
+            font-size: 12px; font-weight: bold; letter-spacing: 1px; }
+        .badge-pendiente  { background: #f39c12; color: #fff; }
+        .badge-confirmado { background: #27ae60; color: #fff; }
+        .badge-anulado    { background: #c0392b; color: #fff; }
+
+        /* CUERPO */
+        .rec-body { padding: 24px 30px; }
+
+        /* DOS COLUMNAS */
+        .two-col { display: flex; gap: 16px; margin-bottom: 16px; }
+        .two-col .col { flex: 1; }
+
+        /* CAJAS DE INFO */
+        .info-box { border: 1px solid #e0e0e0; border-radius: 5px; padding: 12px 14px;
+            background: #fafafa; height: 100%; }
+        .info-box h4 { font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+            color: #888; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 8px; }
+        .info-box table { width: 100%; border-collapse: collapse; }
+        .info-box td { padding: 3px 0; font-size: 12.5px; vertical-align: top; }
+        .info-box td:first-child { color: #777; width: 110px; }
+        .info-box td:last-child  { font-weight: 600; color: #2c3e50; }
+
+        /* SECCIONES */
+        .section { margin-bottom: 18px; }
+        .section-title { font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+            color: #888; padding-bottom: 4px; margin-bottom: 10px; }
+        .section-title.contado-title { border-bottom: 2px solid #2c3e50; }
+        .section-title.credito-title { border-bottom: 2px solid #e67e22; }
+
+        /* TABLAS */
+        table.data { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+        table.data thead th { color: #fff; padding: 7px 9px;
+            font-size: 10px; text-transform: uppercase; letter-spacing: 1px; text-align: left; }
+        table.data.contado-tbl thead th { background: #2c3e50; }
+        table.data.credito-tbl thead th { background: #1a5276; }
+        table.data tbody tr:nth-child(even) { background: #f7f7f7; }
+        table.data tbody td { padding: 6px 9px; border-bottom: 1px solid #eee; }
+        table.data tfoot td { padding: 8px 9px; font-weight: bold; border-top: 2px solid #2c3e50;
+            background: #f0f2f5; }
+        .tr { text-align: right; }
+        .tc { text-align: center; }
+
+        /* RESUMEN CRÉDITO */
+        .credit-summary {
+            background: linear-gradient(135deg, #1a252f 0%, #212f3c 100%);
+            border-radius: 6px; padding: 18px 22px; margin-bottom: 18px; color: #fff;
+        }
+        .credit-summary h4 {
+            font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px;
+            color: #85c1e9; margin-bottom: 14px; padding-bottom: 8px;
+            border-bottom: 1px solid #2e4057;
+        }
+        .credit-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px;
+        }
+        .credit-item { }
+        .credit-item .ci-label { font-size: 10px; color: #85c1e9; text-transform: uppercase; letter-spacing: 1px; }
+        .credit-item .ci-val   { font-size: 16px; font-weight: bold; color: #fff; margin-top: 2px; }
+        .credit-item.highlight .ci-label { color: #f0b27a; }
+        .credit-item.highlight .ci-val   { color: #f0b27a; font-size: 18px; }
+        .progress-wrap { margin-top: 14px; padding-top: 12px; border-top: 1px solid #2e4057; }
+        .progress-label { font-size: 10px; color: #85c1e9; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 6px; display: flex; justify-content: space-between; }
+        .progress-bar { background: #2e4057; border-radius: 4px; height: 8px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 4px; background: #27ae60; transition: width .5s; }
+
+        /* CUOTAS CRÉDITO */
+        .cuota-badge {
+            display: inline-block; padding: 2px 10px; border-radius: 12px;
+            font-size: 11px; font-weight: bold;
+        }
+        .cuota-badge.parcial  { background: #fef9e7; color: #d68910; border: 1px solid #f0b27a; }
+        .cuota-badge.completo { background: #eafaf1; color: #1e8449; border: 1px solid #82e0aa; }
+
+        /* MEDIOS DE PAGO */
+        .medios { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+        .medio { border: 1px solid #ddd; border-radius: 5px; padding: 10px 16px; min-width: 130px; }
+        .medio h5 { font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+            color: #888; margin-bottom: 4px; }
+        .medio .monto { font-size: 16px; font-weight: bold; color: #2c3e50; }
+        .medio small { font-size: 11px; color: #999; display: block; margin-top: 2px; }
+        .total-cobrado { font-size: 15px; font-weight: bold; color: #2c3e50;
+            background: #eaf4fb; border: 1px solid #aed6f1; border-radius: 4px;
+            padding: 10px 14px; display: inline-block; margin-top: 8px; }
+        .total-cobrado.credito-total { background: #fef5e7; border-color: #f0b27a; }
+
+        /* FIRMA */
+        .firma-area { display: flex; justify-content: space-between; margin-top: 30px; padding-top: 20px; border-top: 1px dashed #ddd; }
+        .firma-box { text-align: center; width: 45%; }
+        .firma-line { border-top: 1px solid #555; margin-bottom: 6px; }
+        .firma-box span { font-size: 11px; color: #666; }
+
+        /* OBSERVACIÓN */
+        .obs-box { background: #fff8e1; border-left: 4px solid #f39c12; border-radius: 4px;
+            padding: 10px 14px; font-size: 12.5px; color: #555; }
+
+        /* TOAST */
+        #toast {
+            position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+            min-width: 280px; max-width: 420px; padding: 14px 20px; border-radius: 8px;
+            font-size: 13.5px; font-weight: 500; color: #fff; box-shadow: 0 6px 24px rgba(0,0,0,.25);
+            display: flex; align-items: center; gap: 10px;
+            opacity: 0; transition: opacity .3s ease, transform .3s ease;
+            z-index: 9999; pointer-events: none;
+        }
+        #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        #toast.success { background: #27ae60; }
+        #toast.warning { background: #f39c12; }
+        #toast.error   { background: #c0392b; }
+
+        /* PIE */
+        .rec-footer { background: #f5f5f5; border-top: 1px solid #ddd; padding: 12px 30px;
+            text-align: center; font-size: 11px; color: #999; }
+
+        /* PRINT */
+        @media print {
+            body { background: #fff; }
+            .action-bar { display: none !important; }
+            .page { margin: 0; box-shadow: none; border-radius: 0; }
+            .credit-summary { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- BARRA DE ACCIONES -->
+<div class="action-bar no-print">
+    <span class="ab-title" id="lblDocNum">Recibo de Cobro</span>
+
+    <span id="badgeFormato" style="
+        padding: 5px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        background: #27ae60;
+        color: #fff;
+    ">CONTADO</span>
+
+    <button class="btn-act btn-print" onclick="window.print()">&#128424; Imprimir</button>
+    <button class="btn-act btn-pdf" id="btnPDF" onclick="descargarPDF()">&#128196; PDF</button>
+    <button class="btn-act btn-email" id="btnEmail" onclick="enviarCorreo()">&#9993; Correo</button>
+</div>
+
+<!-- RECIBO -->
+<div class="page" id="recibo">
+
+    <!-- CABECERA -->
+    <div class="rec-header contado" id="recHeader">
+        <h1 id="empNombre">AutoProcesos</h1>
+        <p id="empDireccion"></p>
+        <p id="empTelefono"></p>
+        <div class="tipo-badge contado-tipo" id="badgeTipo">RECIBO DE COBRO</div>
+    </div>
+
+    <!-- NÚMERO + ESTADO -->
+    <div class="rec-docnum contado" id="recDocnum">
+        <span class="nro" id="docNro">RECIBO N° 0000000</span>
+        <span id="docEstado"></span>
+    </div>
+
+    <div class="rec-body">
+
+        <!-- COBRO + CLIENTE -->
+        <div class="two-col" style="margin-bottom:16px;">
+            <div class="col">
+                <div class="info-box">
+                    <h4>Datos del Cobro</h4>
+                    <table>
+                        <tr><td>Fecha</td><td id="cobroFecha"></td></tr>
+                        <tr><td>Forma de cobro</td><td id="formaCobro"></td></tr>
+                        <tr><td>Caja</td><td id="cobroCaja"></td></tr>
+                        <tr><td>Sucursal</td><td id="sucNombre"></td></tr>
+                        <tr><td>Encargado</td><td id="cobroFuncionario"></td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="col">
+                <div class="info-box">
+                    <h4>Cliente</h4>
+                    <table>
+                        <tr><td>Nombre</td><td id="cliNombre"></td></tr>
+                        <tr><td>RUC</td><td id="cliRuc"></td></tr>
+                        <tr><td>Teléfono</td><td id="cliTelefono"></td></tr>
+                        <tr><td>Dirección</td><td id="cliDireccion"></td></tr>
+                        <tr><td>Correo</td><td id="cliCorreo"></td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- BLOQUE CRÉDITO (solo visible en formato crédito) -->
+        <!-- ══════════════════════════════════════════════ -->
+        <div id="bloqueCredito" style="display:none;">
+
+            <!-- RESUMEN CRÉDITO -->
+            <div class="credit-summary">
+                <h4>&#9642; Estado del Crédito</h4>
+                <div class="credit-grid">
+                    <div class="credit-item">
+                        <div class="ci-label">Total financiado</div>
+                        <div class="ci-val" id="crdTotalFinanciado">—</div>
+                    </div>
+                    <div class="credit-item">
+                        <div class="ci-label">Cuotas</div>
+                        <div class="ci-val" id="crdCuotas">—</div>
+                    </div>
+                    <div class="credit-item">
+                        <div class="ci-label">Total ya cobrado</div>
+                        <div class="ci-val" id="crdTotalCobrado">—</div>
+                    </div>
+                    <div class="credit-item highlight">
+                        <div class="ci-label">Saldo pendiente</div>
+                        <div class="ci-val" id="crdSaldo">—</div>
+                    </div>
+                </div>
+                <div class="progress-wrap">
+                    <div class="progress-label">
+                        <span>Progreso de pago</span>
+                        <span id="crdPorcentaje">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="crdProgressFill" style="width:0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CUOTAS DE ESTE RECIBO -->
+            <div class="section">
+                <div class="section-title credito-title">Cuotas pagadas en este recibo</div>
+                <table class="data credito-tbl">
+                    <thead>
+                        <tr>
+                            <th>Referencia</th>
+                            <th class="tc">Cuota N°</th>
+                            <th>IFV</th>
+                            <th class="tr">Monto cuota</th>
+                            <th class="tr">Este pago</th>
+                            <th class="tr">Saldo cuota</th>
+                            <th class="tc">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaCuotasCredito"></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="tr" style="font-size:11px;color:#555;">Total cobrado este recibo</td>
+                            <td class="tr" id="crdTotalEstePago" style="color:#1a5276;">—</td>
+                            <td colspan="2"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+        </div><!-- /bloqueCredito -->
+
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- BLOQUE CONTADO (solo visible en formato contado) -->
+        <!-- ══════════════════════════════════════════════ -->
+        <div id="bloqueContado">
+
+            <!-- CUOTAS (si hay) -->
+            <div class="section" id="secCuotasContado" style="display:none;">
+                <div class="section-title contado-title">Cuotas cobradas</div>
+                <table class="data contado-tbl">
+                    <thead>
+                        <tr>
+                            <th>Referencia</th>
+                            <th class="tc">Cuota N°</th>
+                            <th>Vencimiento (IFV)</th>
+                            <th class="tr">Monto</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaCuotasContado"></tbody>
+                </table>
+            </div>
+
+            <!-- DETALLE PRODUCTOS -->
+            <div class="section">
+                <div class="section-title contado-title">Detalle de productos / servicios</div>
+                <table class="data contado-tbl">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th class="tc">Cant.</th>
+                            <th class="tr">Precio</th>
+                            <th class="tc">Imp.</th>
+                            <th class="tr">Subtotal</th>
+                            <th class="tr">IVA</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaDetalles"></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="tr">Total Comprobante</td>
+                            <td class="tr" id="totalGral">0,00</td>
+                            <td class="tr" id="totalIva">0,00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+        </div><!-- /bloqueContado -->
+
+        <!-- MEDIOS DE PAGO (siempre visible) -->
+        <div class="section">
+            <div class="section-title contado-title" id="titleMedios">Medios de pago</div>
+            <div class="medios" id="divMedios"></div>
+            <div class="total-cobrado" id="boxTotalCobrado">
+                Total cobrado este recibo: <span id="totalCobrado">0,00</span>
+            </div>
+        </div>
+
+        <!-- OBSERVACIÓN -->
+        <div class="section" id="secObs" style="display:none;">
+            <div class="section-title contado-title">Observación</div>
+            <div class="obs-box" id="cobroObs"></div>
+        </div>
+
+        <!-- ÁREA DE FIRMA (solo en crédito) -->
+        <div class="firma-area" id="secFirma" style="display:none;">
+            <div class="firma-box">
+                <div class="firma-line"></div>
+                <span>Firma del cobrador</span>
+            </div>
+            <div class="firma-box">
+                <div class="firma-line"></div>
+                <span>Firma del cliente / Acuse de recibo</span>
+            </div>
+        </div>
+
+    </div><!-- /rec-body -->
+
+    <div class="rec-footer">
+        <p>Generado el <span id="fechaHoy"></span> — Documento interno de cobro</p>
+        <p>&copy; AutoProcesos — Sistema de Gestión de Talleres</p>
+    </div>
+
+</div><!-- /page -->
+
+<script src="../../js/ruta.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+    var cobroId      = null;
+    var _datosGlobal = null;
+    var _formato     = 'contado'; // 'contado' | 'credito'
+
+    // ─────────────────────────────────────────────
+    // UTILIDADES
+    // ─────────────────────────────────────────────
+    function getToken() {
+        try {
+            var s = JSON.parse(localStorage.getItem('datosSesion'));
+            return (s && s.token) ? s.token : null;
+        } catch (e) { return null; }
+    }
+
+    function fmt(n) {
+        var num = parseFloat(n);
+        if (isNaN(num)) num = 0;
+        return num.toLocaleString('es-PY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function badgeClass(estado) {
+        if (estado === 'CONFIRMADO') return 'badge-confirmado';
+        if (estado === 'ANULADO')    return 'badge-anulado';
+        return 'badge-pendiente';
+    }
+
+    var _toastTimer = null;
+    function showToast(msg, tipo) {
+        var t = document.getElementById('toast');
+        t.className = 'show ' + (tipo || 'success');
+        t.innerHTML = '<span>' + msg + '</span>';
+        if (_toastTimer) clearTimeout(_toastTimer);
+        _toastTimer = setTimeout(function() { t.classList.remove('show'); }, 4000);
+    }
+
+    // ─────────────────────────────────────────────
+    // APLICAR FORMATO (contado o crédito)
+    // ─────────────────────────────────────────────
+    function aplicarFormato(data) {
+        var esCredito = (_formato === 'credito');
+
+        // Badge en barra de acciones
+        var badgeFormato = document.getElementById('badgeFormato');
+        if (badgeFormato) {
+            badgeFormato.textContent = esCredito ? 'CRÉDITO' : 'CONTADO';
+            badgeFormato.style.background = esCredito ? '#e67e22' : '#27ae60';
+        }
+
+        // Header + docnum
+        var header  = document.getElementById('recHeader');
+        var docnum  = document.getElementById('recDocnum');
+        var badgeTp = document.getElementById('badgeTipo');
+        if (esCredito) {
+            header.className  = 'rec-header credito';
+            docnum.className  = 'rec-docnum credito';
+            badgeTp.className = 'tipo-badge credito-tipo';
+            badgeTp.textContent = 'RECIBO DE CUOTA';
+        } else {
+            header.className  = 'rec-header contado';
+            docnum.className  = 'rec-docnum contado';
+            badgeTp.className = 'tipo-badge contado-tipo';
+            badgeTp.textContent = 'RECIBO DE COBRO';
+        }
+
+        // Bloques
+        document.getElementById('bloqueCredito').style.display = esCredito ? '' : 'none';
+        document.getElementById('bloqueContado').style.display = esCredito ? 'none' : '';
+        document.getElementById('secFirma').style.display      = esCredito ? '' : 'none';
+
+        // Total cobrado box
+        var boxTotal = document.getElementById('boxTotalCobrado');
+        boxTotal.className = 'total-cobrado' + (esCredito ? ' credito-total' : '');
+    }
+
+    // ─────────────────────────────────────────────
+    // CARGAR DATOS
+    // ─────────────────────────────────────────────
+    function cargarDatos(id) {
+        var token = getToken();
+        if (!token) {
+            document.body.innerHTML = '<p style="padding:40px;color:#c0392b;">Sin sesión activa.</p>';
+            return;
+        }
+        fetch(getUrl() + 'cobros_cab/imprimir/' + id, {
+            headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/json' }
+        })
+        .then(function(r) { if (!r.ok) throw new Error('Error ' + r.status); return r.json(); })
+        .then(function(data) {
+            _datosGlobal = data;
+
+            // Auto-detectar formato desde condicion_pago de la venta
+            var cuotas = data.cuotas || [];
+            if (cuotas.length > 0 && cuotas[0].condicion_pago === 'CREDITO') {
+                _formato = 'credito';
+            }
+
+            renderizar(data);
+        })
+        .catch(function(e) {
+            document.body.innerHTML = '<p style="padding:40px;color:#c0392b;">' + e.message + '</p>';
+        });
+    }
+
+    // ─────────────────────────────────────────────
+    // RENDERIZAR
+    // ─────────────────────────────────────────────
+    function renderizar(data) {
+        var cab             = data.cab             || {};
+        var detalles        = data.detalles        || [];
+        var cuotas          = data.cuotas          || [];
+        var resumenCredito  = data.resumen_credito || null;
+        var tarjetas        = data.tarjeta         || [];
+        var cheques         = data.cheque          || [];
+        var transferencias  = data.transferencias  || [];
+        var qrs             = data.qrs             || [];
+
+        // Empresa
+        document.getElementById('empNombre').textContent    = cab.emp_razon_social || 'AutoProcesos';
+        document.getElementById('empDireccion').textContent = cab.emp_direccion    || '';
+        document.getElementById('empTelefono').textContent  = cab.emp_telefono ? 'Tel: ' + cab.emp_telefono : '';
+
+        // Número + estado
+        var nroTxt = 'RECIBO N° ' + String(cab.id).padStart(7, '0');
+        document.getElementById('docNro').textContent     = nroTxt;
+        document.getElementById('lblDocNum').textContent  = nroTxt;
+        document.getElementById('docEstado').innerHTML    =
+            '<span class="badge ' + badgeClass(cab.cobro_estado) + '">' + (cab.cobro_estado || '') + '</span>';
+
+        // Datos cobro
+        document.getElementById('cobroFecha').textContent       = cab.cobro_fecha      || '';
+        document.getElementById('formaCobro').textContent       = cab.forma_cobro      || '';
+        document.getElementById('cobroCaja').textContent        = cab.caja             || '';
+        document.getElementById('sucNombre').textContent        = cab.suc_razon_social || '';
+        document.getElementById('cobroFuncionario').textContent = cab.funcionario      || '';
+
+        // Cliente
+        document.getElementById('cliNombre').textContent    = (cab.cli_nombre || '') + ' ' + (cab.cli_apellido || '');
+        document.getElementById('cliRuc').textContent       = cab.cli_ruc       || '';
+        document.getElementById('cliTelefono').textContent  = cab.cli_telefono  || '';
+        document.getElementById('cliDireccion').textContent = cab.cli_direccion || '';
+        document.getElementById('cliCorreo').textContent    = cab.cli_correo    || '';
+
+        // ── BLOQUE CONTADO ──────────────────────────
+        // Cuotas en formato contado (si hay)
+        if (cuotas.length > 0) {
+            document.getElementById('secCuotasContado').style.display = '';
+            var fcont = '';
+            cuotas.forEach(function(c) {
+                fcont += '<tr>'
+                    + '<td>' + (c.venta_nro || '') + '</td>'
+                    + '<td class="tc">' + (c.nro_cuota || '') + '</td>'
+                    + '<td>' + (c.fecha_vencimiento || '') + '</td>'
+                    + '<td class="tr">' + fmt(c.monto_cobrado) + '</td>'
+                    + '</tr>';
+            });
+            document.getElementById('tablaCuotasContado').innerHTML = fcont;
+        }
+
+        // Productos
+        var totalGral = 0, totalIva = 0, fd = '';
+        detalles.forEach(function(d) {
+            var sub = parseFloat(d.subtotal) || (parseFloat(d.cantidad) * parseFloat(d.precio));
+            var iva = 0;
+            var imp = (d.tip_imp_nom || '').toUpperCase();
+            if (imp.indexOf('EXENT') !== -1) iva = 0;
+            else if (imp.indexOf('5') !== -1) iva = sub / 21;
+            else iva = sub / 11;
+            totalGral += sub; totalIva += iva;
+            fd += '<tr>'
+                + '<td>' + (d.item_decripcion || '') + '</td>'
+                + '<td class="tc">' + (d.cantidad || 0) + '</td>'
+                + '<td class="tr">' + fmt(d.precio) + '</td>'
+                + '<td class="tc">' + (d.tip_imp_nom || '') + '</td>'
+                + '<td class="tr">' + fmt(sub) + '</td>'
+                + '<td class="tr">' + fmt(iva) + '</td>'
+                + '</tr>';
+        });
+        document.getElementById('tablaDetalles').innerHTML = fd ||
+            '<tr><td colspan="6" style="text-align:center;color:#aaa;padding:14px;">Sin detalle de productos</td></tr>';
+        document.getElementById('totalGral').textContent = fmt(totalGral);
+        document.getElementById('totalIva').textContent  = fmt(totalIva);
+
+        // ── BLOQUE CRÉDITO ──────────────────────────
+        if (resumenCredito) {
+            var totalFinanciado  = parseFloat(resumenCredito.total_financiado)  || 0;
+            var totalYaCobrado   = parseFloat(resumenCredito.total_ya_cobrado)  || 0;
+            var cuotasCobradas   = parseInt(resumenCredito.cuotas_cobradas)     || 0;
+            var totalCuotas      = parseInt(resumenCredito.total_cuotas)        || 0;
+            var saldoPendiente   = Math.max(totalFinanciado - totalYaCobrado, 0);
+            var pct              = totalFinanciado > 0 ? Math.round((totalYaCobrado / totalFinanciado) * 100) : 0;
+
+            document.getElementById('crdTotalFinanciado').textContent = 'Gs. ' + fmt(totalFinanciado);
+            document.getElementById('crdCuotas').textContent         = cuotasCobradas + ' / ' + totalCuotas + ' pagadas';
+            document.getElementById('crdTotalCobrado').textContent   = 'Gs. ' + fmt(totalYaCobrado);
+            document.getElementById('crdSaldo').textContent          = 'Gs. ' + fmt(saldoPendiente);
+            document.getElementById('crdPorcentaje').textContent     = pct + '%';
+            document.getElementById('crdProgressFill').style.width   = pct + '%';
+        }
+
+        // Cuotas detalle crédito
+        var totalEstePago = 0;
+        var fcred = '';
+        cuotas.forEach(function(c) {
+            var montoCuota    = parseFloat(c.cta_cob_monto)  || 0;
+            var montoEste     = parseFloat(c.monto_cobrado)   || 0;
+            var saldoCuota    = Math.max(montoCuota - montoEste, 0);
+            var esParcial     = saldoCuota > 0.01;
+            var badgeHtml     = esParcial
+                ? '<span class="cuota-badge parcial">Parcial</span>'
+                : '<span class="cuota-badge completo">&#10003; Completo</span>';
+
+            totalEstePago += montoEste;
+
+            var totalCuotasBD = (c.vent_cant_cuota || '?');
+            var nroCuotaLabel = (c.nro_cuota || '?') + ' / ' + totalCuotasBD;
+
+            fcred += '<tr>'
+                + '<td style="font-size:11px;color:#555;">' + (c.venta_nro || '') + '</td>'
+                + '<td class="tc" style="font-weight:bold;">' + nroCuotaLabel + '</td>'
+                + '<td>' + (c.fecha_vencimiento || '') + '</td>'
+                + '<td class="tr">' + fmt(montoCuota) + '</td>'
+                + '<td class="tr" style="font-weight:bold;color:#1a5276;">' + fmt(montoEste) + '</td>'
+                + '<td class="tr" style="color:' + (esParcial ? '#d68910' : '#888') + ';">'
+                    + (esParcial ? fmt(saldoCuota) : '—') + '</td>'
+                + '<td class="tc">' + badgeHtml + '</td>'
+                + '</tr>';
+        });
+        document.getElementById('tablaCuotasCredito').innerHTML = fcred ||
+            '<tr><td colspan="7" style="text-align:center;color:#aaa;padding:14px;">Sin cuotas</td></tr>';
+        document.getElementById('crdTotalEstePago').textContent = fmt(totalEstePago);
+
+        // ── MEDIOS DE PAGO (compartido) ──────────────
+        var medios = '';
+        var montoEfectivo = parseFloat(cab.monto_efectivo) || 0;
+        if (montoEfectivo > 0) {
+            medios += '<div class="medio"><h5>Efectivo</h5>'
+                + '<div class="monto">' + fmt(montoEfectivo) + '</div></div>';
+        }
+        tarjetas.forEach(function(t) {
+            if (parseFloat(t.monto_tarjeta) > 0) {
+                medios += '<div class="medio"><h5>Tarjeta</h5>'
+                    + '<div class="monto">' + fmt(t.monto_tarjeta) + '</div>'
+                    + (t.nro_tarjeta ? '<small>N° ' + t.nro_tarjeta + '</small>' : '')
+                    + '</div>';
+            }
+        });
+        cheques.forEach(function(c) {
+            if (parseFloat(c.monto_cheque) > 0) {
+                medios += '<div class="medio"><h5>Cheque</h5>'
+                    + '<div class="monto">' + fmt(c.monto_cheque) + '</div>'
+                    + (c.nro_cheque ? '<small>N° ' + c.nro_cheque + '</small>' : '')
+                    + '</div>';
+            }
+        });
+        transferencias.forEach(function(t) {
+            if (parseFloat(t.monto_transferencia) > 0) {
+                medios += '<div class="medio"><h5>Transferencia</h5>'
+                    + '<div class="monto">' + fmt(t.monto_transferencia) + '</div>'
+                    + (t.banco_entidad  ? '<small>' + t.banco_entidad + '</small>' : '')
+                    + (t.nro_referencia ? '<small>Ref: ' + t.nro_referencia + '</small>' : '')
+                    + '</div>';
+            }
+        });
+        qrs.forEach(function(q) {
+            if (parseFloat(q.monto_qr) > 0) {
+                medios += '<div class="medio"><h5>QR</h5>'
+                    + '<div class="monto">' + fmt(q.monto_qr) + '</div>'
+                    + (q.nro_referencia ? '<small>Ref: ' + q.nro_referencia + '</small>' : '')
+                    + '</div>';
+            }
+        });
+        document.getElementById('divMedios').innerHTML = medios ||
+            '<p style="color:#aaa;font-size:12px;">Sin detalle de medios de pago</p>';
+        document.getElementById('totalCobrado').textContent = fmt(cab.cobro_importe);
+
+        // Observación
+        var obs = (cab.cobro_observacion || '').trim();
+        if (obs && obs !== 'Sin Obs.' && obs.indexOf('ANULADO') === -1) {
+            document.getElementById('secObs').style.display = '';
+            document.getElementById('cobroObs').textContent = obs;
+        }
+
+        // Fecha hoy
+        document.getElementById('fechaHoy').textContent =
+            new Date().toLocaleDateString('es-PY', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+        // Aplicar estilos de formato
+        aplicarFormato(data);
+    }
+
+    // ─────────────────────────────────────────────
+    // PDF
+    // ─────────────────────────────────────────────
+    function descargarPDF() {
+        var btn = document.getElementById('btnPDF');
+        btn.disabled = true; btn.textContent = 'Generando...';
+        var el = document.getElementById('recibo');
+        html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#ffffff' }).then(function(canvas) {
+            var { jsPDF } = window.jspdf;
+            var pdf    = new jsPDF('p', 'mm', 'a4');
+            var imgData = canvas.toDataURL('image/png');
+            var pdfW   = pdf.internal.pageSize.getWidth();
+            var pdfH   = pdf.internal.pageSize.getHeight();
+            var imgH   = (canvas.height * pdfW) / canvas.width;
+            var posY   = 0;
+            while (posY < imgH) {
+                if (posY > 0) pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, -posY, pdfW, imgH);
+                posY += pdfH;
+            }
+            pdf.save('recibo-cobro-' + String(cobroId).padStart(7, '0') + '.pdf');
+            btn.disabled = false; btn.innerHTML = '&#128196; PDF';
+        }).catch(function() { btn.disabled = false; btn.innerHTML = '&#128196; PDF'; });
+    }
+
+    // ─────────────────────────────────────────────
+    // CORREO
+    // ─────────────────────────────────────────────
+    function enviarCorreo() {
+        var token = getToken();
+        if (!token) { showToast('Sin sesión activa.', 'error'); return; }
+        var btn = document.getElementById('btnEmail');
+        btn.disabled = true; btn.textContent = 'Enviando...';
+        fetch(getUrl() + 'cobros_cab/enviar-recibo/' + cobroId, {
+            method: 'GET',
+            headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/json' }
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            showToast(data.mensaje, data.tipo || 'success');
+            btn.disabled = false; btn.innerHTML = '&#9993; Correo';
+        })
+        .catch(function() {
+            showToast('Error al enviar.', 'error');
+            btn.disabled = false; btn.innerHTML = '&#9993; Correo';
+        });
+    }
+
+    // ─────────────────────────────────────────────
+    // INIT
+    // ─────────────────────────────────────────────
+    var params = new URLSearchParams(window.location.search);
+    cobroId = params.get('id');
+    if (cobroId) {
+        cargarDatos(cobroId);
+    } else {
+        document.body.innerHTML = '<p style="padding:40px;color:#c0392b;">ID de cobro no especificado.</p>';
+    }
+</script>
+</body>
+</html>

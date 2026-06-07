@@ -49,6 +49,7 @@
 
         <input type="hidden" value="0" id="txtOperacion"/>
         <input type="hidden" id="sucursal_id">
+        <input type="hidden" id="suc_estado" value="activo"/>
 
         <!-- EMPRESA -->
         <div class="section-box">
@@ -125,8 +126,8 @@
                 <i class="material-icons">edit</i> Modificar
             </button>
 
-            <button id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();" disabled>
-                <i class="material-icons">delete</i> Eliminar
+            <button id="btnEstado" class="btn btn-danger waves-effect" onclick="confirmarCambioEstado();" disabled>
+                <i class="material-icons">block</i> <span id="lblEstado">Desactivar</span>
             </button>
 
             <button id="btnGrabar" class="btn btn-default waves-effect" onclick="confirmarOperacion();" disabled>
@@ -160,6 +161,7 @@
                         <th>Teléfono</th>
                         <th>Dirección</th>
                         <th>Correo</th>
+                        <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
@@ -170,6 +172,7 @@
                         <th>Teléfono</th>
                         <th>Dirección</th>
                         <th>Correo</th>
+                        <th>Estado</th>
                     </tr>
                 </tfoot>
             </table>

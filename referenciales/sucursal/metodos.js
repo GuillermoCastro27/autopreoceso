@@ -58,7 +58,7 @@ function agregar(){
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -74,10 +74,9 @@ function editar(){
     $("#suc_direccion").removeAttr("disabled");
     $("#suc_correo").removeAttr("disabled");
 
-
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -85,13 +84,11 @@ function editar(){
     $(".form-line").attr("class","form-line focused");
 }
 
-function eliminar(){
-    $("#txtOperacion").val(3);
-
+function confirmarCambioEstado() {
+    $("#txtOperacion").val(4);
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
-
+    $("#btnEstado").attr("disabled","true");
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
 }
@@ -106,9 +103,12 @@ function confirmarOperacion() {
         titulo = "EDITAR";
         pregunta = "¿DESEA EDITAR EL REGISTRO SELECCIONADO?";
     }
-    if(oper===3){
-        titulo = "ELIMINAR";
-        pregunta = "¿DESEA ELIMINAR EL REGISTRO SELECCIONADO?";
+    if(oper===4){
+        var estado = $("#suc_estado").val();
+        titulo   = estado === 'activo' ? 'DESACTIVAR' : 'ACTIVAR';
+        pregunta = estado === 'activo'
+            ? '¿Desea desactivar este registro? No aparecerá en búsquedas.'
+            : '¿Desea activar este registro nuevamente?';
     }
     swal({
         title: titulo,
@@ -138,12 +138,17 @@ function listar(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionSucursal("+ rs.id +", "+ rs.empresa_id +", '" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.suc_telefono + "','" + rs.suc_direccion + "','" + rs.suc_correo + "');\">";
+            var estado = rs.suc_estado || 'activo';
+            var badge  = estado === 'activo'
+                ? '<span class="badge" style="background:#27ae60;">Activo</span>'
+                : '<span class="badge" style="background:#c0392b;">Inactivo</span>';
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionSucursal("+ rs.id +", "+ rs.empresa_id +", '" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.suc_telefono + "','" + rs.suc_direccion + "','" + rs.suc_correo + "','" + estado + "');\">";
                 lista = lista + "<td>" + rs.emp_razon_social + "</td>";
                 lista = lista + "<td>" + rs.suc_razon_social + "</td>";
                 lista = lista + "<td>" + rs.suc_telefono + "</td>";
                 lista = lista + "<td>" + rs.suc_direccion + "</td>";
                 lista = lista + "<td>" + rs.suc_correo + "</td>";
+                lista = lista + "<td>" + badge + "</td>";
             lista = lista + "</tr>";
         }
         $("#tableBody").html(lista);
@@ -154,7 +159,7 @@ function listar(){
     });
 }
 
-function seleccionSucursal(id, empresa_id, emp_razon_social, suc_razon_social, suc_telefono, suc_direccion, suc_correo) {
+function seleccionSucursal(id, empresa_id, emp_razon_social, suc_razon_social, suc_telefono, suc_direccion, suc_correo, estado) {
     $("#sucursal_id").val(id);
     $("#empresa_id").val(empresa_id);
     $("#emp_razon_social").val(emp_razon_social);
@@ -162,14 +167,23 @@ function seleccionSucursal(id, empresa_id, emp_razon_social, suc_razon_social, s
     $("#suc_telefono").val(suc_telefono);
     $("#suc_direccion").val(suc_direccion);
     $("#suc_correo").val(suc_correo);
+    $("#suc_estado").val(estado || 'activo');
 
+    var activo = (estado || 'activo') === 'activo';
+    if (activo) {
+        $("#btnEstado").removeClass("btn-success").addClass("btn-danger");
+        $("#lblEstado").text("Desactivar");
+        $("#btnEstado").find("i").text("block");
+    } else {
+        $("#btnEstado").removeClass("btn-danger").addClass("btn-success");
+        $("#lblEstado").text("Activar");
+        $("#btnEstado").find("i").text("check_circle");
+    }
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").removeAttr("disabled");
+    $("#btnEstado").removeAttr("disabled");
     $("#btnGrabar").attr("disabled","true");
-    $("#btnCancelar").attr("disabled","true");
-    $("#btnEliminar").removeAttr("disabled");
-    
     $("#btnCancelar").removeAttr("disabled");
 
     $(".form-line").attr("class","form-line focused");
@@ -210,11 +224,18 @@ function seleccionEmpresa(id,emp_razon_social,emp_direccion,emp_telefono,emp_cor
 function grabar(){
     var op = parseInt($("#txtOperacion").val());
 
+    if (op === 4) { cambiarEstado(); return; }
+
     if (op !== 3) {
         var suc  = $("#suc_razon_social").val().trim();
         var emp  = $("#empresa_id").val();
         if (!suc || !emp) {
             swal('Error', 'Razón social y empresa son obligatorios.', 'error');
+            return;
+        }
+        var CHARS_INVALIDOS = /[*<>{}|]/;
+        if (CHARS_INVALIDOS.test(suc)) {
+            swal('Caracteres no permitidos', 'El campo no puede contener los caracteres: * < > { } |', 'error');
             return;
         }
     }
@@ -225,10 +246,7 @@ function grabar(){
         endpoint = "sucursal/update/" + $("#sucursal_id").val();
         metodo = "PUT";
     }
-    if (op === 3) {
-        endpoint = "sucursal/delete/" + $("#sucursal_id").val();
-        metodo = "DELETE";
-    }
+    // op===3 removed — use cambiarEstado() for state toggle
 
     $.ajax({
         url: getUrl() + "" + endpoint,
@@ -269,5 +287,22 @@ function grabar(){
             swal('Error', res ? (res.mensaje || res.message || 'Error inesperado.') : 'Error inesperado.', 'error');
         }
         console.log(xhr.responseText);
+    });
+}
+
+function cambiarEstado() {
+    var id = $("#sucursal_id").val();
+    $.ajax({
+        url: getUrl() + 'sucursal/estado/' + id,
+        method: 'PATCH',
+        dataType: 'json'
+    })
+    .done(function(res) {
+        swal({ title: 'Respuesta', text: res.mensaje, type: res.tipo },
+            function() { if (res.tipo === 'success') location.reload(true); });
+    })
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        swal('Error', res && res.mensaje ? res.mensaje : 'Error inesperado.', 'error');
     });
 }

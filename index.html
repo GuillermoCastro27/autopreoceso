@@ -65,6 +65,15 @@
                 </div>
             </div>
 
+            <div class="row m-t-5 m-b-10">
+                <div class="col-xs-12">
+                    <input type="checkbox" id="recordarUsuario" style="margin-right:6px; cursor:pointer;">
+                    <label for="recordarUsuario" style="font-size:13px; color:#888; cursor:pointer; font-weight:normal;">
+                        Recordar usuario
+                    </label>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-xs-7">
                     <button class="btn btn-block bg-pink waves-effect"
@@ -76,10 +85,7 @@
             </div>
 
             <div class="row m-t-15">
-                <div class="col-xs-6">
-                    <a href="#" data-toggle="modal" data-target="#registerModal">Registrarse</a>
-                </div>
-                <div class="col-xs-6 text-right">
+                <div class="col-xs-12 text-right">
                     <a href="javascript:void(0);" onclick="mostrarOlvide();">¿Olvidaste tu contraseña?</a>
                 </div>
             </div>
@@ -163,42 +169,6 @@
 
 </div>
 
-<!-- ================= MODAL REGISTRO ================= -->
-<div class="modal fade" id="registerModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-black">
-                <h4 class="modal-title">Registro de Usuario</h4>
-            </div>
-            <div class="modal-body">
-
-                <div class="form-group">
-                    <label>Nombre</label>
-                    <input type="text" id="name" class="form-control" autocomplete="off">
-                </div>
-
-                <div class="form-group">
-                    <label>Correo</label>
-                    <input type="email" id="email" class="form-control" autocomplete="off">
-                </div>
-
-                <div class="form-group">
-                    <label>Usuario</label>
-                    <input type="text" id="login1" class="form-control" autocomplete="off">
-                </div>
-
-                <div class="form-group">
-                    <label>Contraseña</label>
-                    <input type="password" id="password1" class="form-control" autocomplete="new-password">
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-success" onclick="registrarUsuario()">Registrar</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- ================= MODAL 2FA ================= -->
 <div class="modal fade" id="modal2fa" tabindex="-1">
@@ -261,6 +231,47 @@
     localStorage.removeItem('datosSesion');
     localStorage.removeItem('2fa_email');
 
+    // Cargar usuario recordado
+    (function () {
+        var recordado = localStorage.getItem('login_recordado');
+        if (recordado) {
+            $('#login').val(recordado);
+            $('#recordarUsuario').prop('checked', true);
+            $('#password').focus();
+        }
+    })();
+
+    // Validación en tiempo real: campo usuario
+    $('#login').on('input', function () {
+        var val = $(this).val().trim();
+        var linea = $(this).closest('.form-line');
+        if (val.length === 0) {
+            linea.removeClass('focused').css('border-bottom-color', '');
+        } else if (val.length < 3) {
+            linea.addClass('focused').css('border-bottom-color', '#e74c3c');
+        } else {
+            linea.addClass('focused').css('border-bottom-color', '#2ecc71');
+        }
+    });
+
+    // Validación en tiempo real: campo contraseña
+    $('#password').on('input', function () {
+        var val = $(this).val();
+        var linea = $(this).closest('.form-line');
+        if (val.length === 0) {
+            linea.removeClass('focused').css('border-bottom-color', '');
+        } else if (val.length < 8) {
+            linea.addClass('focused').css('border-bottom-color', '#e74c3c');
+        } else {
+            linea.addClass('focused').css('border-bottom-color', '#2ecc71');
+        }
+    });
+
+    // Enviar con Enter
+    $(document).on('keydown', '#login, #password', function (e) {
+        if (e.key === 'Enter') validarUsuario();
+    });
+
     // Mostrar formulario de reset si la URL trae token + email
     (function () {
         var params = new URLSearchParams(window.location.search);
@@ -280,14 +291,33 @@
     });
 
     function validarUsuario() {
+        var loginVal = $("#login").val().trim();
+        var passVal  = $("#password").val();
+
+        if (!loginVal) {
+            Swal.fire('Campo requerido', 'Ingresá tu nombre de usuario.', 'warning');
+            $('#login').focus();
+            return;
+        }
+        if (!passVal) {
+            Swal.fire('Campo requerido', 'Ingresá tu contraseña.', 'warning');
+            $('#password').focus();
+            return;
+        }
+
+        if ($('#recordarUsuario').is(':checked')) {
+            localStorage.setItem('login_recordado', loginVal);
+        } else {
+            localStorage.removeItem('login_recordado');
+        }
 
         $.ajax({
             url: getUrl() + "login",
             method: "POST",
             dataType: "json",
             data: {
-                login: $("#login").val(),
-                password: $("#password").val()
+                login: loginVal,
+                password: passVal
             }
         })
         .done(function (res) {
@@ -306,12 +336,61 @@
                 Swal.fire('Sin conexión', 'No se pudo conectar al servidor. Verificá que el servidor esté en ejecución.', 'error');
                 return;
             }
-            if (e.status === 403 && e.responseJSON && e.responseJSON.tipo === 'sin_2fa') {
-                Swal.fire('Acceso denegado', e.responseJSON.message, 'error');
+
+            var r = e.responseJSON || {};
+
+            if (r.tipo === 'usuario_no_existe') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Usuario no encontrado',
+                    text: 'El usuario ingresado no existe. Verificá que lo hayas escrito correctamente.'
+                });
                 return;
             }
-            var msg = e.responseJSON ? e.responseJSON.message : 'Error al iniciar sesión.';
-            Swal.fire('Error', msg, 'error');
+
+            if (r.tipo === 'contrasena_incorrecta') {
+                var aviso = r.restantes === 1
+                    ? 'Te queda <strong>1 intento</strong> antes de que la cuenta sea bloqueada.'
+                    : 'Te quedan <strong>' + r.restantes + ' intentos</strong> antes de que la cuenta sea bloqueada.';
+
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Contraseña incorrecta',
+                    html: 'La contraseña ingresada no es correcta.<br><br>'
+                        + aviso + '<br><br>'
+                        + '¿No la recordás? Podés recuperarla o contactar al administrador del sistema.',
+                    showCancelButton: true,
+                    confirmButtonText: '<i class="fa fa-key"></i> Recuperar contraseña',
+                    cancelButtonText: 'Intentar de nuevo',
+                    confirmButtonColor: '#e91e63',
+                    cancelButtonColor: '#607d8b'
+                }).then(function (result) {
+                    if (result.isConfirmed) mostrarOlvide();
+                });
+                return;
+            }
+
+            if (r.tipo === 'bloqueado') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Cuenta bloqueada',
+                    html: r.message + '<br><br>¿Olvidaste tu contraseña?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Recuperar contraseña',
+                    cancelButtonText: 'Cerrar',
+                    confirmButtonColor: '#e91e63'
+                }).then(function (result) {
+                    if (result.isConfirmed) mostrarOlvide();
+                });
+                return;
+            }
+
+            if (e.status === 403 && r.tipo === 'sin_2fa') {
+                Swal.fire('Acceso denegado', r.message, 'error');
+                return;
+            }
+
+            Swal.fire('Error', r.message || 'Error al iniciar sesión.', 'error');
         });
     }
 
@@ -346,27 +425,6 @@
         });
     }
 
-    function registrarUsuario() {
-
-        $.ajax({
-            url: getUrl() + "registrarse",
-            method: "POST",
-            dataType: "json",
-            data: {
-                name: $("#name").val(),
-                email: $("#email").val(),
-                login: $("#login1").val(),
-                password: $("#password1").val()
-            }
-        })
-        .done(function () {
-            Swal.fire("Registro exitoso", "Ya puede iniciar sesión", "success");
-            $("#registerModal").modal("hide");
-        })
-        .fail(function (e) {
-            alert("Error al registrar usuario");
-        });
-    }
 
     // ================= RECUPERAR CONTRASEÑA =================
 

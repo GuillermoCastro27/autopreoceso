@@ -74,6 +74,7 @@
 
                 <div class="col-sm-3">
                     <input type="text" id="ajus_cab_fecha" class="datetimepicker form-control" disabled placeholder="Fecha">
+                <small id="avisoFechaAjuste" style="color:#e74c3c;display:none;"></small>
                 </div>
 
             </div>
@@ -130,8 +131,11 @@
 
     <div class="body">
 
-        <div class="row clearfix" id="formDetalles">
+        <div class="section-box" id="formDetalles" style="display:none;">
+            <div class="section-title">Ítems</div>
             <input type="hidden" id="txtOperacionDetalle" value="0">
+            <input type="hidden" id="stock_disponible_det" value="0">
+        <div class="row clearfix">
 
             <div class="col-sm-1">
                 <input type="text" id="item_id" class="form-control" disabled placeholder="Cod">
@@ -147,12 +151,25 @@
             </div>
 
             <div class="col-sm-2">
-                <input type="text" id="ajus_det_cantidad" class="form-control" disabled placeholder="Cantidad">
+                <input type="text" id="ajus_det_cantidad" class="form-control" disabled placeholder="Cantidad"
+                       oninput="validarCantidadAjuste();">
+                <small id="avisoStockAjuste" style="color:#e74c3c;display:none;"></small>
             </div>
 
             <div class="col-sm-2">
                 <select class="form-control" id="deposito_id_det" disabled>
                     <option value="">-- Depósito --</option>
+                </select>
+            </div>
+
+            <div class="col-sm-2">
+                <select class="form-control" id="marca_det_mm" disabled>
+                    <option value="">-- Marca --</option>
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <select class="form-control" id="modelo_det_mm" disabled>
+                    <option value="">-- Modelo --</option>
                 </select>
             </div>
 
@@ -187,7 +204,16 @@
         <i class="material-icons">save</i>
     </button>
 
+    <button type="button"
+            id="btnCancelarDetalle"
+            class="btn btn-warning waves-effect"
+            style="display:none;"
+            onclick="cancelarDetalle();">
+        <i class="material-icons">close</i>
+    </button>
+
 </div>
+        </div>
         </div>
 
         <table class="table table-bordered table-striped">
@@ -195,6 +221,8 @@
                 <tr>
                     <th>Código</th>
                     <th>Producto</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
                     <th>Cantidad</th>
                     <th>Stock</th>
                     <th>Depósito</th>
@@ -260,7 +288,8 @@
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js"></script>
-<script src="metodos.js?v=2"></script>
+<script src="../../js/marcaModelo.js"></script>
+<script src="metodos.js?v=5"></script>
 
 </body>
 </html>

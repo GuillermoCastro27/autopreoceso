@@ -44,6 +44,7 @@
     <input type="hidden" value="0" id="txtOperacion"/>
     <input type="hidden" id="funcionario_id">
     <input type="hidden" value="PENDIENTE" id="ord_serv_estado"/>
+    <input type="hidden" value="NORMAL" id="ord_serv_tipo"/>
 
     <!-- ================= DATOS GENERALES ================= -->
     <div class="section-box">
@@ -196,6 +197,9 @@
                         <th>Código</th>
                         <th>Producto</th>
                         <th>Cantidad</th>
+                        <th>Costo</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
                     </tr>
                 </thead>
                 <tbody id="tableDetalle"></tbody>

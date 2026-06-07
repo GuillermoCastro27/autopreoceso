@@ -49,53 +49,57 @@
     <div class="body">
 
         <input type="hidden" value="0" id="txtOperacion"/>
-        <input type="hidden" id="acc_estado" value="PENDIENTE">
+        <input type="hidden" id="txtCodigo" value="0"/>
 
-        <!-- DATOS DE CAJA -->
+        <!-- DATOS DEL ACCESO -->
         <div class="section-box">
             <div class="section-title">Datos del Acceso</div>
 
             <div class="row clearfix">
-                <div class="col-sm-2">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="txtCodigo" class="form-control" disabled>
-                            <label class="form-label">Código</label>
-                        </div>
+
+                <!-- Rol / Perfil -->
+                <div class="col-sm-4">
+                    <label class="control-label">Rol / Perfil</label>
+                    <div class="form-group" style="position:relative;">
+                        <input type="text" id="perfil_desc" class="form-control" disabled
+                               onkeyup="buscarPerfil();" placeholder="Buscar perfil...">
+                        <input type="hidden" id="perfil_id">
+                        <div id="listaPerfil" class="list-group"
+                             style="display:none; position:absolute; z-index:2000; width:100%;"></div>
                     </div>
                 </div>
 
-                <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="per_nombre" class="form-control" disabled onkeyup="buscarPermisos();">
-                            <label class="form-label">Permiso</label>
-                        </div>
-                        <input type="hidden" id="permiso_id">
-                        <div id="listaPermisos" style="display:none;"></div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="perfil_desc" class="form-control" disabled onkeyup="buscarPerfil();">
-                            <label class="form-label">Rol</label>
-                        </div>
-                        <input type="hidden" id="perfil_id">
-                        <div id="listaPerfil" style="display:none;"></div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="mod_nombre" class="form-control" disabled onkeyup="buscarModulo();">
-                            <label class="form-label">Módulo</label>
-                        </div>
+                <!-- Módulo -->
+                <div class="col-sm-3">
+                    <label class="control-label">Módulo</label>
+                    <div class="form-group">
+                        <select id="sel_modulo" class="form-control" disabled onchange="onModuloChange();">
+                            <option value="">-- Seleccione módulo --</option>
+                        </select>
                         <input type="hidden" id="mod_id">
-                        <div id="listaModulos" style="display:none;"></div>
                     </div>
+                </div>
+
+                <!-- Entidad / Formulario -->
+                <div class="col-sm-3">
+                    <label class="control-label">Formulario / Entidad</label>
+                    <div class="form-group">
+                        <select id="sel_entidad" class="form-control" disabled onchange="onEntidadChange();">
+                            <option value="">-- Seleccione formulario --</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Acciones -->
+            <div class="row clearfix" id="fila_acciones" style="display:none;">
+                <div class="col-sm-12">
+                    <label class="control-label"><strong>Acciones permitidas:</strong></label>
+                    <div id="div_acciones" style="padding:8px 0;"></div>
                 </div>
             </div>
+
         </div>
 
         <!-- BOTONES -->
@@ -143,9 +147,10 @@
                 <thead>
                     <tr>
                         <th>Código</th>
-                        <th>Permiso</th>
-                        <th>Rol</th>
                         <th>Módulo</th>
+                        <th>Entidad</th>
+                        <th>Acción</th>
+                        <th>Rol</th>
                         <th>Estado</th>
                     </tr>
                 </thead>
@@ -153,9 +158,10 @@
                 <tfoot>
                     <tr>
                         <th>Código</th>
-                        <th>Permiso</th>
-                        <th>Rol</th>
                         <th>Módulo</th>
+                        <th>Entidad</th>
+                        <th>Acción</th>
+                        <th>Rol</th>
                         <th>Estado</th>
                     </tr>
                 </tfoot>
@@ -187,10 +193,10 @@
 <script src="../../plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
 <script src="../../plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
 
-<script src="../../js/ruta.js"></script>
+<script src="../../js/ruta.js?v=2"></script>
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
-<script src="metodos.js?v=2"></script>
+<script src="metodos.js?v=3"></script>
 
 </body>
 </html>

@@ -9,25 +9,25 @@ function formatoTabla(){
                 extend:'copy',
                 text:'COPIAR',
                 className:'btn btn-primary waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Entidades Emisoras'
             },
             {
                 extend:'excel',
                 text:'EXCEL',
                 className:'btn btn-success waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Entidades Emisoras'
             },
             {
                 extend:'pdf',
                 text:'PDF',
                 className:'btn btn-danger waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Entidades Emisoras'
             },
             {
                 extend:'print',
                 text:'IMPRIMIR',
                 className:'btn btn-warning waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Entidades Emisoras'
             }
         ],
         iDisplayLength:3,
@@ -58,7 +58,7 @@ function agregar(){
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -75,7 +75,7 @@ function editar(){
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -83,13 +83,11 @@ function editar(){
     $(".form-line").attr("class","form-line focused");
 }
 
-function eliminar(){
-    $("#txtOperacion").val(3);
-
+function confirmarCambioEstado() {
+    $("#txtOperacion").val(4);
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
-
+    $("#btnEstado").attr("disabled","true");
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
 }
@@ -103,9 +101,13 @@ function confirmarOperacion() {
         titulo = "EDITAR";
         pregunta = "¿DESEA EDITAR EL REGISTRO SELECCIONADO?";
     }
-    if(oper===3){
-        titulo = "ELIMINAR";
-        pregunta = "¿DESEA ELIMINAR EL REGISTRO SELECCIONADO?";
+    if(oper===4){
+        var estado = $("#ent_emis_estado").val();
+        var activo = (estado || 'activo').toLowerCase() === 'activo';
+        titulo   = activo ? 'DESACTIVAR' : 'ACTIVAR';
+        pregunta = activo
+            ? '¿Desea desactivar este registro? No aparecerá en búsquedas.'
+            : '¿Desea activar este registro nuevamente?';
     }
     swal({
         title: titulo,
@@ -136,6 +138,10 @@ function listar() {
         let lista = "";
 
         for (let rs of resultado) {
+            var estado = rs.ent_emis_estado || 'activo';
+            var badge  = (estado).toLowerCase() === 'activo'
+                ? '<span class="badge" style="background:#27ae60;">Activo</span>'
+                : '<span class="badge" style="background:#c0392b;">Inactivo</span>';
 
             lista += `<tr class="item-list"
                         onclick="seleccionEntidadEmisora(
@@ -144,7 +150,7 @@ function listar() {
                             '${rs.ent_emis_direccion || ""}',
                             '${rs.ent_emis_telefono || ""}',
                             '${rs.ent_emis_email || ""}',
-                            '${rs.ent_emis_estado}'
+                            '${estado}'
                         )">`;
 
             lista += `<td>${rs.entidad_emisora_id}</td>`;
@@ -152,7 +158,7 @@ function listar() {
             lista += `<td>${rs.ent_emis_direccion || ""}</td>`;
             lista += `<td>${rs.ent_emis_telefono || ""}</td>`;
             lista += `<td>${rs.ent_emis_email || ""}</td>`;
-            lista += `<td>${rs.ent_emis_estado}</td>`;
+            lista += `<td>${badge}</td>`;
 
             lista += `</tr>`;
         }
@@ -160,8 +166,8 @@ function listar() {
         $("#tableBody").html(lista);
         formatoTabla();
     })
-    .fail(function (a, b, c) {
-        alert(c);
+    .fail(function(xhr) {
+        swal('Error', 'No se pudo cargar la lista.', 'error');
     });
 }
 function seleccionEntidadEmisora(
@@ -179,11 +185,20 @@ function seleccionEntidadEmisora(
     $("#ent_emis_email").val(email);
     $("#ent_emis_estado").val(estado);
 
-    // Botonera (igual a tu patrón)
-    $("#btnAgregar").attr("disabled", true);
+    var activo = (estado || 'activo').toLowerCase() === 'activo';
+    if (activo) {
+        $("#btnEstado").removeClass("btn-success").addClass("btn-danger");
+        $("#lblEstado").text("Desactivar");
+        $("#btnEstado").find("i").text("block");
+    } else {
+        $("#btnEstado").removeClass("btn-danger").addClass("btn-success");
+        $("#lblEstado").text("Activar");
+        $("#btnEstado").find("i").text("check_circle");
+    }
+    $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").removeAttr("disabled");
-    $("#btnGrabar").attr("disabled", true);
-    $("#btnEliminar").removeAttr("disabled");
+    $("#btnEstado").removeAttr("disabled");
+    $("#btnGrabar").attr("disabled","true");
     $("#btnCancelar").removeAttr("disabled");
 
     $(".form-line").attr("class", "form-line focused");
@@ -191,6 +206,8 @@ function seleccionEntidadEmisora(
 
 
 function grabar() {
+    var op = parseInt($("#txtOperacion").val());
+    if (op === 4) { cambiarEstado(); return; }
 
     // 🔹 Captura de campos
     var nombre    = $("#ent_emis_nombre").val().trim();
@@ -206,6 +223,12 @@ function grabar() {
             text: "El nombre y el estado son obligatorios.",
             type: "error"
         });
+        return;
+    }
+
+    var CHARS_INVALIDOS = /[*<>{}|]/;
+    if (CHARS_INVALIDOS.test(nombre)) {
+        swal('Caracteres no permitidos', 'El campo no puede contener los caracteres: * < > { } |', 'error');
         return;
     }
 
@@ -248,23 +271,39 @@ function grabar() {
             }
         });
     })
-    .fail(function (a) {
-
-        try {
-            let response = JSON.parse(a.responseText);
-
-            swal({
-                title: "Error",
-                text: response.mensaje || "Error al procesar la solicitud",
-                type: "error"
-            });
-
-        } catch (e) {
-            swal({
-                title: "Error",
-                text: "Verifique los datos ingresados.",
-                type: "error"
-            });
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        if (xhr.status === 422) {
+            var msg = '';
+            if (res && res.errors) {
+                $.each(res.errors, function(k, v){ msg += (Array.isArray(v) ? v[0] : v) + '\n'; });
+            } else {
+                msg = res && res.message ? res.message : 'Verifique los campos ingresados.';
+            }
+            swal('Error de validación', msg, 'error');
+        } else if (xhr.status === 409) {
+            swal('No se puede eliminar', res && res.mensaje ? res.mensaje : 'El registro está siendo utilizado en otra parte del sistema.', 'error');
+        } else if (xhr.status === 404) {
+            swal('No encontrado', 'El registro seleccionado no existe.', 'error');
+        } else {
+            swal('Error', res && res.mensaje ? res.mensaje : 'Ocurrió un error inesperado. Intente nuevamente.', 'error');
         }
+    });
+}
+
+function cambiarEstado() {
+    var id = $("#txtCodigo").val();
+    $.ajax({
+        url: getUrl() + 'entidad_emisora/estado/' + id,
+        method: 'PATCH',
+        dataType: 'json'
+    })
+    .done(function(res) {
+        swal({ title: 'Respuesta', text: res.mensaje, type: res.tipo },
+            function() { if (res.tipo === 'success') location.reload(true); });
+    })
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        swal('Error', res && res.mensaje ? res.mensaje : 'Error inesperado.', 'error');
     });
 }

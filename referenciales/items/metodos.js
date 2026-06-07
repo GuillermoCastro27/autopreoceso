@@ -24,10 +24,10 @@ function formatoTabla(){
         dom: 'Bfrtip',
         responsive: true,
         buttons: [
-            { extend:'copy',   text:'COPIAR',   className:'btn btn-primary waves-effect',  title:'Listado de Items' },
-            { extend:'excel',  text:'EXCEL',    className:'btn btn-success waves-effect',  title:'Listado de Items' },
-            { extend:'pdf',    text:'PDF',      className:'btn btn-danger waves-effect',   title:'Listado de Items' },
-            { extend:'print',  text:'IMPRIMIR', className:'btn btn-warning waves-effect',  title:'Listado de Items' }
+            { extend:'copy',   text:'COPIAR',   className:'btn btn-primary waves-effect',  title:'Ítems' },
+            { extend:'excel',  text:'EXCEL',    className:'btn btn-success waves-effect',  title:'Ítems' },
+            { extend:'pdf',    text:'PDF',      className:'btn btn-danger waves-effect',   title:'Ítems' },
+            { extend:'print',  text:'IMPRIMIR', className:'btn btn-warning waves-effect',  title:'Ítems' }
         ],
         iDisplayLength: 5,
         language:{
@@ -55,7 +55,7 @@ function agregar(){
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
     $(".form-line").attr("class","form-line focused");
@@ -71,17 +71,17 @@ function editar(){
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
     $(".form-line").attr("class","form-line focused");
 }
 
-function eliminar(){
-    $("#txtOperacion").val(3);
+function confirmarCambioEstado() {
+    $("#txtOperacion").val(4);
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
 }
@@ -110,9 +110,13 @@ function listar(){
     .done(function(resultado){
         var lista = "";
         for(var rs of resultado){
+            var estado = rs.item_estado || 'activo';
+            var badge  = estado === 'activo'
+                ? '<span class="badge" style="background:#27ae60;">Activo</span>'
+                : '<span class="badge" style="background:#c0392b;">Inactivo</span>';
             lista += "<tr class=\"item-list\" onclick=\"seleccionItems(" + rs.id + "," + rs.tipo_id + "," + rs.tipo_impuesto_id + ",'" +
                 rs.item_decripcion + "','" + rs.item_costo + "','" + rs.item_precio + "','" +
-                rs.tipo_descripcion + "','" + rs.tip_imp_nom + "');\">";
+                rs.tipo_descripcion + "','" + rs.tip_imp_nom + "','" + estado + "');\">";
             lista += "<td>" + rs.id + "</td>";
             lista += "<td>" + rs.item_decripcion + "</td>";
             lista += "<td>" + rs.item_costo + "</td>";
@@ -121,6 +125,7 @@ function listar(){
             lista += "<td>" + rs.tip_imp_nom + "</td>";
             lista += "<td>" + (rs.marcas  || '-') + "</td>";
             lista += "<td>" + (rs.modelos || '-') + "</td>";
+            lista += "<td>" + badge + "</td>";
             lista += "</tr>";
         }
         $("#tableBody").html(lista);
@@ -133,7 +138,7 @@ function listar(){
 }
 
 // ===================== SELECCIÓN DE FILA =====================
-function seleccionItems(id, tipo_id, tipo_impuesto_id, item_decripcion, item_costo, item_precio, tipo_descripcion, tip_imp_nom){
+function seleccionItems(id, tipo_id, tipo_impuesto_id, item_decripcion, item_costo, item_precio, tipo_descripcion, tip_imp_nom, estado){
     $("#id").val(id);
     $("#item_decripcion").val(item_decripcion);
     $("#item_costo").val(item_costo);
@@ -142,6 +147,18 @@ function seleccionItems(id, tipo_id, tipo_impuesto_id, item_decripcion, item_cos
     $("#tipo_descripcion").val(tipo_descripcion);
     $("#tipo_impuesto_id").val(tipo_impuesto_id);
     $("#tip_imp_nom").val(tip_imp_nom);
+    $("#item_estado").val(estado || 'activo');
+
+    var activo = (estado || 'activo') === 'activo';
+    if (activo) {
+        $("#btnEstado").removeClass("btn-success").addClass("btn-danger");
+        $("#lblEstado").text("Desactivar");
+        $("#btnEstado").find("i").text("block");
+    } else {
+        $("#btnEstado").removeClass("btn-danger").addClass("btn-success");
+        $("#lblEstado").text("Activar");
+        $("#btnEstado").find("i").text("check_circle");
+    }
 
     // Cargar marcas y modelos (solo lectura)
     cargarMarcasItem(id);
@@ -155,7 +172,7 @@ function seleccionItems(id, tipo_id, tipo_impuesto_id, item_decripcion, item_cos
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").removeAttr("disabled");
-    $("#btnEliminar").removeAttr("disabled");
+    $("#btnEstado").removeAttr("disabled");
     $("#btnGrabar").attr("disabled","true");
     $("#btnCancelar").removeAttr("disabled");
     $(".form-line").attr("class","form-line focused");
@@ -375,7 +392,13 @@ function confirmarOperacion(){
     var titulo   = "AGREGAR";
     var pregunta = "¿DESEA GRABAR EL NUEVO REGISTRO?";
     if (oper === 2){ titulo = "EDITAR";    pregunta = "¿DESEA EDITAR EL REGISTRO SELECCIONADO?"; }
-    if (oper === 3){ titulo = "ELIMINAR";  pregunta = "¿DESEA ELIMINAR EL REGISTRO SELECCIONADO?"; }
+    if (oper === 4){
+        var estado = $("#item_estado").val();
+        titulo   = estado === 'activo' ? 'DESACTIVAR' : 'ACTIVAR';
+        pregunta = estado === 'activo'
+            ? '¿Desea desactivar este registro? No aparecerá en búsquedas.'
+            : '¿Desea activar este registro nuevamente?';
+    }
     swal({
         title: titulo, text: pregunta, type: "warning",
         showCancelButton: true, confirmButtonColor: "#458E49",
@@ -386,18 +409,25 @@ function confirmarOperacion(){
 function grabar(){
     var op = parseInt($("#txtOperacion").val());
 
+    if (op === 4) { cambiarEstado(); return; }
+
     if (op !== 3) {
         if (!$("#item_decripcion").val().trim() || !$("#item_costo").val().trim() ||
             !$("#item_precio").val().trim() || !$("#tipo_id").val() || !$("#tipo_impuesto_id").val()) {
             swal('Error', 'Descripción, costo, precio, tipo e impuesto son obligatorios.', 'error');
             return;
         }
+        var CHARS_INVALIDOS = /[*<>{}|]/;
+        if (CHARS_INVALIDOS.test($("#item_decripcion").val().trim())) {
+            swal('Caracteres no permitidos', 'El campo no puede contener los caracteres: * < > { } |', 'error');
+            return;
+        }
     }
 
     var endpoint = "items/create";
     var metodo   = "POST";
-    if (op === 2){ endpoint = "items/update/" + $("#id").val(); metodo = "PUT";    }
-    if (op === 3){ endpoint = "items/delete/" + $("#id").val(); metodo = "DELETE"; }
+    if (op === 2){ endpoint = "items/update/" + $("#id").val(); metodo = "PUT"; }
+    // op===3 removed — use cambiarEstado() for state toggle
 
     // Construir arrays de IDs para enviar
     var marcasIds  = marcasItem.map(function(m){ return m.marca_id; });
@@ -439,5 +469,22 @@ function grabar(){
         } else {
             swal('Error', res ? (res.mensaje || res.message || 'Error inesperado.') : 'Error inesperado.', 'error');
         }
+    });
+}
+
+function cambiarEstado() {
+    var id = $("#id").val();
+    $.ajax({
+        url: getUrl() + 'items/estado/' + id,
+        method: 'PATCH',
+        dataType: 'json'
+    })
+    .done(function(res) {
+        swal({ title: 'Respuesta', text: res.mensaje, type: res.tipo },
+            function() { if (res.tipo === 'success') location.reload(true); });
+    })
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        swal('Error', res && res.mensaje ? res.mensaje : 'Error inesperado.', 'error');
     });
 }

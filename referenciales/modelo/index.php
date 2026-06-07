@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>GUI MODELO</title>
+    <title>Modelo</title>
 
     <link rel="icon" href="../../images.ico" type="image/x-icon">
 
@@ -41,13 +41,14 @@
         <h2>
             <i class="material-icons">precision_manufacturing</i>
             Mantener Modelo
-            <small>CRUD de Modelo</small>
+            <small>Gestión de Modelo</small>
         </h2>
     </div>
 
     <div class="body">
 
         <input type="hidden" value="0" id="txtOperacion"/>
+        <input type="hidden" id="modelo_estado" value="activo"/>
 
         <!-- DATOS DEL MODELO -->
         <div class="section-box">
@@ -117,8 +118,8 @@
             <button id="btnEditar" class="btn btn-primary waves-effect" onclick="editar();" disabled>
                 <i class="material-icons">edit</i> Modificar
             </button>
-            <button id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();" disabled>
-                <i class="material-icons">delete</i> Eliminar
+            <button id="btnEstado" class="btn btn-danger waves-effect" onclick="confirmarCambioEstado();" disabled>
+                <i class="material-icons">block</i> <span id="lblEstado">Desactivar</span>
             </button>
             <button id="btnGrabar" class="btn btn-default waves-effect" onclick="confirmarOperacion();" disabled>
                 <i class="material-icons">save</i> Grabar
@@ -147,6 +148,7 @@
                         <th>Modelo</th>
                         <th>Tipo de Modelo</th>
                         <th>Año</th>
+                        <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
@@ -157,6 +159,7 @@
                         <th>Modelo</th>
                         <th>Tipo de Modelo</th>
                         <th>Año</th>
+                        <th>Estado</th>
                     </tr>
                 </tfoot>
             </table>
@@ -189,7 +192,7 @@
 
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
-<script src="metodos.js?v=2"></script>
+<script src="metodos.js?v=4"></script>
 
 </body>
 </html>

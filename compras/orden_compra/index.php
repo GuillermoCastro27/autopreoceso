@@ -83,10 +83,12 @@
 
                 <div class="col-sm-3">
                     <input type="text" id="ord_comp_intervalo_fecha_vence" class="datetimepicker form-control" disabled placeholder="Intervalo Vencimiento">
+                    <small id="avisoVenceOC" style="color:#e74c3c;display:none;"></small>
                 </div>
 
                 <div class="col-sm-2">
                     <input type="text" id="ord_comp_fecha" class="datetimepicker form-control" readonly placeholder="Fecha">
+                    <small id="avisoFechaOC" style="color:#e74c3c;display:none;"></small>
                 </div>
 
                 <div class="col-sm-2">
@@ -96,18 +98,61 @@
         </div>
 
         <div class="section-box">
-            <div class="section-title">Presupuesto y Proveedor</div>
+            <div class="section-title">Origen y Proveedor</div>
 
-            <div class="row clearfix">
+            <!-- Toggle origen (solo visible en modo Agregar/Editar) -->
+            <div id="seccionOrigen" style="display:none; margin-bottom:12px;">
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default active" id="btnLblPresupuesto">
+                        <input type="radio" name="origen_oc" value="presupuesto" autocomplete="off" checked onchange="cambiarOrigen();">
+                        <i class="material-icons" style="font-size:16px;vertical-align:middle;">description</i> Desde Presupuesto
+                    </label>
+                    <label class="btn btn-default" id="btnLblPedido">
+                        <input type="radio" name="origen_oc" value="pedido" autocomplete="off" onchange="cambiarOrigen();">
+                        <i class="material-icons" style="font-size:16px;vertical-align:middle;">list_alt</i> Desde Pedido Directo
+                    </label>
+                </div>
+            </div>
+
+            <!-- Búsqueda de presupuesto -->
+            <div id="divPresupuesto" class="row clearfix">
                 <div class="col-sm-12">
                     <input type="text" id="presupuestos" class="form-control" disabled onkeyup="buscarPresupuesto();" placeholder="Presupuesto">
                     <input type="hidden" id="presupuesto_id" value="0">
                     <div id="listaPresupuesto" style="display:none;"></div>
                 </div>
 
+                <div class="col-sm-12" id="panelPedidosPresupuesto" style="display:none; margin-top:8px;">
+                    <small style="font-weight:600; color:#555;">Pedidos que conforman este presupuesto:</small>
+                    <table class="table table-bordered table-condensed" style="margin-top:4px; margin-bottom:0; font-size:12px;">
+                        <thead>
+                            <tr>
+                                <th style="width:90px;">Nro Pedido</th>
+                                <th>Observaciones</th>
+                                <th style="width:110px;">Vencimiento</th>
+                                <th style="width:90px;">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyPedidosPresupuesto"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Búsqueda de pedido (oculto por defecto) -->
+            <div id="divPedido" class="row clearfix" style="display:none;">
+                <div class="col-sm-12">
+                    <input type="text" id="pedido_desc" class="form-control" disabled onkeyup="buscarPedidoDirecto();" placeholder="Buscar Pedido por número...">
+                    <input type="hidden" id="pedido_id" value="0">
+                    <div id="listaPedido" style="display:none;"></div>
+                </div>
+            </div>
+
+            <!-- Proveedor -->
+            <div class="row clearfix" style="margin-top:6px;">
                 <div class="col-sm-4">
                     <input type="hidden" id="proveedor_id" value="0">
-                    <input type="text" id="prov_razonsocial" class="form-control" disabled placeholder="Proveedor">
+                    <input type="text" id="prov_razonsocial" class="form-control" disabled onkeyup="buscarProveedorDirecto();" placeholder="Proveedor">
+                    <div id="listaProveedor" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-2">
@@ -131,6 +176,7 @@
             <button id="btnConfirmar" class="btn btn-success" onclick="confirmar();" disabled><i class="material-icons">check_circle</i> Confirmar</button>
             <button id="btnGrabar" class="btn btn-default" onclick="confirmarOperacion();" disabled><i class="material-icons">save</i> Grabar</button>
             <button id="btnCancelar" class="btn btn-warning" onclick="cancelar();" disabled><i class="material-icons">close</i> Cancelar</button>
+            <button id="btnImprimir" class="btn btn-info waves-effect" onclick="imprimirOrden();" style="display:none;" disabled><i class="material-icons">print</i> Imprimir</button>
         </div>
 
     </div>
@@ -145,35 +191,56 @@
     </div>
     <div class="body">
 
-        <div class="row clearfix" id="formDetalles" style="display:none;">
+        <div id="formDetalles" style="display:none;">
             <input type="hidden" id="txtOperacionDetalle" value="0">
             <input type="hidden" id="tipo_impuesto_id">
-            <div class="col-sm-1">
-                <input type="text" id="item_id" class="form-control" disabled placeholder="Cod">
+
+            <div class="section-box">
+                <div class="section-title">Productos</div>
+                <div class="row clearfix">
+                    <div class="col-sm-1">
+                        <input type="text" id="item_id" class="form-control" disabled placeholder="Cód">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
+                        <div id="listaProductos" style="display:none;"></div>
+                    </div>
+                    <div class="col-sm-1">
+                        <input type="text" id="orden_compra_det_cantidad" class="form-control" disabled placeholder="Cant.">
+                    </div>
+                    <div class="col-sm-1">
+                        <input type="text" id="cantidad_stock" class="form-control" disabled placeholder="Stock">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" id="item_costo" class="form-control" disabled placeholder="Costo">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" id="tip_imp_nom" class="form-control" disabled placeholder="Impuesto">
+                    </div>
+                    <div class="col-sm-2">
+                        <select class="form-control" id="marca_det_oc" disabled>
+                            <option value="">-- Marca --</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <select class="form-control" id="modelo_det_oc" disabled>
+                            <option value="">-- Modelo --</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <select class="form-control" id="deposito_id_det" disabled>
+                            <option value="">-- Depósito --</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="col-sm-4">
-                <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
-                <div id="listaProductos" style="display:none;"></div>
-            </div>
-            <div class="col-sm-1">
-                <input type="text" id="orden_compra_det_cantidad" class="form-control" disabled placeholder="Cant.">
-            </div>
-            <div class="col-sm-1">
-                <input type="text" id="item_costo" class="form-control" disabled placeholder="Costo">
-            </div>
-            <div class="col-sm-2">
-                <input type="text" id="tip_imp_nom" class="form-control" disabled placeholder="Impuesto">
-            </div>
-            <div class="col-sm-2">
-                <select class="form-control" id="deposito_id_det" disabled>
-                    <option value="">-- Depósito --</option>
-                </select>
-            </div>
-            <div class="col-sm-1">
+
+            <div class="btn-toolbar-left">
                 <button type="button" id="btnAgregarDetalle" class="btn btn-success waves-effect" onclick="agregarDetalle();"><i class="material-icons">add</i></button>
                 <button type="button" id="btnEditarDetalle" class="btn btn-warning waves-effect" onclick="editarDetalle();"><i class="material-icons">mode_edit</i></button>
                 <button type="button" id="btnEliminarDetalle" class="btn btn-danger waves-effect" onclick="eliminarDetalle();"><i class="material-icons">clear</i></button>
-                <button type="button" id="btnGrabarDetalle" class="btn btn-default waves-effect" style="display:none;" onclick="grabarDetalle();"><i class="material-icons">save</i></button>
+                <button type="button" id="btnGrabarDetalle"    class="btn btn-default waves-effect" style="display:none;" onclick="grabarDetalle();"><i class="material-icons">save</i></button>
+                <button type="button" id="btnCancelarDetalle" class="btn btn-warning waves-effect" style="display:none;" onclick="cancelarDetalle();"><i class="material-icons">close</i></button>
             </div>
         </div>
 
@@ -183,6 +250,8 @@
                     <tr>
                         <th>Código</th>
                         <th>Producto</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
                         <th>Cantidad</th>
                         <th>Costo</th>
                         <th>Impuesto</th>
@@ -194,12 +263,20 @@
                 <tbody id="tableDetalle"></tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="6" class="text-right">Total</th>
-                        <th id="txtTotalGral">0</th>
+                        <th colspan="9" class="text-right">IVA 10%</th>
+                        <th id="txtIva10" class="text-right">0</th>
                     </tr>
                     <tr>
-                        <th colspan="6" class="text-right">Total IVA</th>
-                        <th id="txtTotalConImpuesto">0</th>
+                        <th colspan="9" class="text-right">IVA 5%</th>
+                        <th id="txtIva5" class="text-right">0</th>
+                    </tr>
+                    <tr>
+                        <th colspan="9" class="text-right">Total IVA</th>
+                        <th id="txtTotalConImpuesto" class="text-right">0</th>
+                    </tr>
+                    <tr>
+                        <th colspan="9" class="text-right" style="font-weight:bold;">Total General</th>
+                        <th id="txtTotalGral" class="text-right" style="font-weight:bold;">0</th>
                     </tr>
                 </tfoot>
             </table>

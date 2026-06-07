@@ -48,6 +48,7 @@
     <div class="body">
 
         <input type="hidden" id="txtOperacion" value="0">
+        <input type="hidden" id="tipo_serv_estado" value="activo"/>
 
         <!-- DATOS DEL SERVICIO -->
         <div class="section-box">
@@ -92,8 +93,8 @@
             <button id="btnEditar" class="btn btn-primary waves-effect" onclick="editar();" disabled>
                 <i class="material-icons">edit</i> Modificar
             </button>
-            <button id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();" disabled>
-                <i class="material-icons">delete</i> Eliminar
+            <button id="btnEstado" class="btn btn-danger waves-effect" onclick="confirmarCambioEstado();" disabled>
+                <i class="material-icons">block</i> <span id="lblEstado">Desactivar</span>
             </button>
             <button id="btnGrabar" class="btn btn-default waves-effect" onclick="confirmarOperacion();" disabled>
                 <i class="material-icons">save</i> Grabar
@@ -123,6 +124,7 @@
                         <th>Código</th>
                         <th>Nombre</th>
                         <th>Precio</th>
+                        <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
@@ -131,6 +133,7 @@
                         <th>Código</th>
                         <th>Nombre</th>
                         <th>Precio</th>
+                        <th>Estado</th>
                     </tr>
                 </tfoot>
             </table>

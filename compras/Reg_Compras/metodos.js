@@ -79,6 +79,8 @@ function agregar() {
     $("#comp_estado").removeAttr("disabled");
     $("#comp_cant_cuota").attr("disabled", "true");
     $("#comp_timbrado").removeAttr("disabled");
+    $("#comp_nro_factura").removeAttr("disabled");
+    $("#comp_fecha_emision").removeAttr("disabled");
     $("#ordencompra").removeAttr("disabled");
     $("#condicion_pago").attr("disabled", "true");
     $("#emp_razon_social").attr("disabled", "true");
@@ -104,6 +106,8 @@ function editar() {
     $("#comp_estado").removeAttr("disabled");
     $("#comp_cant_cuota").attr("disabled", "true");
     $("#comp_timbrado").removeAttr("disabled");
+    $("#comp_nro_factura").removeAttr("disabled");
+    $("#comp_fecha_emision").removeAttr("disabled");
     $("#ordencompra").removeAttr("disabled");
     $("#condicion_pago").attr("disabled", "true");
     $("#emp_razon_social").attr("disabled", "true");
@@ -183,18 +187,30 @@ function mensajeOperacion(titulo, mensaje, tipo) {
     swal(titulo, mensaje, tipo);
 }
 
+// Inicializar fechas por defecto al mes actual
+(function() {
+    var hoy   = new Date();
+    var desde = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+    document.getElementById('filtro_desde').value = desde.toISOString().slice(0,10);
+    document.getElementById('filtro_hasta').value  = hoy.toISOString().slice(0,10);
+})();
+
 // Lista los registros de compra mediante una solicitud AJAX
-function listar() { 
+function listar() {
+    var desde = document.getElementById('filtro_desde').value;
+    var hasta = document.getElementById('filtro_hasta').value;
     $.ajax({
         url: getUrl() + "compras/read",
         method: "GET",
-        dataType: "json"
+        dataType: "json",
+        data: { desde: desde, hasta: hasta }
     })
     .done(function(resultado) {
         var lista = "";
         for (rs of resultado) {
-            lista += "<tr class=\"item-list\" onclick=\"seleccionCompra(" + rs.id + "," + rs.proveedor_id + "," + rs.empresa_id + "," + rs.sucursal_id + "," + rs.orden_compra_cab_id + ",'" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.ordencompra + "','" + rs.comp_intervalo_fecha_vence + "','" + rs.comp_fecha + "','" + rs.comp_estado + "','" + rs.comp_cant_cuota + "','" + rs.encargado + "','" + rs.prov_razonsocial + "','" + rs.prov_ruc + "','" + rs.prov_telefono + "','" + rs.prov_correo + "','" + rs.condicion_pago + "','" + (rs.comp_timbrado || '') + "');\">";
+            lista += "<tr class=\"item-list\" onclick=\"seleccionCompra(" + rs.id + "," + rs.proveedor_id + "," + rs.empresa_id + "," + rs.sucursal_id + "," + rs.orden_compra_cab_id + ",'" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.ordencompra + "','" + rs.comp_intervalo_fecha_vence + "','" + rs.comp_fecha + "','" + rs.comp_estado + "','" + rs.comp_cant_cuota + "','" + rs.encargado + "','" + rs.prov_razonsocial + "','" + rs.prov_ruc + "','" + rs.prov_telefono + "','" + rs.prov_correo + "','" + rs.condicion_pago + "','" + (rs.comp_timbrado || '') + "','" + (rs.comp_nro_factura || '') + "','" + (rs.comp_fecha_emision || '') + "');\">";
             lista += "<td>" + rs.id + "</td>";
+            lista += "<td>" + (rs.comp_nro_factura || '-') + "</td>";
             lista += "<td>" + (rs.comp_timbrado || '-') + "</td>";
             lista += "<td>" + rs.comp_intervalo_fecha_vence + "</td>";
             lista += "<td>" + rs.comp_fecha + "</td>";
@@ -209,12 +225,11 @@ function listar() {
     })
     .fail(function(xhr, status, error) {
         alert("Error: " + error);
-        console.error(xhr.responseText);
     });
 }
 
 // Rellena el formulario con los datos de un pedido seleccionado.
-function seleccionCompra(id_compra_cab, proveedor_id, empresa_id, sucursal_id, orden_compra_cab_id, emp_razon_social, suc_razon_social, ordencompra, comp_intervalo_fecha_vence, comp_fecha, comp_estado, comp_cant_cuota, encargado, prov_razonsocial, prov_ruc, prov_telefono, prov_correo, condicion_pago, comp_timbrado) {
+function seleccionCompra(id_compra_cab, proveedor_id, empresa_id, sucursal_id, orden_compra_cab_id, emp_razon_social, suc_razon_social, ordencompra, comp_intervalo_fecha_vence, comp_fecha, comp_estado, comp_cant_cuota, encargado, prov_razonsocial, prov_ruc, prov_telefono, prov_correo, condicion_pago, comp_timbrado, comp_nro_factura, comp_fecha_emision) {
     $("#id").val(id_compra_cab);
     $("#proveedor_id").val(proveedor_id);
     $("#empresa_id").val(empresa_id);
@@ -234,7 +249,9 @@ function seleccionCompra(id_compra_cab, proveedor_id, empresa_id, sucursal_id, o
     $("#prov_correo").val(prov_correo);
     $("#condicion_pago").val(condicion_pago);
     $("#comp_timbrado").val(comp_timbrado);
-    
+    $("#comp_nro_factura").val(comp_nro_factura || '');
+    $("#comp_fecha_emision").val(comp_fecha_emision || '');
+
     // Mostrar y ocultar secciones según sea necesario
     $("#registros").attr("style", "display:none;");
     $("#detalle").attr("style", "display:block;");
@@ -277,17 +294,103 @@ function formatearNumero(numero) {
         maximumFractionDigits: 2
     });
 }
+
+function mascararFechaComp(input) {
+    var v = input.value.replace(/\D/g, '').slice(0, 8);
+    if (v.length > 4) v = v.slice(0,2) + '/' + v.slice(2,4) + '/' + v.slice(4);
+    else if (v.length > 2) v = v.slice(0,2) + '/' + v.slice(2);
+    input.value = v;
+}
+
+function validarFechaEmisionComp() {
+    var val = $('#comp_fecha_emision').val().trim();
+    var aviso = $('#avisoFechaEmisionComp');
+    if (!val) { aviso.hide(); $('#comp_fecha_emision').css('border-color',''); return; }
+    var m = moment(val, 'DD/MM/YYYY', true);
+    if (!m.isValid()) {
+        $('#comp_fecha_emision').css('border-color','#e74c3c');
+        aviso.text('Formato: DD/MM/YYYY').show();
+    } else if (m.isAfter(moment(), 'day')) {
+        $('#comp_fecha_emision').css('border-color','#e74c3c');
+        aviso.text('La fecha de emisión no puede ser futura.').show();
+    } else {
+        $('#comp_fecha_emision').css('border-color',''); aviso.hide();
+    }
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function mostrarErrores(xhr) {
+    if (xhr.status === 403) return;
+    var res = xhr.responseJSON;
+    var titulo = xhr.status === 422 ? 'Datos inválidos' : 'Error';
+    var msg = '';
+    if (res && res.errors) {
+        var lineas = [];
+        $.each(res.errors, function(k, v) { lineas.push('• ' + (Array.isArray(v) ? v[0] : v)); });
+        msg = lineas.join('\n');
+    } else if (res && res.mensaje) { msg = res.mensaje; }
+    else { msg = 'Ocurrió un error inesperado.'; }
+    swal({ title: titulo, text: msg, type: xhr.status === 422 ? 'warning' : 'error' });
+}
+
+var FMT_COMP = 'YYYY-MM-DD HH:mm:ss';
+
+// ─── VALIDACIONES EN TIEMPO REAL ─────────────────────────────────────────────
+function validarFechaComp() {
+    var val = $('#comp_fecha').val().trim();
+    var aviso = $('#avisoFechaComp');
+    if (!val) { aviso.hide(); return; }
+    var m = moment(val, FMT_COMP, true);
+    if (!m.isValid()) {
+        $('#comp_fecha').css('border-color','#e74c3c');
+        aviso.text('Formato de fecha inválido.').show();
+    } else if (!m.clone().startOf('day').isSame(moment().startOf('day'))) {
+        $('#comp_fecha').css('border-color','#e74c3c');
+        aviso.text('La fecha debe ser la de hoy (' + moment().format('DD/MM/YYYY') + ').').show();
+    } else {
+        $('#comp_fecha').css('border-color',''); aviso.hide();
+    }
+}
+
+function validarIFVComp() {
+    var condicion = $('#condicion_pago').val();
+    if (condicion !== 'CREDITO') { $('#avisoIFVComp').hide(); return; }
+    var val = $('#comp_intervalo_fecha_vence').val().trim();
+    var aviso = $('#avisoIFVComp');
+    if (!val) { aviso.hide(); return; }
+    var m = moment(val, FMT_COMP, true);
+    if (!m.isValid()) {
+        $('#comp_intervalo_fecha_vence').css('border-color','#e74c3c');
+        aviso.text('Formato inválido.').show();
+    } else if (m.clone().startOf('day').isBefore(moment().startOf('day'))) {
+        $('#comp_intervalo_fecha_vence').css('border-color','#e74c3c');
+        aviso.text('La fecha de vencimiento no puede ser pasada.').show();
+    } else {
+        $('#comp_intervalo_fecha_vence').css('border-color',''); aviso.hide();
+    }
+}
+
+function autoFormatoFactura(input) {
+    var digits = input.value.replace(/\D/g, '').slice(0, 13);
+    var formatted = digits;
+    if (digits.length > 6) {
+        formatted = digits.slice(0,3) + '-' + digits.slice(3,6) + '-' + digits.slice(6);
+    } else if (digits.length > 3) {
+        formatted = digits.slice(0,3) + '-' + digits.slice(3);
+    }
+    input.value = formatted;
+}
 function listarDetalles() {
     var cantidadDetalle = 0;
-    var TotalGral = 0;
-    var TotalConImpuesto = 0; // Variable para total con impuestos
+    var TotalGral  = 0;
+    var TotalIva10 = 0;
+    var TotalIva5  = 0;
 
-    const CompraId = $("#id").val(); // Obtener el ID de la orden de compra
-    const estadoCompra = $("#comp_estado").val(); // Obtener el estado de la orden (asegúrate de tener este campo en tu HTML)
+    const CompraId    = $("#id").val();
+    const estadoCompra = $("#comp_estado").val();
 
-    // Comprobar si el ID de la orden de compra es válido
     if (!CompraId) {
-        alert("No se ha definido el ID de la orden de compra.");
+        alert("No se ha definido el ID de la compra.");
         return;
     }
 
@@ -297,51 +400,50 @@ function listarDetalles() {
         dataType: "json"
     })
     .done(function(resultado) {
-        console.log(resultado); // Verificar qué datos llegan del servidor
-
         var lista = "";
         if (resultado && resultado.length > 0) {
-            // Iterar sobre los detalles si existen
             for (let rs of resultado) {
-                const cantidad = rs.comp_det_cantidad || 0; // Valor de cantidad, por defecto 0
-                const costo = rs.item_costo || 0; // Valor de costo, por defecto 0
-
-                const subtotal = cantidad * costo; // Cálculo del subtotal
-                let totalConImpuesto = subtotal; // Inicializamos el total con impuesto igual al subtotal
-
-                // Calcular el impuesto según el tipo
-                if (rs.tip_imp_nom === "IVA10") {
-                    totalConImpuesto = subtotal / 11; // Dividimos por 11 para IVA10
-                } else if (rs.tip_imp_nom === "IVA5") {
-                    totalConImpuesto = subtotal / 21; // Dividimos por 21 para IVA5
+                const cantidad = rs.comp_det_cantidad || 0;
+                const costo    = rs.item_costo || 0;
+                const subtotal = cantidad * costo;
+                const imp = (rs.tip_imp_nom || '').toUpperCase();
+                let iva = 0;
+                if (imp.indexOf('EXENT') !== -1) {
+                    iva = 0;
+                } else if (imp.indexOf('5') !== -1) {
+                    iva = Math.round(subtotal / 21);
+                    TotalIva5 += iva;
+                } else {
+                    iva = Math.round(subtotal / 11);
+                    TotalIva10 += iva;
                 }
 
-                lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" + rs.item_id + "," + rs.tipo_impuesto_id + ",'" + rs.item_decripcion + "','" + (rs.tip_imp_nom || 'No definido') + "'," + cantidad + ", " + costo + ", '" + formatearNumero(subtotal) + "', '" + formatearNumero(totalConImpuesto) + "'," + (rs.deposito_id||0) + ");\">";
+                lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" + rs.item_id + "," + rs.tipo_impuesto_id + ",'" + rs.item_decripcion + "','" + (rs.tip_imp_nom || '-') + "'," + cantidad + ", " + costo + ", '" + formatearNumero(subtotal) + "', '" + formatearNumero(iva) + "'," + (rs.deposito_id||0) + ");\">";
                 lista += "<td>" + rs.item_id + "</td>";
                 lista += "<td>" + rs.item_decripcion + "</td>";
+                lista += "<td>" + (rs.marc_nom  || '—') + "</td>";
+                lista += "<td>" + (rs.modelo_nom || '—') + "</td>";
                 lista += "<td>" + cantidad + "</td>";
-                lista += "<td class='text-right'>" + (costo ? formatearNumero(costo) : 'No definido') + "</td>";
-                lista += "<td>" + (rs.tip_imp_nom || 'No definido') + "</td>";
+                lista += "<td class='text-right'>" + formatearNumero(costo) + "</td>";
+                lista += "<td>" + (rs.tip_imp_nom || '-') + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>";
-                lista += "<td class='text-right'>" + formatearNumero(totalConImpuesto) + "</td>";
+                lista += "<td class='text-right'>" + formatearNumero(iva) + "</td>";
                 lista += "<td>" + getNombreDeposito(rs.deposito_id) + "</td>";
                 lista += "</tr>";
 
                 cantidadDetalle++;
-                TotalGral += subtotal; // Sumar al total general
-                TotalConImpuesto += totalConImpuesto; // Sumar al total con impuestos
+                TotalGral += subtotal;
             }
 
-            // Actualizar la tabla con los detalles generados
             $("#tableDetalle").html(lista);
         } else {
-            // Si no hay detalles, mostrar un mensaje en la tabla
-            $("#tableDetalle").html("<tr><td colspan='7' class='text-center'>No se encontraron detalles para esta orden de compra.</td></tr>");
+            $("#tableDetalle").html("<tr><td colspan='10' class='text-center'>No se encontraron detalles para esta compra.</td></tr>");
         }
 
-        // Mostrar los totales en la pantalla con formato
-        $("#txtTotalGral").text(formatearNumero(TotalGral)); // Mostrar total general
-        $("#txtTotalConImpuesto").text(formatearNumero(TotalConImpuesto)); // Mostrar total con impuestos
+        $("#txtIva10").text(formatearNumero(TotalIva10));
+        $("#txtIva5").text(formatearNumero(TotalIva5));
+        $("#txtTotalConImpuesto").text(formatearNumero(TotalIva10 + TotalIva5));
+        $("#txtTotalGral").text(formatearNumero(TotalGral));
 
         // Habilitar el botón Confirmar si hay detalles y la orden está pendiente
         if (estadoCompra === "PENDIENTE" && cantidadDetalle > 0) {
@@ -352,7 +454,6 @@ function listarDetalles() {
     })
     .fail(function(a, b, c) {
         alert("Error al obtener detalles: " + c);
-        console.log(a.responseText);
     });
 }
 function buscarOrdenCompra() {
@@ -366,7 +467,6 @@ function buscarOrdenCompra() {
         }
     })
     .done(function(resultado) {
-        console.log("Resultados encontrados:", resultado);
         var lista = "<ul class=\"list-group\">";
         for (var rs of resultado) {
             lista += "<li class=\"list-group-item\" onclick=\"seleccionOrdenCompra("+rs.orden_compra_cab_id+","+rs.empresa_id+","+rs.sucursal_id+", '"+rs.ordencompra+"',"+rs.proveedor_id+", '"+rs.prov_razonsocial+"', '"+rs.prov_ruc+"', '"+rs.prov_telefono+"', '"+rs.prov_correo+"', '"+rs.suc_razon_social+"', '"+rs.emp_razon_social+"', '"+rs.ord_comp_intervalo_fecha_vence+"', '"+rs.ord_comp_cant_cuota+"', '"+rs.condicion_pago+"')\">"+rs.ordencompra+"</li>";   
@@ -376,7 +476,6 @@ function buscarOrdenCompra() {
         $("#listaOrdenCompra").attr("style", "display:block; position: absolute; z-index: 2000;");
     })    
     .fail(function(jqXHR, textStatus, errorThrown) {
-        console.error("Error en la búsqueda:", textStatus, errorThrown);
     });
 }
 function seleccionOrdenCompra(orden_compra_cab_id, empresa_id, sucursal_id, ordencompra, proveedor_id, prov_razonsocial, prov_ruc, prov_telefono, prov_correo, suc_razon_social, emp_razon_social,ord_comp_intervalo_fecha_vence,ord_comp_cant_cuota,condicion_pago) {
@@ -429,6 +528,59 @@ function grabar() {
         metodo = "PUT";
         estado = "RECIBIDO";
     }
+    var errores = [];
+    var condicion = $('#condicion_pago').val();
+
+    // Fecha de la compra (debe ser hoy)
+    var fechaVal = $('#comp_fecha').val().trim();
+    if (!fechaVal) {
+        errores.push('La fecha de la compra es obligatoria.');
+    } else {
+        var mFecha = moment(fechaVal, FMT_COMP, true);
+        if (!mFecha.isValid()) errores.push('El formato de la fecha es inválido.');
+        else if (!mFecha.clone().startOf('day').isSame(moment().startOf('day')))
+            errores.push('La fecha debe ser la de hoy (' + moment().format('DD/MM/YYYY') + ').');
+    }
+
+    // Fecha de emisión (requerida, no futura)
+    var fechaEmision = $.trim($('#comp_fecha_emision').val());
+    if (!fechaEmision) {
+        errores.push('La fecha de emisión de la factura es obligatoria.');
+    } else {
+        var mEmision = moment(fechaEmision, 'DD/MM/YYYY', true);
+        if (!mEmision.isValid()) errores.push('La fecha de emisión tiene formato inválido. Use DD/MM/YYYY.');
+        else if (mEmision.isAfter(moment(), 'day')) errores.push('La fecha de emisión no puede ser futura.');
+    }
+
+    // Orden de compra requerida
+    if (!$('#orden_compra_cab_id').val() || $('#orden_compra_cab_id').val() == '0')
+        errores.push('Debe seleccionar una Orden de Compra.');
+
+    // Validaciones para CRÉDITO
+    if (condicion === 'CREDITO') {
+        var ifv = $('#comp_intervalo_fecha_vence').val().trim();
+        if (!ifv) {
+            errores.push('El intervalo de vencimiento es obligatorio para condición CRÉDITO.');
+        } else {
+            var mIFV = moment(ifv, FMT_COMP, true);
+            if (!mIFV.isValid()) errores.push('El formato del intervalo de vencimiento es inválido.');
+            else if (mIFV.clone().startOf('day').isBefore(moment().startOf('day')))
+                errores.push('El intervalo de vencimiento no puede ser una fecha pasada.');
+        }
+        var cuotas = parseInt($('#comp_cant_cuota').val());
+        if (!cuotas || cuotas <= 0) errores.push('La cantidad de cuotas es obligatoria para condición CRÉDITO.');
+    }
+
+    // Número de factura: si tiene valor, validar formato
+    var nroFactura = $.trim($('#comp_nro_factura').val());
+    if (nroFactura && !/^\d{3}-\d{3}-\d{7}$/.test(nroFactura))
+        errores.push('El Nro. de Factura debe tener el formato 000-000-0000000.');
+
+    if (errores.length > 0) {
+        swal({ title: 'Datos incompletos', text: errores.map(function(e){ return '• '+e; }).join('\n'), type: 'warning' });
+        return;
+    }
+
     $.ajax({
         url: getUrl() + endpoint,
         method: metodo,
@@ -441,6 +593,9 @@ function grabar() {
             'comp_cant_cuota': $("#comp_cant_cuota").val(),
             'condicion_pago': $("#condicion_pago").val(),
             'comp_timbrado': $("#comp_timbrado").val(),
+            'comp_nro_factura': nroFactura || null,
+            'comp_fecha_emision': fechaEmision
+                ? moment(fechaEmision, 'DD/MM/YYYY').format('YYYY-MM-DD') : null,
             'funcionario_id': $("#funcionario_id").val(),
             'orden_compra_cab_id': $("#orden_compra_cab_id").val(),
             'proveedor_id': $("#proveedor_id").val(),
@@ -466,10 +621,7 @@ function grabar() {
             }
         });
     })
-    .fail(function(a, b, c) {
-        alert(c);
-        console.log(a.responseText); // Mostrar error en la consola
-    });
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 function buscarEmpresas() {
     $.ajax({
@@ -489,7 +641,6 @@ function buscarEmpresas() {
     })
     .fail(function(a,b,c) {
         alert(c);
-        console.log(a.responseText);
     });
 }
 
@@ -521,7 +672,6 @@ function buscarSucursal(){
     })
     .fail(function(a,b,c){
         alert(c);
-        console.log(a.responseText);
     })
 }
 
@@ -543,14 +693,11 @@ function cargarFuncionarioIdLogueado() {
         
         if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
             $('#funcionario_id').val(datosSesion.user.funcionario_id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
-            console.error('No se encontraron datos de sesión válidos');
             alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');
             window.location.href = '../../index.html';
         }
     } catch (error) {
-        console.error('Error al cargar datos de usuario:', error);
         alert('Error al cargar datos del usuario. Inicie sesión nuevamente.');
         window.location.href = '../../index.html';
     }
@@ -562,5 +709,13 @@ function campoFecha(){
         format: 'YYYY-MM-DD HH:mm:ss',
         clearButton: true,
         weekStart: 1
+    });
+    $('#comp_fecha').on('change', function() { validarFechaComp(); });
+    $('#comp_intervalo_fecha_vence').on('change', function() { validarIFVComp(); });
+    $('#condicion_pago').on('change', function() {
+        if ($(this).val() === 'CONTADO') {
+            $('#comp_intervalo_fecha_vence').css('border-color','');
+            $('#avisoIFVComp').hide();
+        } else { validarIFVComp(); }
     });
 }

@@ -158,6 +158,7 @@
 
             <input type="hidden" id="txtOperacionDetalle" value="0">
             <input type="hidden" id="tipo_impuesto_id">
+            <input type="hidden" id="original_item_id">
 
             <!-- Código -->
             <div class="col-sm-2">
@@ -184,6 +185,20 @@
             <!-- Precio -->
             <div class="col-sm-2" style="margin-top:10px">
                 <input type="text" id="soli_det_costo" class="form-control" disabled placeholder="Precio">
+            </div>
+
+            <!-- Marca -->
+            <div class="col-sm-2" style="margin-top:10px">
+                <select class="form-control" id="marca_det_mm" disabled>
+                    <option value="">-- Marca --</option>
+                </select>
+            </div>
+
+            <!-- Modelo -->
+            <div class="col-sm-2" style="margin-top:10px">
+                <select class="form-control" id="modelo_det_mm" disabled>
+                    <option value="">-- Modelo --</option>
+                </select>
             </div>
 
             <!-- Botones -->
@@ -216,13 +231,13 @@
                 <thead style="background:#263238;color:#fff">
                     <tr>
                         <th>Producto</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
                         <th>Cantidad</th>
                         <th>Stock</th>
                         <th>Precio</th>
                         <th>Sub Total</th>
                         <th>IVA</th>
-                        <th>Total</th>
-                        <th>Total IVA</th>
                     </tr>
                 </thead>
 
@@ -230,13 +245,23 @@
 
                 <tfoot>
                     <tr>
-                        <th colspan="7" class="text-right">Total</th>
-                        <th id="txtTotalGral">0</th>
+                        <th colspan="7" class="text-right">IVA 10%</th>
+                        <th id="txtIva10">0</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th colspan="7" class="text-right">IVA 5%</th>
+                        <th id="txtIva5">0</th>
                         <th></th>
                     </tr>
                     <tr>
                         <th colspan="7" class="text-right">Total IVA</th>
                         <th id="txtTotalConImpuesto">0</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th colspan="7" class="text-right" style="font-weight:bold;">Total</th>
+                        <th id="txtTotalGral" style="font-weight:bold;">0</th>
                         <th></th>
                     </tr>
                 </tfoot>
@@ -310,7 +335,8 @@
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js"></script>
-<script src="metodos.js?v=2"></script>
+<script src="../../js/marcaModelo.js"></script>
+<script src="metodos.js?v=3"></script>
 
 </body>
 </html>

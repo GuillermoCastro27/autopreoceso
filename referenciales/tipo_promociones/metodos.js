@@ -10,25 +10,25 @@ function formatoTabla(){
                 extend:'copy',
                 text:'COPIAR',
                 className:'btn btn-primary waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Tipos de Promociones'
             },
             {
                 extend:'excel',
                 text:'EXCEL',
                 className:'btn btn-success waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Tipos de Promociones'
             },
             {
                 extend:'pdf',
                 text:'PDF',
                 className:'btn btn-danger waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Tipos de Promociones'
             },
             {
                 extend:'print',
                 text:'IMPRIMIR',
                 className:'btn btn-warning waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Tipos de Promociones'
             }
         ],
         iDisplayLength:3,
@@ -49,6 +49,18 @@ function cancelar(){
     location.reload(true);
 }
 
+function manejarCambioModo() {
+    var modo = $("#tipo_prom_modo").val();
+    if (modo === "2X1") {
+        $("#tipo_prom_valor").val("0").prop("disabled", true);
+        $("#lbl_valor_hint").text("No aplica para 2x1").show();
+    } else {
+        $("#tipo_prom_valor").prop("disabled", false);
+        var hint = modo === "PORCENTAJE" ? "Entre 0 y 100" : "";
+        $("#lbl_valor_hint").text(hint);
+    }
+}
+
 function agregar(){
     $("#txtOperacion").val(1);
     $("#txtCodigo").val(0);
@@ -56,12 +68,12 @@ function agregar(){
     $("#tipo_prom_descrip").removeAttr("disabled");
     $("#tipo_prom_fechaInicio").removeAttr("disabled");
     $("#tipo_prom_fechaFin").removeAttr("disabled");
-    $("#tipo_prom_modo").removeAttr("disabled");
-    $("#tipo_prom_valor").removeAttr("disabled");
+    $("#tipo_prom_modo").removeAttr("disabled").val("").off("change.modo").on("change.modo", manejarCambioModo);
+    $("#tipo_prom_valor").removeAttr("disabled").val("");
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -75,12 +87,12 @@ function editar(){
     $("#tipo_prom_descrip").removeAttr("disabled");
     $("#tipo_prom_fechaInicio").removeAttr("disabled");
     $("#tipo_prom_fechaFin").removeAttr("disabled");
-    $("#tipo_prom_modo").removeAttr("disabled");
-    $("#tipo_prom_valor").removeAttr("disabled");
+    $("#tipo_prom_modo").removeAttr("disabled").off("change.modo").on("change.modo", manejarCambioModo);
+    manejarCambioModo(); // aplicar regla según modo actual
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -88,13 +100,11 @@ function editar(){
     $(".form-line").attr("class","form-line focused");
 }
 
-function eliminar(){
-    $("#txtOperacion").val(3);
-
+function confirmarCambioEstado(){
+    $("#txtOperacion").val(4);
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
-
+    $("#btnEstado").attr("disabled","true");
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
 }
@@ -109,9 +119,12 @@ function confirmarOperacion() {
         titulo = "EDITAR";
         pregunta = "¿DESEA EDITAR EL REGISTRO SELECCIONADO?";
     }
-    if(oper===3){
-        titulo = "ELIMINAR";
-        pregunta = "¿DESEA ELIMINAR EL REGISTRO SELECCIONADO?";
+    if(oper===4){
+        var estado = $("#tipo_prom_estado").val();
+        titulo   = (estado || 'activo') === 'activo' ? 'DESACTIVAR' : 'ACTIVAR';
+        pregunta = (estado || 'activo') === 'activo'
+            ? '¿Desea desactivar este registro? No aparecerá en búsquedas.'
+            : '¿Desea activar este registro nuevamente?';
     }
     swal({
         title: titulo,
@@ -140,7 +153,11 @@ function listar(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipoPromociones("+rs.tipo_promociones_id+",'"+rs.tipo_prom_nombre+"','"+rs.tipo_prom_descrip+"','"+rs.tipo_prom_fechaInicio+"','"+rs.tipo_prom_fechaFin+"','"+rs.tipo_prom_modo+"','"+rs.tipo_prom_valor+"');\">";
+            var estado = rs.tipo_prom_estado || 'activo';
+            var badge  = estado === 'activo'
+                ? '<span class="badge" style="background:#27ae60;">Activo</span>'
+                : '<span class="badge" style="background:#c0392b;">Inactivo</span>';
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipoPromociones("+rs.tipo_promociones_id+",'"+rs.tipo_prom_nombre+"','"+rs.tipo_prom_descrip+"','"+rs.tipo_prom_fechaInicio+"','"+rs.tipo_prom_fechaFin+"','"+rs.tipo_prom_modo+"','"+rs.tipo_prom_valor+"','"+estado+"');\">";
                 lista = lista + "<td>";
                 lista = lista + rs.tipo_promociones_id;
                 lista = lista +"</td>";
@@ -162,6 +179,7 @@ function listar(){
                 lista = lista + "<td>";
                 lista = lista + rs.tipo_prom_valor;
                 lista = lista +"</td>";
+                lista = lista + "<td>" + badge + "</td>";
             lista = lista + "</tr>";
         }
         $("#tableBody").html(lista);
@@ -171,7 +189,7 @@ function listar(){
         alert(c);
     })
 }
-function seleccionTipoPromociones(codigo, tipo_prom_nombre,tipo_prom_descrip,tipo_prom_fechaInicio,tipo_prom_fechaFin,tipo_prom_modo,tipo_prom_valor){
+function seleccionTipoPromociones(codigo, tipo_prom_nombre,tipo_prom_descrip,tipo_prom_fechaInicio,tipo_prom_fechaFin,tipo_prom_modo,tipo_prom_valor, estado){
     $("#txtCodigo").val(codigo);
     $("#tipo_prom_nombre").val(tipo_prom_nombre);
     $("#tipo_prom_descrip").val(tipo_prom_descrip);
@@ -179,13 +197,30 @@ function seleccionTipoPromociones(codigo, tipo_prom_nombre,tipo_prom_descrip,tip
     $("#tipo_prom_fechaFin").val(tipo_prom_fechaFin);
     $("#tipo_prom_modo").val(tipo_prom_modo);
     $("#tipo_prom_valor").val(tipo_prom_valor);
+    // Mostrar hint de modo al visualizar un registro
+    if (tipo_prom_modo === "2X1") {
+        $("#lbl_valor_hint").text("No aplica para 2x1").show();
+    } else if (tipo_prom_modo === "PORCENTAJE") {
+        $("#lbl_valor_hint").text("Entre 0 y 100");
+    } else {
+        $("#lbl_valor_hint").text("");
+    }
 
+    $("#tipo_prom_estado").val(estado || 'activo');
+    var activo = (estado || 'activo') === 'activo';
+    if (activo) {
+        $("#btnEstado").removeClass("btn-success").addClass("btn-danger");
+        $("#lblEstado").text("Desactivar");
+        $("#btnEstado").find("i").text("block");
+    } else {
+        $("#btnEstado").removeClass("btn-danger").addClass("btn-success");
+        $("#lblEstado").text("Activar");
+        $("#btnEstado").find("i").text("check_circle");
+    }
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").removeAttr("disabled");
+    $("#btnEstado").removeAttr("disabled");
     $("#btnGrabar").attr("disabled","true");
-    $("#btnCancelar").attr("disabled","true");
-    $("#btnEliminar").removeAttr("disabled");
-    
     $("#btnCancelar").removeAttr("disabled");
 
     $(".form-line").attr("class","form-line focused");
@@ -206,64 +241,70 @@ function grabar(){
     var Modo = $("#tipo_prom_modo").val().trim();
     var Valor = $("#tipo_prom_valor").val().trim();
 
-    // Validar que el campo descripción no esté vacío
     if (nombre === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return;  // Salir de la función si la validación falla
+        swal('Error', 'El nombre de la promoción es obligatorio.', 'error');
+        return;
     }
     if (descripción === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return;  // Salir de la función si la validación falla
+        swal('Error', 'La descripción es obligatoria.', 'error');
+        return;
     }
+
+    var CHARS_INVALIDOS = /[*<>{}|]/;
+    if (CHARS_INVALIDOS.test(nombre)) {
+        swal('Caracteres no permitidos', 'El nombre no puede contener: * < > { } |', 'error');
+        return;
+    }
+    if (CHARS_INVALIDOS.test(descripción)) {
+        swal('Caracteres no permitidos', 'La descripción no puede contener: * < > { } |', 'error');
+        return;
+    }
+
     if (FechaInicio === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return;  // Salir de la función si la validación falla
+        swal('Error', 'La fecha de inicio es obligatoria.', 'error');
+        return;
     }
     if (FechaFin === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return;  // Salir de la función si la validación falla
+        swal('Error', 'La fecha de fin es obligatoria.', 'error');
+        return;
     }
     if (Modo === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return;  // Salir de la función si la validación falla
+        swal('Error', 'Debe seleccionar un modo de promoción.', 'error');
+        return;
     }
-    if (Valor === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return;  // Salir de la función si la validación falla
+    if (Modo !== "2X1" && Valor === "") {
+        swal('Error', 'El valor es obligatorio para el modo seleccionado.', 'error');
+        return;
     }
+
+    // Si el modo es 2X1 no se valida ni envía valor
+    if (Modo !== "2X1") {
+        var valorNum = parseFloat(Valor.replace(",", "."));
+        if (isNaN(valorNum) || valorNum < 0) {
+            swal('Error', 'El valor debe ser un número mayor o igual a cero.', 'error');
+            return;
+        }
+        if (Modo === "PORCENTAJE" && valorNum > 100) {
+            swal('Error', 'El porcentaje no puede ser mayor a 100%.', 'error');
+            return;
+        }
+    }
+
+    var mInicio = moment(FechaInicio, 'DD/MM/YYYY HH:mm:ss', true);
+    var mFin    = moment(FechaFin,    'DD/MM/YYYY HH:mm:ss', true);
+    if (mInicio.isValid() && mFin.isValid() && mFin.isBefore(mInicio)) {
+        swal('Error', 'La fecha de fin no puede ser anterior a la fecha de inicio.', 'error');
+        return;
+    }
+
+    var op = parseInt($("#txtOperacion").val());
+    if (op === 4) { cambiarEstado(); return; }
+
     var endpoint = "tipo-promociones/create";
     var metodo = "POST";
-    if($("#txtOperacion").val()==2){
+    if(op === 2){
         endpoint = "tipo-promociones/update/"+$("#txtCodigo").val();
         metodo = "PUT";
-    }
-    if($("#txtOperacion").val()==3){
-        endpoint = "tipo-promociones/delete/"+$("#txtCodigo").val();
-        metodo = "DELETE";
     }
     $.ajax({
         url:getUrl() + ""+endpoint,
@@ -275,8 +316,8 @@ function grabar(){
             'tipo_prom_nombre': $("#tipo_prom_nombre").val(),
             'tipo_prom_fechaInicio': $("#tipo_prom_fechaInicio").val(), 
             'tipo_prom_fechaFin': $("#tipo_prom_fechaFin").val(),
-            'tipo_prom_modo': $("#tipo_prom_modo").val(), 
-            'tipo_prom_valor': $("#tipo_prom_valor").val()
+            'tipo_prom_modo':  $("#tipo_prom_modo").val(),
+            'tipo_prom_valor': $("#tipo_prom_modo").val() === "2X1" ? 0 : $("#tipo_prom_valor").val()
         }
 
     })
@@ -307,5 +348,22 @@ function grabar(){
         } else {
             swal('Error', res ? (res.mensaje || res.message || 'Error inesperado.') : 'Error inesperado.', 'error');
         }
+    });
+}
+
+function cambiarEstado() {
+    var id = $("#txtCodigo").val();
+    $.ajax({
+        url: getUrl() + 'tipo-promociones/estado/' + id,
+        method: 'PATCH',
+        dataType: 'json'
+    })
+    .done(function(res) {
+        swal({ title: 'Respuesta', text: res.mensaje, type: res.tipo },
+            function() { if (res.tipo === 'success') location.reload(true); });
+    })
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        swal('Error', res && res.mensaje ? res.mensaje : 'Error inesperado.', 'error');
     });
 }

@@ -172,7 +172,7 @@ function listar() {
     })
     .done(function (resultado) {
 
-        const esc = s => (s || '').toString().replace(/'/g, "\\'");
+        const esc = s => (s || '').toString().replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 
         let lista = "";
 
@@ -240,9 +240,8 @@ function listar() {
         $("#tableBody").html(lista);
         formatoTabla();
     })
-    .fail(function (xhr, status, error) {
-        alert("Error: " + error);
-        console.error(xhr.responseText);
+    .fail(function (xhr) {
+        mostrarErrores(xhr);
     });
 }
 function seleccionOrdenServicio(
@@ -343,44 +342,33 @@ function buscarPresupuestoServ() {
         if (!resultado || resultado.length === 0) {
             lista = "<div class='list-group-item'>No se encontraron presupuestos confirmados</div>";
         } else {
-            for (let rs of resultado) {
-                lista += `
-                    <div class="list-group-item" style="cursor:pointer"
-                        onclick="seleccionarPresupuestoServ(
-                            ${rs.presupuestos_serv_cab_id},
-                            '${(rs.presupuesto_serv || '').replace(/'/g, "\\'")}',
-
-                            ${rs.empresa_id}, '${(rs.emp_razon_social || '').replace(/'/g, "\\'")}',
-                            ${rs.sucursal_id}, '${(rs.suc_razon_social || '').replace(/'/g, "\\'")}',
-
-                            ${rs.tipo_diagnostico_id}, '${(rs.tipo_diag_nombre || '').replace(/'/g, "\\'")}',
-
-                            ${rs.clientes_id}, '${(rs.cli_nombre || '').replace(/'/g, "\\'")}',
-                            '${(rs.cli_apellido || '').replace(/'/g, "\\'")}',
-                            '${(rs.cli_ruc || '').replace(/'/g, "\\'")}',
-                            '${(rs.cli_telefono || '').replace(/'/g, "\\'")}',
-                            '${(rs.cli_direccion || '').replace(/'/g, "\\'")}',
-                            '${(rs.cli_correo || '').replace(/'/g, "\\'")}',
-
-                            ${rs.diagnostico_cab_id},
-                            '${(rs.diag_cab_observaciones || '').replace(/'/g, "\\'")}',
-                            '${(rs.diag_cab_prioridad || '').replace(/'/g, "\\'")}',
-                            '${(rs.diag_cab_nivel_combustible || '').replace(/'/g, "\\'")}',
-                            '${(rs.diag_cab_kilometraje || '').replace(/'/g, "\\'")}',
-                            '${(rs.encargado || '').replace(/'/g, "\\'")}',
-                            '${(rs.pres_serv_cab_fecha_vence || '').replace(/'/g, "\\'")}',
-                            ${rs.tipo_vehiculo_id},
-                            '${(rs.tip_veh_nombre || '').replace(/'/g, "\\'")}',
-                            ${rs.tip_veh_capacidad || 0},
-                            '${(rs.tip_veh_combustible || '').replace(/'/g, "\\'")}',
-                            '${(rs.tip_veh_categoria || '').replace(/'/g, "\\'")}',
-                            '${(rs.marc_nom || '').replace(/'/g, "\\'")}',
-                            '${(rs.modelo_nom || '').replace(/'/g, "\\'")}'
-                        );">
-                        <b>${rs.presupuesto_serv}</b><br>
-                        Estado: ${rs.pres_serv_cab_estado} – Encargado: ${rs.encargado}
-                    </div>
-                `;
+            var esc2 = function(s) { return (s || '').toString().replace(/\\/g, '\\\\').replace(/'/g, "\\'"); };
+            for (var i = 0; i < resultado.length; i++) {
+                var rs = resultado[i];
+                lista += "<div class='list-group-item' style='cursor:pointer' onclick=\"seleccionarPresupuestoServ("
+                    + rs.presupuestos_serv_cab_id + ",'" + esc2(rs.presupuesto_serv) + "',"
+                    + rs.empresa_id + ",'" + esc2(rs.emp_razon_social) + "',"
+                    + rs.sucursal_id + ",'" + esc2(rs.suc_razon_social) + "',"
+                    + rs.tipo_diagnostico_id + ",'" + esc2(rs.tipo_diag_nombre) + "',"
+                    + rs.clientes_id + ",'" + esc2(rs.cli_nombre) + "','" + esc2(rs.cli_apellido) + "',"
+                    + "'" + esc2(rs.cli_ruc) + "','" + esc2(rs.cli_telefono) + "','" + esc2(rs.cli_direccion) + "','" + esc2(rs.cli_correo) + "',"
+                    + rs.diagnostico_cab_id + ","
+                    + "'" + esc2(rs.diag_cab_observaciones) + "','" + esc2(rs.diag_cab_prioridad) + "',"
+                    + "'" + esc2(rs.diag_cab_nivel_combustible) + "','" + esc2(rs.diag_cab_kilometraje) + "',"
+                    + "'" + esc2(rs.encargado) + "','" + esc2(rs.pres_serv_cab_fecha_vence) + "',"
+                    + rs.tipo_vehiculo_id + ","
+                    + "'" + esc2(rs.tip_veh_nombre) + "',"
+                    + (rs.tip_veh_capacidad || 0) + ","
+                    + "'" + esc2(rs.tip_veh_combustible) + "','" + esc2(rs.tip_veh_categoria) + "',"
+                    + "'" + esc2(rs.marc_nom) + "','" + esc2(rs.modelo_nom) + "'"
+                    + ");\">"
+                    + (function(p) {
+                        var c = p === 'ALTA' ? '#c0392b' : p === 'MEDIA' ? '#e67e22' : '#27ae60';
+                        return '<span style="background:' + c + ';color:#fff;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:bold;float:right;">' + (p || '?') + '</span>';
+                    })(rs.diag_cab_prioridad)
+                    + "<b>" + (rs.presupuesto_serv || '') + "</b><br>"
+                    + "Estado: " + (rs.pres_serv_cab_estado || '') + " &nbsp;|&nbsp; Encargado: " + (rs.encargado || '')
+                    + "</div>";
             }
         }
 
@@ -388,8 +376,7 @@ function buscarPresupuestoServ() {
         $("#listaPresupuestoServ").attr("style", "display:block; position:absolute; z-index:2000;");
     })
     .fail(function(xhr) {
-        console.error(xhr.responseText);
-        alert("Error al buscar presupuestos de servicio.");
+        mostrarErrores(xhr);
     });
 }
 
@@ -471,9 +458,8 @@ function buscarEquipoTrabajo(){
         $("#listaEquiTrab").html(lista);
         $("#listaEquiTrab").attr("style","display:block; position:absolute; z-index:2000;");
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr){
+        mostrarErrores(xhr);
     })
 }
 
@@ -497,18 +483,7 @@ function grabar() {
     const presupuesto = parseInt($("#presupuesto_serv_cab_id").val()) || 0;
     const cliente = parseInt($("#clientes_id").val()) || 0;
     const tipo = ($("#ord_serv_tipo").val() || "NORMAL").trim();
-console.log("=== DATOS ANTES DE VALIDAR ===");
-console.log("observaciones:", observaciones);
-console.log("fecha:", fecha);
-console.log("fechaVence:", fechaVence);
-console.log("empresa:", empresa);
-console.log("sucursal:", sucursal);
-console.log("presupuesto:", presupuesto);
-console.log("cliente:", cliente);
-console.log("tipo:", tipo);
-console.log("📌 Presupuesto ID leído en grabar:", $("#presupuesto_serv_cab_id").val());
-console.log("=============================");
-    // ✅ Validar campos obligatorios
+    // Validar campos obligatorios
     if (!observaciones || !fecha || !fechaVence || empresa <= 0 || sucursal <= 0 || presupuesto <= 0 || cliente <= 0) {
         swal({
             title: "Error",
@@ -580,12 +555,10 @@ console.log("=============================");
             }
         });
     })
-    .fail(function(xhr, status, error) {
-        alert("Error: " + error);
-        console.error(xhr.responseText);
+    .fail(function(xhr) {
+        mostrarErrores(xhr);
     });
 }
-
 
 function campoFecha(){
     $('.datetimepicker').bootstrapMaterialDatePicker({
@@ -604,11 +577,14 @@ function listarDetalles(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionOrdenServDet("+rs.item_id+",'"+rs.item_decripcion+"',"+rs.orden_serv_det_cantidad+");\">";
-                lista = lista + "<td>" + rs.item_id + "</td>";
-                lista = lista + "<td>" + rs.item_decripcion + "</td>";
-                lista = lista + "<td>" + rs.orden_serv_det_cantidad + "</td>";
-            lista = lista + "</tr>";
+            lista += `<tr class="item-list">
+                <td>${rs.item_id}</td>
+                <td>${rs.item_decripcion || ''}</td>
+                <td>${rs.orden_serv_det_cantidad}</td>
+                <td>${rs.orden_serv_det_costo}</td>
+                <td>${rs.marc_nom || '-'}</td>
+                <td>${rs.modelo_nom || '-'}</td>
+            </tr>`;
             cantidadDetalle++;
         }
         $("#tableDetalle").html(lista);
@@ -619,27 +595,37 @@ function listarDetalles(){
             $("#btnConfirmar").attr("disabled","true");
         }
     })
-    .fail(function(xhr, status, error) {
-        alert("Error: " + error);
-        console.error(xhr.responseText);
+    .fail(function(xhr) {
+        mostrarErrores(xhr);
     })
 }
 function cargarFuncionarioIdLogueado() {
     try {
-        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
-        
+        var datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
+
         if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
             $('#funcionario_id').val(datosSesion.user.funcionario_id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
-            console.error('No se encontraron datos de sesión válidos');
-            alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');
-            window.location.href = '../../index.html';
+            swal("Error de sesión", "No se puede identificar al usuario. Inicie sesión nuevamente.", "error");
+            setTimeout(function() { window.location.href = '../../index.html'; }, 2000);
         }
     } catch (error) {
-        console.error('Error al cargar datos de usuario:', error);
-        alert('Error al cargar datos del usuario. Inicie sesión nuevamente.');
-        window.location.href = '../../index.html';
+        swal("Error", "Error al cargar datos del usuario. Inicie sesión nuevamente.", "error");
+        setTimeout(function() { window.location.href = '../../index.html'; }, 2000);
     }
+}
+
+function mostrarErrores(xhr) {
+    let mensaje = 'Ocurrió un error inesperado.';
+    if (xhr.responseJSON) {
+        if (xhr.responseJSON.message) {
+            mensaje = xhr.responseJSON.message;
+        }
+        if (xhr.responseJSON.errors) {
+            const errores = xhr.responseJSON.errors;
+            mensaje = Object.values(errores).flat().join('\n');
+        }
+    }
+    swal({ title: 'Error', text: mensaje, type: 'error' });
 }
 

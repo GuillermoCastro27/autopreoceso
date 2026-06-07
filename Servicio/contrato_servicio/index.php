@@ -44,6 +44,7 @@
     <input type="hidden" id="txtOperacion" value="0">
     <input type="hidden" id="funcionario_id">
     <input type="hidden" id="contrato_estado" value="PENDIENTE">
+    <input type="hidden" id="orden_serv_cab_id">
 
     <!-- ================= DATOS GENERALES ================= -->
     <div class="section-box">
@@ -51,6 +52,9 @@
     <div class="row clearfix">
         <div class="col-sm-1">
             <input type="text" id="id" class="form-control" disabled placeholder="Código">
+        </div>
+        <div class="col-sm-2">
+            <input type="text" id="contrato_numero" class="form-control" disabled placeholder="Nº Contrato" style="font-weight:bold;color:#1565c0;">
         </div>
         <div class="col-sm-2">
             <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
@@ -148,6 +152,23 @@
         <div class="col-sm-3" style="margin-top:10px;">
             <input type="text" id="cli_correo" class="form-control" disabled placeholder="Correo">
         </div>
+        <div class="col-sm-4" style="margin-top:10px;">
+            <input type="text" id="contrato_representante" class="form-control" disabled placeholder="Representante firmante del cliente">
+        </div>
+    </div>
+    </div>
+
+    <!-- ================= ORDEN DE SERVICIO VINCULADA ================= -->
+    <div class="section-box">
+    <div class="section-title">Orden de Servicio Vinculada (opcional)</div>
+    <div class="row clearfix">
+        <div class="col-sm-5">
+            <input type="text" id="orden_buscar" class="form-control" disabled placeholder="Buscar orden por observación o cliente..." onkeyup="buscarOrdenParaContrato();">
+        </div>
+        <div class="col-sm-5" style="margin-top:0px;">
+            <input type="text" id="orden_texto" class="form-control" disabled readonly placeholder="Orden vinculada">
+        </div>
+        <div class="col-sm-11" id="lista_orden"></div>
     </div>
     </div>
 
@@ -183,6 +204,9 @@
         </button>
         <button type="button" id="btnImprimir" class="btn btn-info" onclick="imprimirContrato();" disabled>
             <i class="material-icons">print</i> Imprimir
+        </button>
+        <button type="button" id="btnRenovar" class="btn btn-default" onclick="renovarContrato();" disabled>
+            <i class="material-icons">autorenew</i> Renovar
         </button>
     </div>
 
@@ -222,6 +246,7 @@
                 <button type="button" id="btnEditarDetalle" class="btn btn-warning waves-effect" onclick="editarDetalle();"><i class="material-icons">mode_edit</i></button>
                 <button type="button" id="btnEliminarDetalle" class="btn btn-danger waves-effect" onclick="eliminarDetalle();"><i class="material-icons">clear</i></button>
                 <button type="button" id="btnGrabarDetalle" class="btn btn-default waves-effect" style="display:none;" onclick="grabarDetalle();"><i class="material-icons">save</i></button>
+                <button type="button" id="btnCancelarDetalle" class="btn btn-warning waves-effect" style="display:none;" onclick="cancelarDetalle();"><i class="material-icons">close</i></button>
             </div>
         </div>
     </div>
@@ -243,12 +268,20 @@
         <tbody id="tableDetalle"></tbody>
         <tfoot>
             <tr>
-                <th colspan="7" class="text-right">Total Comprobante</th>
-                <th class="text-right" id="txtTotalGral">0</th>
+                <th colspan="7" class="text-right">IVA 10%</th>
+                <th class="text-right" id="txtIva10">0</th>
+            </tr>
+            <tr>
+                <th colspan="7" class="text-right">IVA 5%</th>
+                <th class="text-right" id="txtIva5">0</th>
             </tr>
             <tr>
                 <th colspan="7" class="text-right">Total IVA</th>
                 <th class="text-right" id="txtTotalConImpuesto">0</th>
+            </tr>
+            <tr>
+                <th colspan="7" class="text-right" style="font-weight:bold;">Total Comprobante</th>
+                <th class="text-right" id="txtTotalGral" style="font-weight:bold;">0</th>
             </tr>
         </tfoot>
     </table>

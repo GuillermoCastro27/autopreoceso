@@ -9,25 +9,25 @@ function formatoTabla(){
                 extend:'copy',
                 text:'COPIAR',
                 className:'btn btn-primary waves-effect',
-                title:'Listado de Tipo Items'
+                title:'Formas de Cobro'
             },
             {
                 extend:'excel',
                 text:'EXCEL',
                 className:'btn btn-success waves-effect',
-                title:'Listado de Tipo Items'
+                title:'Formas de Cobro'
             },
             {
                 extend:'pdf',
                 text:'PDF',
                 className:'btn btn-danger waves-effect',
-                title:'Listado de Tipo Items'
+                title:'Formas de Cobro'
             },
             {
                 extend:'print',
                 text:'IMPRIMIR',
                 className:'btn btn-warning waves-effect',
-                title:'Listado de Tipo Items'
+                title:'Formas de Cobro'
             }
         ],
         iDisplayLength:3,
@@ -55,7 +55,7 @@ function agregar(){
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -69,7 +69,7 @@ function editar(){
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -77,17 +77,14 @@ function editar(){
     $(".form-line").attr("class","form-line focused");
 }
 
-function eliminar(){
-    $("#txtOperacion").val(3);
-
+function confirmarCambioEstado() {
+    $("#txtOperacion").val(4);
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
-
+    $("#btnEstado").attr("disabled","true");
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
 }
-
 
 function confirmarOperacion() {
     var oper = parseInt($("#txtOperacion").val());
@@ -98,9 +95,13 @@ function confirmarOperacion() {
         titulo = "EDITAR";
         pregunta = "¿DESEA EDITAR EL REGISTRO SELECCIONADO?";
     }
-    if(oper===3){
-        titulo = "ELIMINAR";
-        pregunta = "¿DESEA ELIMINAR EL REGISTRO SELECCIONADO?";
+    if(oper===4){
+        var estado = $("#for_cob_estado").val();
+        var activo = (estado || 'activo').toLowerCase() === 'activo';
+        titulo   = activo ? 'DESACTIVAR' : 'ACTIVAR';
+        pregunta = activo
+            ? '¿Desea desactivar este registro? No aparecerá en búsquedas.'
+            : '¿Desea activar este registro nuevamente?';
     }
     swal({
         title: titulo,
@@ -128,38 +129,54 @@ function listar(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipo("+rs.forma_cobro_id+",'"+rs.for_cob_descripcion+"');\">";
+            var estado = rs.for_cob_estado || 'activo';
+            var badge  = (estado).toLowerCase() === 'activo'
+                ? '<span class="badge" style="background:#27ae60;">Activo</span>'
+                : '<span class="badge" style="background:#c0392b;">Inactivo</span>';
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipo("+rs.forma_cobro_id+",'"+rs.for_cob_descripcion+"','"+estado+"');\">";
                 lista = lista + "<td>";
                 lista = lista + rs.forma_cobro_id;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
                 lista = lista + rs.for_cob_descripcion;
                 lista = lista +"</td>";
+                lista = lista + "<td>" + badge + "</td>";
             lista = lista + "</tr>";
         }
         $("#tableBody").html(lista);
         formatoTabla();
     })
-    .fail(function(a,b,c){
-        alert(c);
-    })
+    .fail(function(xhr) {
+        swal('Error', 'No se pudo cargar la lista.', 'error');
+    });
 }
-function seleccionTipo(codigo, for_cob_descripcion){
+function seleccionTipo(codigo, for_cob_descripcion, estado){
     $("#txtCodigo").val(codigo);
     $("#for_cob_descripcion").val(for_cob_descripcion);
 
+    $("#for_cob_estado").val(estado || 'activo');
+    var activo = (estado || 'activo').toLowerCase() === 'activo';
+    if (activo) {
+        $("#btnEstado").removeClass("btn-success").addClass("btn-danger");
+        $("#lblEstado").text("Desactivar");
+        $("#btnEstado").find("i").text("block");
+    } else {
+        $("#btnEstado").removeClass("btn-danger").addClass("btn-success");
+        $("#lblEstado").text("Activar");
+        $("#btnEstado").find("i").text("check_circle");
+    }
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").removeAttr("disabled");
+    $("#btnEstado").removeAttr("disabled");
     $("#btnGrabar").attr("disabled","true");
-    $("#btnCancelar").attr("disabled","true");
-    $("#btnEliminar").removeAttr("disabled");
-    
     $("#btnCancelar").removeAttr("disabled");
 
     $(".form-line").attr("class","form-line focused");
 }
 
 function grabar() {
+    var op = parseInt($("#txtOperacion").val());
+    if (op === 4) { cambiarEstado(); return; }
     var descripcion = $("#for_cob_descripcion").val().trim();
 
     // Validar que el campo descripción no esté vacío
@@ -169,7 +186,13 @@ function grabar() {
             text: "El campo no debe estar vacío.",
             type: "error"
         });
-        return; 
+        return;
+    }
+
+    var CHARS_INVALIDOS = /[*<>{}|]/;
+    if (CHARS_INVALIDOS.test(descripcion)) {
+        swal('Caracteres no permitidos', 'El campo no puede contener los caracteres: * < > { } |', 'error');
+        return;
     }
 
     var endpoint = "forma_cobro/create";
@@ -187,9 +210,9 @@ function grabar() {
         url: getUrl() + "" + endpoint,
         method: metodo,
         dataType: "json",
-        data: { 
-            'id': $("#txtCodigo").val(), 
-            'for_cob_descripcion': descripcion, 
+        data: {
+            'id': $("#txtCodigo").val(),
+            'for_cob_descripcion': descripcion,
         }
     })
     .done(function(resultado) {
@@ -204,40 +227,38 @@ function grabar() {
         });
     })
     .fail(function(xhr) {
-        var respuesta = xhr.responseJSON;
-
-        // Manejo de errores
-        if (xhr.status === 400) {
-            swal({
-                title: "Error",
-                text: respuesta.mensaje,
-                type: "error"
-            });
-        } else if (xhr.status === 422) {
-            // Errores de validación
-            let errores = "";
-            $.each(respuesta.errors, function(key, value) {
-                errores += value + "\n";
-            });
-            swal({
-                title: "Error de validación",
-                text: errores,
-                type: "error"
-            });
-        } else if (xhr.status === 500 && xhr.responseText.includes("SQLSTATE[23503]")) {
-            // Error de llave foránea (tipo en uso en otra tabla)
-            swal({
-                title: "Error",
-                text: "No se puede eliminar la forma de cobro porque está siendo utilizado en otra parte del sistema.",
-                type: "error"
-            });
+        var res = xhr.responseJSON;
+        if (xhr.status === 422) {
+            var msg = '';
+            if (res && res.errors) {
+                $.each(res.errors, function(k, v){ msg += (Array.isArray(v) ? v[0] : v) + '\n'; });
+            } else {
+                msg = res && res.message ? res.message : 'Verifique los campos ingresados.';
+            }
+            swal('Error de validación', msg, 'error');
+        } else if (xhr.status === 409) {
+            swal('No se puede eliminar', res && res.mensaje ? res.mensaje : 'El registro está siendo utilizado en otra parte del sistema.', 'error');
+        } else if (xhr.status === 404) {
+            swal('No encontrado', 'El registro seleccionado no existe.', 'error');
         } else {
-            swal({
-                title: "Error",
-                text: "Ocurrió un error inesperado.",
-                type: "error"
-            });
+            swal('Error', res && res.mensaje ? res.mensaje : 'Ocurrió un error inesperado. Intente nuevamente.', 'error');
         }
-        console.log(xhr.responseText);
+    });
+}
+
+function cambiarEstado() {
+    var id = $("#txtCodigo").val();
+    $.ajax({
+        url: getUrl() + 'forma_cobro/estado/' + id,
+        method: 'PATCH',
+        dataType: 'json'
+    })
+    .done(function(res) {
+        swal({ title: 'Respuesta', text: res.mensaje, type: res.tipo },
+            function() { if (res.tipo === 'success') location.reload(true); });
+    })
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        swal('Error', res && res.mensaje ? res.mensaje : 'Error inesperado.', 'error');
     });
 }

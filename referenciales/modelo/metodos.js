@@ -9,25 +9,25 @@ function formatoTabla(){
                 extend:'copy',
                 text:'COPIAR',
                 className:'btn btn-primary waves-effect',
-                title:'Listado de Modelos'
+                title:'Modelos'
             },
             {
                 extend:'excel',
                 text:'EXCEL',
                 className:'btn btn-success waves-effect',
-                title:'Listado de Modelos'
+                title:'Modelos'
             },
             {
                 extend:'pdf',
                 text:'PDF',
                 className:'btn btn-danger waves-effect',
-                title:'Listado de Modelos'
+                title:'Modelos'
             },
             {
                 extend:'print',
                 text:'IMPRIMIR',
                 className:'btn btn-warning waves-effect',
-                title:'Listado de Modelos'
+                title:'Modelos'
             }
         ],
         iDisplayLength:3,
@@ -58,7 +58,7 @@ function agregar(){
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -75,7 +75,7 @@ function editar(){
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -83,13 +83,11 @@ function editar(){
     $(".form-line").attr("class","form-line focused");
 }
 
-function eliminar(){
-    $("#txtOperacion").val(3);
-
+function confirmarCambioEstado() {
+    $("#txtOperacion").val(4);
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
-
+    $("#btnEstado").attr("disabled","true");
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
 }
@@ -104,9 +102,12 @@ function confirmarOperacion() {
         titulo = "EDITAR";
         pregunta = "¿DESEA EDITAR EL REGISTRO SELECCIONADO?";
     }
-    if(oper===3){
-        titulo = "ELIMINAR";
-        pregunta = "¿DESEA ELIMINAR EL REGISTRO SELECCIONADO?";
+    if(oper===4){
+        var estado = $("#modelo_estado").val();
+        titulo   = estado === 'activo' ? 'DESACTIVAR' : 'ACTIVAR';
+        pregunta = estado === 'activo'
+            ? '¿Desea desactivar este registro? No aparecerá en búsquedas.'
+            : '¿Desea activar este registro nuevamente?';
     }
     swal({
         title: titulo,
@@ -136,7 +137,11 @@ function listar(){
         console.log(resultado); 
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionModelo("+rs.id+","+rs.marca_id+",'"+rs.marc_nom+"','"+rs.modelo_nom+"','"+rs.modelo_tipo+"','"+rs.modelo_año+"');\">";
+            var estado = rs.modelo_estado || 'activo';
+            var badge  = estado === 'activo'
+                ? '<span class="badge" style="background:#27ae60;">Activo</span>'
+                : '<span class="badge" style="background:#c0392b;">Inactivo</span>';
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionModelo("+rs.id+","+rs.marca_id+",'"+rs.marc_nom+"','"+rs.modelo_nom+"','"+rs.modelo_tipo+"','"+rs.modelo_año+"','"+estado+"');\">";
                 lista = lista + "<td>";
                 lista = lista + rs.id;
                 lista = lista +"</td>";
@@ -152,6 +157,7 @@ function listar(){
                 lista = lista + "<td>";
                 lista = lista + rs.modelo_año;
                 lista = lista +"</td>";
+                lista = lista + "<td>" + badge + "</td>";
             lista = lista + "</tr>";
         }
         $("#tableBody").html(lista);
@@ -161,20 +167,30 @@ function listar(){
         alert(c);
     })
 }
-function seleccionModelo(codigo, marca_id, marc_nom, modelo_nom, modelo_tipo, modelo_año){
+function seleccionModelo(codigo, marca_id, marc_nom, modelo_nom, modelo_tipo, modelo_año, estado){
     $("#txtCodigo").val(codigo);
     $("#marca_id").val(marca_id);
     $("#marc_nom").val(marc_nom);
     $("#txtNom").val(modelo_nom);
     $("#modelo_tipo").val(modelo_tipo);
     $("#modelo_año").val(modelo_año);
+    $("#modelo_estado").val(estado || 'activo');
+
+    var activo = (estado || 'activo') === 'activo';
+    if (activo) {
+        $("#btnEstado").removeClass("btn-success").addClass("btn-danger");
+        $("#lblEstado").text("Desactivar");
+        $("#btnEstado").find("i").text("block");
+    } else {
+        $("#btnEstado").removeClass("btn-danger").addClass("btn-success");
+        $("#lblEstado").text("Activar");
+        $("#btnEstado").find("i").text("check_circle");
+    }
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").removeAttr("disabled");
+    $("#btnEstado").removeAttr("disabled");
     $("#btnGrabar").attr("disabled","true");
-    $("#btnCancelar").attr("disabled","true");
-    $("#btnEliminar").removeAttr("disabled");
-    
     $("#btnCancelar").removeAttr("disabled");
 
     $(".form-line").attr("class","form-line focused");
@@ -253,6 +269,10 @@ function habilitarMarca() {
 
 
 function grabar(){
+    var op = parseInt($("#txtOperacion").val());
+
+    if (op === 4) { cambiarEstado(); return; }
+
     var descripcion = $("#txtNom").val().trim();
 
     // Validar que el campo descripción no esté vacío
@@ -264,16 +284,19 @@ function grabar(){
         });
         return;  // Salir de la función si la validación falla
     }
+    var CHARS_INVALIDOS = /[*<>{}|]/;
+    if (CHARS_INVALIDOS.test(descripcion)) {
+        swal('Caracteres no permitidos', 'El campo no puede contener los caracteres: * < > { } |', 'error');
+        return;
+    }
+
     var endpoint = "modelo/create";
     var metodo = "POST";
-    if($("#txtOperacion").val()==2){
+    if(op==2){
         endpoint = "modelo/update/"+$("#txtCodigo").val();
         metodo = "PUT";
     }
-    if($("#txtOperacion").val()==3){
-        endpoint = "modelo/delete/"+$("#txtCodigo").val();
-        metodo = "DELETE";
-    }
+    // op===3 removed — use cambiarEstado() for state toggle
     $.ajax({
         url:getUrl() + ""+endpoint,
         method:metodo,
@@ -316,4 +339,21 @@ function grabar(){
         }
         console.log(xhr.responseText);
     })
+}
+
+function cambiarEstado() {
+    var id = $("#txtCodigo").val();
+    $.ajax({
+        url: getUrl() + 'modelo/estado/' + id,
+        method: 'PATCH',
+        dataType: 'json'
+    })
+    .done(function(res) {
+        swal({ title: 'Respuesta', text: res.mensaje, type: res.tipo },
+            function() { if (res.tipo === 'success') location.reload(true); });
+    })
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        swal('Error', res && res.mensaje ? res.mensaje : 'Error inesperado.', 'error');
+    });
 }

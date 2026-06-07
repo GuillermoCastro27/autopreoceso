@@ -9,25 +9,25 @@ function formatoTabla(){
                 extend:'copy',
                 text:'COPIAR',
                 className:'btn btn-primary waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Equipos de Trabajo'
             },
             {
                 extend:'excel',
                 text:'EXCEL',
                 className:'btn btn-success waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Equipos de Trabajo'
             },
             {
                 extend:'pdf',
                 text:'PDF',
                 className:'btn btn-danger waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Equipos de Trabajo'
             },
             {
                 extend:'print',
                 text:'IMPRIMIR',
                 className:'btn btn-warning waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Equipos de Trabajo'
             }
         ],
         iDisplayLength:3,
@@ -57,7 +57,7 @@ function agregar(){
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -73,7 +73,7 @@ function editar(){
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -81,31 +81,13 @@ function editar(){
     $(".form-line").attr("class","form-line focused");
 }
 
-function eliminar(){
-    $("#txtOperacion").val(3);
-
+function confirmarCambioEstado(){
+    $("#txtOperacion").val(4);
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
-
+    $("#btnEstado").attr("disabled","true");
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
-}
-function formatearPrecio(input) {
-    // Eliminar puntos para poder trabajar el número real
-    let valor = input.value.replace(/\./g, "");
-
-    // Si no es número, salir
-    if (isNaN(valor)) {
-        input.value = "";
-        return;
-    }
-
-    // Convertir a número entero
-    let numero = parseInt(valor, 10);
-
-    // Formatear con puntos (estilo paraguayo)
-    input.value = numero.toLocaleString('es-ES'); 
 }
 
 function confirmarOperacion() {
@@ -117,9 +99,12 @@ function confirmarOperacion() {
         titulo = "EDITAR";
         pregunta = "¿DESEA EDITAR EL REGISTRO SELECCIONADO?";
     }
-    if(oper===3){
-        titulo = "ELIMINAR";
-        pregunta = "¿DESEA ELIMINAR EL REGISTRO SELECCIONADO?";
+    if(oper===4){
+        var estado = $("#equipo_estado").val();
+        titulo   = (estado || 'activo') === 'activo' ? 'DESACTIVAR' : 'ACTIVAR';
+        pregunta = (estado || 'activo') === 'activo'
+            ? '¿Desea desactivar este registro? No aparecerá en búsquedas.'
+            : '¿Desea activar este registro nuevamente?';
     }
     swal({
         title: titulo,
@@ -148,18 +133,22 @@ function listar() {
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista += "<tr class=\"item-list\" onclick=\"seleccionTipoServicio("
+            var estado = rs.equipo_estado || 'activo';
+            var badge  = estado === 'activo'
+                ? '<span class="badge" style="background:#27ae60;">Activo</span>'
+                : '<span class="badge" style="background:#c0392b;">Inactivo</span>';
+            lista += "<tr class=\"item-list\" onclick=\"seleccionEquipoTrabajo("
                 + rs.equipo_trabajo_id + ",'"
                 + rs.equipo_nombre + "','"
                 + rs.equipo_descripcion + "','"
-                + rs.equipo_categoria + "');\">";
+                + rs.equipo_categoria + "','"
+                + estado + "');\">";
 
             lista += "<td>" + rs.equipo_trabajo_id + "</td>";
             lista += "<td>" + rs.equipo_nombre + "</td>";
-
-            // 🟢 Mostrar precio formateado
             lista += "<td>" + rs.equipo_descripcion + "</td>";
             lista += "<td>" + rs.equipo_categoria + "</td>";
+            lista += "<td>" + badge + "</td>";
 
             lista += "</tr>";
         }
@@ -171,18 +160,27 @@ function listar() {
         alert(c);
     })
 }
-function seleccionTipoServicio(codigo, equipo_nombre,equipo_descripcion,equipo_categoria){
+function seleccionEquipoTrabajo(codigo, equipo_nombre,equipo_descripcion,equipo_categoria, estado){
     $("#txtCodigo").val(codigo);
     $("#equipo_nombre").val(equipo_nombre);
     $("#equipo_descripcion").val(equipo_descripcion);
     $("#equipo_categoria").val(equipo_categoria);
 
+    $("#equipo_estado").val(estado || 'activo');
+    var activo = (estado || 'activo') === 'activo';
+    if (activo) {
+        $("#btnEstado").removeClass("btn-success").addClass("btn-danger");
+        $("#lblEstado").text("Desactivar");
+        $("#btnEstado").find("i").text("block");
+    } else {
+        $("#btnEstado").removeClass("btn-danger").addClass("btn-success");
+        $("#lblEstado").text("Activar");
+        $("#btnEstado").find("i").text("check_circle");
+    }
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").removeAttr("disabled");
+    $("#btnEstado").removeAttr("disabled");
     $("#btnGrabar").attr("disabled","true");
-    $("#btnCancelar").attr("disabled","true");
-    $("#btnEliminar").removeAttr("disabled");
-    
     $("#btnCancelar").removeAttr("disabled");
 
     $(".form-line").attr("class","form-line focused");
@@ -195,38 +193,40 @@ function grabar(){
 
     // Validar que el campo descripción no esté vacío
     if (nombre === "") {
-        swal({
-            title: "Error",
-            text: "Ningún campo debe estar vacío.",
-            type: "error"
-        });
-        return;  // Salir de la función si la validación falla
+        swal('Error', 'El nombre del equipo es obligatorio.', 'error');
+        return;
     }
     if (descripcion === "") {
-        swal({
-            title: "Error",
-            text: "Ningún campo debe estar vacío.",
-            type: "error"
-        });
-        return;  // Salir de la función si la validación falla
+        swal('Error', 'La descripción es obligatoria.', 'error');
+        return;
     }
     if (categoria === "") {
-        swal({
-            title: "Error",
-            text: "Ningún campo debe estar vacío.",
-            type: "error"
-        });
-        return;  // Salir de la función si la validación falla
+        swal('Error', 'La categoría es obligatoria.', 'error');
+        return;
     }
+
+    var CHARS_INVALIDOS = /[*<>{}|]/;
+    if (CHARS_INVALIDOS.test(nombre)) {
+        swal('Caracteres no permitidos', 'El campo no puede contener los caracteres: * < > { } |', 'error');
+        return;
+    }
+    if (CHARS_INVALIDOS.test(descripcion)) {
+        swal('Caracteres no permitidos', 'El campo no puede contener los caracteres: * < > { } |', 'error');
+        return;
+    }
+    if (CHARS_INVALIDOS.test(categoria)) {
+        swal('Caracteres no permitidos', 'El campo no puede contener los caracteres: * < > { } |', 'error');
+        return;
+    }
+
+    var op = parseInt($("#txtOperacion").val());
+    if (op === 4) { cambiarEstado(); return; }
+
     var endpoint = "equipo_trabajo/create";
     var metodo = "POST";
-    if($("#txtOperacion").val()==2){
+    if(op === 2){
         endpoint = "equipo_trabajo/update/"+$("#txtCodigo").val();
         metodo = "PUT";
-    }
-    if($("#txtOperacion").val()==3){
-        endpoint = "equipo_trabajo/delete/"+$("#txtCodigo").val();
-        metodo = "DELETE";
     }
     $.ajax({
         url:getUrl() + ""+endpoint,
@@ -267,5 +267,22 @@ function grabar(){
         } else {
             swal('Error', res ? (res.mensaje || res.message || 'Error inesperado.') : 'Error inesperado.', 'error');
         }
+    });
+}
+
+function cambiarEstado() {
+    var id = $("#txtCodigo").val();
+    $.ajax({
+        url: getUrl() + 'equipo_trabajo/estado/' + id,
+        method: 'PATCH',
+        dataType: 'json'
+    })
+    .done(function(res) {
+        swal({ title: 'Respuesta', text: res.mensaje, type: res.tipo },
+            function() { if (res.tipo === 'success') location.reload(true); });
+    })
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        swal('Error', res && res.mensaje ? res.mensaje : 'Error inesperado.', 'error');
     });
 }

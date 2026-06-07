@@ -180,11 +180,17 @@ function grabar() {
     }
     if (abreviatura === "") {
         swal({
-            title: "Error", 
+            title: "Error",
             text: "El campo no debe estar vacío.",
             type: "error"
         });
-        return; 
+        return;
+    }
+
+    var CHARS_INVALIDOS = /[*<>{}|]/;
+    if (CHARS_INVALIDOS.test(descripcion)) {
+        swal('Caracteres no permitidos', 'El campo no puede contener los caracteres: * < > { } |', 'error');
+        return;
     }
 
     var endpoint = "perfiles/create";

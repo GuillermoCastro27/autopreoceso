@@ -146,34 +146,49 @@
         <div class="row clearfix" id="formDetalles">
             <input type="hidden" id="txtOperacionDetalle" value="0"/>
 
-            <div class="col-sm-1">
-                <input type="text" id="item_id" class="form-control" disabled placeholder="Código">
-            </div>
-
-            <div class="col-sm-6">
-                <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
-                <div id="listaProductos" style="display:none;"></div>
-            </div>
-
+            <!-- FILA 1: Depósito → Producto → Código → Stock -->
             <div class="col-sm-3">
-                <input type="text" id="cantidad_stock" class="form-control" disabled placeholder="Cantidad Disponible">
-            </div>
-
-            <div class="col-sm-2">
-                <input type="text" id="det_cantidad" class="form-control" disabled placeholder="Cantidad">
-            </div>
-
-            <div class="col-sm-3">
-                <select class="form-control" id="deposito_id_det" disabled>
-                    <option value="">-- Depósito --</option>
+                <select class="form-control" id="deposito_id_det" disabled onchange="onDepositoChange();">
+                    <option value="">-- Depósito (seleccione primero) --</option>
                 </select>
             </div>
 
-            <div class="col-sm-3" style="margin-top:15px;">
+            <div class="col-sm-5">
+                <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Buscar producto (requiere depósito)">
+                <div id="listaProductos" style="display:none;"></div>
+            </div>
+
+            <div class="col-sm-1">
+                <input type="text" id="item_id" class="form-control" disabled placeholder="Cód.">
+            </div>
+
+            <div class="col-sm-3">
+                <input type="text" id="cantidad_stock" class="form-control" disabled placeholder="Stock disponible">
+            </div>
+
+            <!-- FILA 2: Marca → Modelo → Cantidad → Botones -->
+            <div class="col-sm-3" style="margin-top:8px;">
+                <select class="form-control" id="marca_det" disabled>
+                    <option value="">-- Marca --</option>
+                </select>
+            </div>
+
+            <div class="col-sm-3" style="margin-top:8px;">
+                <select class="form-control" id="modelo_det" disabled>
+                    <option value="">-- Modelo --</option>
+                </select>
+            </div>
+
+            <div class="col-sm-2" style="margin-top:8px;">
+                <input type="text" id="det_cantidad" class="form-control" disabled placeholder="Cantidad">
+            </div>
+
+            <div class="col-sm-4" style="margin-top:14px;">
                 <button id="btnAgregarDetalle" class="btn btn-success" onclick="agregarDetalle();"><i class="material-icons">add</i></button>
                 <button id="btnEditarDetalle" class="btn btn-warning" onclick="editarDetalle();"><i class="material-icons">mode_edit</i></button>
                 <button id="btnEliminarDetalle" class="btn btn-danger" onclick="eliminarDetalle();"><i class="material-icons">clear</i></button>
                 <button id="btnGrabarDetalle" class="btn btn-default" onclick="grabarDetalle();" style="display:none;"><i class="material-icons">save</i></button>
+                <button id="btnCancelarDetalle" class="btn btn-warning" onclick="cancelarDetalle();" style="display:none;"><i class="material-icons">close</i></button>
             </div>
         </div>
 
@@ -185,6 +200,8 @@
                     <tr>
                         <th>Código</th>
                         <th>Producto</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
                         <th>Cantidad</th>
                         <th>Cantidad Disponible</th>
                         <th>Depósito</th>

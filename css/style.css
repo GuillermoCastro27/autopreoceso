@@ -8333,3 +8333,25 @@ body.theme-red { background: #f1f2f6; }
 .theme-red .navbar-header {
     background-color: #2d3436 !important;
 }
+
+/* ===== SIDEBAR SCROLLEABLE ===== */
+.sidebar {
+    overflow-y: auto !important;
+}
+.sidebar .menu {
+    height: auto !important;
+    overflow-y: visible !important;
+}
+
+/* ===== TOGGLE +/– del menú lateral: color, z-index y espacio para que no quede tapado ===== */
+.sidebar .menu .list .menu-toggle::before,
+.sidebar .menu .list .menu-toggle::after {
+    color: #2d3436 !important;
+    font-weight: 700;
+    font-size: 20px;
+    z-index: 10;
+}
+/* Deja margen derecho en el link para que el texto no cubra el +/– */
+.sidebar .menu .list a.menu-toggle {
+    padding-right: 40px;
+}

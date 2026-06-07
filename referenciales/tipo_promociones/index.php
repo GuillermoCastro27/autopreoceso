@@ -52,6 +52,7 @@
                         <div class="body">
                             <div class="row clearfix">
                                 <input type="hidden" value="0" id="txtOperacion"/>
+                                <input type="hidden" id="tipo_prom_estado" value="activo"/>
 
                                 <!-- CÓDIGO -->
                                 <div class="col-sm-2">
@@ -122,9 +123,10 @@
                                 <div class="col-sm-6">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="number" id="tipo_prom_valor" class="form-control" disabled>
+                                            <input type="number" id="tipo_prom_valor" class="form-control" min="0" step="0.01" disabled>
                                             <label class="form-label">Valor</label>
                                         </div>
+                                        <small id="lbl_valor_hint" style="color:#888;display:none;"></small>
                                     </div>
                                 </div>
                             </div>
@@ -133,7 +135,7 @@
                             <div class="button-demo">
                                 <button type="button" id="btnAgregar" class="btn btn-success waves-effect" onclick="agregar();">AGREGAR</button>
                                 <button type="button" id="btnEditar" class="btn btn-primary waves-effect" onclick="editar();" disabled>MODIFICAR</button>
-                                <button type="button" id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();" disabled>ELIMINAR</button>
+                                <button type="button" id="btnEstado" class="btn btn-danger waves-effect" onclick="confirmarCambioEstado();" disabled><i class="material-icons">block</i> <span id="lblEstado">Desactivar</span></button>
                                 <button type="button" id="btnGrabar" class="btn btn-default waves-effect" disabled onclick="confirmarOperacion();">GRABAR</button>
                                 <button type="button" id="btnCancelar" class="btn btn-warning waves-effect" onclick="cancelar();" disabled>CANCELAR</button> 
                             </div>
@@ -158,6 +160,7 @@
                                             <th>Fecha Fin</th>
                                             <th>Modo</th>
                                             <th>Valor</th>
+                                            <th>Estado</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableBody"></tbody>
@@ -170,6 +173,7 @@
                                             <th>Fecha Fin</th>
                                             <th>Modo</th>
                                             <th>Valor</th>
+                                            <th>Estado</th>
                                         </tr>
                                     </tfoot>    
                                 </table>

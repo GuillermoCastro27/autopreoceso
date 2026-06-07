@@ -10,25 +10,25 @@ function formatoTabla(){
                 extend:'copy',
                 text:'COPIAR',
                 className:'btn btn-primary waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Tipos de Descuento'
             },
             {
                 extend:'excel',
                 text:'EXCEL',
                 className:'btn btn-success waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Tipos de Descuento'
             },
             {
                 extend:'pdf',
                 text:'PDF',
                 className:'btn btn-danger waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Tipos de Descuento'
             },
             {
                 extend:'print',
                 text:'IMPRIMIR',
                 className:'btn btn-warning waves-effect',
-                title:'Listado de Tipo de impuestos'
+                title:'Listado de Tipos de Descuento'
             }
         ],
         iDisplayLength:3,
@@ -59,7 +59,7 @@ function agregar(){
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -76,7 +76,7 @@ function editar(){
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -84,13 +84,11 @@ function editar(){
     $(".form-line").attr("class","form-line focused");
 }
 
-function eliminar(){
-    $("#txtOperacion").val(3);
-
+function confirmarCambioEstado(){
+    $("#txtOperacion").val(4);
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
-
+    $("#btnEstado").attr("disabled","true");
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
 }
@@ -105,9 +103,12 @@ function confirmarOperacion() {
         titulo = "EDITAR";
         pregunta = "¿DESEA EDITAR EL REGISTRO SELECCIONADO?";
     }
-    if(oper===3){
-        titulo = "ELIMINAR";
-        pregunta = "¿DESEA ELIMINAR EL REGISTRO SELECCIONADO?";
+    if(oper===4){
+        var estado = $("#tipo_desc_estado").val();
+        titulo   = (estado || 'activo') === 'activo' ? 'DESACTIVAR' : 'ACTIVAR';
+        pregunta = (estado || 'activo') === 'activo'
+            ? '¿Desea desactivar este registro? No aparecerá en búsquedas.'
+            : '¿Desea activar este registro nuevamente?';
     }
     swal({
         title: titulo,
@@ -136,7 +137,11 @@ function listar(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipoDescuentos("+rs.tipo_descuentos_id+",'"+rs.tipo_desc_nombre+"','"+rs.tipo_desc_descrip+"','"+rs.tipo_desc_fechaInicio+"','"+rs.tipo_desc_fechaFin+"');\">";
+            var estado = rs.tipo_desc_estado || 'activo';
+            var badge  = estado === 'activo'
+                ? '<span class="badge" style="background:#27ae60;">Activo</span>'
+                : '<span class="badge" style="background:#c0392b;">Inactivo</span>';
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipoDescuentos("+rs.tipo_descuentos_id+",'"+rs.tipo_desc_nombre+"','"+rs.tipo_desc_descrip+"','"+rs.tipo_desc_fechaInicio+"','"+rs.tipo_desc_fechaFin+"','"+estado+"');\">";
                 lista = lista + "<td>";
                 lista = lista + rs.tipo_descuentos_id;
                 lista = lista +"</td>";
@@ -152,6 +157,7 @@ function listar(){
                 lista = lista + "<td>";
                 lista = lista + rs.tipo_desc_fechaFin;
                 lista = lista +"</td>";
+                lista = lista + "<td>" + badge + "</td>";
             lista = lista + "</tr>";
         }
         $("#tableBody").html(lista);
@@ -161,19 +167,28 @@ function listar(){
         alert(c);
     })
 }
-function seleccionTipoDescuentos(codigo, tipo_desc_nombre,tipo_desc_descrip,tipo_desc_fechaInicio,tipo_desc_fechaFin){
+function seleccionTipoDescuentos(codigo, tipo_desc_nombre,tipo_desc_descrip,tipo_desc_fechaInicio,tipo_desc_fechaFin, estado){
     $("#txtCodigo").val(codigo);
     $("#tipo_desc_nombre").val(tipo_desc_nombre);
     $("#tipo_desc_descrip").val(tipo_desc_descrip);
     $("#tipo_desc_fechaInicio").val(tipo_desc_fechaInicio);
     $("#tipo_desc_fechaFin").val(tipo_desc_fechaFin);
 
+    $("#tipo_desc_estado").val(estado || 'activo');
+    var activo = (estado || 'activo') === 'activo';
+    if (activo) {
+        $("#btnEstado").removeClass("btn-success").addClass("btn-danger");
+        $("#lblEstado").text("Desactivar");
+        $("#btnEstado").find("i").text("block");
+    } else {
+        $("#btnEstado").removeClass("btn-danger").addClass("btn-success");
+        $("#lblEstado").text("Activar");
+        $("#btnEstado").find("i").text("check_circle");
+    }
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").removeAttr("disabled");
+    $("#btnEstado").removeAttr("disabled");
     $("#btnGrabar").attr("disabled","true");
-    $("#btnCancelar").attr("disabled","true");
-    $("#btnEliminar").removeAttr("disabled");
-    
     $("#btnCancelar").removeAttr("disabled");
 
     $(".form-line").attr("class","form-line focused");
@@ -192,48 +207,49 @@ function grabar(){
     var FechaInicio = $("#tipo_desc_fechaInicio").val().trim();
     var FechaFin = $("#tipo_desc_fechaFin").val().trim();
 
-    // Validar que el campo descripción no esté vacío
     if (nombre === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return;  // Salir de la función si la validación falla
+        swal('Error', 'El nombre del tipo de descuento es obligatorio.', 'error');
+        return;
     }
     if (descripción === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return;  // Salir de la función si la validación falla
+        swal('Error', 'La descripción es obligatoria.', 'error');
+        return;
     }
+
+    var CHARS_INVALIDOS = /[*<>{}|]/;
+    if (CHARS_INVALIDOS.test(nombre)) {
+        swal('Caracteres no permitidos', 'El nombre no puede contener: * < > { } |', 'error');
+        return;
+    }
+    if (CHARS_INVALIDOS.test(descripción)) {
+        swal('Caracteres no permitidos', 'La descripción no puede contener: * < > { } |', 'error');
+        return;
+    }
+
     if (FechaInicio === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return;  // Salir de la función si la validación falla
+        swal('Error', 'La fecha de inicio es obligatoria.', 'error');
+        return;
     }
     if (FechaFin === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return;  // Salir de la función si la validación falla
+        swal('Error', 'La fecha de fin es obligatoria.', 'error');
+        return;
     }
+
+    var mInicio = moment(FechaInicio, 'DD/MM/YYYY HH:mm:ss', true);
+    var mFin    = moment(FechaFin,    'DD/MM/YYYY HH:mm:ss', true);
+    if (mInicio.isValid() && mFin.isValid() && mFin.isBefore(mInicio)) {
+        swal('Error', 'La fecha de fin no puede ser anterior a la fecha de inicio.', 'error');
+        return;
+    }
+
+    var op = parseInt($("#txtOperacion").val());
+    if (op === 4) { cambiarEstado(); return; }
+
     var endpoint = "tipo-descuentos/create";
     var metodo = "POST";
-    if($("#txtOperacion").val()==2){
+    if(op === 2){
         endpoint = "tipo-descuentos/update/"+$("#txtCodigo").val();
         metodo = "PUT";
-    }
-    if($("#txtOperacion").val()==3){
-        endpoint = "tipo-descuentos/delete/"+$("#txtCodigo").val();
-        metodo = "DELETE";
     }
     $.ajax({
         url:getUrl() + ""+endpoint,
@@ -275,5 +291,22 @@ function grabar(){
         } else {
             swal('Error', res ? (res.mensaje || res.message || 'Error inesperado.') : 'Error inesperado.', 'error');
         }
+    });
+}
+
+function cambiarEstado() {
+    var id = $("#txtCodigo").val();
+    $.ajax({
+        url: getUrl() + 'tipo-descuentos/estado/' + id,
+        method: 'PATCH',
+        dataType: 'json'
+    })
+    .done(function(res) {
+        swal({ title: 'Respuesta', text: res.mensaje, type: res.tipo },
+            function() { if (res.tipo === 'success') location.reload(true); });
+    })
+    .fail(function(xhr) {
+        var res = xhr.responseJSON;
+        swal('Error', res && res.mensaje ? res.mensaje : 'Error inesperado.', 'error');
     });
 }

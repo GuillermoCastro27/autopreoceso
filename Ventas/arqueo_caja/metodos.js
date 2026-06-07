@@ -12,32 +12,32 @@ function formatoTabla(){
                 extend:'copy',
                 text:'COPIAR',
                 className:'btn btn-primary waves-effect',
-                title:'Listado de Pedidos'
+                title:'Arqueo de Caja'
             },
             {
                 extend:'excel',
                 text:'EXCEL',
                 className:'btn btn-success waves-effect',
-                title:'Listado de Pedidos'
+                title:'Arqueo de Caja'
             },
             {
                 extend:'pdf',
                 text:'PDF',
                 className:'btn btn-danger waves-effect',
-                title:'Listado de Pedidos'
+                title:'Arqueo de Caja'
             },
             {
                 extend:'print',
                 text:'IMPRIMIR',
                 className:'btn btn-warning waves-effect',
-                title:'Listado de Pedidos'
+                title:'Arqueo de Caja'
             }
         ],
         iDisplayLength:3,
         language:{
             sSearch: 'Buscar: ',
-            sInfo: 'Mostrando resultados del START al END de un total de TOTAL registros',
-            sInfoFiltered: '(filtrado de entre MAX registros)',
+            sInfo: 'Mostrando resultados del _START_ al _END_ de un total de _TOTAL_ registros',
+            sInfoFiltered: '(filtrado de entre _MAX_ registros)',
             sZeroRecords: 'No se encontraron resultados',
             sInfoEmpty: 'Mostrando resultado del 0 al 0 de un total de 0 registros',
             oPaginate:{
@@ -170,8 +170,7 @@ function listar() {
         formatoTabla();
     })
     .fail(function (xhr) {
-        console.error(xhr.responseText);
-        alert("Error al listar arqueos de caja");
+        mostrarErrores(xhr);
     });
 }
 function seleccionArqueo(
@@ -258,9 +257,8 @@ function buscarEmpresas() {
             seleccionEmpresa(primeraEmpresa.id, primeraEmpresa.emp_razon_social, primeraEmpresa.emp_direccion, primeraEmpresa.emp_telef, primeraEmpresa.emp_correo);
         }
     })
-    .fail(function(a,b,c) {
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr) {
+        swal("Error", "No se pudo cargar las sucursales.", "error");
     });
 }
 
@@ -290,9 +288,8 @@ function buscarSucursal(){
         $("#listaSucursal").html(lista);
         $("#listaSucursal").attr("style","display:block; position:absolute; z-index:2000;");
     })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
+    .fail(function(xhr){
+        swal("Error", "No se pudo cargar las sucursales.", "error");
     })
 }
 
@@ -387,11 +384,8 @@ function seleccionApertCierCaja(
 
 function grabar() {
 
-    console.clear();
-    console.log("=== INICIO GRABAR ARQUEO ===");
 
     let oper = parseInt($("#txtOperacion").val());
-    console.log("Operacion:", oper);
 
     let endpoint = "";
     let metodo   = "POST";
@@ -409,16 +403,9 @@ function grabar() {
         let tipo  = $("#tipo_arqueo").val();
         let fechaVista = $("#arqueo_fecha").val();
 
-        console.log("empresa_id:", emp);
-        console.log("sucursal_id:", suc);
-        console.log("apertura_cierre_caja_id:", aper);
-        console.log("user_id:", user);
-        console.log("tipo_arqueo:", tipo);
-        console.log("arqueo_fecha (vista):", fechaVista);
 
         // 🔴 VALIDACIÓN FECHA
         if (!moment(fechaVista, "DD/MM/YYYY HH:mm:ss", true).isValid()) {
-            console.error("❌ Fecha inválida:", fechaVista);
             swal("Error", "Debe ingresar una fecha válida para el arqueo.", "error");
             return;
         }
@@ -426,13 +413,9 @@ function grabar() {
         let fecha = moment(fechaVista, "DD/MM/YYYY HH:mm:ss")
                     .format("YYYY-MM-DD HH:mm:ss");
 
-        console.log("arqueo_fecha (formato backend):", fecha);
 
         // 🔴 VALIDACIÓN CAMPOS
         if (!emp || !suc || !aper || !user || !tipo) {
-            console.error("❌ Campos incompletos", {
-                emp, suc, aper, user, tipo
-            });
             swal("Error", "Debe completar todos los datos del arqueo.", "error");
             return;
         }
@@ -446,8 +429,6 @@ function grabar() {
             arqueo_fecha: fecha
         };
 
-        console.log("Endpoint:", endpoint);
-        console.log("Datos enviados:", datos);
     }
 
     // =========================
@@ -456,10 +437,8 @@ function grabar() {
     if (oper === 2) {
 
         let id = $("#id").val();
-        console.log("Anular arqueo ID:", id);
 
         if (!id || id === "0") {
-            console.error("❌ ID inválido para anular");
             swal("Error", "No hay un arqueo seleccionado.", "error");
             return;
         }
@@ -474,10 +453,8 @@ function grabar() {
     if (oper === 3) {
 
         let id = $("#id").val();
-        console.log("Confirmar arqueo ID:", id);
 
         if (!id || id === "0") {
-            console.error("❌ ID inválido para confirmar");
             swal("Error", "No hay un arqueo seleccionado.", "error");
             return;
         }
@@ -487,14 +464,10 @@ function grabar() {
     }
 
     if (endpoint === "") {
-        console.error("❌ Endpoint vacío. Operación inválida.");
         swal("Error", "Operación no válida.", "error");
         return;
     }
 
-    console.log("=== EJECUTANDO AJAX ===");
-    console.log("URL:", getUrl() + endpoint);
-    console.log("Método:", metodo);
 
     $.ajax({
         url: getUrl() + endpoint,
@@ -503,7 +476,6 @@ function grabar() {
         data: datos
     })
     .done(function (resultado) {
-        console.log("✅ RESPUESTA OK:", resultado);
 
         swal({
             title: "Respuesta",
@@ -514,9 +486,6 @@ function grabar() {
         });
     })
     .fail(function (xhr) {
-        console.error("❌ ERROR AJAX");
-        console.error("Status:", xhr.status);
-        console.error("Response:", xhr.responseText);
 
         swal("Error", "No se pudo completar la operación.", "error");
     });
@@ -533,20 +502,11 @@ function campoFecha(){
 
 // Función para cargar el funcionario_id del usuario logueado
 function cargarFuncionarioIdLogueado() {
-    try {
-        const datosSesion = JSON.parse(localStorage.getItem('datosSesion'));
-        
-        if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
-            $('#funcionario_id').val(datosSesion.user.funcionario_id);
-            console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
-        } else {
-            console.error('No se encontraron datos de sesión válidos');
-            alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');
-            window.location.href = '../../index.html';
-        }
-    } catch (error) {
-        console.error('Error al cargar datos de usuario:', error);
-        alert('Error al cargar datos del usuario. Inicie sesión nuevamente.');
+    const datosSesion = JSON.parse(localStorage.getItem('datosSesion') || '{}');
+    if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
+        $('#funcionario_id').val(datosSesion.user.funcionario_id);
+    } else {
+        swal("Sesión expirada", "No se puede identificar al usuario. Inicie sesión nuevamente.", "error");
         window.location.href = '../../index.html';
     }
 }
