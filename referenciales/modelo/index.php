@@ -57,54 +57,34 @@
             <div class="row clearfix">
 
                 <div class="col-sm-2">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="txtCodigo" class="form-control" disabled>
-                            <label class="form-label">Código</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Código</label>
+                    <input type="text" id="txtCodigo" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="marc_nom" class="form-control" disabled onkeyup="buscarMarcas();">
-                            <label class="form-label">Marca</label>
-                        </div>
-                        <input type="hidden" id="marca_id">
-                        <div id="listaMarcas" style="display:none;"></div>
-                    </div>
+                    <label class="field-label">Marca</label>
+                    <input type="text" id="marc_nom" class="form-control" disabled onkeyup="buscarMarcas();" placeholder="Marca">
+                    <input type="hidden" id="marca_id">
+                    <div id="listaMarcas" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="txtNom" class="form-control" disabled>
-                            <label class="form-label">Modelo</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Modelo</label>
+                    <input type="text" id="txtNom" class="form-control" disabled placeholder="Modelo">
                 </div>
 
                 <div class="col-sm-3">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <select id="modelo_tipo" class="form-control" disabled onchange="habilitarMarca();">
-                                <option value="" disabled selected>Seleccione tipo...</option>
-                                <option value="PRODUCTO">PRODUCTO</option>
-                                <option value="VEHICULO">VEHICULO</option>
-                            </select>
-                            <label class="form-label">Tipo de Modelo</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Tipo de Modelo</label>
+                    <select id="modelo_tipo" class="form-control" disabled onchange="habilitarMarca();">
+                        <option value="" disabled selected>Seleccione tipo...</option>
+                        <option value="PRODUCTO">PRODUCTO</option>
+                        <option value="VEHICULO">VEHICULO</option>
+                    </select>
                 </div>
 
                 <div class="col-sm-3">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="modelo_año" class="form-control" disabled>
-                            <label class="form-label">Año del Modelo</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Año del Modelo</label>
+                    <input type="text" id="modelo_año" class="form-control" disabled placeholder="Año del Modelo">
                 </div>
 
             </div>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -24,6 +24,48 @@
     <!-- AdminBSB -->
     <link href="../../css/style.css" rel="stylesheet">
     <link href="../../css/themes/all-themes.css" rel="stylesheet" />
+
+    <style>
+        .seccion-filtros { background:#f8f9fa; border:1px solid #e0e0e0; border-radius:4px; padding:12px 14px; margin-bottom:14px; }
+        .kpi-box { display:inline-block; background:#2d3436; color:#fff; padding:5px 14px; border-radius:4px; margin:0 6px 6px 0; font-size:13px; }
+        .kpi-box b { font-size:15px; }
+        .chart-wrap { position:relative; min-height:260px; }
+        .spinner-overlay { display:none; position:absolute; top:0; left:0; width:100%; height:100%;
+            background:rgba(255,255,255,.75); z-index:10; align-items:center; justify-content:center; }
+        .spinner-overlay.activo { display:flex; }
+        .tabla-resultado { margin-top:14px; }
+
+    .dt-buttons { display: none; }
+
+    @media print {
+        nav.navbar, #leftsidebar, .sidebar, .preloader, .overlay { display: none !important; }
+        section.content { margin-left: 0 !important; padding: 8px !important; }
+        body { background: #fff !important; font-size: 9pt; color: #000; }
+
+        .print-only { display: block !important; }
+        .no-print    { display: none  !important; }
+
+        .dt-buttons, .dataTables_filter, .dataTables_length,
+        .dataTables_paginate, .dataTables_info, .spinner-overlay { display: none !important; }
+
+        .card { box-shadow: none !important; border: 1px solid #ddd !important;
+                page-break-inside: avoid; margin-bottom: 8px !important; }
+        .card .header { background: #f5f5f5 !important; padding: 8px 12px !important; }
+        .card .body { padding: 10px !important; }
+
+        canvas { display: block !important; max-width: 100% !important; height: auto !important; }
+
+        .col-md-6, .col-sm-6 { width: 50% !important; float: left !important; box-sizing: border-box; }
+        .row.clearfix { overflow: hidden; }
+
+        table { width: 100% !important; font-size: 8pt !important; border-collapse: collapse !important; }
+        th, td { padding: 2px 5px !important; border: 1px solid #bbb !important; }
+
+        #print-summary { padding: 8px 14px 6px; background: #f8f9fa !important;
+                         border: 1px solid #dee2e6 !important; margin-bottom: 12px;
+                         font-size: 10pt; overflow: hidden; }
+    }
+    </style>
 </head>
 
 <body class="theme-red">
@@ -31,47 +73,62 @@
 <?php require_once('../../opciones.php'); ?>
 
 <section class="content">
+<div id="print-summary" class="print-only" style="display:none;"></div>
 <div class="container-fluid">
 <div class="row clearfix">
 <div class="col-md-12">
 
 <!-- ================= FILTROS ================= -->
 <div class="card card-industrial">
-    <div class="header">
+    <div class="header" style="position:relative;">
         <h2>
             <i class="material-icons">build</i>
             Informes de Servicio
             <small>Consulta y exportación por rango de fechas</small>
         </h2>
+        <div class="no-print" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);">
+            <button onclick="exportarPDF();" class="btn btn-sm waves-effect"
+                    style="background:#c0392b;color:#fff;border:none;padding:7px 13px;margin-right:6px;">
+                <i class="material-icons" style="vertical-align:middle;font-size:16px;">picture_as_pdf</i>
+                PDF
+            </button>
+            <button onclick="exportarPagina();" class="btn btn-sm waves-effect"
+                    style="background:#2d3436;color:#fff;border:none;padding:7px 13px;">
+                <i class="material-icons" style="vertical-align:middle;font-size:16px;">print</i>
+                Imprimir
+            </button>
+        </div>
     </div>
 
     <div class="body">
 
-        <div class="filtro-box">
+        <div class="filtro-box no-print">
             <div class="filtro-title">Parámetros de Búsqueda</div>
 
             <div class="row clearfix">
                 <div class="col-sm-3">
                     <label>Desde</label>
-                    <input type="date" id="fecha_desde" class="form-control">
+                    <input type="text" id="fecha_desde" class="form-control datepicker-informe" placeholder="DD/MM/YYYY" autocomplete="off">
                 </div>
 
                 <div class="col-sm-3">
                     <label>Hasta</label>
-                    <input type="date" id="fecha_hasta" class="form-control">
+                    <input type="text" id="fecha_hasta" class="form-control datepicker-informe" placeholder="DD/MM/YYYY" autocomplete="off">
                 </div>
 
                 <div class="col-sm-3">
                     <label>Informe de</label>
                     <select id="tipo" class="form-control">
+                        <option value="solicitud_servicio">Solicitudes de Servicio</option>
                         <option value="recepcion">Recepciones</option>
                         <option value="diagnostico">Diagnósticos</option>
                         <option value="presupuesto_serv">Presupuestos de Servicio</option>
                         <option value="orden_servicio">Órdenes de Servicio</option>
+                        <option value="insumos">Insumos Utilizados</option>
                         <option value="contrato">Contratos de Servicio</option>
-                        <option value="reclamo">Reclamos de Clientes</option>
                         <option value="promociones">Promociones</option>
                         <option value="descuentos">Descuentos</option>
+                        <option value="reclamo">Reclamos de Clientes</option>
                     </select>
                 </div>
 
@@ -104,6 +161,9 @@
     </div>
 </div>
 
+<!-- ===== ESTADÍSTICAS DINÁMICAS POR TIPO ===== -->
+<div id="stats_container"></div>
+
 </div>
 </div>
 </div>
@@ -134,13 +194,12 @@
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js"></script>
-<script src="metodos.js?v=2"></script>
+<script src="metodos.js?v=7"></script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById("contenedor_tabla").style.display = "none";
-    });
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
 </body>
 </html>

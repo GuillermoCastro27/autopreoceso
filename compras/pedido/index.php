@@ -60,15 +60,18 @@
 
             <div class="row clearfix">
                 <div class="col-sm-2">
+                    <label class="field-label">Código</label>
                     <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Empresa</label>
                     <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
                     <input type="hidden" id="empresa_id">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Sucursal</label>
                     <input type="text" id="suc_razon_social" class="form-control" disabled
                            onkeyup="buscarSucursal();" placeholder="Sucursal">
                     <input type="hidden" id="sucursal_id">
@@ -76,16 +79,22 @@
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Fecha</label>
                     <input type="text" id="ped_fecha" class="datetimepicker form-control" disabled placeholder="Fecha">
                     <small id="avisoFechaPed" style="color:#e74c3c;display:none;"></small>
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Plazo de Entrega</label>
                     <input type="text" id="ped_vence" class="datetimepicker form-control" disabled placeholder="Plazo de Entrega">
                     <small id="avisoVencePed" style="color:#e74c3c;display:none;"></small>
                 </div>
 
+            </div>
+
+            <div class="row clearfix" style="margin-top:6px;">
                 <div class="col-sm-6">
+                    <label class="field-label">Observaciones</label>
                     <input type="text" id="ped_pbservaciones" class="form-control" disabled placeholder="Observaciones">
                 </div>
             </div>
@@ -139,22 +148,26 @@
             <!-- Fila 1: ítem, marca, modelo -->
             <div class="row clearfix">
                 <div class="col-sm-1">
+                    <label class="field-label">Cód.</label>
                     <input type="text" id="item_id" class="form-control" disabled placeholder="Cód">
                 </div>
 
                 <div class="col-sm-5">
+                    <label class="field-label">Producto</label>
                     <input type="text" id="item_decripcion" class="form-control" disabled
-                           onkeyup="buscarProductos();" placeholder="Producto">
+                           onkeyup="buscarProductos();" placeholder="Buscar...">
                     <div id="listaProductos" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Marca</label>
                     <select class="form-control" id="marca_det" disabled onchange="cargarModelosPedido();">
                         <option value="">-- Marca --</option>
                     </select>
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Modelo</label>
                     <select class="form-control" id="modelo_det" disabled>
                         <option value="">-- Modelo --</option>
                     </select>
@@ -164,14 +177,17 @@
             <!-- Fila 2: stock, cantidad, depósito -->
             <div class="row clearfix" style="margin-top:6px;">
                 <div class="col-sm-2">
-                    <input type="text" id="cantidad_stock" class="form-control" disabled placeholder="Stock disponible">
+                    <label class="field-label">Stock Disp.</label>
+                    <input type="text" id="cantidad_stock" class="form-control" disabled placeholder="0">
                 </div>
 
                 <div class="col-sm-2">
-                    <input type="text" id="det_cantidad" class="form-control" disabled placeholder="Cantidad a pedir">
+                    <label class="field-label">Cantidad</label>
+                    <input type="text" id="det_cantidad" class="form-control" disabled placeholder="0">
                 </div>
 
                 <div class="col-sm-4">
+                    <label class="field-label">Depósito</label>
                     <select class="form-control" id="deposito_id_det" disabled>
                         <option value="">-- Depósito --</option>
                     </select>
@@ -261,7 +277,7 @@
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js?v=2"></script>
-<script src="metodos.js?v=20260601k"></script>
+<script src="metodos.js"></script>
 
 </body>
 </html>

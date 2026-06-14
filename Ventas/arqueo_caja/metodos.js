@@ -193,11 +193,10 @@ function seleccionArqueo(
     $("#caja").val(caja_descripcion);
     $("#tipo_arqueo").val(tipo_arqueo);
 
-    // ✅ MOSTRAR TOTALES TAL CUAL VIENEN DEL BACKEND
-    $("#total_efectivo").val(total_efectivo);
-    $("#total_cheque").val(total_cheque);
-    $("#total_tarjeta").val(total_tarjeta);
-    $("#total_general").val(total_general);
+    $("#total_efectivo").val(formatearNumero(total_efectivo));
+    $("#total_cheque").val(formatearNumero(total_cheque));
+    $("#total_tarjeta").val(formatearNumero(total_tarjeta));
+    $("#total_general").val(formatearNumero(total_general));
     // =========================
     // VISTA
     // =========================
@@ -230,47 +229,9 @@ function seleccionArqueo(
     }
 }
 
-function calcularMontoCierre() {
-
-    let efectivo = parseFloat($("#monto_efectivo_cierre").val()) || 0;
-    let tarjeta  = parseFloat($("#monto_tarjeta_cierre").val()) || 0;
-    let cheque   = parseFloat($("#monto_cheque_cierre").val()) || 0;
-
-    let total = efectivo + tarjeta + cheque;
-
-    $("#monto_cierre").val(total.toFixed(2));
-}
-
-function buscarEmpresas() {
-    $.ajax({
-        url:getUrl() + "empresa/read",
-        method:"GET",
-        dataType: "json"
-    })
-    .done(function(resultado) {
-        var lista = "<ul class=\"list-group\">";
-        
-        // Comprobar si hay empresas en el resultado
-        if (resultado.length > 0) {
-            // Seleccionar automáticamente la primera empresa
-            var primeraEmpresa = resultado[0];
-            seleccionEmpresa(primeraEmpresa.id, primeraEmpresa.emp_razon_social, primeraEmpresa.emp_direccion, primeraEmpresa.emp_telef, primeraEmpresa.emp_correo);
-        }
-    })
-    .fail(function(xhr) {
-        swal("Error", "No se pudo cargar las sucursales.", "error");
-    });
-}
-
-function seleccionEmpresa(id, emp_razon_social, emp_direccion, emp_telef, emp_correo) {
-    $("#empresa_id").val(id);
-    $("#emp_razon_social").val(emp_razon_social);
-    $("#emp_direccion").val(emp_direccion);
-    $("#emp_telef").val(emp_telef);
-    $("#emp_correo").val(emp_correo);
-
-    $("#listaEmpresa").html("");
-    $("#listaEmpresa").attr("style", "display:none;");
+function formatearNumero(n) {
+    if (isNaN(n)) return '0,00';
+    return Number(n).toLocaleString('es-PY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function buscarSucursal(){

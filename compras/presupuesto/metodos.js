@@ -1,4 +1,5 @@
 ﻿var pedidosSeleccionados = [];
+var todosLosPedidos = [];
 
 // Cargar funcionario_id del usuario logueado
 cargarFuncionarioIdLogueado();
@@ -84,7 +85,8 @@ function agregar(){
     $("#pre_vence").removeAttr("disabled");
     $("#pre_observaciones").removeAttr("disabled");
     $("#prov_razonsocial").removeAttr("disabled");
-    $("#pedido").removeAttr("disabled");
+    $("#btnAbrirPedidos").prop("disabled", false);
+    todosLosPedidos = [];
     $("#emp_razon_social").attr("disabled","true");
     $("#suc_razon_social").removeAttr("disabled");
 
@@ -112,7 +114,8 @@ function editar(){
     $("#pre_vence").removeAttr("disabled");
     $("#pre_observaciones").removeAttr("disabled");
     $("#prov_razonsocial").removeAttr("disabled");
-    $("#pedido").removeAttr("disabled");
+    $("#btnAbrirPedidos").prop("disabled", false);
+    todosLosPedidos = [];
     $("#emp_razon_social").attr("disabled","true");
     $("#suc_razon_social").removeAttr("disabled");
 
@@ -295,10 +298,12 @@ function seleccionPresupuesto(
         $("#btnEditar").prop("disabled", false);
         $("#btnEliminar").prop("disabled", false);
         $("#formDetalles").show();
-    }
-
-    if (pre_estado === "CONFIRMADO") {
+    } else if (pre_estado === "CONFIRMADO") {
         $("#btnEliminar").prop("disabled", false);
+    } else if (pre_estado === "PROCESADO") {
+        // Solo lectura: todos los botones permanecen deshabilitados
+    } else if (pre_estado === "ANULADO") {
+        // Todos los botones permanecen deshabilitados
     }
 
     $(".form-line").addClass("focused");
@@ -311,7 +316,7 @@ function bloquearCabecera() {
     $("#pre_vence").attr("disabled", true);
     $("#pre_observaciones").attr("disabled", true);
     $("#prov_razonsocial").attr("disabled", true);
-    $("#pedido").attr("disabled", true);
+    $("#btnAbrirPedidos").prop("disabled", true);
     $("#suc_razon_social").attr("disabled", true);
 
     $("#btnGrabar").prop("disabled", true);
@@ -749,7 +754,7 @@ function buscarProductos(){
         url: getUrl()+"items/buscar",
         method: "POST",
         dataType: "json",
-        data:{ "item_decripcion": $("#item_decripcion").val() }
+        data:{ "item_decripcion": $("#item_decripcion").val(), "deposito_id": $("#deposito_id_det").val() || null }
     })
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
@@ -793,6 +798,10 @@ function formatearNumero(numero) {
     });
 }
 
+function _esc(s) {
+    return (s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
 // Obtiene y muestra la lista de detalles de un presupuesto mediante una solicitud AJAX.
 function listarDetalles() {
     let cantidadDetalle = 0;
@@ -833,15 +842,20 @@ function listarDetalles() {
                     TotalIva10 += iva;
                 }
 
+                var _depNomPre = getNombreDeposito(rs.deposito_id);
+                var _modNomPre = rs.modelo_nom ? rs.modelo_nom + (rs.modelo_año ? ' (' + rs.modelo_año + ')' : '') : '';
                 lista += "<tr class='item-list' onclick=\"seleccionDetalle("
                     + rs.item_id + ",'"
-                    + rs.item_decripcion + "',"
+                    + _esc(rs.item_decripcion) + "',"
                     + cantidad + ","
                     + costo + ","
                     + (rs.deposito_id||0) + ","
                     + rs.cantidad_disponible + ","
                     + (rs.marca_id||0) + ","
-                    + (rs.modelo_id||0) + ")\">";
+                    + (rs.modelo_id||0) + ",'"
+                    + _esc(_depNomPre) + "','"
+                    + _esc(rs.marc_nom||'') + "','"
+                    + _esc(_modNomPre) + "')\">";
 
                 lista += "<td>" + rs.item_id + "</td>";
                 lista += "<td>" + rs.item_decripcion + "</td>";
@@ -878,27 +892,37 @@ function listarDetalles() {
     });
 }
 // Rellena el formulario con los datos de un detalle seleccionado.
-function seleccionDetalle(item_id, item_decripcion, det_cantidad, det_costo, deposito_id, cantidad_disponible, marca_id, modelo_id){
+function seleccionDetalle(item_id, item_decripcion, det_cantidad, det_costo, deposito_id, cantidad_disponible, marca_id, modelo_id, dep_nombre, marc_nom, modelo_nom_full){
     $("#item_id").val(item_id);
     $("#item_decripcion").val(item_decripcion);
     $("#det_cantidad").val(det_cantidad);
     $("#det_costo").val(formatearNumero(det_costo));
     $("#cantidad_stock").val('' + cantidad_disponible);
     $("#deposito_id_original").val(deposito_id || '');
-    $("#deposito_id_det").html(getSelectDeposito(deposito_id)).attr("disabled", true);
+    var $dep = $('#deposito_id_det');
+    if (deposito_id && dep_nombre) {
+        $dep.html('<option value="' + deposito_id + '" selected>' + dep_nombre + '</option>');
+    } else {
+        $dep.html('<option value="">-- Depósito --</option>');
+    }
+    $dep.prop('disabled', true);
     $("#txtOperacionDetalle").val(0);
-    // Autocompletar marca y modelo
     _marcaIdPre  = marca_id  || null;
     _modeloIdPre = modelo_id || null;
-    if (marca_id) {
-        cargarMarcasPresupuesto(item_id, marca_id);
-        if (modelo_id) {
-            setTimeout(function() { cargarModelosPresupuesto(item_id, marca_id, modelo_id); }, 350);
-        }
+    var $marca = $('#marca_det_pre');
+    if (marca_id && marc_nom) {
+        $marca.html('<option value="' + marca_id + '" selected>' + marc_nom + '</option>');
     } else {
-        $('#marca_det_pre').html('<option value="">-- Marca --</option>').prop('disabled', true);
-        $('#modelo_det_pre').html('<option value="">-- Modelo --</option>').prop('disabled', true);
+        $marca.html('<option value="">-- Marca --</option>');
     }
+    $marca.prop('disabled', true);
+    var $modelo = $('#modelo_det_pre');
+    if (modelo_id && modelo_nom_full) {
+        $modelo.html('<option value="' + modelo_id + '" selected>' + modelo_nom_full + '</option>');
+    } else {
+        $modelo.html('<option value="">-- Modelo --</option>');
+    }
+    $modelo.prop('disabled', true);
 }
 
 // Realiza una búsqueda de proveedores y muestra los resultados.
@@ -939,49 +963,144 @@ function seleccionProveedor(proveedor_id,prov_razonsocial,prov_ruc,prov_telefono
     $(".form-line").attr("class","form-line focused");
 }
 
-// Realiza una búsqueda de pedidos y muestra los resultados.
-function buscarPedidos(){
-    $.ajax({
-        url: getUrl()+"pedidos/buscar",
-        method: "POST",
-        dataType: "json",
-        data:{
-            "numero":$("#pedido").val()
-        }
-    })
-    .done(function(resultado){
-        var lista = "<ul class=\"list-group\">";
-        for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionPedido("+rs.pedido_id+","+rs.empresa_id+","+rs.sucursal_id+",'"+rs.emp_razon_social+"','"+rs.suc_razon_social+"','"+rs.ped_vence+"','"+rs.pedido+"')\">"+rs.pedido+"</li>";   
-        }
-        lista += "</ul>";
-        $("#listaPedidos").html(lista);
-        $("#listaPedidos").attr("style","display:block; position: absolute; z-index: 2000;");
-    })
-    .fail(function(xhr,b,c){
-        if (xhr.status !== 403) swal('Error', 'No se pudo buscar pedidos.', 'error');
-    });
+// ─── MULTI-SELECT DE PEDIDOS ─────────────────────────────────────────────────
+function togglePanelPedidos() {
+    if ($('#panelMultiPedidos').is(':visible')) {
+        cerrarPanelPedidos();
+    } else {
+        abrirPanelPedidos();
+    }
 }
 
-// Agrega el pedido seleccionado al array y actualiza la tabla.
-function seleccionPedido(pedido_id, empresa_id, sucursal_id, emp_razon_social, suc_razon_social, ped_vence, pedido) {
-    if (pedidosSeleccionados.find(function(p){ return p.pedido_id === pedido_id; })) {
-        swal("Aviso", "Este pedido ya fue agregado.", "warning");
-        $("#listaPedidos").hide().html("");
+function abrirPanelPedidos() {
+    $('#panelMultiPedidos').show();
+    $('#iconoPanelPedidos').text('expand_less');
+    $('#filtroPanelPedidos').val('').focus();
+
+    if (todosLosPedidos.length > 0) {
+        renderizarPanelPedidos(todosLosPedidos);
         return;
     }
 
-    pedidosSeleccionados.push({ pedido_id: pedido_id, empresa_id: empresa_id, sucursal_id: sucursal_id, emp_razon_social: emp_razon_social, suc_razon_social: suc_razon_social, ped_vence: ped_vence, pedido: pedido });
+    $('#listaPanelPedidos').html('<div class="text-center text-muted" style="padding:20px;"><i class="material-icons" style="font-size:24px;display:block;margin-bottom:6px;">hourglass_empty</i>Cargando pedidos...</div>');
 
-    if (pedidosSeleccionados.length === 1) {
-        $("#empresa_id").val(empresa_id);
-        $("#emp_razon_social").val(emp_razon_social);
+    $.ajax({
+        url: getUrl() + 'pedidos/buscar',
+        method: 'POST',
+        dataType: 'json',
+        data: { numero: '' }
+    })
+    .done(function(resultado) {
+        todosLosPedidos = resultado;
+        renderizarPanelPedidos(resultado);
+    })
+    .fail(function() {
+        $('#listaPanelPedidos').html('<div class="text-center text-danger" style="padding:16px;">Error al cargar pedidos.</div>');
+    });
+}
+
+function renderizarPanelPedidos(pedidos) {
+    if (!pedidos || !pedidos.length) {
+        $('#listaPanelPedidos').html('<div class="text-center text-muted" style="padding:20px;">No hay pedidos confirmados disponibles.</div>');
+        $('#countPanelPedidos').text('');
+        return;
     }
 
-    $("#pedido").val("");
-    $("#listaPedidos").hide().html("");
+    var yaSeleccionadosIds = pedidosSeleccionados.map(function(p) { return p.pedido_id; });
+    var html = '';
+
+    pedidos.forEach(function(p) {
+        var yaAgregado = yaSeleccionadosIds.indexOf(p.pedido_id) !== -1;
+        var bgColor    = yaAgregado ? '#f0fff0' : '#fff';
+        var textColor  = yaAgregado ? '#aaa' : '#333';
+
+        html += '<label style="display:flex;align-items:center;padding:8px 12px;margin:0;font-weight:normal;border-bottom:1px solid #f5f5f5;background:' + bgColor + ';cursor:' + (yaAgregado ? 'default' : 'pointer') + ';">'
+            + '<input type="checkbox" class="ckPedido" value="' + p.pedido_id + '" '
+            + (yaAgregado ? 'checked disabled' : '')
+            + ' data-empresa_id="' + (p.empresa_id || '') + '"'
+            + ' data-sucursal_id="' + (p.sucursal_id || '') + '"'
+            + ' data-emp="' + (p.emp_razon_social || '').replace(/"/g, '&quot;') + '"'
+            + ' data-suc="' + (p.suc_razon_social || '').replace(/"/g, '&quot;') + '"'
+            + ' data-vence="' + (p.ped_vence || '') + '"'
+            + ' data-pedido="' + (p.pedido || '').replace(/"/g, '&quot;') + '"'
+            + ' style="margin-right:10px;flex-shrink:0;">'
+            + '<span style="color:' + textColor + ';flex:1;">' + (p.pedido || 'Pedido #' + p.pedido_id) + '</span>'
+            + (yaAgregado ? '<span style="font-size:11px;color:#27ae60;margin-left:6px;"><i class="material-icons" style="font-size:13px;vertical-align:middle;">check_circle</i> Agregado</span>' : '')
+            + '</label>';
+    });
+
+    $('#listaPanelPedidos').html(html);
+
+    var disponibles = pedidos.filter(function(p) { return yaSeleccionadosIds.indexOf(p.pedido_id) === -1; }).length;
+    $('#countPanelPedidos').text(disponibles + ' disponible' + (disponibles !== 1 ? 's' : ''));
+}
+
+function filtrarPanelPedidos() {
+    var filtro = $('#filtroPanelPedidos').val().toLowerCase().trim();
+    if (!filtro) {
+        renderizarPanelPedidos(todosLosPedidos);
+        return;
+    }
+    var filtrados = todosLosPedidos.filter(function(p) {
+        return (p.pedido || '').toLowerCase().indexOf(filtro) !== -1
+            || String(p.pedido_id).indexOf(filtro) !== -1;
+    });
+    renderizarPanelPedidos(filtrados);
+}
+
+function agregarPedidosMarcados() {
+    var marcados = $('.ckPedido:checked:not(:disabled)');
+    if (!marcados.length) {
+        swal('Aviso', 'Marque al menos un pedido de la lista.', 'warning');
+        return;
+    }
+
+    marcados.each(function() {
+        var pedido_id = parseInt($(this).val());
+        if (pedidosSeleccionados.find(function(p) { return p.pedido_id === pedido_id; })) return;
+
+        pedidosSeleccionados.push({
+            pedido_id:        pedido_id,
+            empresa_id:       $(this).data('empresa_id'),
+            sucursal_id:      $(this).data('sucursal_id'),
+            emp_razon_social: $(this).data('emp'),
+            suc_razon_social: $(this).data('suc'),
+            ped_vence:        $(this).data('vence'),
+            pedido:           $(this).data('pedido')
+        });
+    });
+
+    if (pedidosSeleccionados.length > 0) {
+        $('#empresa_id').val(pedidosSeleccionados[0].empresa_id);
+        $('#emp_razon_social').val(pedidosSeleccionados[0].emp_razon_social);
+    }
+
+    todosLosPedidos = [];
+    cerrarPanelPedidos();
     renderizarPedidosSeleccionados();
 }
+
+function cerrarPanelPedidos() {
+    $('#panelMultiPedidos').hide();
+    $('#iconoPanelPedidos').text('expand_more');
+}
+
+$(document).on('change', '.ckPedido:not(:disabled)', function() {
+    var label = $(this).closest('label');
+    if ($(this).is(':checked')) {
+        label.css({ background: '#e8f4fd', borderLeft: '3px solid #2980b9', paddingLeft: '9px' });
+        label.find('span:first').css('color', '#1a6a9a');
+    } else {
+        label.css({ background: '#fff', borderLeft: '', paddingLeft: '12px' });
+        label.find('span:first').css('color', '#333');
+    }
+});
+
+$(document).on('click', function(e) {
+    if (!$(e.target).closest('#wrapperMultiPedidos').length) {
+        cerrarPanelPedidos();
+    }
+});
 
 function renderizarPedidosSeleccionados() {
     if (pedidosSeleccionados.length === 0) {

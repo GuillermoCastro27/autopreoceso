@@ -59,15 +59,18 @@
 
             <div class="row clearfix">
                 <div class="col-sm-1">
+                    <label class="field-label">Código</label>
                     <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Empresa</label>
                     <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
                     <input type="hidden" id="empresa_id">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Sucursal</label>
                     <input type="text" id="suc_razon_social" class="form-control" disabled
                            onkeyup="buscarSucursal();" placeholder="Sucursal">
                     <input type="hidden" id="sucursal_id">
@@ -75,6 +78,7 @@
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Condición de Pago</label>
                     <select id="condicion_pago" class="form-control" disabled onchange="controlarCamposPago();">
                         <option value="CONTADO">Al contado</option>
                         <option value="CREDITO">A crédito</option>
@@ -82,32 +86,38 @@
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Timbrado</label>
                     <input type="text" id="comp_timbrado" class="form-control" disabled placeholder="Timbrado">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Intervalo Vencimiento</label>
                     <input type="text" id="comp_intervalo_fecha_vence" class="datetimepicker form-control" disabled placeholder="Intervalo Vencimiento">
                     <small id="avisoIFVComp" style="color:#e74c3c;display:none;"></small>
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Fecha</label>
                     <input type="text" id="comp_fecha" class="datetimepicker form-control" disabled placeholder="Fecha">
                     <small id="avisoFechaComp" style="color:#e74c3c;display:none;"></small>
                 </div>
 
                 <div class="col-sm-1">
+                    <label class="field-label">Cuota</label>
                     <input type="text" id="comp_cant_cuota" class="form-control" disabled placeholder="Cuota">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Nro. Factura</label>
                     <input type="text" id="comp_nro_factura" class="form-control" disabled
-                           placeholder="Nro. Factura (000-000-0000000)" maxlength="15"
+                           placeholder="000-000-0000000" maxlength="15"
                            oninput="autoFormatoFactura(this)">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Fecha Emisión</label>
                     <input type="text" id="comp_fecha_emision" class="form-control" disabled
-                           placeholder="Fecha Emisión (DD/MM/YYYY)" maxlength="10"
+                           placeholder="DD/MM/YYYY" maxlength="10"
                            oninput="mascararFechaComp(this); validarFechaEmisionComp();">
                     <small id="avisoFechaEmisionComp" style="color:#e74c3c;display:none;"></small>
                 </div>
@@ -119,6 +129,7 @@
 
             <div class="row clearfix">
                 <div class="col-sm-12">
+                    <label class="field-label">Orden de Compra</label>
                     <input type="text" id="ordencompra" class="form-control" disabled
                            onkeyup="buscarOrdenCompra();" placeholder="Orden de Compra">
                     <input type="hidden" id="orden_compra_cab_id" value="0">
@@ -126,19 +137,23 @@
                 </div>
 
                 <div class="col-sm-4">
+                    <label class="field-label">Proveedor</label>
                     <input type="hidden" id="proveedor_id" value="0">
                     <input type="text" id="prov_razonsocial" class="form-control" disabled placeholder="Proveedor">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">RUC</label>
                     <input type="text" id="prov_ruc" class="form-control" disabled placeholder="RUC">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Teléfono</label>
                     <input type="text" id="prov_telefono" class="form-control" disabled placeholder="Teléfono">
                 </div>
 
                 <div class="col-sm-4">
+                    <label class="field-label">Correo</label>
                     <input type="text" id="prov_correo" class="form-control" disabled placeholder="Correo">
                 </div>
             </div>
@@ -199,19 +214,19 @@
                 <tbody id="tableDetalle"></tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="6" class="text-right">IVA 10%</th>
+                        <th colspan="9" class="text-right">IVA 10%</th>
                         <th id="txtIva10" class="text-right">0</th>
                     </tr>
                     <tr>
-                        <th colspan="6" class="text-right">IVA 5%</th>
+                        <th colspan="9" class="text-right">IVA 5%</th>
                         <th id="txtIva5" class="text-right">0</th>
                     </tr>
                     <tr>
-                        <th colspan="6" class="text-right">Total IVA</th>
+                        <th colspan="9" class="text-right">Total IVA</th>
                         <th id="txtTotalConImpuesto" class="text-right">0</th>
                     </tr>
                     <tr>
-                        <th colspan="6" class="text-right" style="font-weight:bold;">Total General</th>
+                        <th colspan="9" class="text-right" style="font-weight:bold;">Total General</th>
                         <th id="txtTotalGral" class="text-right" style="font-weight:bold;">0</th>
                     </tr>
                 </tfoot>

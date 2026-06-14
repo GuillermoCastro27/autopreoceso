@@ -56,26 +56,31 @@ Recepción de Vehículos
 
 <div class="row clearfix">
     <div class="col-sm-2">
+        <label class="field-label">Código</label>
         <input type="text" id="id" class="form-control" disabled placeholder="Código">
     </div>
 
     <div class="col-sm-3">
+        <label class="field-label">Empresa</label>
         <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
         <input type="hidden" id="empresa_id">
         <div id="listaEmpresa" style="display:none;"></div>
     </div>
 
     <div class="col-sm-3">
+        <label class="field-label">Sucursal</label>
         <input type="text" id="suc_razon_social" class="form-control" disabled onkeyup="buscarSucursal();" placeholder="Sucursal">
         <input type="hidden" id="sucursal_id">
         <div id="listaSucursal" style="display:none;"></div>
     </div>
 
     <div class="col-sm-2">
+        <label class="field-label">Fecha</label>
         <input type="text" id="recep_cab_fecha" class="datetimepicker form-control" disabled placeholder="Fecha">
     </div>
 
     <div class="col-sm-2">
+        <label class="field-label">Fecha Estimada</label>
         <input type="text" id="recep_cab_fecha_estimada" class="datetimepicker form-control" disabled placeholder="Fecha Estimada">
     </div>
 </div>
@@ -87,30 +92,36 @@ Recepción de Vehículos
 
 <div class="row clearfix">
     <div class="col-sm-6">
+        <label class="field-label">Solicitud</label>
         <input type="text" id="solicitud" class="form-control" disabled onkeyup="buscarSolicitud();" placeholder="Solicitud">
         <input type="hidden" id="solicitudes_cab_id" value="0">
         <div id="listaSolicitud" style="display:none;"></div>
     </div>
 
     <div class="col-sm-6">
+        <label class="field-label">Observaciones</label>
         <input type="text" id="recep_cab_observaciones" class="form-control" disabled placeholder="Observaciones">
     </div>
 </div>
 
 <div class="row clearfix" style="margin-top:10px;">
     <div class="col-sm-2">
+        <label class="field-label">Prioridad</label>
         <input type="text" id="recep_cab_prioridad" class="form-control" disabled placeholder="Prioridad">
     </div>
 
     <div class="col-sm-2">
+        <label class="field-label">Kilometraje</label>
         <input type="text" id="recep_cab_kilometraje" class="form-control" disabled placeholder="Kilometraje">
     </div>
 
     <div class="col-sm-2">
+        <label class="field-label">Combustible</label>
         <input type="text" id="recep_cab_nivel_combustible" class="form-control" disabled placeholder="Combustible">
     </div>
 
     <div class="col-sm-4">
+        <label class="field-label">Tipo Servicio</label>
         <input type="text" id="tipo_serv_nombre" class="form-control" disabled onkeyup="buscarTipoServicio();" placeholder="Tipo Servicio">
         <input type="hidden" id="tipo_servicio_id">
         <div id="listaTipoServ" style="display:none;"></div>
@@ -124,30 +135,36 @@ Recepción de Vehículos
 
 <div class="row clearfix">
     <div class="col-sm-3">
+        <label class="field-label">Nombre</label>
         <input type="text" id="cli_nombre" class="form-control" disabled onkeyup="buscarCliente();" placeholder="Nombre">
         <input type="hidden" id="clientes_id">
         <div id="listaClientes" style="display:none;"></div>
     </div>
 
     <div class="col-sm-3">
+        <label class="field-label">Apellido</label>
         <input type="text" id="cli_apellido" class="form-control" disabled placeholder="Apellido">
     </div>
 
     <div class="col-sm-3">
+        <label class="field-label">RUC</label>
         <input type="text" id="cli_ruc" class="form-control" disabled placeholder="RUC">
     </div>
 
     <div class="col-sm-3">
+        <label class="field-label">Teléfono</label>
         <input type="text" id="cli_telefono" class="form-control" disabled placeholder="Teléfono">
     </div>
 </div>
 
 <div class="row clearfix" style="margin-top:10px;">
     <div class="col-sm-6">
+        <label class="field-label">Dirección</label>
         <input type="text" id="cli_direccion" class="form-control" disabled placeholder="Dirección">
     </div>
 
     <div class="col-sm-6">
+        <label class="field-label">Correo</label>
         <input type="text" id="cli_correo" class="form-control" disabled placeholder="Correo">
     </div>
 </div>
@@ -159,44 +176,53 @@ Recepción de Vehículos
 
 <div class="row clearfix">
     <div class="col-sm-3">
+        <label class="field-label">Tipo Vehículo</label>
         <input type="text" id="tip_veh_nombre" class="form-control" disabled onkeyup="buscarTipoVehiculoPorMarca();" placeholder="Tipo Vehículo">
         <input type="hidden" id="tipo_vehiculo_id">
         <div id="listaTipoVeh" style="display:none;"></div>
     </div>
 
     <div class="col-sm-3">
+        <label class="field-label">Capacidad</label>
         <input type="text" id="tip_veh_capacidad" class="form-control" disabled placeholder="Capacidad">
     </div>
 
     <div class="col-sm-3">
+        <label class="field-label">Tipo Combustible</label>
         <input type="text" id="tip_veh_combustible" class="form-control" disabled placeholder="Tipo Combustible">
     </div>
 
     <div class="col-sm-3">
+        <label class="field-label">Categoría</label>
         <input type="text" id="tip_veh_categoria" class="form-control" disabled placeholder="Categoría">
     </div>
 </div>
 
 <div class="row clearfix" style="margin-top:10px;">
     <div class="col-sm-3">
+        <label class="field-label">Observación</label>
         <input type="text" id="tip_veh_observacion" class="form-control" disabled placeholder="Observación">
     </div>
 
     <div class="col-sm-3">
+        <label class="field-label">Nro. Chasis</label>
         <input type="text" id="recep_cab_num_chasis" class="form-control" disabled placeholder="Nro. Chasis">
     </div>
 
     <div class="col-sm-4">
+        <label class="field-label">Marca</label>
         <input type="text" id="marc_nom" class="form-control" disabled onkeyup="buscarMarcasVehiculo();" placeholder="Marca">
         <input type="hidden" id="marca_id">
         <div id="listaMarcasVehiculo" style="display:none;"></div>
     </div>
 
     <div class="col-sm-3">
+        <label class="field-label">Modelo</label>
         <input type="text" id="modelo_nom" class="form-control" disabled placeholder="Modelo">
     </div>
 
     <div class="col-sm-2">
+        <label class="field-label">Año Modelo</label>
         <input type="text" id="modelo_año" class="form-control" disabled placeholder="Año Modelo">
     </div>
 </div>

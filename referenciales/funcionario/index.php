@@ -56,39 +56,23 @@
             <div class="row clearfix">
 
                 <div class="col-sm-2">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="id" class="form-control" disabled>
-                            <label class="form-label">Código</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Código</label>
+                    <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-5">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="fun_nom" class="form-control" disabled>
-                            <label class="form-label">Nombre</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Nombre</label>
+                    <input type="text" id="fun_nom" class="form-control" disabled placeholder="Nombre">
                 </div>
 
                 <div class="col-sm-5">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="fun_apellido" class="form-control" disabled>
-                            <label class="form-label">Apellido</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Apellido</label>
+                    <input type="text" id="fun_apellido" class="form-control" disabled placeholder="Apellido">
                 </div>
 
                 <div class="col-sm-3">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="fun_ci" class="form-control" disabled>
-                            <label class="form-label">CI</label>
-                        </div>
-                    </div>
+                    <label class="field-label">CI</label>
+                    <input type="text" id="fun_ci" class="form-control" disabled placeholder="CI">
                 </div>
 
             </div>
@@ -100,30 +84,18 @@
             <div class="row clearfix">
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="fun_direccion" class="form-control" disabled>
-                            <label class="form-label">Dirección</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Dirección</label>
+                    <input type="text" id="fun_direccion" class="form-control" disabled placeholder="Dirección">
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="fun_telefono" class="form-control" disabled>
-                            <label class="form-label">Teléfono</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Teléfono</label>
+                    <input type="text" id="fun_telefono" class="form-control" disabled placeholder="Teléfono">
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="fun_correo" class="form-control" disabled>
-                            <label class="form-label">Correo</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Correo</label>
+                    <input type="text" id="fun_correo" class="form-control" disabled placeholder="Correo">
                 </div>
 
             </div>
@@ -135,36 +107,24 @@
             <div class="row clearfix">
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="pais_descrpcion" class="form-control" disabled onkeyup="buscarPaises();">
-                            <label class="form-label">País</label>
-                        </div>
-                        <input type="hidden" id="pais_id">
-                        <div id="listaPaises" style="display:none;"></div>
-                    </div>
+                    <label class="field-label">País</label>
+                    <input type="text" id="pais_descrpcion" class="form-control" disabled onkeyup="buscarPaises();" placeholder="País">
+                    <input type="hidden" id="pais_id">
+                    <div id="listaPaises" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="ciu_descripcion" class="form-control" disabled onkeyup="buscarCiudades();">
-                            <label class="form-label">Ciudad</label>
-                        </div>
-                        <input type="hidden" id="ciudad_id">
-                        <div id="listaCiudades" style="display:none;"></div>
-                    </div>
+                    <label class="field-label">Ciudad</label>
+                    <input type="text" id="ciu_descripcion" class="form-control" disabled onkeyup="buscarCiudades();" placeholder="Ciudad">
+                    <input type="hidden" id="ciudad_id">
+                    <div id="listaCiudades" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="nacio_descripcion" class="form-control" disabled onkeyup="buscarNacionalidades();">
-                            <label class="form-label">Nacionalidad</label>
-                        </div>
-                        <input type="hidden" id="nacionalidad_id">
-                        <div id="listaNacionalidades" style="display:none;"></div>
-                    </div>
+                    <label class="field-label">Nacionalidad</label>
+                    <input type="text" id="nacio_descripcion" class="form-control" disabled onkeyup="buscarNacionalidades();" placeholder="Nacionalidad">
+                    <input type="hidden" id="nacionalidad_id">
+                    <div id="listaNacionalidades" style="display:none;"></div>
                 </div>
 
             </div>

@@ -74,18 +74,21 @@
 
                 <!-- CÓDIGO -->
                 <div class="col-sm-1">
+                    <label class="field-label">Código</label>
                     <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <!-- EMPRESA -->
                 <div class="col-sm-2">
+                    <label class="field-label">Empresa</label>
                     <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
                     <input type="hidden" id="empresa_id">
                     <div id="listaEmpresa" style="display:none;"></div>
                 </div>
 
                 <!-- SUCURSAL -->
-                <div class="col-sm-2">
+                <div class="col-sm-2" style="position:relative;">
+                    <label class="field-label">Sucursal</label>
                     <input type="text"
                            id="suc_razon_social"
                            class="form-control"
@@ -93,11 +96,12 @@
                            onkeyup="buscarSucursal();"
                            placeholder="Sucursal">
                     <input type="hidden" id="sucursal_id">
-                    <div id="listaSucursal" style="display:none;"></div>
+                    <div id="listaSucursal" style="display:none; position:absolute; z-index:2000; width:100%;"></div>
                 </div>
 
                 <!-- CONDICIÓN DE PAGO -->
                 <div class="col-sm-2">
+                    <label class="field-label">Condición de Pago</label>
                     <input type="text"
                            id="nota_vene_condicion_pago"
                            class="form-control"
@@ -107,6 +111,7 @@
 
                 <!-- VENCIMIENTO -->
                 <div class="col-sm-3">
+                    <label class="field-label">Fecha Vencimiento</label>
                     <input type="text"
                            id="vencimiento"
                            class="datetimepicker form-control"
@@ -116,6 +121,7 @@
 
                 <!-- FECHA -->
                 <div class="col-sm-3">
+                    <label class="field-label">Fecha</label>
                     <input type="text"
                            id="nota_vent_fecha"
                            class="datetimepicker form-control"
@@ -158,6 +164,7 @@
 
                 <!-- CUOTAS -->
                 <div class="col-sm-1">
+                    <label class="field-label">Cuota</label>
                     <input type="text"
                            id="cuotas"
                            class="form-control"
@@ -167,6 +174,7 @@
 
                 <!-- TIPO NOTA -->
                 <div class="col-sm-2">
+                    <label class="field-label">Tipo de Nota</label>
                     <select id="nota_vent_tipo" class="form-control" disabled onchange="cargarTimbrado();">
                         <option value="">-- Tipo --</option>
                         <option value="Crédito">Crédito</option>
@@ -174,8 +182,25 @@
                     </select>
                 </div>
 
+                <!-- AFECTA STOCK -->
+                <div class="col-sm-2">
+                    <label class="field-label">Afecta Stock</label>
+                    <div class="btn-group" id="grupoAfectaStock">
+                        <button type="button" id="btnAfectaSi" class="btn btn-success btn-sm waves-effect active"
+                                onclick="setAfectaStock(true);" disabled>
+                            <i class="material-icons" style="font-size:14px;vertical-align:middle;">check</i> Sí
+                        </button>
+                        <button type="button" id="btnAfectaNo" class="btn btn-default btn-sm waves-effect"
+                                onclick="setAfectaStock(false);" disabled>
+                            <i class="material-icons" style="font-size:14px;vertical-align:middle;">close</i> No
+                        </button>
+                    </div>
+                    <input type="hidden" id="nota_vent_afecta_stock" value="1">
+                </div>
+
                 <!-- OBSERVACIONES -->
-                <div class="col-sm-4">
+                <div class="col-sm-3">
+                    <label class="field-label">Observaciones</label>
                     <input type="text"
                            id="nota_vent_observaciones"
                            class="form-control"
@@ -193,6 +218,7 @@
             <div class="row clearfix">
 
                 <div class="col-sm-6">
+                    <label class="field-label">Venta</label>
                     <input type="text"
                            id="venta"
                            class="form-control"
@@ -213,17 +239,17 @@
             <div class="row clearfix">
 
                 <div class="col-sm-2">
+                    <label class="field-label">Nombre</label>
                     <input type="text"
                            id="cli_nombre"
                            class="form-control"
                            disabled
-                           onkeyup="buscarCliente();"
                            placeholder="Nombre">
                     <input type="hidden" id="clientes_id">
-                    <div id="listaClientes" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Apellido</label>
                     <input type="text"
                            id="cli_apellido"
                            class="form-control"
@@ -232,6 +258,7 @@
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">RUC</label>
                     <input type="text"
                            id="cli_ruc"
                            class="form-control"
@@ -240,6 +267,7 @@
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Dirección</label>
                     <input type="text"
                            id="cli_direccion"
                            class="form-control"
@@ -248,6 +276,7 @@
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Teléfono</label>
                     <input type="text"
                            id="cli_telefono"
                            class="form-control"
@@ -256,6 +285,7 @@
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Correo</label>
                     <input type="text"
                            id="cli_correo"
                            class="form-control"
@@ -301,99 +331,129 @@
 
                     <div class="card card-industrial" id="detalle" style="display:none">
                         <div class="header">
-                            <h2>Detalles de Notas de Ventas</h2>
+                            <h2><i class="material-icons">list</i> Detalles de Notas de Ventas</h2>
                         </div>
                         <div class="body">
-                            <div class="row clearfix" id="formDetalles">
-                            <!-- CAMPO PARA CODIGO CON 2 COLUMNAS -->
-                            <div class="col-sm-2">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="item_id" class="form-control" disabled>
-                                        <label class="form-label">Código</label>
+
+                            <!-- CAMPOS OCULTOS DETALLE -->
+                            <input type="hidden" id="txtOperacionDetalle" value="0">
+                            <input type="hidden" id="tipo_impuesto_id">
+                            <input type="hidden" id="stock_disponible_det" value="0">
+
+                            <!-- FORMULARIO DE ÍTEMS -->
+                            <div class="section-box" id="formDetalles" style="display:none;">
+                                <div class="section-title">Ítems</div>
+
+                                <div class="row clearfix">
+                                    <div class="col-sm-1">
+                                        <label style="font-size:12px;color:#636e72;">Código</label>
+                                        <input type="text" id="item_id" class="form-control" disabled placeholder="Cód">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label style="font-size:12px;color:#636e72;">Producto</label>
+                                        <input type="text" id="item_decripcion" class="form-control" disabled
+                                               onkeyup="buscarProductos();" placeholder="Buscar producto...">
+                                        <div id="listaProductos" style="display:none; position:absolute; z-index:2000; width:100%;"></div>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <label style="font-size:12px;color:#636e72;">Cantidad</label>
+                                        <input type="text" id="notas_vent_det_cantidad" class="form-control" disabled
+                                               placeholder="Cant." oninput="validarCantidadNota();">
+                                        <small id="avisoStockNota" style="color:#e74c3c;display:none;"></small>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <label style="font-size:12px;color:#636e72;">Precio</label>
+                                        <input type="text" id="notas_vent_det_precio" class="form-control" disabled placeholder="Precio">
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <label style="font-size:12px;color:#636e72;">Impuesto</label>
+                                        <input type="text" id="tip_imp_nom" class="form-control" disabled placeholder="Tipo Impuesto">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label style="font-size:12px;color:#636e72;">Depósito</label>
+                                        <select id="deposito_id_det" class="form-control" disabled>
+                                            <option value="">-- Depósito --</option>
+                                        </select>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- CAMPO PARA BUSCAR PRODUCTOS CON 4 COLUMNAS -->
-                            <div class="col-sm-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();">
-                                        <label class="form-label">Producto</label>
+
+                                <div class="row clearfix" style="margin-top:8px;">
+                                    <div class="col-sm-3">
+                                        <label style="font-size:12px;color:#636e72;">Marca</label>
+                                        <select id="marca_det_mm" class="form-control" disabled>
+                                            <option value="">-- Marca --</option>
+                                        </select>
                                     </div>
-                                    <div id="listaProductos" style="display:none;"></div>
-                                </div>
-                            </div>
-                            <!-- CAMPO PARA CANTIDAD 2 COLUMNAS -->
-                            <div class="col-sm-2">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="notas_vent_det_cantidad" class="form-control" disabled>
-                                        <label class="form-label">Cantidad</label>
+                                    <div class="col-sm-3">
+                                        <label style="font-size:12px;color:#636e72;">Modelo</label>
+                                        <select id="modelo_det_mm" class="form-control" disabled>
+                                            <option value="">-- Modelo --</option>
+                                        </select>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- CAMPO PARA COSTO CON 2 COLUMNAS -->
-                            <div class="col-sm-2">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="notas_vent_det_precio" class="form-control" disabled>
-                                        <label class="form-label">Precio</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- BOTONES -->
-                            <div class="col-sm-2">
-                                <div class="icon-button-demo">
-                                    <button type="button" id="btnEditarDetalle" class="btn btn-warning waves-effect" onclick="editarDetalle();">
-                                        <i class="material-icons">mode_edit</i>
+
+                                <div class="btn-toolbar-left" style="margin-top:10px;">
+                                    <button id="btnAgregarDetalle"  class="btn btn-success waves-effect" onclick="agregarDetalle();">
+                                        <i class="material-icons">add</i>
                                     </button>
-                                    <button type="button" id="btnGrabarDetalle" class="btn btn-default waves-effect" style="display:none;" onclick="grabarDetalle();">
+                                    <button id="btnEditarDetalle"   class="btn btn-warning waves-effect" onclick="editarDetalle();">
+                                        <i class="material-icons">edit</i>
+                                    </button>
+                                    <button id="btnEliminarDetalle" class="btn btn-danger waves-effect"  onclick="eliminarDetalle();">
+                                        <i class="material-icons">clear</i>
+                                    </button>
+                                    <button id="btnGrabarDetalle"   class="btn btn-default waves-effect" onclick="grabarDetalle();" style="display:none;">
                                         <i class="material-icons">save</i>
                                     </button>
+                                    <button id="btnCancelarDetalle" class="btn btn-warning waves-effect" onclick="cancelarDetalle();" style="display:none;">
+                                        <i class="material-icons">close</i>
+                                    </button>
                                 </div>
                             </div>
-                        </div> <!-- fin de row -->
 
-                        <!-- Campos ocultos adicionales -->
-                        <input type="hidden" value="0" id="txtOperacionDetalle"/>
-                        <input type="hidden" id="tipo_impuesto_id"/>
+                            <!-- TABLA DE ÍTEMS -->
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable">
+                                <table class="table table-bordered table-striped table-hover">
                                     <thead>
                                         <tr>
                                             <th>Código</th>
                                             <th>Producto</th>
-                                            <th>Cantidad</th>
-                                            <th>Precio</th>
-                                            <th>Tipo impuesto</th>
-                                            <th>Sub Total</th>
-                                            <th>IVA</th>
+                                            <th>Marca</th>
+                                            <th>Modelo</th>
+                                            <th class="text-right">Cantidad</th>
+                                            <th class="text-right">Precio</th>
+                                            <th>Impuesto</th>
+                                            <th class="text-right">Sub Total</th>
+                                            <th class="text-right">IVA</th>
+                                            <th>Depósito</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="tableDetalle">
-                                        <!-- Aquí se llenarán los detalles de los productos -->
-                                    </tbody>
+                                    <tbody id="tableDetalle"></tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="6" class="text-right">Total Comprobante</th>
+                                            <th colspan="8" class="text-right">Total Comprobante</th>
                                             <th class="text-right" id="txtTotalGral">0</th>
+                                            <th></th>
                                         </tr>
                                         <tr>
-                                            <th colspan="6" class="text-right">IVA 10%</th>
+                                            <th colspan="8" class="text-right">IVA 10%</th>
                                             <th class="text-right" id="txtIva10">0</th>
+                                            <th></th>
                                         </tr>
                                         <tr>
-                                            <th colspan="6" class="text-right">IVA 5%</th>
+                                            <th colspan="8" class="text-right">IVA 5%</th>
                                             <th class="text-right" id="txtIva5">0</th>
+                                            <th></th>
                                         </tr>
                                         <tr>
-                                            <th colspan="6" class="text-right">Total IVA</th>
-                                            <th class="text-right" id="txtTotalConImpuesto">0</th>
+                                            <th colspan="8" class="text-right" style="font-weight:bold;">Total IVA</th>
+                                            <th class="text-right" id="txtTotalConImpuesto" style="font-weight:bold;">0</th>
+                                            <th></th>
                                         </tr>
                                     </tfoot>
                                 </table>
                             </div>
+
                         </div>
                     </div>
                     <div class="card card-industrial" id="registros">
@@ -416,22 +476,7 @@
                                             <th>Estado</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="tableBody">
-                                        
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Código</th>
-                                            <th>Intervalo de fecha Vencimiento</th>
-                                            <th>Fecha</th>
-                                            <th>Ventas</th>
-                                            <th>Encargado</th>
-                                            <th>Cantidad de cuota</th>
-                                            <th>Tipo de Nota</th>
-                                            <th>Observaciones</th>
-                                            <th>Estado</th>
-                                        </tr>
-                                    </tfoot>    
+                                    <tbody id="tableBody"></tbody>
                                 </table>
                             </div>
                         </div>
@@ -489,8 +534,8 @@
 
     <!-- Ruta Js (la url del backend o del api rest) -->
     <script src="../../js/ruta.js"></script>
-
-    <script src="metodos.js?v=2"></script>
+    <script src="../../js/marcaModelo.js"></script>
+    <script src="metodos.js?v=7"></script>
 </body>
 
 </html>

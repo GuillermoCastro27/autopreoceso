@@ -58,32 +58,38 @@
 
             <div class="row clearfix">
                 <div class="col-sm-2">
+                    <label class="field-label">Código</label>
                     <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Empresa</label>
                     <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
                     <input type="hidden" id="empresa_id">
                     <div id="listaEmpresa" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Sucursal</label>
                     <input type="text" id="suc_razon_social" class="form-control" disabled onkeyup="buscarSucursal();" placeholder="Sucursal">
                     <input type="hidden" id="sucursal_id">
                     <div id="listaSucursal" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Fecha</label>
                     <input type="text" id="ped_ven_fecha" class="datetimepicker form-control" disabled placeholder="Fecha">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Plazo de Entrega</label>
                     <input type="text" id="ped_ven_vence" class="datetimepicker form-control" disabled placeholder="Plazo de Entrega">
                 </div>
             </div>
 
             <div class="row clearfix" style="margin-top:10px;">
                 <div class="col-sm-6">
+                    <label class="field-label">Observaciones</label>
                     <input type="text" id="ped_ven_observaciones" class="form-control" disabled placeholder="Observaciones">
                 </div>
             </div>
@@ -95,30 +101,36 @@
 
             <div class="row clearfix">
                 <div class="col-sm-2">
+                    <label class="field-label">Nombre</label>
                     <input type="text" id="cli_nombre" class="form-control" disabled onkeyup="buscarCliente();" placeholder="Nombre">
                     <input type="hidden" id="clientes_id">
                     <div id="listaClientes" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Apellido</label>
                     <input type="text" id="cli_apellido" class="form-control" disabled placeholder="Apellido">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">RUC</label>
                     <input type="text" id="cli_ruc" class="form-control" disabled placeholder="RUC">
                 </div>
 
                 <div class="col-sm-4">
+                    <label class="field-label">Dirección</label>
                     <input type="text" id="cli_direccion" class="form-control" disabled placeholder="Dirección">
                 </div>
             </div>
 
             <div class="row clearfix" style="margin-top:10px;">
                 <div class="col-sm-4">
+                    <label class="field-label">Teléfono</label>
                     <input type="text" id="cli_telefono" class="form-control" disabled placeholder="Teléfono">
                 </div>
 
                 <div class="col-sm-4">
+                    <label class="field-label">Correo</label>
                     <input type="text" id="cli_correo" class="form-control" disabled placeholder="Correo">
                 </div>
             </div>

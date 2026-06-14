@@ -51,36 +51,23 @@
                         <div class="body">
                             <div class="row clearfix">
                             <input type="hidden" value="0" id="txtOperacion"/>
-                                <!-- CAMPO PARA CODIGO CON 3 COLUMNAS -->
                                 <!-- CAMPO PARA DESCRIPCION CON 5 COLUMNAS -->
                                 <div class="col-sm-5">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="item_marca_descrip" class="form-control" disabled>
-                                            <label class="form-label">Descripción</label>
-                                        </div>
-                                    </div>
+                                    <label class="field-label">Descripción</label>
+                                    <input type="text" id="item_marca_descrip" class="form-control" disabled placeholder="Descripción">
                                 </div>
-                                <!-- CAMPO PARA GENTILICIO CON 4 COLUMNAS -->
+                                <!-- CAMPO PARA PRODUCTO CON 4 COLUMNAS -->
                                 <div class="col-sm-4">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                        <input type="hidden" id="item_id" value="0"/>
-                                            <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();">
-                                            <label class="form-label">Producto</label>
-                                        </div>
-                                        <div id="listaProductos" style="display:none;"></div>
-                                    </div>
+                                    <label class="field-label">Producto</label>
+                                    <input type="hidden" id="item_id" value="0"/>
+                                    <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
+                                    <div id="listaProductos" style="display:none;"></div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="hidden" id="marca_id" value="0"/>
-                                            <input type="text" id="marc_nom" class="form-control" disabled onkeyup="buscarMarca();">
-                                            <label class="form-label">Marca</label>
-                                        </div>
-                                        <div id="listaMarcas" style="display:none;"></div>
-                                    </div>
+                                    <label class="field-label">Marca</label>
+                                    <input type="hidden" id="marca_id" value="0"/>
+                                    <input type="text" id="marc_nom" class="form-control" disabled onkeyup="buscarMarca();" placeholder="Marca">
+                                    <div id="listaMarcas" style="display:none;"></div>
                                 </div>
                             </div>
                             

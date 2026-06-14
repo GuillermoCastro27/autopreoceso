@@ -322,6 +322,10 @@ function seleccionOrdenServicio(
 
     if (estado === "PENDIENTE") {
         $("#btnEditar, #btnEliminar, #btnConfirmar").prop("disabled", false);
+    } else if (estado === "CONFIRMADO") {
+        // Confirmada: solo lectura, sin operaciones adicionales
+    } else if (estado === "ANULADO") {
+        // Todos los botones permanecen deshabilitados
     }
 
     $(".form-line").addClass("focused");

@@ -12,6 +12,7 @@
     <link href="../../plugins/animate-css/animate.css" rel="stylesheet" />
     <link href="../../plugins/sweetalert/sweetalert.css" rel="stylesheet" />
     <link href="../../plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="../../plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
     <link href="../../css/style.css" rel="stylesheet">
     <link href="../../css/themes/all-themes.css" rel="stylesheet" />
     <style>
@@ -50,15 +51,29 @@
             <div class="section-title">Filtros</div>
             <div class="row clearfix">
 
-                <div class="col-sm-3">
+                <div class="col-sm-2">
+                    <label class="field-label">Módulo</label>
+                    <select id="filtro_modulo" class="form-control" onchange="filtrarTablasPorModulo();">
+                        <option value="">— Todos —</option>
+                        <option value="Compras">Compras</option>
+                        <option value="Ventas">Ventas</option>
+                        <option value="Servicio">Servicio</option>
+                        <option value="Referenciales">Referenciales</option>
+                        <option value="Seguridad">Seguridad</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-5">
+                    <label class="field-label">Tabla</label>
                     <select id="filtro_tabla" class="form-control">
                         <option value="">— Todas las tablas —</option>
                     </select>
                 </div>
 
-                <div class="col-sm-2">
+                <div class="col-sm-3">
+                    <label class="field-label">Operación</label>
                     <select id="filtro_operacion" class="form-control">
-                        <option value="">— Todas las operaciones —</option>
+                        <option value="">— Todas —</option>
                         <option value="INSERT">INSERT</option>
                         <option value="UPDATE">UPDATE</option>
                         <option value="DELETE">DELETE</option>
@@ -66,23 +81,27 @@
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">ID de Registro</label>
                     <input type="text" id="filtro_registro_id" class="form-control" placeholder="ID de registro...">
                 </div>
 
-                <div class="col-sm-2">
-                    <label class="control-label">Desde</label>
-                    <input type="date" id="filtro_desde" class="form-control">
+            </div>
+
+            <div class="row clearfix" style="margin-top:6px;">
+
+                <div class="col-sm-3">
+                    <label class="field-label">Desde</label>
+                    <input type="text" id="filtro_desde" class="datetimepicker form-control" placeholder="DD/MM/AAAA" readonly>
                 </div>
 
-                <div class="col-sm-2">
-                    <label class="control-label">Hasta</label>
-                    <input type="date" id="filtro_hasta" class="form-control">
+                <div class="col-sm-3">
+                    <label class="field-label">Hasta</label>
+                    <input type="text" id="filtro_hasta" class="datetimepicker form-control" placeholder="DD/MM/AAAA" readonly>
                 </div>
 
-                <div class="col-sm-1">
-                    <label class="control-label">&nbsp;</label>
-                    <button class="btn btn-primary waves-effect btn-block" onclick="listar();">
-                        <i class="material-icons">search</i>
+                <div class="col-sm-2" style="padding-top:18px;">
+                    <button class="btn btn-primary waves-effect" onclick="listar();">
+                        <i class="material-icons">search</i> Buscar
                     </button>
                 </div>
 
@@ -105,6 +124,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>Módulo</th>
                         <th>Tabla</th>
                         <th>Operación</th>
                         <th>Registro ID</th>
@@ -117,6 +137,7 @@
                 <tfoot>
                     <tr>
                         <th>#</th>
+                        <th>Módulo</th>
                         <th>Tabla</th>
                         <th>Operación</th>
                         <th>Registro ID</th>
@@ -184,9 +205,11 @@
 <script src="../../plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
 <script src="../../plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
 <script src="../../plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
+<script src="../../plugins/momentjs/moment.js"></script>
+<script src="../../plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js?v=2"></script>
-<script src="metodos.js?v=1"></script>
+<script src="metodos.js"></script>
 </body>
 </html>

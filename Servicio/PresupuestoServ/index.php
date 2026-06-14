@@ -50,22 +50,27 @@
     <div class="section-title">Datos Generales</div>
     <div class="row clearfix">
         <div class="col-sm-1">
+            <label class="field-label">Código</label>
             <input type="text" id="id" class="form-control" disabled placeholder="Código">
         </div>
         <div class="col-sm-2">
+            <label class="field-label">Empresa</label>
             <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
             <input type="hidden" id="empresa_id">
             <div id="listaEmpresa" style="display:none;"></div>
         </div>
         <div class="col-sm-2">
+            <label class="field-label">Sucursal</label>
             <input type="text" id="suc_razon_social" class="form-control" disabled onkeyup="buscarSucursal();" placeholder="Sucursal">
             <input type="hidden" id="sucursal_id">
             <div id="listaSucursal" style="display:none;"></div>
         </div>
         <div class="col-sm-3">
+            <label class="field-label">Fecha</label>
             <input type="text" id="pres_serv_cab_fecha" class="datetimepicker form-control" disabled placeholder="Fecha">
         </div>
         <div class="col-sm-3">
+            <label class="field-label">Fecha Vence</label>
             <input type="text" id="pres_serv_cab_fecha_vence" class="datetimepicker form-control" disabled placeholder="Fecha Vence">
         </div>
     </div>
@@ -76,14 +81,17 @@
     <div class="section-title">Diagnóstico</div>
     <div class="row clearfix">
         <div class="col-sm-6">
+            <label class="field-label">Diagnóstico</label>
             <input type="text" id="diagnostico" class="form-control" disabled onkeyup="buscarDiagnostico();" placeholder="Diagnóstico">
             <input type="hidden" id="diagnostico_cab_id">
             <div id="listaDiagnostico" style="display:none;"></div>
         </div>
         <div class="col-sm-3">
+            <label class="field-label">Tipo Diagnóstico</label>
             <input type="text" id="tipo_diag_nombre" class="form-control" disabled placeholder="Tipo Diagnóstico">
         </div>
         <div class="col-sm-3">
+            <label class="field-label">Tipo de Servicio</label>
             <input type="text" id="tipo_serv_nombre" class="form-control" disabled placeholder="Tipo de Servicio">
             <input type="hidden" id="tipo_servicio_id" name="tipo_servicio_id">
         </div>
@@ -95,26 +103,31 @@
     <div class="section-title">Promociones y Observaciones</div>
     <div class="row clearfix">
         <div class="col-sm-6">
+            <label class="field-label">Promociones</label>
             <input type="text" id="prom_cab_nombre" class="form-control" disabled onkeyup="buscarPromociones();" placeholder="Promociones">
             <input type="hidden" id="promociones_cab_id">
             <div id="listaPromociones" style="display:none;"></div>
         </div>
         <div class="col-sm-6">
+            <label class="field-label">Descuentos</label>
             <input type="text" id="desc_cab_nombre" class="form-control" disabled onkeyup="buscarDescuentos();" placeholder="Descuentos">
             <input type="hidden" id="descuentos_cab_id">
             <div id="listaDescuentos" style="display:none;"></div>
         </div>
         <div class="col-sm-3" style="margin-top:10px;">
+            <label class="field-label">Tipo de Descuento</label>
             <input type="text" id="tipo_desc_nombre" class="form-control" disabled onkeyup="buscarTipoDescuento();" placeholder="Tipo de Descuento">
             <input type="hidden" id="tipo_descuento_id" name="tipo_descuento_id">
             <div id="listaTipoDesc" style="display:none;"></div>
         </div>
         <div class="col-sm-3" style="margin-top:10px;">
+            <label class="field-label">Tipo de Promoción</label>
             <input type="text" id="tipo_prom_nombre" class="form-control" disabled onkeyup="buscarTipoPromocion();" placeholder="Tipo de Promociones">
             <input type="hidden" id="tipo_promocion_id" name="tipo_promocion_id">
             <div id="listaTipoProm" style="display:none;"></div>
         </div>
         <div class="col-sm-6" style="margin-top:10px;">
+            <label class="field-label">Observaciones</label>
             <input type="text" id="pres_serv_cab_observaciones" class="form-control" disabled placeholder="Observaciones">
         </div>
     </div>
@@ -125,23 +138,29 @@
     <div class="section-title">Cliente</div>
     <div class="row clearfix">
         <div class="col-sm-2">
+            <label class="field-label">Nombre</label>
             <input type="text" id="cli_nombre" class="form-control" disabled onkeyup="buscarCliente();" placeholder="Nombre">
             <input type="hidden" id="clientes_id">
             <div id="listaClientes" style="display:none;"></div>
         </div>
         <div class="col-sm-2">
+            <label class="field-label">Apellido</label>
             <input type="text" id="cli_apellido" class="form-control" disabled placeholder="Apellido">
         </div>
         <div class="col-sm-2">
+            <label class="field-label">RUC</label>
             <input type="text" id="cli_ruc" class="form-control" disabled placeholder="RUC">
         </div>
         <div class="col-sm-2">
+            <label class="field-label">Teléfono</label>
             <input type="text" id="cli_telefono" class="form-control" disabled placeholder="Teléfono">
         </div>
         <div class="col-sm-3">
+            <label class="field-label">Dirección</label>
             <input type="text" id="cli_direccion" class="form-control" disabled placeholder="Dirección">
         </div>
         <div class="col-sm-3" style="margin-top:10px;">
+            <label class="field-label">Correo</label>
             <input type="text" id="cli_correo" class="form-control" disabled placeholder="Correo">
         </div>
     </div>
@@ -152,22 +171,28 @@
     <div class="section-title">Vehículo</div>
     <div class="row clearfix">
         <div class="col-sm-3">
+            <label class="field-label">Tipo Vehículo</label>
             <input type="text" id="tip_veh_nombre" class="form-control" disabled placeholder="Tipo Vehículo">
             <input type="hidden" id="tipo_vehiculo_id">
         </div>
         <div class="col-sm-3">
+            <label class="field-label">Capacidad</label>
             <input type="text" id="tip_veh_capacidad" class="form-control" disabled placeholder="Capacidad">
         </div>
         <div class="col-sm-3">
+            <label class="field-label">Combustible</label>
             <input type="text" id="tip_veh_combustible" class="form-control" disabled placeholder="Combustible">
         </div>
         <div class="col-sm-3">
+            <label class="field-label">Categoría</label>
             <input type="text" id="tip_veh_categoria" class="form-control" disabled placeholder="Categoría">
         </div>
         <div class="col-sm-3" style="margin-top:10px;">
+            <label class="field-label">Marca</label>
             <input type="text" id="marc_nom" class="form-control" disabled placeholder="Marca">
         </div>
         <div class="col-sm-3" style="margin-top:10px;">
+            <label class="field-label">Modelo</label>
             <input type="text" id="modelo_nom" class="form-control" disabled placeholder="Modelo">
         </div>
     </div>

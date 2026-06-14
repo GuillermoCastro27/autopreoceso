@@ -56,23 +56,17 @@
             <div class="row clearfix">
 
                 <div class="col-sm-2">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="id" class="form-control" disabled>
-                            <label class="form-label">Código</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Código</label>
+                    <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-3">
-                    <div class="form-group">
-                        <label style="font-size:12px; color:#999;">Tipo de Persona</label>
-                        <select id="cli_tipo_persona" class="form-control" disabled
-                                onchange="cambiarTipoPersona(this.value);">
-                            <option value="FISICA">Persona Física</option>
-                            <option value="JURIDICA">Persona Jurídica</option>
-                        </select>
-                    </div>
+                    <label class="field-label">Tipo de Persona</label>
+                    <select id="cli_tipo_persona" class="form-control" disabled
+                            onchange="cambiarTipoPersona(this.value);">
+                        <option value="FISICA">Persona Física</option>
+                        <option value="JURIDICA">Persona Jurídica</option>
+                    </select>
                 </div>
 
             </div>
@@ -84,12 +78,8 @@
                 <div class="section-title" style="color:#2980b9;">Datos de la Empresa</div>
                 <div class="row clearfix">
                     <div class="col-sm-8">
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <input type="text" id="cli_razon_social" class="form-control" disabled>
-                                <label class="form-label">Razón Social / Nombre de la Empresa</label>
-                            </div>
-                        </div>
+                        <label class="field-label">Razón Social / Nombre de la Empresa</label>
+                        <input type="text" id="cli_razon_social" class="form-control" disabled placeholder="Razón Social / Nombre de la Empresa">
                     </div>
                 </div>
             </div>
@@ -101,21 +91,13 @@
             <div class="row clearfix">
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="cli_nombre" class="form-control" disabled>
-                            <label class="form-label" id="lbl_nombre">Nombre</label>
-                        </div>
-                    </div>
+                    <label class="field-label" id="lbl_nombre">Nombre</label>
+                    <input type="text" id="cli_nombre" class="form-control" disabled placeholder="Nombre">
                 </div>
 
                 <div class="col-sm-6">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="cli_apellido" class="form-control" disabled>
-                            <label class="form-label" id="lbl_apellido">Apellido</label>
-                        </div>
-                    </div>
+                    <label class="field-label" id="lbl_apellido">Apellido</label>
+                    <input type="text" id="cli_apellido" class="form-control" disabled placeholder="Apellido">
                 </div>
 
             </div>
@@ -127,40 +109,24 @@
             <div class="row clearfix">
 
                 <div class="col-sm-3">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="cli_ruc" class="form-control" disabled>
-                            <label class="form-label">Nro. Documento / RUC</label>
-                        </div>
-                        <small style="color:#aaa; font-size:11px;">CI: 1234567 &nbsp;|&nbsp; RUC: 80123456-7 &nbsp;|&nbsp; Pasaporte: AA123456</small>
-                    </div>
+                    <label class="field-label">Nro. Documento / RUC</label>
+                    <input type="text" id="cli_ruc" class="form-control" disabled placeholder="Nro. Documento / RUC">
+                    <small style="color:#aaa; font-size:11px;">CI: 1234567 &nbsp;|&nbsp; RUC: 80123456-7 &nbsp;|&nbsp; Pasaporte: AA123456</small>
                 </div>
 
                 <div class="col-sm-3">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="cli_telefono" class="form-control" disabled>
-                            <label class="form-label">Teléfono</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Teléfono</label>
+                    <input type="text" id="cli_telefono" class="form-control" disabled placeholder="Teléfono">
                 </div>
 
                 <div class="col-sm-6">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="cli_correo" class="form-control" disabled>
-                            <label class="form-label">Correo</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Correo</label>
+                    <input type="text" id="cli_correo" class="form-control" disabled placeholder="Correo">
                 </div>
 
                 <div class="col-sm-12">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="cli_direccion" class="form-control" disabled>
-                            <label class="form-label">Dirección</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Dirección</label>
+                    <input type="text" id="cli_direccion" class="form-control" disabled placeholder="Dirección">
                 </div>
 
             </div>
@@ -172,36 +138,24 @@
             <div class="row clearfix">
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="pais_descrpcion" class="form-control" disabled onkeyup="buscarPaises();">
-                            <label class="form-label">País</label>
-                        </div>
-                        <input type="hidden" id="pais_id">
-                        <div id="listaPaises" style="display:none;"></div>
-                    </div>
+                    <label class="field-label">País</label>
+                    <input type="text" id="pais_descrpcion" class="form-control" disabled onkeyup="buscarPaises();" placeholder="País">
+                    <input type="hidden" id="pais_id">
+                    <div id="listaPaises" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="ciu_descripcion" class="form-control" disabled onkeyup="buscarCiudades();">
-                            <label class="form-label">Ciudad</label>
-                        </div>
-                        <input type="hidden" id="ciudad_id">
-                        <div id="listaCiudades" style="display:none;"></div>
-                    </div>
+                    <label class="field-label">Ciudad</label>
+                    <input type="text" id="ciu_descripcion" class="form-control" disabled onkeyup="buscarCiudades();" placeholder="Ciudad">
+                    <input type="hidden" id="ciudad_id">
+                    <div id="listaCiudades" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="nacio_descripcion" class="form-control" disabled onkeyup="buscarNacionalidades();">
-                            <label class="form-label">Nacionalidad</label>
-                        </div>
-                        <input type="hidden" id="nacionalidad_id">
-                        <div id="listaNacionalidades" style="display:none;"></div>
-                    </div>
+                    <label class="field-label">Nacionalidad</label>
+                    <input type="text" id="nacio_descripcion" class="form-control" disabled onkeyup="buscarNacionalidades();" placeholder="Nacionalidad">
+                    <input type="hidden" id="nacionalidad_id">
+                    <div id="listaNacionalidades" style="display:none;"></div>
                 </div>
 
             </div>

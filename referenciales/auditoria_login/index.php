@@ -12,6 +12,7 @@
     <link href="../../plugins/animate-css/animate.css" rel="stylesheet" />
     <link href="../../plugins/sweetalert/sweetalert.css" rel="stylesheet" />
     <link href="../../plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="../../plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
     <link href="../../css/style.css" rel="stylesheet">
     <link href="../../css/themes/all-themes.css" rel="stylesheet" />
     <style>
@@ -46,9 +47,11 @@
             <div class="section-title">Filtros</div>
             <div class="row clearfix">
                 <div class="col-sm-3">
+                    <label class="field-label">Usuario</label>
                     <input type="text" id="filtro_login" class="form-control" placeholder="Usuario...">
                 </div>
                 <div class="col-sm-3">
+                    <label class="field-label">Resultado</label>
                     <select id="filtro_resultado" class="form-control">
                         <option value="">— Todos los resultados —</option>
                         <option value="exitoso">Exitoso</option>
@@ -58,12 +61,14 @@
                     </select>
                 </div>
                 <div class="col-sm-2">
-                    <input type="date" id="filtro_desde" class="form-control" placeholder="Desde">
+                    <label class="field-label">Desde</label>
+                    <input type="text" id="filtro_desde" class="datetimepicker form-control" placeholder="DD/MM/AAAA" readonly>
                 </div>
                 <div class="col-sm-2">
-                    <input type="date" id="filtro_hasta" class="form-control" placeholder="Hasta">
+                    <label class="field-label">Hasta</label>
+                    <input type="text" id="filtro_hasta" class="datetimepicker form-control" placeholder="DD/MM/AAAA" readonly>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-2" style="padding-top:18px;">
                     <button class="btn btn-primary waves-effect btn-block" onclick="listar();">
                         <i class="material-icons">search</i> Filtrar
                     </button>
@@ -134,6 +139,8 @@
 <script src="../../plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
 <script src="../../plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
 <script src="../../plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
+<script src="../../plugins/momentjs/moment.js"></script>
+<script src="../../plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js?v=2"></script>

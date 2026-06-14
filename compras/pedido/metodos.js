@@ -473,25 +473,18 @@ function seleccionPedido(id_pedido,empresa_id, sucursal_id,emp_razon_social,suc_
     
     $("#btnCancelar").removeAttr("disabled");
 
-    if(ped_estado === "PENDIENTE"){
-    $("#btnAgregar").attr("disabled","true");
-    $("#btnGrabar").attr("disabled","true");
-    
-    $("#btnEliminar").removeAttr("disabled");
-    $("#btnConfirmar").removeAttr("disabled");
-    $("#btnEditar").removeAttr("disabled");
-    $("#formDetalles").attr("style","display:block;");
-    }
-    $(".form-line").attr("class","form-line focused");
-
-    if(ped_estado === "CONFIRMADO"){
-        $("#btnAgregar").attr("disabled","true");
-        $("#btnGrabar").attr("disabled","true");
-        $("#btnEditar").attr("disabled","true");
+    if (ped_estado === "PENDIENTE") {
+        $("#btnEliminar").removeAttr("disabled");
+        $("#btnConfirmar").removeAttr("disabled");
+        $("#btnEditar").removeAttr("disabled");
+        $("#formDetalles").attr("style", "display:block;");
+    } else if (ped_estado === "CONFIRMADO") {
         $("#btnEliminar").removeAttr("disabled");
         $('#btnImprimir').show().removeAttr('disabled');
-    } else {
-        $('#btnImprimir').hide().attr('disabled', true);
+    } else if (ped_estado === "PROCESADO") {
+        $('#btnImprimir').show().removeAttr('disabled');
+    } else if (ped_estado === "ANULADO") {
+        // Todos los botones permanecen deshabilitados
     }
 
     $(".form-line").attr("class","form-line focused");
@@ -584,6 +577,11 @@ function grabar(){
                 mostrarBotonesDetalle('normal');
                 if(resultado.registro.ped_estado!="PENDIENTE" || $("#txtOperacion").val()==2){
                     location.reload(true);
+                } else {
+                    // Cabecera grabada y pendiente: bloquear campos, habilitar Modificar/Anular
+                    $('#ped_fecha, #ped_vence, #ped_pbservaciones, #suc_razon_social').attr('disabled', 'true');
+                    $('#btnGrabar, #btnCancelar').attr('disabled', 'true');
+                    $('#btnEditar, #btnEliminar').removeAttr('disabled');
                 }
             }
         });
@@ -804,10 +802,11 @@ function buscarProductos() {
     var q = $('#item_decripcion').val();
     if (q.length < 2) { $('#listaProductos').html('').hide(); return; }
     debounce('prod', function() {
+        var depId = $('#deposito_id_det').val();
         $.ajax({
             url: getUrl() + 'items/buscar', method: 'POST', dataType: 'json',
             headers: { Authorization: 'Bearer ' + getToken() },
-            data: { item_decripcion: q }
+            data: { item_decripcion: q, deposito_id: depId || null }
         })
         .done(function(resultado) {
             var lista = '<ul class="list-group">';
@@ -835,6 +834,10 @@ function seleccionProducto(item_id, item_decripcion, cantidad_disponible){
     cargarMarcasPedido(item_id, null);
 }
 
+function _esc(s) {
+    return (s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
 function listarDetalles(){
     var cantidadDetalle = 0;
     $.ajax({
@@ -846,18 +849,24 @@ function listarDetalles(){
     .done(function(resultado){
         var lista = "";
         for(var rs of resultado){
+            var modeloNomFull = rs.modelo_nom
+                ? rs.modelo_nom + (rs.modelo_año ? ' (' + rs.modelo_año + ')' : '')
+                : '';
             lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle("
                 + rs.item_id + ",'"
-                + rs.item_decripcion + "',"
+                + _esc(rs.item_decripcion) + "',"
                 + rs.det_cantidad + ","
                 + rs.cantidad_stock + ","
                 + (rs.deposito_id||0) + ","
                 + (rs.marca_id||0) + ","
-                + (rs.modelo_id||0) + ")\">";
+                + (rs.modelo_id||0) + ",'"
+                + _esc(rs.dep_nombre||'') + "','"
+                + _esc(rs.marc_nom||'') + "','"
+                + _esc(modeloNomFull) + "')\">";
             lista += "<td>" + rs.item_id + "</td>";
             lista += "<td>" + rs.item_decripcion + "</td>";
             lista += "<td>" + (rs.marc_nom || '—') + "</td>";
-            lista += "<td>" + (rs.modelo_nom ? rs.modelo_nom + (rs.modelo_año ? ' ('+rs.modelo_año+')' : '') : '—') + "</td>";
+            lista += "<td>" + (modeloNomFull || '—') + "</td>";
             lista += "<td>" + rs.det_cantidad + "</td>";
             lista += "<td>" + rs.cantidad_stock + "</td>";
             lista += "<td>" + (rs.dep_nombre || '—') + "</td>";
@@ -877,51 +886,41 @@ function listarDetalles(){
         console.error(xhr.responseText);
     })
 }
-function seleccionDetalle(item_id, item_decripcion, det_cantidad, cantidad_stock, deposito_id, marca_id, modelo_id) {
+function seleccionDetalle(item_id, item_decripcion, det_cantidad, cantidad_stock, deposito_id, marca_id, modelo_id, dep_nombre, marc_nom, modelo_nom_full) {
     $("#item_id").val(item_id);
     $("#item_decripcion").val(item_decripcion);
     $("#det_cantidad").val(det_cantidad);
     $("#cantidad_stock").val(cantidad_stock);
     _marcaIdSel  = marca_id  || null;
     _modeloIdSel = modelo_id || null;
-    cargarDepositosPedido(deposito_id);
 
-    // Autocompletar marca y modelo usando caché
-    $('#marca_det').html('<option value="">-- Marca --</option>').prop('disabled', true);
-    $('#modelo_det').html('<option value="">-- Modelo --</option>').prop('disabled', true);
-
-    if (marca_id) {
-        function poblarMarca(marcas) {
-            var opts = '<option value="">-- Marca --</option>';
-            marcas.forEach(function(m) {
-                var id = m.marca_id;
-                opts += '<option value="' + id + '"' + (id == marca_id ? ' selected' : '') + '>' + m.marc_nom + '</option>';
-            });
-            $('#marca_det').html(opts).val(marca_id).prop('disabled', true);
-        }
-        function poblarModelo(modelos) {
-            var filtrados = modelos.filter(function(m) { return String(m.marca_id) === String(marca_id); });
-            var mopts = '<option value="">-- Modelo --</option>';
-            filtrados.forEach(function(m) {
-                var id = m.modelo_id;
-                mopts += '<option value="' + id + '"' + (id == modelo_id ? ' selected' : '') + '>' + m.modelo_nom + (m.modelo_año ? ' (' + m.modelo_año + ')' : '') + '</option>';
-            });
-            if (modelo_id) $('#modelo_det').html(mopts).val(modelo_id).prop('disabled', true);
-        }
-
-        if (_cacheMarcas[item_id]) {
-            poblarMarca(_cacheMarcas[item_id]);
-        } else {
-            $.get(getUrl() + 'items/' + item_id + '/marcas', function(d) { _cacheMarcas[item_id] = d; poblarMarca(d); });
-        }
-        if (modelo_id) {
-            if (_cacheModelos[item_id]) {
-                poblarModelo(_cacheModelos[item_id]);
-            } else {
-                $.get(getUrl() + 'items/' + item_id + '/modelos', function(d) { _cacheModelos[item_id] = d; poblarModelo(d); });
-            }
-        }
+    // Depósito: poblar directamente con el valor ya conocido (sin AJAX)
+    var $dep = $('#deposito_id_det');
+    if (deposito_id && dep_nombre) {
+        $dep.html('<option value="' + deposito_id + '" selected>' + dep_nombre + '</option>');
+    } else {
+        $dep.html('<option value="">-- Depósito --</option>');
     }
+    $dep.prop('disabled', true);
+
+    // Marca: poblar directamente
+    var $marca = $('#marca_det');
+    if (marca_id && marc_nom) {
+        $marca.html('<option value="' + marca_id + '" selected>' + marc_nom + '</option>');
+    } else {
+        $marca.html('<option value="">-- Marca --</option>');
+    }
+    $marca.prop('disabled', true);
+
+    // Modelo: poblar directamente
+    var $modelo = $('#modelo_det');
+    if (modelo_id && modelo_nom_full) {
+        $modelo.html('<option value="' + modelo_id + '" selected>' + modelo_nom_full + '</option>');
+    } else {
+        $modelo.html('<option value="">-- Modelo --</option>');
+    }
+    $modelo.prop('disabled', true);
+
     $(".form-line").addClass("focused");
 }
 
@@ -990,6 +989,7 @@ function seleccionSucursal(empresa_id,suc_razon_social,suc_direccion,suc_telefon
 
     $("#listaSucursal").html("");
     $("#listaSucursal").attr("style","display:none;");
+
 }
 
 // Función para cargar el funcionario_id del usuario logueado

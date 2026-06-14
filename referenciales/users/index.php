@@ -56,69 +56,41 @@
 
             <div class="row clearfix">
                 <div class="col-sm-2">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="txtCodigo" class="form-control" disabled>
-                            <label class="form-label">Código</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Código</label>
+                    <input type="text" id="txtCodigo" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-6">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="name" class="form-control" disabled>
-                            <label class="form-label">Nombre</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Nombre</label>
+                    <input type="text" id="name" class="form-control" disabled placeholder="Nombre">
                 </div>
                 <div class="col-sm-6">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="login" class="form-control" disabled>
-                            <label class="form-label">Usuario</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Usuario</label>
+                    <input type="text" id="login" class="form-control" disabled placeholder="Usuario">
                 </div>
                 <div class="col-sm-6">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="email" id="email" class="form-control" disabled>
-                            <label class="form-label">Correo</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Correo</label>
+                    <input type="email" id="email" class="form-control" disabled placeholder="Correo">
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="perfil_desc" class="form-control" disabled onkeyup="buscarPerfil();">
-                            <label class="form-label">Perfil</label>
-                        </div>
-                        <input type="hidden" id="perfil_id">
-                        <div id="listaPerfil" style="display:none;"></div>
-                    </div>
+                    <label class="field-label">Perfil</label>
+                    <input type="text" id="perfil_desc" class="form-control" disabled onkeyup="buscarPerfil();" placeholder="Perfil">
+                    <input type="hidden" id="perfil_id">
+                    <div id="listaPerfil" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-6">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="fun_nombre_completo" class="form-control" disabled onkeyup="buscarFuncionario();">
-                            <label class="form-label">Funcionario</label>
-                        </div>
-                        <input type="hidden" id="funcionario_id">
-                        <div id="listaFuncionarios" style="display:none;"></div>
-                        <small><a href="#" onclick="limpiarFuncionario(); return false;" style="font-size:11px; color:#999;">&#10005; Limpiar</a></small>
-                    </div>
+                    <label class="field-label">Funcionario</label>
+                    <input type="text" id="fun_nombre_completo" class="form-control" disabled onkeyup="buscarFuncionario();" placeholder="Funcionario">
+                    <input type="hidden" id="funcionario_id">
+                    <div id="listaFuncionarios" style="display:none;"></div>
+                    <small><a href="#" onclick="limpiarFuncionario(); return false;" style="font-size:11px; color:#999;">&#10005; Limpiar</a></small>
                 </div>
 
                 <div class="col-sm-6" id="divPassword">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="password" id="password" class="form-control" disabled>
-                            <label class="form-label">Contraseña</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Contraseña</label>
+                    <input type="password" id="password" class="form-control" disabled placeholder="Contraseña">
                 </div>
 
                 <div class="col-sm-12" style="margin-top:8px;">

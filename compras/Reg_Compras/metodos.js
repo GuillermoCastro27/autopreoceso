@@ -267,22 +267,15 @@ function seleccionCompra(id_compra_cab, proveedor_id, empresa_id, sucursal_id, o
     
     $("#btnCancelar").removeAttr("disabled");
 
-    if(comp_estado === "PENDIENTE"){
-        $("#btnAgregar").attr("disabled","true");
-        $("#btnGrabar").attr("disabled","true");
-
+    if (comp_estado === "PENDIENTE") {
         $("#btnEliminar").removeAttr("disabled");
         $("#btnEditar").removeAttr("disabled");
         $("#btnConfirmar").removeAttr("disabled");
-        $("#formDetalles").attr("style","display:block;");
-    }
-
-    if(comp_estado === "RECIBIDO"){
-        $("#btnAgregar").attr("disabled","true");
-        $("#btnGrabar").attr("disabled","true");
-        $("#btnEditar").attr("disabled","true");
-
+        $("#formDetalles").attr("style", "display:block;");
+    } else if (comp_estado === "RECIBIDO") {
         $("#btnEliminar").removeAttr("disabled");
+    } else if (comp_estado === "ANULADO") {
+        // Todos los botones permanecen deshabilitados
     }
 
     $(".form-line").attr("class","form-line focused");

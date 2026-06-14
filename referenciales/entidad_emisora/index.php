@@ -57,48 +57,28 @@
             <div class="row clearfix">
 
                 <div class="col-sm-2">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="txtCodigo" class="form-control" disabled>
-                            <label class="form-label">Código</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Código</label>
+                    <input type="text" id="txtCodigo" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-5">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="ent_emis_nombre" class="form-control" disabled>
-                            <label class="form-label">Nombre de la Entidad</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Nombre de la Entidad</label>
+                    <input type="text" id="ent_emis_nombre" class="form-control" disabled placeholder="Nombre de la Entidad">
                 </div>
 
                 <div class="col-sm-5">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="ent_emis_direccion" class="form-control" disabled>
-                            <label class="form-label">Dirección</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Dirección</label>
+                    <input type="text" id="ent_emis_direccion" class="form-control" disabled placeholder="Dirección">
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="ent_emis_telefono" class="form-control" disabled>
-                            <label class="form-label">Teléfono</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Teléfono</label>
+                    <input type="text" id="ent_emis_telefono" class="form-control" disabled placeholder="Teléfono">
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="ent_emis_email" class="form-control" disabled>
-                            <label class="form-label">Correo</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Correo</label>
+                    <input type="text" id="ent_emis_email" class="form-control" disabled placeholder="Correo">
                 </div>
 
             </div>

@@ -57,34 +57,22 @@
             <div class="row clearfix">
 
                 <div class="col-sm-3">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="txtCodigo" class="form-control" disabled>
-                            <label class="form-label">Código</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Código</label>
+                    <input type="text" id="txtCodigo" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-5">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="txtNom" class="form-control" disabled>
-                            <label class="form-label">Marca</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Marca</label>
+                    <input type="text" id="txtNom" class="form-control" disabled placeholder="Marca">
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <select id="mar_tipo" class="form-control" disabled>
-                                <option value="LUBRICANTE">LUBRICANTE</option>
-                                <option value="PRODUCTO">PRODUCTO</option>
-                                <option value="VEHICULO">VEHICULO</option>
-                            </select>
-                            <label class="form-label">Tipo de Marca</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Tipo de Marca</label>
+                    <select id="mar_tipo" class="form-control" disabled>
+                        <option value="LUBRICANTE">LUBRICANTE</option>
+                        <option value="PRODUCTO">PRODUCTO</option>
+                        <option value="VEHICULO">VEHICULO</option>
+                    </select>
                 </div>
 
             </div>

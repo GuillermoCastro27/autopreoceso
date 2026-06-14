@@ -59,8 +59,8 @@
 
                 <!-- Rol / Perfil -->
                 <div class="col-sm-4">
-                    <label class="control-label">Rol / Perfil</label>
-                    <div class="form-group" style="position:relative;">
+                    <label class="field-label">Rol / Perfil</label>
+                    <div style="position:relative;">
                         <input type="text" id="perfil_desc" class="form-control" disabled
                                onkeyup="buscarPerfil();" placeholder="Buscar perfil...">
                         <input type="hidden" id="perfil_id">
@@ -71,23 +71,19 @@
 
                 <!-- Módulo -->
                 <div class="col-sm-3">
-                    <label class="control-label">Módulo</label>
-                    <div class="form-group">
-                        <select id="sel_modulo" class="form-control" disabled onchange="onModuloChange();">
-                            <option value="">-- Seleccione módulo --</option>
-                        </select>
-                        <input type="hidden" id="mod_id">
-                    </div>
+                    <label class="field-label">Módulo</label>
+                    <select id="sel_modulo" class="form-control" disabled onchange="onModuloChange();">
+                        <option value="">-- Seleccione módulo --</option>
+                    </select>
+                    <input type="hidden" id="mod_id">
                 </div>
 
                 <!-- Entidad / Formulario -->
                 <div class="col-sm-3">
-                    <label class="control-label">Formulario / Entidad</label>
-                    <div class="form-group">
-                        <select id="sel_entidad" class="form-control" disabled onchange="onEntidadChange();">
-                            <option value="">-- Seleccione formulario --</option>
-                        </select>
-                    </div>
+                    <label class="field-label">Formulario / Entidad</label>
+                    <select id="sel_entidad" class="form-control" disabled onchange="onEntidadChange();">
+                        <option value="">-- Seleccione formulario --</option>
+                    </select>
                 </div>
 
             </div>
@@ -95,7 +91,7 @@
             <!-- Acciones -->
             <div class="row clearfix" id="fila_acciones" style="display:none;">
                 <div class="col-sm-12">
-                    <label class="control-label"><strong>Acciones permitidas:</strong></label>
+                    <label class="field-label"><strong>Acciones permitidas:</strong></label>
                     <div id="div_acciones" style="padding:8px 0;"></div>
                 </div>
             </div>

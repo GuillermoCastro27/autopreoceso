@@ -53,23 +53,13 @@
                             <input type="hidden" id="marca_estado" value="activo"/>
 
                             <div class="col-sm-1">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="txtCodigo"
-                                               class="form-control" disabled>
-                                        <label class="form-label">Código</label>
-                                    </div>
-                                </div>
+                                <label class="field-label">Código</label>
+                                <input type="text" id="txtCodigo" class="form-control" disabled placeholder="Código">
                             </div>
 
                             <div class="col-sm-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="marca_nombre"
-                                               class="form-control" disabled>
-                                        <label class="form-label">Nombre de la Marca</label>
-                                    </div>
-                                </div>
+                                <label class="field-label">Nombre de la Marca</label>
+                                <input type="text" id="marca_nombre" class="form-control" disabled placeholder="Nombre de la Marca">
                             </div>
                         </div>
 

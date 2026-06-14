@@ -58,23 +58,27 @@
             <div class="row clearfix">
 
                 <div class="col-sm-2">
+                    <label class="field-label">Código</label>
                     <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Empresa</label>
                     <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
                     <input type="hidden" id="empresa_id">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Sucursal</label>
                     <input type="text" id="suc_razon_social" class="form-control" disabled onkeyup="buscarSucursal();" placeholder="Sucursal">
                     <input type="hidden" id="sucursal_id">
                     <div id="listaSucursal" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Fecha</label>
                     <input type="text" id="ajus_cab_fecha" class="datetimepicker form-control" disabled placeholder="Fecha">
-                <small id="avisoFechaAjuste" style="color:#e74c3c;display:none;"></small>
+                    <small id="avisoFechaAjuste" style="color:#e74c3c;display:none;"></small>
                 </div>
 
             </div>
@@ -86,12 +90,14 @@
             <div class="row clearfix">
 
                 <div class="col-sm-4">
-                    <input type="text" id="descripcion" class="form-control" disabled onkeyup="buscarMotivoAjuste();" placeholder="Motivo de ajuste">
+                    <label class="field-label">Motivo de Ajuste</label>
+                    <input type="text" id="descripcion" class="form-control" disabled onkeyup="buscarMotivoAjuste();" placeholder="Buscar motivo...">
                     <input type="hidden" id="motivo_ajuste_id">
                     <div id="listaMotivoajuste" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Tipo de Ajuste</label>
                     <input type="text" id="tipo_ajuste" class="form-control" disabled placeholder="Tipo de ajuste">
                 </div>
 
@@ -138,36 +144,43 @@
         <div class="row clearfix">
 
             <div class="col-sm-1">
-                <input type="text" id="item_id" class="form-control" disabled placeholder="Cod">
+                <label class="field-label">Cód.</label>
+                <input type="text" id="item_id" class="form-control" disabled placeholder="Cód">
             </div>
 
             <div class="col-sm-3">
-                <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
+                <label class="field-label">Producto</label>
+                <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Buscar...">
                 <div id="listaProductos" style="display:none;"></div>
             </div>
 
             <div class="col-sm-3">
-                <input type="text" id="cantidad_stock" class="form-control" disabled placeholder="Stock actual">
+                <label class="field-label">Stock Actual</label>
+                <input type="text" id="cantidad_stock" class="form-control" disabled placeholder="0">
             </div>
 
             <div class="col-sm-2">
-                <input type="text" id="ajus_det_cantidad" class="form-control" disabled placeholder="Cantidad"
+                <label class="field-label">Cantidad</label>
+                <input type="text" id="ajus_det_cantidad" class="form-control" disabled placeholder="0"
                        oninput="validarCantidadAjuste();">
                 <small id="avisoStockAjuste" style="color:#e74c3c;display:none;"></small>
             </div>
 
             <div class="col-sm-2">
+                <label class="field-label">Depósito</label>
                 <select class="form-control" id="deposito_id_det" disabled>
                     <option value="">-- Depósito --</option>
                 </select>
             </div>
 
             <div class="col-sm-2">
+                <label class="field-label">Marca</label>
                 <select class="form-control" id="marca_det_mm" disabled>
                     <option value="">-- Marca --</option>
                 </select>
             </div>
             <div class="col-sm-2">
+                <label class="field-label">Modelo</label>
                 <select class="form-control" id="modelo_det_mm" disabled>
                     <option value="">-- Modelo --</option>
                 </select>

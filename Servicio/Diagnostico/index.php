@@ -75,16 +75,19 @@
             <div class="row clearfix">
 
                 <div class="col-sm-1">
+                    <label class="field-label">Código</label>
                     <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Empresa</label>
                     <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
                     <input type="hidden" id="empresa_id">
                     <div id="listaEmpresa" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Sucursal</label>
                     <input type="text" id="suc_razon_social" class="form-control" disabled
                            onkeyup="buscarSucursal();" placeholder="Sucursal">
                     <input type="hidden" id="sucursal_id">
@@ -92,10 +95,12 @@
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Fecha</label>
                     <input type="text" id="diag_cab_fecha" class="datetimepicker form-control" disabled placeholder="Fecha">
                 </div>
 
                 <div class="col-sm-4">
+                    <label class="field-label">Tipo de Diagnóstico</label>
                     <input type="text" id="tipo_diag_nombre" class="form-control" disabled
                            onkeyup="buscarTipoDiagnostico();" placeholder="Tipo de Diagnóstico">
                     <input type="hidden" id="tipo_diagnostico_id">
@@ -111,6 +116,7 @@
 
             <div class="row clearfix">
                 <div class="col-sm-6">
+                    <label class="field-label">Recepción</label>
                     <input type="text" id="recepcion" class="form-control" disabled
                            onkeyup="buscarRecepcion();" placeholder="Recepción">
                     <input type="hidden" id="recep_cab_id" value="0">
@@ -125,12 +131,14 @@
 
             <div class="row clearfix">
                 <div class="col-sm-9">
+                    <label class="field-label">Observaciones</label>
                     <textarea id="diag_cab_observaciones" class="form-control" rows="4" disabled
                               placeholder="Observaciones (describa los problemas del vehículo)"
                               style="resize:vertical;"></textarea>
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Prioridad</label>
                     <input type="text" id="diag_cab_prioridad" class="form-control" disabled
                            placeholder="Prioridad">
                 </div>
@@ -143,15 +151,18 @@
 
             <div class="row clearfix">
                 <div class="col-sm-2">
+                    <label class="field-label">Kilometraje</label>
                     <input type="text" id="diag_cab_kilometraje" class="form-control" disabled placeholder="Kilometraje">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Nivel de Combustible</label>
                     <input type="text" id="diag_cab_nivel_combustible" class="form-control" disabled
                            placeholder="Nivel de Combustible">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Tipo de Servicio</label>
                     <input type="text" id="tipo_serv_nombre" class="form-control" disabled
                            onkeyup="buscarTipoServicio();" placeholder="Tipo de Servicio">
                     <input type="hidden" id="tipo_servicio_id">
@@ -166,6 +177,7 @@
 
             <div class="row clearfix">
                 <div class="col-sm-2">
+                    <label class="field-label">Nombre</label>
                     <input type="text" id="cli_nombre" class="form-control" disabled
                            onkeyup="buscarCliente();" placeholder="Cliente">
                     <input type="hidden" id="clientes_id">
@@ -173,22 +185,27 @@
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Apellido</label>
                     <input type="text" id="cli_apellido" class="form-control" disabled placeholder="Apellido">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">RUC</label>
                     <input type="text" id="cli_ruc" class="form-control" disabled placeholder="RUC">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Teléfono</label>
                     <input type="text" id="cli_telefono" class="form-control" disabled placeholder="Teléfono">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Dirección</label>
                     <input type="text" id="cli_direccion" class="form-control" disabled placeholder="Dirección">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Correo</label>
                     <input type="text" id="cli_correo" class="form-control" disabled placeholder="Correo">
                 </div>
             </div>
@@ -200,28 +217,34 @@
 
             <div class="row clearfix">
                 <div class="col-sm-3">
+                    <label class="field-label">Tipo de Vehículo</label>
                     <input type="text" id="tip_veh_nombre" class="form-control" disabled placeholder="Tipo de Vehículo">
                     <input type="hidden" id="tipo_vehiculo_id">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Capacidad</label>
                     <input type="text" id="tip_veh_capacidad" class="form-control" disabled placeholder="Capacidad">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Tipo Combustible</label>
                     <input type="text" id="tip_veh_combustible" class="form-control" disabled
                            placeholder="Tipo Combustible">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Categoría</label>
                     <input type="text" id="tip_veh_categoria" class="form-control" disabled placeholder="Categoría">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Marca</label>
                     <input type="text" id="marc_nom" class="form-control" disabled placeholder="Marca">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Modelo</label>
                     <input type="text" id="modelo_nom" class="form-control" disabled placeholder="Modelo">
                 </div>
             </div>
@@ -330,19 +353,19 @@
                                     <tbody id="tableDetalle"></tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="5" class="text-right">IVA 10%</th>
+                                            <th colspan="7" class="text-right">IVA 10%</th>
                                             <th class="text-right" id="txtIva10">0</th>
                                         </tr>
                                         <tr>
-                                            <th colspan="5" class="text-right">IVA 5%</th>
+                                            <th colspan="7" class="text-right">IVA 5%</th>
                                             <th class="text-right" id="txtIva5">0</th>
                                         </tr>
                                         <tr>
-                                            <th colspan="5" class="text-right">Total IVA</th>
+                                            <th colspan="7" class="text-right">Total IVA</th>
                                             <th class="text-right" id="txtTotalConImpuesto">0</th>
                                         </tr>
                                         <tr>
-                                            <th colspan="5" class="text-right" style="font-weight:bold;">Total Comprobante</th>
+                                            <th colspan="7" class="text-right" style="font-weight:bold;">Total Comprobante</th>
                                             <th class="text-right" id="txtTotalGral" style="font-weight:bold;">0</th>
                                         </tr>
                                     </tfoot>    

@@ -56,85 +56,51 @@
             <div class="row clearfix">
 
                 <div class="col-sm-2">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="txtCodigo" class="form-control" disabled>
-                            <label class="form-label">Código</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Código</label>
+                    <input type="text" id="txtCodigo" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-2">
-                    <div class="form-group">
-                        <label style="font-size:12px; color:#999;">Uso</label>
-                        <select id="tv_uso" class="form-control" disabled onchange="cambiarUso(this.value);">
-                            <option value="SERVICIO">Servicio</option>
-                            <option value="EMPRESA">Empresa</option>
-                        </select>
-                    </div>
+                    <label class="field-label">Uso</label>
+                    <select id="tv_uso" class="form-control" disabled onchange="cambiarUso(this.value);">
+                        <option value="SERVICIO">Servicio</option>
+                        <option value="EMPRESA">Empresa</option>
+                    </select>
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="tip_veh_nombre" class="form-control" disabled>
-                            <label class="form-label">Nombre del Tipo</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Nombre del Tipo</label>
+                    <input type="text" id="tip_veh_nombre" class="form-control" disabled placeholder="Nombre del Tipo">
                 </div>
 
                 <div class="col-sm-2">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="tip_veh_capacidad" class="form-control" disabled>
-                            <label class="form-label">Capacidad (asientos)</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Capacidad (asientos)</label>
+                    <input type="text" id="tip_veh_capacidad" class="form-control" disabled placeholder="Capacidad (asientos)">
                 </div>
 
                 <div class="col-sm-2">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="tip_veh_combustible" class="form-control" disabled>
-                            <label class="form-label">Combustible</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Combustible</label>
+                    <input type="text" id="tip_veh_combustible" class="form-control" disabled placeholder="Combustible">
                 </div>
 
                 <div class="col-sm-2">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="tip_veh_categoria" class="form-control" disabled>
-                            <label class="form-label">Categoría</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Categoría</label>
+                    <input type="text" id="tip_veh_categoria" class="form-control" disabled placeholder="Categoría">
                 </div>
 
                 <div class="col-sm-5">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="tip_veh_observacion" class="form-control" disabled>
-                            <label class="form-label">Observaciones</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Observaciones</label>
+                    <input type="text" id="tip_veh_observacion" class="form-control" disabled placeholder="Observaciones">
                 </div>
 
                 <div class="col-sm-2" id="col_tv_anio" style="display:none;">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="number" id="tv_anio" class="form-control" disabled min="1900" max="2100">
-                            <label class="form-label">Año</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Año</label>
+                    <input type="number" id="tv_anio" class="form-control" disabled min="1900" max="2100" placeholder="Año">
                 </div>
 
                 <div class="col-sm-3" id="col_tv_color" style="display:none;">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="tv_color" class="form-control" disabled>
-                            <label class="form-label">Color</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Color</label>
+                    <input type="text" id="tv_color" class="form-control" disabled placeholder="Color">
                 </div>
 
             </div>
@@ -146,25 +112,17 @@
             <div class="row clearfix">
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="marc_nom" class="form-control" disabled onkeyup="buscarMarcas();">
-                            <label class="form-label">Marca</label>
-                        </div>
-                        <input type="hidden" id="marca_id">
-                        <div id="listaMarcas" style="display:none;"></div>
-                    </div>
+                    <label class="field-label">Marca</label>
+                    <input type="text" id="marc_nom" class="form-control" disabled onkeyup="buscarMarcas();" placeholder="Marca">
+                    <input type="hidden" id="marca_id">
+                    <div id="listaMarcas" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="modelo_nom" class="form-control" disabled onkeyup="buscarModelo();">
-                            <label class="form-label">Modelo</label>
-                        </div>
-                        <input type="hidden" id="modelo_id">
-                        <div id="listaModelos" style="display:none;"></div>
-                    </div>
+                    <label class="field-label">Modelo</label>
+                    <input type="text" id="modelo_nom" class="form-control" disabled onkeyup="buscarModelo();" placeholder="Modelo">
+                    <input type="hidden" id="modelo_id">
+                    <div id="listaModelos" style="display:none;"></div>
                 </div>
 
                 <input type="hidden" id="modelo_año">
@@ -216,30 +174,18 @@
                 <div class="row clearfix">
 
                     <div class="col-sm-3">
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <input type="text" id="tv_det_placa" class="form-control">
-                                <label class="form-label">Placa</label>
-                            </div>
-                        </div>
+                        <label class="field-label">Placa</label>
+                        <input type="text" id="tv_det_placa" class="form-control" placeholder="Placa">
                     </div>
 
                     <div class="col-sm-4">
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <input type="text" id="tv_det_num_chasis" class="form-control">
-                                <label class="form-label">Nro. Chasis</label>
-                            </div>
-                        </div>
+                        <label class="field-label">Nro. Chasis</label>
+                        <input type="text" id="tv_det_num_chasis" class="form-control" placeholder="Nro. Chasis">
                     </div>
 
                     <div class="col-sm-4">
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <input type="text" id="tv_det_num_motor" class="form-control">
-                                <label class="form-label">Nro. Motor</label>
-                            </div>
-                        </div>
+                        <label class="field-label">Nro. Motor</label>
+                        <input type="text" id="tv_det_num_motor" class="form-control" placeholder="Nro. Motor">
                     </div>
 
                 </div>

@@ -50,16 +50,19 @@
             <div class="row clearfix">
 
                 <div class="col-sm-1">
+                    <label class="field-label">Código</label>
                     <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Empresa</label>
                     <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
                     <input type="hidden" id="empresa_id">
                 </div>
 
                 <!-- Sucursal Origen -->
                 <div class="col-sm-2">
+                    <label class="field-label">Sucursal Origen</label>
                     <input type="text" id="suc_razon_social" class="form-control" disabled
                            onkeyup="buscarSucursal();" placeholder="Sucursal">
                     <input type="hidden" id="sucursal_id">
@@ -67,11 +70,13 @@
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Fecha</label>
                     <input type="text" id="nota_remi_fecha" class="datetimepicker form-control" disabled placeholder="Fecha">
                     <small id="avisoFechaRemi" style="color:#e74c3c;display:none;"></small>
                 </div>
 
                 <div class="col-sm-4">
+                    <label class="field-label">Observaciones</label>
                     <input type="text" id="nota_remi_observaciones" class="form-control" disabled placeholder="Observaciones">
                 </div>
 
@@ -111,24 +116,29 @@
                         </label>
                     </div>
                     <div class="col-sm-4">
+                        <label class="field-label">Razón Social</label>
                         <input type="text" id="prov_razonsocial" class="form-control" disabled
                                onkeyup="buscarProveedores();" placeholder="Razón Social del Proveedor">
                         <input type="hidden" id="proveedor_id">
                         <div id="listaProveedores" style="display:none;"></div>
                     </div>
                     <div class="col-sm-2">
+                        <label class="field-label">RUC</label>
                         <input type="text" id="prov_ruc" class="form-control" disabled placeholder="RUC">
                     </div>
                     <div class="col-sm-2">
+                        <label class="field-label">Teléfono</label>
                         <input type="text" id="prov_telefono" class="form-control" disabled placeholder="Teléfono">
                     </div>
                     <div class="col-sm-3">
+                        <label class="field-label">Nro. Nota</label>
                         <input type="text" id="nota_remi_nro" class="form-control" disabled
-                               placeholder="Nro. Nota (000-000-0000000)" maxlength="15"
+                               placeholder="000-000-0000000" maxlength="15"
                                oninput="this.value=this.value.replace(/\D/g,'').slice(0,13); autoFormatoNroNota(this);">
                         <small id="avisoNroNota" style="color:#e74c3c;display:none;"></small>
                     </div>
                     <div class="col-sm-2">
+                        <label class="field-label">Fecha Emisión</label>
                         <input type="text" id="nota_remi_fecha_emision" class="form-control" disabled
                                placeholder="DD/MM/YYYY" maxlength="10"
                                oninput="mascararFecha(this); validarFechaEmision();">
@@ -144,15 +154,18 @@
                         </label>
                     </div>
                     <div class="col-sm-4">
+                        <label class="field-label">Nombre</label>
                         <input type="text" id="chofer_nombre" class="form-control" disabled placeholder="Nombre completo del chofer">
                     </div>
                     <div class="col-sm-2">
+                        <label class="field-label">CI</label>
                         <input type="text" id="chofer_documento" class="form-control" disabled
                                placeholder="CI (6-8 dígitos)" maxlength="8"
                                oninput="this.value=this.value.replace(/\D/g,''); validarCI();">
                         <small id="avisoCI" style="color:#e74c3c;display:none;"></small>
                     </div>
                     <div class="col-sm-2">
+                        <label class="field-label">Teléfono</label>
                         <input type="text" id="chofer_telefono" class="form-control" disabled
                                placeholder="09XXXXXXXX" maxlength="10"
                                oninput="this.value=this.value.replace(/\D/g,''); validarTelefono();">
@@ -168,6 +181,7 @@
                         </label>
                     </div>
                     <div class="col-sm-3">
+                        <label class="field-label">Tipo de Vehículo</label>
                         <select id="tipo_vehiculo" class="form-control" disabled onchange="cambiarTipoVehiculo();">
                             <option value="">-- Tipo de Vehículo --</option>
                             <option value="AUTOMOVIL">Automóvil / Camioneta</option>
@@ -175,23 +189,28 @@
                         </select>
                     </div>
                     <div class="col-sm-2">
+                        <label class="field-label">Matrícula</label>
                         <input type="text" id="vehiculo_matricula" class="form-control" disabled
                                placeholder="Matrícula" maxlength="10"
                                oninput="this.value=this.value.toUpperCase(); validarMatricula();">
                         <small id="avisoMatricula" style="color:#e74c3c;display:none;"></small>
                     </div>
                     <div class="col-sm-2">
+                        <label class="field-label">Modelo</label>
                         <input type="text" id="vehiculo_modelo" class="form-control" disabled placeholder="Modelo">
                     </div>
                     <div class="col-sm-2">
+                        <label class="field-label">Color</label>
                         <input type="text" id="vehiculo_color" class="form-control" disabled placeholder="Color">
                     </div>
                     <div class="col-sm-1">
+                        <label class="field-label">Año</label>
                         <input type="text" id="vehiculo_anio" class="form-control" disabled placeholder="Año"
                                maxlength="4" oninput="validarAnio();">
                         <small id="avisoAnio" style="color:#e74c3c;display:none;"></small>
                     </div>
                     <div class="col-sm-2">
+                        <label class="field-label">Nro. Vehículo</label>
                         <input type="text" id="vehiculo_nro" class="form-control" disabled placeholder="Nro. Vehículo">
                     </div>
                 </div>
@@ -199,6 +218,8 @@
 
             <!-- SECCIÓN TRANSFERENCIA (oculta por defecto) -->
             <div id="seccionTransferencia" style="display:none; margin-top:10px;">
+
+                <!-- Sucursal Destino -->
                 <div class="row clearfix">
                     <div class="col-sm-12">
                         <label style="font-size:11px;font-weight:700;text-transform:uppercase;color:#e74c3c;">
@@ -206,11 +227,59 @@
                             Sucursal Destino
                         </label>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-3" style="position:relative;">
                         <input type="text" id="suc_destino_razon_social" class="form-control" disabled
                                onkeyup="buscarSucursalDestino();" placeholder="Sucursal Destino">
                         <input type="hidden" id="sucursal_destino_id">
                         <div id="listaSucursalDestino" style="display:none;"></div>
+                    </div>
+                </div>
+
+                <!-- Conductor y Vehículo -->
+                <div class="row clearfix" style="margin-top:10px;">
+                    <div class="col-sm-12">
+                        <label style="font-size:11px;font-weight:700;text-transform:uppercase;color:#e74c3c;">
+                            <i class="material-icons" style="font-size:14px;vertical-align:middle;">person_pin</i>
+                            Conductor y Vehículo
+                        </label>
+                    </div>
+
+                    <!-- Conductor -->
+                    <div class="col-sm-4" style="position:relative;">
+                        <input type="text" id="conductor_nombre" class="form-control" disabled
+                               onkeyup="buscarConductor();" placeholder="Buscar conductor (funcionario)...">
+                        <input type="hidden" id="conductor_id">
+                        <div id="listaConductor" style="display:none; position:absolute; z-index:2000; width:100%;"></div>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" id="conductor_ci" class="form-control" disabled placeholder="CI conductor">
+                    </div>
+
+                    <!-- Vehículo -->
+                    <div class="col-sm-3" style="position:relative;">
+                        <input type="text" id="tvd_buscar" class="form-control" disabled
+                               onkeyup="buscarVehiculo();" placeholder="Buscar vehículo (placa/marca)...">
+                        <input type="hidden" id="tipo_vehiculo_det_id">
+                        <div id="listaVehiculo" style="display:none; position:absolute; z-index:2000; width:100%;"></div>
+                    </div>
+                </div>
+
+                <!-- Datos del vehículo seleccionado (readonly) -->
+                <div class="row clearfix" style="margin-top:6px;" id="filaVehiculoInfo">
+                    <div class="col-sm-2">
+                        <input type="text" id="tvd_marca" class="form-control" disabled placeholder="Marca">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" id="tvd_modelo" class="form-control" disabled placeholder="Modelo">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" id="tvd_placa" class="form-control" disabled placeholder="Placa">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" id="tvd_chasis" class="form-control" disabled placeholder="Nº Chasis">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" id="tvd_motor" class="form-control" disabled placeholder="Nº Motor">
                     </div>
                 </div>
 
@@ -281,31 +350,37 @@
             <div class="row clearfix">
 
                 <div class="col-sm-1">
+                    <label class="field-label">Cód.</label>
                     <input type="text" id="item_id" class="form-control" disabled placeholder="Cód">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Producto</label>
                     <input type="text" id="item_decripcion" class="form-control" disabled
-                           onkeyup="buscarProductos();" placeholder="Producto">
+                           onkeyup="buscarProductos();" placeholder="Buscar...">
                     <div id="listaProductos" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-1">
-                    <input type="text" id="nota_remi_com_det_cantidad" class="form-control" disabled placeholder="Cant.">
+                    <label class="field-label">Cant.</label>
+                    <input type="text" id="nota_remi_com_det_cantidad" class="form-control" disabled placeholder="0">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Marca</label>
                     <select class="form-control" id="marca_det_mm" disabled>
                         <option value="">-- Marca --</option>
                     </select>
                 </div>
                 <div class="col-sm-2">
+                    <label class="field-label">Modelo</label>
                     <select class="form-control" id="modelo_det_mm" disabled>
                         <option value="">-- Modelo --</option>
                     </select>
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Depósito</label>
                     <select class="form-control" id="deposito_id_det" disabled>
                         <option value="">-- Depósito --</option>
                     </select>
@@ -313,6 +388,7 @@
 
                 <!-- Solo visible para TRANSFERENCIA -->
                 <div class="col-sm-2" id="colDepositoDestino" style="display:none;">
+                    <label class="field-label">Depósito Destino</label>
                     <select class="form-control" id="deposito_destino_id_det" disabled>
                         <option value="">-- Depósito Destino --</option>
                     </select>
@@ -408,7 +484,7 @@
 <script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js"></script>
 <script src="../../js/marcaModelo.js"></script>
-<script src="metodos.js?v=5"></script>
+<script src="metodos.js?v=7"></script>
 
 </body>
 </html>

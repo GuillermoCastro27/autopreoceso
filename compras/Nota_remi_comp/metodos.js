@@ -34,13 +34,13 @@ function setTipo(tipo) {
         limpiarCamposProveedor();
         deshabilitarCamposProveedor();
         $('#seccionTransferencia').show();
-        // Limpiar timbrado al cambiar a transferencia
         $('#timbrado_id_remi, #tim_numero_remi, #nota_remi_nro_preview, #tim_vence_remi').val('');
         if ($('#sucursal_id').val()) {
             $('#suc_destino_razon_social').prop('disabled', false);
         } else {
             $('#suc_destino_razon_social').prop('disabled', true);
         }
+        $('#conductor_nombre, #tvd_buscar').prop('disabled', false);
         $('#colDepositoDestino').show();
         $('#thDepositoDestino').show();
     } else {
@@ -50,12 +50,116 @@ function setTipo(tipo) {
         $('#seccionProveedor').show();
         habilitarCamposProveedor();
         $('#seccionTransferencia').hide();
-        $('#suc_destino_razon_social').prop('disabled', true).val('');
-        $('#sucursal_destino_id').val('');
+        limpiarCamposTransferencia();
         $('#colDepositoDestino').hide();
         $('#thDepositoDestino').hide();
     }
 }
+
+function limpiarCamposTransferencia() {
+    $('#suc_destino_razon_social').prop('disabled', true).val('');
+    $('#sucursal_destino_id').val('');
+    $('#conductor_id').val('');
+    $('#conductor_nombre').val('').prop('disabled', true);
+    $('#conductor_ci').val('');
+    $('#tipo_vehiculo_det_id').val('');
+    $('#tvd_buscar').val('').prop('disabled', true);
+    $('#tvd_marca, #tvd_modelo, #tvd_placa, #tvd_chasis, #tvd_motor').val('');
+    $('#listaConductor, #listaVehiculo').html('').hide();
+}
+
+// ─── BÚSQUEDA CONDUCTOR ──────────────────────────────────────────────────────
+var _timerConductor;
+function buscarConductor() {
+    var q = $.trim($('#conductor_nombre').val());
+    clearTimeout(_timerConductor);
+    if (!q) { $('#listaConductor').html('').hide(); return; }
+    _timerConductor = setTimeout(function() {
+        $.ajax({
+            url: getUrl() + 'funcionario/buscar',
+            method: 'GET',
+            headers: { Authorization: 'Bearer ' + getToken() },
+            data: { q: q }
+        })
+        .done(function(data) {
+            var lista = "<ul class='list-group' style='margin:0;'>";
+            if (!data.length) lista += "<li class='list-group-item text-muted'>Sin resultados</li>";
+            data.forEach(function(rs) {
+                var info = JSON.stringify({
+                    id:          rs.id,
+                    nombre:      (rs.fun_nom || '') + ' ' + (rs.fun_apellido || ''),
+                    ci:          rs.fun_ci || ''
+                }).replace(/'/g, "&#39;");
+                lista += "<li class='list-group-item lista-conductor-item' style='cursor:pointer;' data-info='" + info + "'>"
+                    + (rs.fun_nom || '') + ' ' + (rs.fun_apellido || '')
+                    + ' <small class="text-muted">CI: ' + (rs.fun_ci || '-') + '</small>'
+                    + "</li>";
+            });
+            lista += "</ul>";
+            $('#listaConductor').html(lista).show();
+        });
+    }, 300);
+}
+
+$(document).on('click', '.lista-conductor-item', function() {
+    var d = $(this).data('info');
+    if (!d) return;
+    $('#conductor_id').val(d.id);
+    $('#conductor_nombre').val(d.nombre);
+    $('#conductor_ci').val(d.ci);
+    $('#listaConductor').html('').hide();
+    $(".form-line").addClass("focused");
+});
+
+// ─── BÚSQUEDA VEHÍCULO ────────────────────────────────────────────────────────
+var _timerVehiculo;
+function buscarVehiculo() {
+    var q = $.trim($('#tvd_buscar').val());
+    clearTimeout(_timerVehiculo);
+    if (!q) { $('#listaVehiculo').html('').hide(); return; }
+    _timerVehiculo = setTimeout(function() {
+        $.ajax({
+            url: getUrl() + 'tipo_vehiculo_det/buscar',
+            method: 'GET',
+            headers: { Authorization: 'Bearer ' + getToken() },
+            data: { q: q }
+        })
+        .done(function(data) {
+            var lista = "<ul class='list-group' style='margin:0;'>";
+            if (!data.length) lista += "<li class='list-group-item text-muted'>Sin resultados</li>";
+            data.forEach(function(rs) {
+                var info = JSON.stringify({
+                    id:       rs.id,
+                    placa:    rs.tv_det_placa   || '',
+                    chasis:   rs.tv_det_num_chasis || '',
+                    motor:    rs.tv_det_num_motor  || '',
+                    marc_nom: rs.marc_nom        || '',
+                    modelo_nom: rs.modelo_nom    || ''
+                }).replace(/'/g, "&#39;");
+                lista += "<li class='list-group-item lista-vehiculo-item' style='cursor:pointer;' data-info='" + info + "'>"
+                    + (rs.marc_nom || '') + ' ' + (rs.modelo_nom || '')
+                    + ' — <strong>' + (rs.tv_det_placa || '') + '</strong>'
+                    + "</li>";
+            });
+            lista += "</ul>";
+            $('#listaVehiculo').html(lista).show();
+        });
+    }, 300);
+}
+
+$(document).on('click', '.lista-vehiculo-item', function() {
+    var d = $(this).data('info');
+    if (!d) return;
+    $('#tipo_vehiculo_det_id').val(d.id);
+    $('#tvd_buscar').val(d.marc_nom + ' ' + d.modelo_nom + ' — ' + d.placa);
+    $('#tvd_marca').val(d.marc_nom);
+    $('#tvd_modelo').val(d.modelo_nom);
+    $('#tvd_placa').val(d.placa);
+    $('#tvd_chasis').val(d.chasis);
+    $('#tvd_motor').val(d.motor);
+    $('#listaVehiculo').html('').hide();
+    $(".form-line").addClass("focused");
+});
 
 function habilitarTipo() {
     $('#btnTipoProveedor, #btnTipoTransferencia').removeAttr('disabled');
@@ -300,7 +404,12 @@ function editar() {
     $("#nota_remi_observaciones").removeAttr("disabled");
     $("#suc_razon_social").removeAttr("disabled");
     habilitarTipo();
-    habilitarCamposProveedor();
+    if ($('#tipo').val() === 'TRANSFERENCIA') {
+        $('#conductor_nombre, #tvd_buscar').removeAttr('disabled');
+        if ($('#sucursal_id').val()) $('#suc_destino_razon_social').removeAttr('disabled');
+    } else {
+        habilitarCamposProveedor();
+    }
 
     $('#btnAgregar, #btnEditar, #btnEliminar, #btnConfirmar').attr('disabled', true);
     $('#btnGrabar, #btnCancelar').removeAttr('disabled');
@@ -407,6 +516,8 @@ function grabar() {
         if (!$('#sucursal_destino_id').val())         errores.push('Seleccione la sucursal destino.');
         else if ($('#sucursal_id').val() === $('#sucursal_destino_id').val())
                                                       errores.push('La sucursal origen y la de destino no pueden ser la misma.');
+        if (!$('#conductor_id').val())                errores.push('Seleccione el conductor (funcionario).');
+        if (!$('#tipo_vehiculo_det_id').val())        errores.push('Seleccione el vehículo para el transporte.');
     }
 
     if (errores.length > 0) {
@@ -441,6 +552,8 @@ function grabar() {
             'nota_remi_nro':           $("#nota_remi_nro").val() || null,
             'nota_remi_fecha_emision': $("#nota_remi_fecha_emision").val()
                 ? moment($("#nota_remi_fecha_emision").val(), 'DD/MM/YYYY').format('YYYY-MM-DD') : null,
+            'conductor_id':            $("#conductor_id").val() || null,
+            'tipo_vehiculo_det_id':    $("#tipo_vehiculo_det_id").val() || null,
             'chofer_nombre':           $("#chofer_nombre").val() || null,
             'chofer_documento':        $("#chofer_documento").val() || null,
             'chofer_telefono':         $("#chofer_telefono").val() || null,
@@ -472,113 +585,137 @@ function listar() {
     $.ajax({ url: getUrl() + 'notaremicomp/read', method: 'GET', dataType: 'json' })
     .done(function(resultado) {
         var lista = '';
-        for (var rs of resultado) {
+        resultado.forEach(function(rs) {
             var badgeTipo = rs.tipo === 'TRANSFERENCIA'
                 ? '<span style="background:#e74c3c;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;">TRANSFERENCIA</span>'
                 : '<span style="background:#2980b9;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;">PROVEEDOR</span>';
 
-            lista += '<tr class="item-list" onclick="seleccionNotaRemi('
-                + rs.id + ','
-                + rs.empresa_id + ','
-                + rs.sucursal_id + ','
-                + (rs.sucursal_destino_id || 0) + ","
-                + "'" + rs.emp_razon_social + "',"
-                + "'" + rs.suc_razon_social + "',"
-                + "'" + (rs.suc_destino_razon_social || '') + "',"
-                + "'" + rs.nota_remi_fecha + "',"
-                + "'" + rs.nota_remi_observaciones + "',"
-                + "'" + rs.nota_remi_estado + "',"
-                + "'" + rs.tipo + "',"
-                + "'" + (rs.funcionario || '-') + "',"
-                + (rs.proveedor_id || 0) + ",'"
-                + (rs.prov_razonsocial || '') + "','"
-                + (rs.prov_ruc || '') + "','"
-                + (rs.prov_telefono || '') + "','"
-                + (rs.nota_remi_nro || '') + "','"
-                + (rs.nota_remi_fecha_emision || '') + "','"
-                + (rs.tim_numero || '') + "','"
-                + (rs.tim_fecha_fin || '') + "','"
-                + (rs.chofer_nombre || '') + "',"
-                + "'" + (rs.chofer_documento || '') + "',"
-                + "'" + (rs.chofer_telefono || '') + "',"
-                + "'" + (rs.vehiculo_matricula || '') + "',"
-                + "'" + (rs.vehiculo_modelo || '') + "',"
-                + "'" + (rs.vehiculo_color || '') + "',"
-                + "'" + (rs.vehiculo_anio || '') + "',"
-                + "'" + (rs.vehiculo_nro || '') + "',"
-                + "'" + (rs.tipo_vehiculo || '') + "'"
-                + ');">';
+            var info = JSON.stringify({
+                id:                    rs.id,
+                empresa_id:            rs.empresa_id,
+                emp_razon_social:      rs.emp_razon_social || '',
+                sucursal_id:           rs.sucursal_id,
+                suc_razon_social:      rs.suc_razon_social || '',
+                sucursal_destino_id:   rs.sucursal_destino_id || '',
+                suc_destino_razon_social: rs.suc_destino_razon_social || '',
+                nota_remi_fecha:       rs.nota_remi_fecha || '',
+                nota_remi_observaciones: rs.nota_remi_observaciones || '',
+                nota_remi_estado:      rs.nota_remi_estado || '',
+                tipo:                  rs.tipo || '',
+                funcionario:           rs.funcionario || '',
+                proveedor_id:          rs.proveedor_id || '',
+                prov_razonsocial:      rs.prov_razonsocial || '',
+                prov_ruc:              rs.prov_ruc || '',
+                prov_telefono:         rs.prov_telefono || '',
+                nota_remi_nro:         rs.nota_remi_nro || '',
+                nota_remi_fecha_emision: rs.nota_remi_fecha_emision || '',
+                tim_numero:            rs.tim_numero || '',
+                tim_fecha_fin:         rs.tim_fecha_fin || '',
+                chofer_nombre:         rs.chofer_nombre || '',
+                chofer_documento:      rs.chofer_documento || '',
+                chofer_telefono:       rs.chofer_telefono || '',
+                vehiculo_matricula:    rs.vehiculo_matricula || '',
+                vehiculo_modelo:       rs.vehiculo_modelo || '',
+                vehiculo_color:        rs.vehiculo_color || '',
+                vehiculo_anio:         rs.vehiculo_anio || '',
+                vehiculo_nro:          rs.vehiculo_nro || '',
+                tipo_vehiculo:         rs.tipo_vehiculo || '',
+                conductor_id:          rs.conductor_id || '',
+                conductor_nombre:      rs.conductor_nombre || '',
+                tipo_vehiculo_det_id:  rs.tipo_vehiculo_det_id || '',
+                tv_det_placa:          rs.tv_det_placa || '',
+                tv_det_num_chasis:     rs.tv_det_num_chasis || '',
+                tv_det_num_motor:      rs.tv_det_num_motor || '',
+                tv_marc_nom:           rs.tv_marc_nom || '',
+                tv_modelo_nom:         rs.tv_modelo_nom || ''
+            }).replace(/'/g, "&#39;");
+
+            lista += '<tr class="item-list" style="cursor:pointer;" data-info=\'' + info + '\'>';
             lista += '<td>' + rs.id + '</td>';
             lista += '<td>' + badgeTipo + '</td>';
-            lista += '<td>' + rs.suc_razon_social + '</td>';
+            lista += '<td>' + (rs.suc_razon_social || '') + '</td>';
             lista += '<td>' + (rs.suc_destino_razon_social || '—') + '</td>';
-            lista += '<td>' + rs.nota_remi_fecha + '</td>';
-            lista += '<td>' + rs.nota_remi_observaciones + '</td>';
+            lista += '<td>' + (rs.nota_remi_fecha || '') + '</td>';
+            lista += '<td>' + (rs.nota_remi_observaciones || '') + '</td>';
             lista += '<td>' + (rs.funcionario || '-') + '</td>';
-            lista += '<td>' + rs.nota_remi_estado + '</td>';
+            lista += '<td>' + (rs.nota_remi_estado || '') + '</td>';
             lista += '</tr>';
-        }
+        });
         $('#tableBody').html(lista);
         formatoTabla();
     })
     .fail(function(xhr) { console.error(xhr.responseText); });
 }
 
-// ─── SELECCIÓN NOTA ──────────────────────────────────────────────────────────
-function seleccionNotaRemi(id, empresa_id, sucursal_id, sucursal_destino_id,
-    emp_razon_social, suc_razon_social, suc_destino_razon_social,
-    nota_remi_fecha, nota_remi_observaciones, nota_remi_estado, tipo, funcionario,
-    proveedor_id, prov_razonsocial, prov_ruc, prov_telefono, nota_remi_nro, nota_remi_fecha_emision,
-    tim_numero, tim_fecha_fin,
-    chofer_nombre, chofer_documento, chofer_telefono,
-    vehiculo_matricula, vehiculo_modelo, vehiculo_color, vehiculo_anio, vehiculo_nro, tipo_vehiculo) {
+$(document).on('click', '.item-list', function() {
+    var d = $(this).data('info');
+    if (d) seleccionNotaRemi(d);
+});
 
-    $("#id").val(id);
-    $("#empresa_id").val(empresa_id);
-    $("#sucursal_id").val(sucursal_id);
-    $("#sucursal_destino_id").val(sucursal_destino_id || '');
-    $("#emp_razon_social").val(emp_razon_social);
-    $("#suc_razon_social").val(suc_razon_social);
-    $("#suc_destino_razon_social").val(suc_destino_razon_social || '');
-    $("#nota_remi_fecha").val(nota_remi_fecha);
-    $("#nota_remi_observaciones").val(nota_remi_observaciones);
-    $("#nota_remi_estado").val(nota_remi_estado);
+// ─── SELECCIÓN NOTA ──────────────────────────────────────────────────────────
+function seleccionNotaRemi(d) {
+    $("#id").val(d.id);
+    $("#empresa_id").val(d.empresa_id);
+    $("#sucursal_id").val(d.sucursal_id);
+    $("#sucursal_destino_id").val(d.sucursal_destino_id || '');
+    $("#emp_razon_social").val(d.emp_razon_social);
+    $("#suc_razon_social").val(d.suc_razon_social);
+    $("#suc_destino_razon_social").val(d.suc_destino_razon_social || '');
+    $("#nota_remi_fecha").val(d.nota_remi_fecha);
+    $("#nota_remi_observaciones").val(d.nota_remi_observaciones);
+    $("#nota_remi_estado").val(d.nota_remi_estado);
 
     // Timbrado (solo para TRANSFERENCIA)
-    if (tipo === 'TRANSFERENCIA') {
-        $('#tim_numero_remi').val(tim_numero || '');
-        $('#nota_remi_nro_preview').val(nota_remi_nro || '');
-        $('#tim_vence_remi').val(tim_fecha_fin || '');
+    if (d.tipo === 'TRANSFERENCIA') {
+        $('#tim_numero_remi').val(d.tim_numero || '');
+        $('#nota_remi_nro_preview').val(d.nota_remi_nro || '');
+        $('#tim_vence_remi').val(d.tim_fecha_fin || '');
+        // Conductor
+        $('#conductor_id').val(d.conductor_id || '');
+        $('#conductor_nombre').val(d.conductor_nombre || '');
+        $('#conductor_ci').val('');
+        // Vehículo
+        $('#tipo_vehiculo_det_id').val(d.tipo_vehiculo_det_id || '');
+        if (d.tipo_vehiculo_det_id) {
+            $('#tvd_buscar').val((d.tv_marc_nom || '') + ' ' + (d.tv_modelo_nom || '') + ' — ' + (d.tv_det_placa || ''));
+        } else {
+            $('#tvd_buscar').val('');
+        }
+        $('#tvd_marca').val(d.tv_marc_nom || '');
+        $('#tvd_modelo').val(d.tv_modelo_nom || '');
+        $('#tvd_placa').val(d.tv_det_placa || '');
+        $('#tvd_chasis').val(d.tv_det_num_chasis || '');
+        $('#tvd_motor').val(d.tv_det_num_motor || '');
     }
 
     // Datos proveedor
-    $('#proveedor_id').val(proveedor_id || '');
-    $('#prov_razonsocial').val(prov_razonsocial || '');
-    $('#prov_ruc').val(prov_ruc || '');
-    $('#prov_telefono').val(prov_telefono || '');
-    $('#nota_remi_nro').val(nota_remi_nro || '');
-    $('#nota_remi_fecha_emision').val(nota_remi_fecha_emision || '');
+    $('#proveedor_id').val(d.proveedor_id || '');
+    $('#prov_razonsocial').val(d.prov_razonsocial || '');
+    $('#prov_ruc').val(d.prov_ruc || '');
+    $('#prov_telefono').val(d.prov_telefono || '');
+    $('#nota_remi_nro').val(d.nota_remi_nro || '');
+    $('#nota_remi_fecha_emision').val(d.nota_remi_fecha_emision || '');
 
-    // Datos chofer y vehículo
-    $('#chofer_nombre').val(chofer_nombre || '');
-    $('#chofer_documento').val(chofer_documento || '');
-    $('#chofer_telefono').val(chofer_telefono || '');
-    $('#vehiculo_matricula').val(vehiculo_matricula || '');
-    $('#vehiculo_modelo').val(vehiculo_modelo || '');
-    $('#vehiculo_color').val(vehiculo_color || '');
-    $('#vehiculo_anio').val(vehiculo_anio || '');
-    $('#vehiculo_nro').val(vehiculo_nro || '');
-    $('#tipo_vehiculo').val(tipo_vehiculo || '');
+    // Datos chofer y vehículo (proveedor)
+    $('#chofer_nombre').val(d.chofer_nombre || '');
+    $('#chofer_documento').val(d.chofer_documento || '');
+    $('#chofer_telefono').val(d.chofer_telefono || '');
+    $('#vehiculo_matricula').val(d.vehiculo_matricula || '');
+    $('#vehiculo_modelo').val(d.vehiculo_modelo || '');
+    $('#vehiculo_color').val(d.vehiculo_color || '');
+    $('#vehiculo_anio').val(d.vehiculo_anio || '');
+    $('#vehiculo_nro').val(d.vehiculo_nro || '');
+    $('#tipo_vehiculo').val(d.tipo_vehiculo || '');
     cambiarTipoVehiculo();
 
     // Aplicar tipo y mostrar/ocultar sección transferencia
-    $('#tipo').val(tipo);
-    setTipo(tipo);
+    $('#tipo').val(d.tipo);
+    setTipo(d.tipo);
     deshabilitarTipo();
     deshabilitarCamposProveedor();
 
-    // Botón imprimir: solo para TRANSFERENCIA no ANULADO
-    if (tipo === 'TRANSFERENCIA' && nota_remi_estado === 'CONFIRMADO') {
+    // Botón imprimir: solo para TRANSFERENCIA CONFIRMADA
+    if (d.tipo === 'TRANSFERENCIA' && d.nota_remi_estado === 'CONFIRMADO') {
         $('#btnImprimir').show().removeAttr('disabled');
     } else {
         $('#btnImprimir').hide().attr('disabled', true);
@@ -593,11 +730,11 @@ function seleccionNotaRemi(id, empresa_id, sucursal_id, sucursal_destino_id,
     $('#btnAgregar, #btnEditar, #btnGrabar, #btnCancelar, #btnEliminar, #btnConfirmar').attr('disabled', true);
     $('#btnCancelar').removeAttr('disabled');
 
-    if (nota_remi_estado === 'PENDIENTE') {
+    if (d.nota_remi_estado === 'PENDIENTE') {
         $('#btnEditar, #btnEliminar, #btnConfirmar').removeAttr('disabled');
         $('#formDetalles').show();
     }
-    if (nota_remi_estado === 'CONFIRMADO') {
+    if (d.nota_remi_estado === 'CONFIRMADO') {
         $('#btnEliminar').removeAttr('disabled');
     }
     $(".form-line").addClass("focused");

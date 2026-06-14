@@ -69,15 +69,18 @@
         <div class="section-box">
             <div class="section-title">Datos Generales de la Venta</div>
 
+            <!-- FILA 1 -->
             <div class="row clearfix">
 
                 <!-- CÓDIGO -->
                 <div class="col-sm-1">
+                    <label class="field-label">Código</label>
                     <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <!-- EMPRESA -->
                 <div class="col-sm-2">
+                    <label class="field-label">Empresa</label>
                     <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
                     <input type="hidden" id="empresa_id">
                     <div id="listaEmpresa" style="display:none;"></div>
@@ -85,6 +88,7 @@
 
                 <!-- SUCURSAL -->
                 <div class="col-sm-2">
+                    <label class="field-label">Sucursal</label>
                     <input type="text" id="suc_razon_social" class="form-control" disabled onkeyup="buscarSucursal();" placeholder="Sucursal">
                     <input type="hidden" id="sucursal_id">
                     <div id="listaSucursal" style="display:none;"></div>
@@ -92,28 +96,37 @@
 
                 <!-- CONDICIÓN DE PAGO -->
                 <div class="col-sm-2">
+                    <label class="field-label">Condición de Pago</label>
                     <select id="condicion_pago" class="form-control" disabled onchange="controlarCamposPago();">
                         <option value="CONTADO">Al contado</option>
                         <option value="CREDITO">A crédito</option>
                     </select>
                 </div>
 
-                <!-- INTERVALO VENCIMIENTO -->
-                <div class="col-sm-3">
-                    <input type="text" id="vent_intervalo_fecha_vence"
-                           class="datetimepicker form-control" disabled
-                           placeholder="Intervalo fecha vencimiento">
-                </div>
-
                 <!-- FECHA -->
-                <div class="col-sm-2">
+                <div class="col-sm-3">
+                    <label class="field-label">Fecha</label>
                     <input type="text" id="vent_fecha"
                            class="datetimepicker form-control" disabled
                            placeholder="Fecha">
                 </div>
 
+            </div>
+
+            <!-- FILA 2: crédito -->
+            <div class="row clearfix" style="margin-top:8px;">
+
+                <!-- INTERVALO VENCIMIENTO -->
+                <div class="col-sm-3">
+                    <label class="field-label">Intervalo Fecha Vencimiento</label>
+                    <input type="text" id="vent_intervalo_fecha_vence"
+                           class="datetimepicker form-control" disabled
+                           placeholder="Intervalo fecha vencimiento">
+                </div>
+
                 <!-- CUOTA -->
-                <div class="col-sm-1">
+                <div class="col-sm-2">
+                    <label class="field-label">Cuota</label>
                     <input type="text" id="vent_cant_cuota"
                            class="form-control" disabled
                            placeholder="Cuota">
@@ -130,7 +143,7 @@
                         <input type="hidden" id="timbrado_id">
                     </div>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-4">
                     <div class="input-group">
                         <span class="input-group-addon" style="font-size:11px;white-space:nowrap;">Nro. Comprobante</span>
                         <input type="text" id="vent_nro_comprobante" class="form-control" disabled placeholder="—">
@@ -219,6 +232,7 @@
 
             <div class="row clearfix">
                 <div class="col-sm-2">
+                    <label class="field-label">Nombre</label>
                     <input type="text" id="cli_nombre" class="form-control"
                            disabled onkeyup="buscarCliente();"
                            placeholder="Nombre">
@@ -227,16 +241,19 @@
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Apellido</label>
                     <input type="text" id="cli_apellido" class="form-control"
                            disabled placeholder="Apellido">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">RUC</label>
                     <input type="text" id="cli_ruc" class="form-control"
                            disabled placeholder="RUC">
                 </div>
 
                 <div class="col-sm-4">
+                    <label class="field-label">Dirección</label>
                     <input type="text" id="cli_direccion" class="form-control"
                            disabled placeholder="Dirección">
                 </div>
@@ -244,11 +261,13 @@
 
             <div class="row clearfix" style="margin-top:10px;">
                 <div class="col-sm-4">
+                    <label class="field-label">Teléfono</label>
                     <input type="text" id="cli_telefono" class="form-control"
                            disabled placeholder="Teléfono">
                 </div>
 
                 <div class="col-sm-4">
+                    <label class="field-label">Correo</label>
                     <input type="text" id="cli_correo" class="form-control"
                            disabled placeholder="Correo">
                 </div>

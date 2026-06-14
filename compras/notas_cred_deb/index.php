@@ -59,15 +59,18 @@
             <!-- FILA 1 -->
             <div class="row clearfix">
                 <div class="col-sm-1">
+                    <label class="field-label">Código</label>
                     <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Empresa</label>
                     <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
                     <input type="hidden" id="empresa_id">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Sucursal</label>
                     <input type="text" id="suc_razon_social" class="form-control" disabled
                            onkeyup="buscarSucursal();" placeholder="Sucursal">
                     <input type="hidden" id="sucursal_id">
@@ -75,6 +78,7 @@
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Condición de Pago</label>
                     <select id="nota_comp_condicion_pago" class="form-control" disabled onchange="controlarCamposPago();">
                         <option value="CONTADO">Al contado</option>
                         <option value="CREDITO">A crédito</option>
@@ -82,6 +86,7 @@
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Fecha</label>
                     <input type="text" id="nota_comp_fecha" class="datetimepicker form-control"
                            readonly placeholder="Fecha">
                     <small id="avisoFechaNota" style="color:#e74c3c;display:none;"></small>
@@ -91,17 +96,20 @@
             <!-- FILA 2 -->
             <div class="row clearfix" style="margin-top:10px;">
                 <div class="col-sm-3">
+                    <label class="field-label">Intervalo Vencimiento</label>
                     <input type="text" id="nota_comp_intervalo_fecha_vence"
                            class="datetimepicker form-control" disabled
                            placeholder="Intervalo vencimiento">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Cuota</label>
                     <input type="text" id="nota_comp_cant_cuota" class="form-control"
                            disabled placeholder="Cuota">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Tipo</label>
                     <select id="nota_comp_tipo" class="form-control" disabled>
                         <option>Crédito</option>
                         <option>Débito</option>
@@ -124,6 +132,7 @@
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Observaciones</label>
                     <input type="text" id="nota_comp_observaciones"
                            class="form-control" disabled
                            placeholder="Observaciones">
@@ -137,46 +146,55 @@
             <div class="row clearfix">
 
                 <div class="col-sm-12">
-                    <input type="text" id="compra_cab" class="form-control" disabled onkeyup="buscarCompra();" placeholder="Compra">
+                    <label class="field-label">Compra</label>
+                    <input type="text" id="compra_cab" class="form-control" disabled onkeyup="buscarCompra();" placeholder="Buscar compra...">
                     <input type="hidden" id="compra_cab_id" value="0">
                     <div id="listaCompra" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-4">
+                    <label class="field-label">Proveedor</label>
                     <input type="hidden" id="proveedor_id" value="0">
                     <input type="text" id="prov_razonsocial" class="form-control" disabled placeholder="Proveedor">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">RUC</label>
                     <input type="text" id="prov_ruc" class="form-control" disabled placeholder="RUC">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Teléfono</label>
                     <input type="text" id="prov_telefono" class="form-control" disabled placeholder="Teléfono">
                 </div>
 
                 <div class="col-sm-4">
+                    <label class="field-label">Correo</label>
                     <input type="text" id="prov_correo" class="form-control" disabled placeholder="Correo">
                 </div>
 
                 <div class="col-sm-3" style="margin-top:10px;">
+                    <label class="field-label">Timbrado Compra</label>
                     <input type="text" id="comp_timbrado" class="form-control" disabled
                            placeholder="Timbrado de la Compra">
                 </div>
 
                 <div class="col-sm-3" style="margin-top:10px;">
+                    <label class="field-label">Nro. Factura Compra</label>
                     <input type="text" id="comp_nro_factura" class="form-control" disabled
                            placeholder="Nro. Factura de la Compra">
                 </div>
 
                 <div class="col-sm-3" style="margin-top:10px;">
+                    <label class="field-label">Timbrado Nota</label>
                     <input type="text" id="nota_comp_timbrado" class="form-control" disabled
                            placeholder="Timbrado de la Nota" maxlength="20">
                 </div>
 
                 <div class="col-sm-3" style="margin-top:10px;">
+                    <label class="field-label">Nro. Nota</label>
                     <input type="text" id="nota_comp_nro_nota" class="form-control" disabled
-                           placeholder="Nro. Nota (000-000-0000000)" maxlength="15"
+                           placeholder="000-000-0000000" maxlength="15"
                            oninput="autoFormatoFactura(this)">
                 </div>
 
@@ -224,40 +242,48 @@
 
             <div class="row clearfix">
                 <div class="col-sm-1">
+                    <label class="field-label">Cód.</label>
                     <input type="text" id="item_id" class="form-control" disabled placeholder="Cód">
                 </div>
 
                 <div class="col-sm-4">
-                    <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
+                    <label class="field-label">Producto</label>
+                    <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Buscar...">
                     <div id="listaProductos" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-1">
-                    <input type="text" id="notas_comp_det_cantidad" class="form-control" disabled placeholder="Cant."
+                    <label class="field-label">Cant.</label>
+                    <input type="text" id="notas_comp_det_cantidad" class="form-control" disabled placeholder="0"
                            oninput="validarCantidadNota();">
                     <small id="avisoStockNota" style="color:#e74c3c;display:none;"></small>
                 </div>
 
                 <div class="col-sm-2">
-                    <input type="text" id="item_costo" class="form-control" disabled placeholder="Costo">
+                    <label class="field-label">Costo</label>
+                    <input type="text" id="item_costo" class="form-control" disabled placeholder="0">
                 </div>
 
                 <div class="col-sm-2">
-                    <input type="text" id="tip_imp_nom_det" class="form-control" disabled placeholder="Impuesto">
+                    <label class="field-label">Impuesto</label>
+                    <input type="text" id="tip_imp_nom_det" class="form-control" disabled placeholder="—">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Depósito</label>
                     <select class="form-control" id="deposito_id_det" disabled>
                         <option value="">-- Depósito --</option>
                     </select>
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Marca</label>
                     <select class="form-control" id="marca_det_mm" disabled>
                         <option value="">-- Marca --</option>
                     </select>
                 </div>
                 <div class="col-sm-2">
+                    <label class="field-label">Modelo</label>
                     <select class="form-control" id="modelo_det_mm" disabled>
                         <option value="">-- Modelo --</option>
                     </select>
@@ -301,19 +327,19 @@
             <tbody id="tableDetalle"></tbody>
             <tfoot>
                 <tr>
-                    <th colspan="6" class="text-right">IVA 10%</th>
+                    <th colspan="9" class="text-right">IVA 10%</th>
                     <th id="txtIva10" class="text-right">0</th>
                 </tr>
                 <tr>
-                    <th colspan="6" class="text-right">IVA 5%</th>
+                    <th colspan="9" class="text-right">IVA 5%</th>
                     <th id="txtIva5" class="text-right">0</th>
                 </tr>
                 <tr>
-                    <th colspan="6" class="text-right">Total IVA</th>
+                    <th colspan="9" class="text-right">Total IVA</th>
                     <th id="txtTotalConImpuesto" class="text-right">0</th>
                 </tr>
                 <tr>
-                    <th colspan="6" class="text-right" style="font-weight:bold;">Total General</th>
+                    <th colspan="9" class="text-right" style="font-weight:bold;">Total General</th>
                     <th id="txtTotalGral" class="text-right" style="font-weight:bold;">0</th>
                 </tr>
             </tfoot>

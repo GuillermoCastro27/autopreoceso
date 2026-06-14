@@ -1,467 +1,576 @@
-﻿// Cargar funcionario_id del usuario logueado
+function getToken() {
+    var s = JSON.parse(localStorage.getItem('datosSesion'));
+    return s ? s.token : '';
+}
+
 cargarFuncionarioIdLogueado();
 listar();
 campoFecha();
-function formatoTabla(){
-    //Exportable table
+
+// ===================================================
+// FORMATO TABLA
+// ===================================================
+
+function formatoTabla() {
     $('.js-exportable').DataTable({
         dom: 'Bfrtip',
         responsive: true,
         buttons: [
-            {
-                extend:'copy',
-                text:'COPIAR',
-                className:'btn btn-primary waves-effect',
-                title:'Notas de Remisión de Venta'
-            },
-            {
-                extend:'excel',
-                text:'EXCEL',
-                className:'btn btn-success waves-effect',
-                title:'Notas de Remisión de Venta'
-            },
-            {
-                extend:'pdf',
-                text:'PDF',
-                className:'btn btn-danger waves-effect',
-                title:'Notas de Remisión de Venta'
-            },
-            {
-                extend:'print',
-                text:'IMPRIMIR',
-                className:'btn btn-warning waves-effect',
-                title:'Notas de Remisión de Venta'
-            }
+            { extend: 'copy',  text: 'COPIAR',   className: 'btn btn-primary waves-effect',  title: 'Notas de Remisión de Venta' },
+            { extend: 'excel', text: 'EXCEL',    className: 'btn btn-success waves-effect',  title: 'Notas de Remisión de Venta' },
+            { extend: 'pdf',   text: 'PDF',      className: 'btn btn-danger waves-effect',   title: 'Notas de Remisión de Venta' },
+            { extend: 'print', text: 'IMPRIMIR', className: 'btn btn-warning waves-effect',  title: 'Notas de Remisión de Venta' }
         ],
-        iDisplayLength:3,
-        language:{
+        iDisplayLength: 10,
+        language: {
             sSearch: 'Buscar: ',
-            sInfo: 'Mostrando resultados del _START_ al _END_ de un total de _TOTAL_ registros',
+            sInfo: 'Mostrando _START_ al _END_ de _TOTAL_ registros',
             sInfoFiltered: '(filtrado de entre _MAX_ registros)',
             sZeroRecords: 'No se encontraron resultados',
             sInfoEmpty: 'Mostrando resultado del 0 al 0 de un total de 0 registros',
-            oPaginate:{
-                sNext: 'Siguiente',
-                sPrevious: 'Anterior'
-            }
+            oPaginate: { sNext: 'Siguiente', sPrevious: 'Anterior' }
         }
     });
 }
-function cancelar(){
+
+// ===================================================
+// ACCIONES DE BOTONES
+// ===================================================
+
+function cancelar() {
     location.reload(true);
 }
 
 function agregar() {
-
     $("#txtOperacion").val(1);
     $("#id").val(0);
+    limpiarForm();
 
-    // Campos editables
-    $("#nota_remi_vent_fecha").removeAttr("disabled");
-    $("#nota_remi_vent_observaciones").removeAttr("disabled");
+    $("#nota_remi_vent_fecha").prop("disabled", false);
+    $("#nota_remi_vent_observaciones").prop("disabled", false);
+    $("#nro_venta").prop("disabled", false);
+    $("#buscar_funcionario_entrega").prop("disabled", false);
+    $("#buscar_vehiculo").prop("disabled", false);
 
-    // Campos SIEMPRE bloqueados
-    $("#emp_razon_social").attr("disabled", true);
-    $("#suc_razon_social").attr("disabled", true);
-    $("#nro_venta").removeAttr("disabled"); // para buscar venta
-    $("#cli_nombre").attr("disabled", true);
+    $("#btnAgregar, #btnEditar, #btnEliminar, #btnConfirmar").prop("disabled", true);
+    $("#btnGrabar, #btnCancelar").prop("disabled", false);
 
-    // Botones
-    $("#btnAgregar, #btnEditar, #btnEliminar, #btnConfirmar").attr("disabled", true);
-    $("#btnGrabar, #btnCancelar").removeAttr("disabled");
-
-    $(".form-line").addClass("focused");
     $("#registros").hide();
+    $(".form-line").addClass("focused");
 }
-function editar() {
 
+function editar() {
     $("#txtOperacion").val(2);
 
-    $("#nota_remi_vent_fecha").removeAttr("disabled");
-    $("#nota_remi_vent_observaciones").removeAttr("disabled");
+    $("#nota_remi_vent_fecha").prop("disabled", false);
+    $("#nota_remi_vent_observaciones").prop("disabled", false);
+    $("#buscar_funcionario_entrega").prop("disabled", false);
+    $("#buscar_vehiculo").prop("disabled", false);
 
-    // Todo lo demás bloqueado
-    $("#emp_razon_social, #suc_razon_social, #nro_venta, #cli_nombre")
-        .attr("disabled", true);
-
-    $("#btnAgregar, #btnEditar, #btnEliminar, #btnConfirmar").attr("disabled", true);
-    $("#btnGrabar, #btnCancelar").removeAttr("disabled");
-
+    $("#btnAgregar, #btnEditar, #btnEliminar, #btnConfirmar").prop("disabled", true);
+    $("#btnGrabar, #btnCancelar").prop("disabled", false);
     $(".form-line").addClass("focused");
 }
+
 function eliminar() {
-
     $("#txtOperacion").val(3);
-
-    // No se edita ningún campo
-    $("input").attr("disabled", true);
-
-    $("#btnAgregar, #btnEditar, #btnEliminar, #btnConfirmar").attr("disabled", true);
-    $("#btnGrabar, #btnCancelar").removeAttr("disabled");
+    $("#btnAgregar, #btnEditar, #btnEliminar, #btnConfirmar").prop("disabled", true);
+    $("#btnGrabar, #btnCancelar").prop("disabled", false);
 }
+
 function confirmar() {
-
     $("#txtOperacion").val(4);
-
-    // Bloquear todo
-    $("input").attr("disabled", true);
-
-    $("#btnAgregar, #btnEditar, #btnEliminar, #btnConfirmar").attr("disabled", true);
-    $("#btnGrabar, #btnCancelar").removeAttr("disabled");
+    $("#btnAgregar, #btnEditar, #btnEliminar, #btnConfirmar").prop("disabled", true);
+    $("#btnGrabar, #btnCancelar").prop("disabled", false);
 }
-
 
 function confirmarOperacion() {
     var oper = parseInt($("#txtOperacion").val());
-    var titulo = "AGREGAR";
-    var pregunta = "¿DESEA GRABAR EL NUEVO REGISTRO?";
-
-    if(oper===2){
-        titulo = "EDITAR";
-        pregunta = "¿DESEA EDITAR EL REGISTRO SELECCIONADO?";
-    }
-    if(oper===3){
-        titulo = "ANULAR";
-        pregunta = "¿DESEA ANULAR EL REGISTRO SELECCIONADO?";
-    }
-    if(oper===4){
-        titulo = "CONFIRMAR";
-        pregunta="¿DESEA CONFIRMAR EL REGISTRO SELECCIONADO?";
-    }
+    var titulos  = { 1: "AGREGAR",    2: "EDITAR",    3: "ANULAR",    4: "CONFIRMAR" };
+    var preguntas= { 1: "¿Desea grabar el nuevo registro?",
+                     2: "¿Desea guardar los cambios?",
+                     3: "¿Desea anular esta nota de remisión?",
+                     4: "¿Desea confirmar esta nota de remisión?" };
     swal({
-        title: titulo,
-        text: pregunta,
+        title: titulos[oper] || "GRABAR",
+        text:  preguntas[oper] || "¿Continuar?",
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#458E49",
         confirmButtonText: "SI",
         cancelButtonText: "NO",
         closeOnConfirm: false
-    }, function () {
-        grabar();
-    });
+    }, function () { grabar(); });
 }
 
-function mensajeOperacion(titulo,mensaje,tipo) {
-    swal(titulo, mensaje, tipo);
-}
+// ===================================================
+// GRABAR
+// ===================================================
 
-
-function listar() {
-
-    $.ajax({
-        url: getUrl() + "notaremivent/read",
-        method: "GET",
-        dataType: "json"
-    })
-    .done(function (resultado) {
-
-        let lista = "";
-
-        for (let rs of resultado) {
-
-            lista += `
-                <tr class="item-list"
-                    onclick="seleccionNotaRemi(
-                        ${rs.id},
-                        ${rs.empresa_id},
-                        ${rs.sucursal_id},
-                        ${rs.ventas_cab_id},      /* ✅ */
-                        ${rs.clientes_id},        /* ✅ */
-                        '${rs.emp_razon_social}',
-                        '${rs.suc_razon_social}',
-                        '${rs.nota_remi_vent_fecha_formato}',
-                        '${rs.nota_remi_vent_observaciones}',
-                        '${rs.nota_remi_vent_estado}',
-                        '${rs.cli_nombre}',
-                        '${rs.cli_apellido}',
-                        '${rs.cli_ruc}',
-                        '${rs.cli_direccion}',
-                        '${rs.cli_telefono}',
-                        '${rs.cli_correo}',
-                        '${rs.nro_venta}'
-                    )">
-                    <td>${rs.id}</td>
-                    <td>${rs.emp_razon_social}</td>
-                    <td>${rs.suc_razon_social}</td>
-                    <td>${rs.nota_remi_vent_fecha_formato}</td>
-                    <td>${rs.nota_remi_vent_observaciones}</td>
-                    <td>${rs.funcionario || rs.name || rs.encargado || '-'}</td>
-                    <td>${rs.nota_remi_vent_estado}</td>
-                </tr>
-            `;
-        }
-
-        $("#tableBody").html(lista);
-        formatoTabla();
-    })
-    .fail(function (xhr) {
-        mostrarErrores(xhr);
-    });
-}
-function seleccionNotaRemi(
-    id_nota,
-    empresa_id,
-    sucursal_id,
-    ventas_cab_id,      // ✅ NUEVO
-    clientes_id,        // ✅ NUEVO
-    emp_razon_social,
-    suc_razon_social,
-    nota_fecha,
-    observaciones,
-    estado,
-    cli_nombre,
-    cli_apellido,
-    cli_ruc,
-    cli_direccion,
-    cli_telefono,
-    cli_correo,
-    nro_venta
-) {
-    $("#id").val(id_nota);
-
-    // Empresa / Sucursal
-    $("#empresa_id").val(empresa_id);
-    $("#sucursal_id").val(sucursal_id);
-    $("#emp_razon_social").val(emp_razon_social);
-    $("#suc_razon_social").val(suc_razon_social);
-
-    // Venta
-    $("#ventas_cab_id").val(ventas_cab_id);   // ✅ CLAVE
-    $("#nro_venta").val(nro_venta);
-
-    // Cliente
-    $("#clientes_id").val(clientes_id);       // ✅ CLAVE
-    $("#cli_nombre").val(cli_nombre);
-    $("#cli_apellido").val(cli_apellido);
-    $("#cli_ruc").val(cli_ruc);
-    $("#cli_direccion").val(cli_direccion);
-    $("#cli_telefono").val(cli_telefono);
-    $("#cli_correo").val(cli_correo);
-
-    // Nota
-    $("#nota_remi_vent_fecha").val(nota_fecha);
-    $("#nota_remi_vent_observaciones").val(observaciones);
-    $("#nota_remi_vent_estado").val(estado);
-
-    // UI
-    $("#registros").hide();
-    $("#detalle").show();
-    $("#formDetalles").hide();
-
-    listarDetalles();
-
-    // Botones
-    $("#btnAgregar, #btnEditar, #btnGrabar, #btnEliminar, #btnConfirmar")
-        .attr("disabled", true);
-
-    $("#btnCancelar").removeAttr("disabled");
-
-    if (estado === "PENDIENTE") {
-        $("#btnEditar").removeAttr("disabled");
-        $("#btnEliminar").removeAttr("disabled");
-        $("#btnConfirmar").removeAttr("disabled");
-        $("#formDetalles").show();
-    }
-
-    $(".form-line").addClass("focused");
-}
-
-function buscarVentas() {
-
-    $.ajax({
-        url: getUrl() + "ventas_cab/buscar",
-        method: "GET",
-        dataType: "json",
-        data: {
-            q: $("#nro_venta").val()
-        }
-    })
-    .done(function (resultado) {
-
-
-        let lista = "<ul class='list-group'>";
-
-        for (let rs of resultado) {
-
-            lista += `
-                <li class="list-group-item"
-                    onclick="seleccionVenta(
-                        ${rs.ventas_cab_id},
-                        '${rs.nro_venta}',
-                        ${rs.empresa_id},
-                        '${rs.emp_razon_social}',
-                        ${rs.sucursal_id},
-                        '${rs.suc_razon_social}',
-                        ${rs.clientes_id},
-                        '${rs.cli_nombre}',
-                        '${rs.cli_apellido}',
-                        '${rs.cli_ruc}',
-                        '${rs.cli_direccion}',
-                        '${rs.cli_telefono}',
-                        '${rs.cli_correo}'
-                    )">
-                    VENTA NRO: ${rs.nro_venta} - ${rs.cli_nombre} ${rs.cli_apellido}
-                </li>
-            `;
-        }
-
-        lista += "</ul>";
-
-        $("#listaVentas")
-            .html(lista)
-            .css({
-                display: "block",
-                position: "absolute",
-                zIndex: 2000
-            });
-    })
-    .fail(function (xhr) {
-    });
-}
-function seleccionVenta(
-    ventas_cab_id,
-    nro_venta,
-    empresa_id,
-    emp_razon_social,
-    sucursal_id,
-    suc_razon_social,
-    clientes_id,
-    cli_nombre,
-    cli_apellido,
-    cli_ruc,
-    cli_direccion,
-    cli_telefono,
-    cli_correo
-) {
-    // Venta
-    $("#ventas_cab_id").val(ventas_cab_id);
-    $("#nro_venta").val(nro_venta);
-
-    // Empresa / Sucursal
-    $("#empresa_id").val(empresa_id);
-    $("#sucursal_id").val(sucursal_id);
-    $("#emp_razon_social").val(emp_razon_social);
-    $("#suc_razon_social").val(suc_razon_social);
-
-    // Cliente
-    $("#clientes_id").val(clientes_id);
-    $("#cli_nombre").val(cli_nombre);
-    $("#cli_apellido").val(cli_apellido);
-    $("#cli_ruc").val(cli_ruc);
-    $("#cli_direccion").val(cli_direccion);
-    $("#cli_telefono").val(cli_telefono);
-    $("#cli_correo").val(cli_correo);
-
-    // Ocultar lista
-    $("#listaVentas").html("").hide();
-
-    // UX
-    $(".form-line").addClass("focused");
-
-    // Bloquear edición de campos que no deben cambiar
-    $("#nro_venta").attr("disabled", true);
-}
 function grabar() {
+    var op = parseInt($("#txtOperacion").val());
 
-
-
-
-
-    let observaciones = $("#nota_remi_vent_observaciones").val().trim();
-    let fecha         = $("#nota_remi_vent_fecha").val().trim();
-
-    // ===============================
-    // VALIDACIONES
-    // ===============================
-    if (fecha === "") {
-        swal("Error", "Debe ingresar la fecha de la nota de remisión.", "error");
+    if (op === 3) {
+        $.ajax({
+            url: getUrl() + "notaremivent/anular/" + $("#id").val(),
+            method: "PUT", dataType: "json",
+            headers: { Authorization: "Bearer " + getToken() }
+        })
+        .done(function(r) { swal("Listo", r.mensaje, r.tipo, function() { if (r.tipo === "success") location.reload(true); }); })
+        .fail(function(xhr) { mostrarErrores(xhr); });
         return;
     }
 
-    if (observaciones === "") {
-        swal("Error", "Debe ingresar una observación.", "error");
+    if (op === 4) {
+        $.ajax({
+            url: getUrl() + "notaremivent/confirmar/" + $("#id").val(),
+            method: "PUT", dataType: "json",
+            headers: { Authorization: "Bearer " + getToken() }
+        })
+        .done(function(r) { swal("Listo", r.mensaje, r.tipo, function() { if (r.tipo === "success") location.reload(true); }); })
+        .fail(function(xhr) { mostrarErrores(xhr); });
         return;
     }
 
-    if ($("#ventas_cab_id").val() == 0 || $("#ventas_cab_id").val() === "") {
-        swal("Error", "Debe seleccionar una venta.", "error");
-        return;
+    var fecha = $.trim($("#nota_remi_vent_fecha").val());
+    if (!fecha) { swal("Atención", "Debe ingresar la fecha.", "warning"); return; }
+    if (!$("#ventas_cab_id").val() || $("#ventas_cab_id").val() == 0) {
+        swal("Atención", "Debe seleccionar una venta.", "warning"); return;
+    }
+    if (!$("#funcionario_entrega_id").val()) {
+        swal("Atención", "Debe seleccionar el funcionario que realiza la entrega.", "warning"); return;
     }
 
-    // ===============================
-    // ENDPOINT Y MÉTODO
-    // ===============================
-    let endpoint = "notaremivent/create";
-    let metodo   = "POST";
-    let estado   = "PENDIENTE";
+    var endpoint = (op === 2)
+        ? "notaremivent/update/" + $("#id").val()
+        : "notaremivent/create";
+    var metodo = (op === 2) ? "PUT" : "POST";
 
-    if ($("#txtOperacion").val() == 2) {
-        endpoint = "notaremivent/update/" + $("#id").val();
-        metodo   = "PUT";
-    }
-
-    if ($("#txtOperacion").val() == 3) {
-        endpoint = "notaremivent/anular/" + $("#id").val();
-        metodo   = "PUT";
-        estado   = "ANULADA";
-    }
-
-    if ($("#txtOperacion").val() == 4) {
-        endpoint = "notaremivent/confirmar/" + $("#id").val();
-        metodo   = "PUT";
-        estado   = "CONFIRMADA";
-    }
-
-    // ===============================
-    // AJAX
-    // ===============================
     $.ajax({
         url: getUrl() + endpoint,
-        method: metodo,
-        dataType: "json",
+        method: metodo, dataType: "json",
+        headers: { Authorization: "Bearer " + getToken() },
         data: {
-            nota_remi_vent_fecha: $("#nota_remi_vent_fecha").val(),
-            nota_remi_vent_observaciones: $("#nota_remi_vent_observaciones").val(),
-            nota_remi_vent_estado: estado,
-
-            ventas_cab_id: $("#ventas_cab_id").val(),
-            clientes_id: $("#clientes_id").val(),
-
-            funcionario_id: $("#funcionario_id").val(),
-            empresa_id: $("#empresa_id").val(),
-            sucursal_id: $("#sucursal_id").val(),
-
-            operacion: $("#txtOperacion").val()
+            nota_remi_vent_fecha:           $("#nota_remi_vent_fecha").val(),
+            nota_remi_vent_observaciones:   $("#nota_remi_vent_observaciones").val(),
+            ventas_cab_id:                  $("#ventas_cab_id").val(),
+            clientes_id:                    $("#clientes_id").val(),
+            empresa_id:                     $("#empresa_id").val(),
+            sucursal_id:                    $("#sucursal_id").val(),
+            funcionario_entrega_id:         $("#funcionario_entrega_id").val() || null,
+            tipo_vehiculo_det_id:           $("#tipo_vehiculo_det_id").val()   || null,
+            timbrado_id:                    $("#timbrado_id").val()            || null,
+            nota_remi_vent_nro_comprobante: $("#nota_remi_vent_nro_comprobante").val() || null,
         }
     })
-    .done(function (resultado) {
-
-        swal({
-            title: "Respuesta",
-            text: resultado.mensaje,
-            type: resultado.tipo
-        }, function () {
-
-            if (resultado.tipo === "success") {
-
-                $("#id").val(resultado.registro.id);
-
+    .done(function(r) {
+        swal({ title: "Respuesta", text: r.mensaje, type: r.tipo }, function() {
+            if (r.tipo === "success") {
+                if (r.registro && r.registro.id) $("#id").val(r.registro.id);
                 $("#detalle").show();
                 listarDetalles();
-
-                // Si ya no está pendiente, recargar
-                if (resultado.registro.nota_remi_vent_estado !== "PENDIENTE") {
+                if (op !== 1 || (r.registro && r.registro.nota_remi_vent_estado !== "PENDIENTE")) {
                     location.reload(true);
                 }
             }
         });
     })
-    .fail(function (xhr) {
-        swal("Error", "Ocurrió un error al grabar la nota de remisión.", "error");
+    .fail(function(xhr) { mostrarErrores(xhr); });
+}
+
+// ===================================================
+// LISTAR
+// ===================================================
+
+function listar() {
+    $.ajax({
+        url: getUrl() + "notaremivent/read",
+        method: "GET", dataType: "json",
+        headers: { Authorization: "Bearer " + getToken() }
+    })
+    .done(function(resultado) {
+        var lista = "";
+        for (var rs of resultado) {
+            var badge = badgeEstado(rs.nota_remi_vent_estado);
+            var vehiculo = rs.tv_det_placa
+                ? (rs.marc_nom + " " + rs.modelo_nom + " — " + rs.tv_det_placa).trim()
+                : "—";
+            lista += "<tr style='cursor:pointer;' onclick='seleccionNotaRemi(" + rs.id + ");'>";
+            lista += "<td>" + rs.id + "</td>";
+            lista += "<td>" + (rs.emp_razon_social || "") + "</td>";
+            lista += "<td>" + (rs.suc_razon_social || "") + "</td>";
+            lista += "<td>" + (rs.nota_remi_vent_fecha_formato || "") + "</td>";
+            lista += "<td>" + (rs.nro_venta ? "VENTA NRO: " + rs.nro_venta : "—") + "</td>";
+            lista += "<td>" + (rs.cli_nombre || "") + " " + (rs.cli_apellido || "") + "</td>";
+            lista += "<td>" + (rs.funcionario_entrega_nombre || "—") + "</td>";
+            lista += "<td>" + vehiculo + "</td>";
+            lista += "<td>" + (rs.nota_remi_vent_observaciones || "") + "</td>";
+            lista += "<td>" + badge + "</td>";
+            lista += "</tr>";
+        }
+
+        if ($.fn.DataTable.isDataTable(".js-exportable")) {
+            $(".js-exportable").DataTable().destroy();
+        }
+        $("#tableBody").html(lista);
+        formatoTabla();
+    })
+    .fail(function(xhr) { mostrarErrores(xhr); });
+}
+
+function seleccionNotaRemi(id) {
+    $.ajax({
+        url: getUrl() + "notaremivent/read",
+        method: "GET", dataType: "json",
+        headers: { Authorization: "Bearer " + getToken() }
+    })
+    .done(function(resultado) {
+        var rs = resultado.find(function(r) { return r.id === id; });
+        if (!rs) return;
+
+        $("#id").val(rs.id);
+        $("#empresa_id").val(rs.empresa_id);
+        $("#sucursal_id").val(rs.sucursal_id);
+        $("#emp_razon_social").val(rs.emp_razon_social);
+        $("#suc_razon_social").val(rs.suc_razon_social);
+        $("#ventas_cab_id").val(rs.ventas_cab_id);
+        $("#nro_venta").val(rs.nro_venta ? "VENTA NRO: " + rs.nro_venta : "");
+        $("#clientes_id").val(rs.clientes_id);
+        $("#cli_nombre").val(rs.cli_nombre || "");
+        $("#cli_apellido").val(rs.cli_apellido || "");
+        $("#cli_ruc").val(rs.cli_ruc || "");
+        $("#cli_direccion").val(rs.cli_direccion || "");
+        $("#nota_remi_vent_fecha").val(rs.nota_remi_vent_fecha_formato || "");
+        $("#nota_remi_vent_observaciones").val(rs.nota_remi_vent_observaciones || "");
+        $("#nota_remi_vent_estado").val(rs.nota_remi_vent_estado);
+
+        // Funcionario entrega
+        $("#funcionario_entrega_id").val(rs.funcionario_entrega_id || "");
+        $("#buscar_funcionario_entrega").val(rs.funcionario_entrega_nombre || "");
+
+        // Vehículo
+        $("#tipo_vehiculo_det_id").val(rs.tipo_vehiculo_det_id || "");
+        if (rs.tv_det_placa) {
+            $("#buscar_vehiculo").val(rs.marc_nom + " " + rs.modelo_nom + " — " + rs.tv_det_placa);
+        } else {
+            $("#buscar_vehiculo").val("");
+        }
+
+        // Timbrado
+        $("#timbrado_id").val(rs.timbrado_id || "");
+        $("#nota_remi_vent_nro_comprobante").val(rs.nota_remi_vent_nro_comprobante || "");
+        $("#nota_remi_vent_nro_comprobante_display").val(rs.nota_remi_vent_nro_comprobante || "");
+        $("#tim_numero_display").val(rs.timbrado_id ? "(cargado)" : "—");
+
+        var estado = (rs.nota_remi_vent_estado || "").trim().toUpperCase();
+
+        $("#registros").hide();
+        $("#detalle").show();
+        listarDetalles();
+
+        $("#btnAgregar, #btnEditar, #btnGrabar, #btnEliminar, #btnConfirmar, #btnImprimir").prop("disabled", true);
+        $("#btnCancelar").prop("disabled", false);
+
+        if (estado === "PENDIENTE") {
+            $("#btnEditar, #btnEliminar, #btnConfirmar").prop("disabled", false);
+        }
+        if (estado === "CONFIRMADA") {
+            $("#btnEliminar").prop("disabled", false);
+        }
+        $("#btnImprimir").prop("disabled", false);
+
+        $(".form-line").addClass("focused");
+    })
+    .fail(function(xhr) { mostrarErrores(xhr); });
+}
+
+// ===================================================
+// LISTAR DETALLE
+// ===================================================
+
+function listarDetalles() {
+    var notaId = $("#id").val();
+    if (!notaId || notaId == 0) return;
+
+    $.ajax({
+        url: getUrl() + "notaremiventdet/read/" + notaId,
+        method: "GET", dataType: "json",
+        headers: { Authorization: "Bearer " + getToken() }
+    })
+    .done(function(resultado) {
+        var lista = "";
+        var total = 0;
+        var n = 0;
+
+        for (var rs of resultado) {
+            n++;
+            var sub = parseFloat(rs.subtotal) || 0;
+            total += sub;
+
+            var origenBadge = rs.tipo_origen === 'servicio'
+                ? "<span class='label label-info'>" + rs.origen_label + "</span>"
+                : "<span class='label label-success'>Venta</span>";
+
+            lista += "<tr>";
+            lista += "<td>" + n + "</td>";
+            lista += "<td>" + rs.item_decripcion + "</td>";
+            lista += "<td>" + origenBadge + "</td>";
+            lista += "<td class='text-right'>" + formatearNumero(rs.nota_remi_vent_det_cantidad) + "</td>";
+            lista += "<td class='text-right'>" + formatearNumero(rs.nota_remi_vent_det_precio) + "</td>";
+            lista += "<td class='text-right'>" + formatearNumero(sub) + "</td>";
+            lista += "</tr>";
+        }
+
+        if (!lista) lista = "<tr><td colspan='6' class='text-center text-muted'>Sin ítems registrados</td></tr>";
+
+        $("#tableDetalle").html(lista);
+        $("#txtTotalGral").text(formatearNumero(total));
+
+        var estado = $("#nota_remi_vent_estado").val();
+        if (estado === "PENDIENTE" && n > 0) {
+            $("#btnConfirmar").prop("disabled", false);
+        }
+    })
+    .fail(function(xhr) { mostrarErrores(xhr); });
+}
+
+// ===================================================
+// BUSCAR VENTA
+// ===================================================
+
+function buscarVentas() {
+    var q = $("#nro_venta").val();
+    if (q.length < 1) { $("#listaVentas").hide(); return; }
+
+    $.ajax({
+        url: getUrl() + "ventas_cab/buscar",
+        method: "GET", dataType: "json",
+        headers: { Authorization: "Bearer " + getToken() },
+        data: { q: q }
+    })
+    .done(function(resultado) {
+        var lista = "<ul class='list-group'>";
+        for (var rs of resultado) {
+            var nro = (rs.nro_venta || "").trim();
+            var info = JSON.stringify({
+                ventas_cab_id:  rs.ventas_cab_id,
+                nro_venta:      nro,
+                empresa_id:     rs.empresa_id,
+                emp_razon_social: rs.emp_razon_social || "",
+                sucursal_id:    rs.sucursal_id,
+                suc_razon_social: rs.suc_razon_social || "",
+                clientes_id:    rs.clientes_id,
+                cli_nombre:     rs.cli_nombre    || "",
+                cli_apellido:   rs.cli_apellido  || "",
+                cli_ruc:        rs.cli_ruc        || "",
+                cli_direccion:  rs.cli_direccion  || ""
+            }).replace(/'/g, "&#39;");
+
+            lista += "<li class='list-group-item lista-venta-item' style='cursor:pointer;' data-info='" +
+                info + "'>VENTA NRO: " + nro + " &mdash; " +
+                (rs.cli_nombre || "") + " " + (rs.cli_apellido || "") + "</li>";
+        }
+        if (!resultado.length) lista += "<li class='list-group-item text-muted'>Sin resultados</li>";
+        lista += "</ul>";
+        $("#listaVentas").html(lista).css({ display: "block", position: "absolute", zIndex: 2000 });
+    })
+    .fail(function(xhr) { mostrarErrores(xhr); });
+}
+
+$(document).on("click", ".lista-venta-item", function() {
+    var d = $(this).data("info");
+    if (!d) return;
+    seleccionVenta(d.ventas_cab_id, d.nro_venta, d.empresa_id, d.emp_razon_social,
+        d.sucursal_id, d.suc_razon_social, d.clientes_id, d.cli_nombre,
+        d.cli_apellido, d.cli_ruc, d.cli_direccion);
+});
+
+function seleccionVenta(ventas_cab_id, nro_venta, empresa_id, emp_razon_social, sucursal_id, suc_razon_social, clientes_id, cli_nombre, cli_apellido, cli_ruc, cli_direccion) {
+    $("#ventas_cab_id").val(ventas_cab_id);
+    $("#nro_venta").val("VENTA NRO: " + nro_venta).prop("disabled", true);
+    $("#empresa_id").val(empresa_id);
+    $("#emp_razon_social").val(emp_razon_social);
+    $("#sucursal_id").val(sucursal_id);
+    $("#suc_razon_social").val(suc_razon_social);
+    $("#clientes_id").val(clientes_id);
+    $("#cli_nombre").val(cli_nombre);
+    $("#cli_apellido").val(cli_apellido);
+    $("#cli_ruc").val(cli_ruc);
+    $("#cli_direccion").val(cli_direccion);
+    $("#listaVentas").html("").hide();
+    $(".form-line").addClass("focused");
+    cargarTimbrado();
+}
+
+// ===================================================
+// BUSCAR FUNCIONARIO ENTREGA
+// ===================================================
+
+function buscarFuncionarioEntrega() {
+    var q = $("#buscar_funcionario_entrega").val();
+    if (q.length < 2) { $("#listaFuncionariosEntrega").hide(); return; }
+
+    $.ajax({
+        url: getUrl() + "funcionario/buscar",
+        method: "GET", dataType: "json",
+        headers: { Authorization: "Bearer " + getToken() },
+        data: { q: q }
+    })
+    .done(function(resultado) {
+        var lista = "<ul class='list-group'>";
+        for (var rs of resultado) {
+            lista += "<li class='list-group-item lista-func-entrega-item' style='cursor:pointer;'" +
+                " data-id='" + rs.id + "'" +
+                " data-nombre='" + (rs.fun_nombre_completo || "").replace(/'/g,"&#39;") + "'>" +
+                (rs.fun_nombre_completo || "") + " <small class='text-muted'>CI: " + (rs.fun_ci || "") + "</small></li>";
+        }
+        if (!resultado.length) lista += "<li class='list-group-item text-muted'>Sin resultados</li>";
+        lista += "</ul>";
+        $("#listaFuncionariosEntrega").html(lista).css({ display: "block", position: "absolute", zIndex: 2000 });
+    })
+    .fail(function(xhr) { mostrarErrores(xhr); });
+}
+
+function seleccionFuncionarioEntrega(id, nombre) {
+    $("#funcionario_entrega_id").val(id);
+    $("#buscar_funcionario_entrega").val(nombre);
+    $("#listaFuncionariosEntrega").html("").hide();
+    $(".form-line").addClass("focused");
+}
+
+$(document).on("click", ".lista-func-entrega-item", function() {
+    seleccionFuncionarioEntrega($(this).data("id"), $(this).data("nombre"));
+});
+
+// ===================================================
+// BUSCAR VEHÍCULO DE ENTREGA
+// ===================================================
+
+function buscarVehiculo() {
+    var q = $("#buscar_vehiculo").val();
+    if (q.length < 1) { $("#listaVehiculos").hide(); return; }
+
+    $.ajax({
+        url: getUrl() + "tipo_vehiculo_det/buscar",
+        method: "GET", dataType: "json",
+        headers: { Authorization: "Bearer " + getToken() },
+        data: { q: q }
+    })
+    .done(function(resultado) {
+        var lista = "<ul class='list-group'>";
+        for (var rs of resultado) {
+            var label = (rs.marc_nom || "") + " " + (rs.modelo_nom || "") +
+                        (rs.tv_anio  ? " " + rs.tv_anio  : "") +
+                        (rs.tv_color ? " — " + rs.tv_color : "") +
+                        (rs.tv_det_placa ? " | Placa: " + rs.tv_det_placa : "");
+            lista += "<li class='list-group-item lista-vehiculo-item' style='cursor:pointer;'" +
+                " data-id='" + rs.id + "'" +
+                " data-label='" + label.replace(/'/g,"&#39;") + "'>" + label + "</li>";
+        }
+        if (!resultado.length) lista += "<li class='list-group-item text-muted'>Sin vehículos encontrados</li>";
+        lista += "</ul>";
+        $("#listaVehiculos").html(lista).css({ display: "block", position: "absolute", zIndex: 2000 });
+    })
+    .fail(function(xhr) { mostrarErrores(xhr); });
+}
+
+function seleccionVehiculo(id, label) {
+    $("#tipo_vehiculo_det_id").val(id);
+    $("#buscar_vehiculo").val(label);
+    $("#listaVehiculos").html("").hide();
+    $(".form-line").addClass("focused");
+}
+
+$(document).on("click", ".lista-vehiculo-item", function() {
+    seleccionVehiculo($(this).data("id"), $(this).data("label"));
+});
+
+// ===================================================
+// TIMBRADO
+// ===================================================
+
+function cargarTimbrado() {
+    var empId = $("#empresa_id").val();
+    var sucId = $("#sucursal_id").val();
+
+    if (!empId || !sucId) {
+        $("#timbrado_id").val("");
+        $("#nota_remi_vent_nro_comprobante").val("");
+        $("#nota_remi_vent_nro_comprobante_display").val("—");
+        $("#tim_numero_display").val("(seleccionar venta primero)");
+        $("#tim_vence_display").val("—");
+        return;
+    }
+
+    $.ajax({
+        url: getUrl() + "timbrado/para-ventas",
+        method: "GET", dataType: "json",
+        headers: { Authorization: "Bearer " + getToken() },
+        data: { empresa_id: empId, sucursal_id: sucId, tipo_documento: "nota_remision_vent" }
+    })
+    .done(function(res) {
+        $("#timbrado_id").val(res.timbrado_id);
+        $("#nota_remi_vent_nro_comprobante").val(res.nro_comprobante);
+        $("#nota_remi_vent_nro_comprobante_display").val(res.nro_formateado || res.nro_comprobante);
+        $("#tim_numero_display").val(res.tim_numero);
+        var vence = res.tim_fecha_fin ? res.tim_fecha_fin.substring(0, 10) : "—";
+        $("#tim_vence_display").val(vence);
+        if (res.nros_restantes <= 10) {
+            swal("Atención", "El timbrado " + res.tim_numero + " tiene solo " + res.nros_restantes + " números restantes.", "warning");
+        }
+    })
+    .fail(function(xhr) {
+        $("#timbrado_id").val("");
+        $("#nota_remi_vent_nro_comprobante").val("");
+        $("#nota_remi_vent_nro_comprobante_display").val("—");
+        var res = xhr.responseJSON;
+        var msg = (res && res.mensaje) ? res.mensaje : "Sin timbrado activo para nota de remisión.";
+        $("#tim_numero_display").val(msg);
+        $("#tim_vence_display").val("—");
+        if (xhr.status === 404) {
+            swal("Sin timbrado", msg + " Registre uno en Referenciales → Timbrado.", "warning");
+        }
     });
 }
-function campoFecha(){
+
+// ===================================================
+// HELPERS
+// ===================================================
+
+function limpiarForm() {
+    $("#id").val("");
+    $("#empresa_id, #sucursal_id, #emp_razon_social, #suc_razon_social").val("");
+    $("#ventas_cab_id").val(0);
+    $("#nro_venta").val("").prop("disabled", false);
+    $("#clientes_id").val("");
+    $("#cli_nombre, #cli_apellido, #cli_ruc, #cli_direccion").val("");
+    $("#nota_remi_vent_fecha, #nota_remi_vent_observaciones").val("");
+    $("#funcionario_entrega_id").val("");
+    $("#buscar_funcionario_entrega").val("");
+    $("#tipo_vehiculo_det_id").val("");
+    $("#buscar_vehiculo").val("");
+    $("#timbrado_id").val("");
+    $("#nota_remi_vent_nro_comprobante").val("");
+    $("#nota_remi_vent_nro_comprobante_display").val("—");
+    $("#tim_numero_display").val("—");
+    $("#tim_vence_display").val("—");
+    $("#detalle").hide();
+    $("#tableDetalle").html("<tr><td colspan='6' class='text-center text-muted'>Sin ítems</td></tr>");
+    $("#txtTotalGral").text("0,00");
+}
+
+function badgeEstado(estado) {
+    var colores = { PENDIENTE: "label-warning", CONFIRMADA: "label-success", ANULADA: "label-danger" };
+    var clase = colores[estado] || "label-default";
+    return "<span class='label " + clase + "'>" + (estado || "") + "</span>";
+}
+
+function formatearNumero(n) {
+    if (n === null || n === undefined || isNaN(n)) return "0,00";
+    return Number(n).toLocaleString("es-PY", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function campoFecha() {
     $('.datetimepicker').bootstrapMaterialDatePicker({
         format: 'DD/MM/YYYY HH:mm:ss',
         clearButton: true,
@@ -469,67 +578,35 @@ function campoFecha(){
     });
 }
 
-function listarDetalles() {
-
-    let cantidadDetalle = 0;
-    let totalGeneral = 0;
-
-    $.ajax({
-        url: getUrl() + "notaremiventdet/read/" + $("#id").val(),
-        method: "GET",
-        dataType: "json"
-    })
-    .done(function (resultado) {
-
-        let lista = "";
-
-        for (let rs of resultado) {
-
-            let subtotal = rs.nota_remi_vent_det_cantidad * rs.nota_remi_vent_det_precio;
-            totalGeneral += subtotal;
-
-            lista += `
-                <tr class="item-list"
-                    onclick="seleccionDetalle(
-                        ${rs.item_id},
-                        '${rs.item_decripcion}',
-                        ${rs.nota_remi_vent_det_cantidad},
-                        ${rs.nota_remi_vent_det_precio}
-                    )">
-                    <td>${rs.item_id}</td>
-                    <td>${rs.item_decripcion}</td>
-                    <td class="text-right">${rs.nota_remi_vent_det_cantidad}</td>
-                    <td class="text-right">${rs.nota_remi_vent_det_precio}</td>
-                    <td class="text-right">${subtotal}</td>
-                </tr>
-            `;
-
-            cantidadDetalle++;
-        }
-
-        $("#tableDetalle").html(lista);
-        $("#txtTotalGral").html(totalGeneral);
-
-        // Habilitar confirmar solo si está pendiente y tiene detalle
-        if ($("#nota_remi_vent_estado").val() === "PENDIENTE" && cantidadDetalle > 0) {
-            $("#btnConfirmar").removeAttr("disabled");
-        } else {
-            $("#btnConfirmar").attr("disabled", true);
-        }
-    })
-    .fail(function (xhr) {
-        swal("Error", "No se pudo listar el detalle de la nota de remisión.", "error");
-    });
+function cargarFuncionarioIdLogueado() {
+    var s = JSON.parse(localStorage.getItem('datosSesion') || '{}');
+    if (s && s.user && s.user.funcionario_id) {
+        $('#funcionario_id').val(s.user.funcionario_id);
+    } else {
+        swal("Sesión expirada", "Inicie sesión nuevamente.", "error");
+        window.location.href = '../../index.html';
+    }
 }
 
+// ===================================================
+// IMPRIMIR
+// ===================================================
 
-// Función para cargar el funcionario_id del usuario logueado
-function cargarFuncionarioIdLogueado() {
-    const datosSesion = JSON.parse(localStorage.getItem('datosSesion') || '{}');
-    if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
-        $('#funcionario_id').val(datosSesion.user.funcionario_id);
+function abrirImprimir() {
+    var id = $("#id").val();
+    if (!id || id == 0) { swal("Atención", "Seleccione una nota de remisión.", "warning"); return; }
+    window.open("imprimir.html?id=" + id, "_blank");
+}
+
+function mostrarErrores(xhr) {
+    if (xhr.status === 403) return;
+    var res = xhr.responseJSON;
+    if (xhr.status === 422 && res && res.errors) {
+        var msgs = Object.values(res.errors).flat().map(function(e) { return "• " + e; }).join("\n");
+        swal({ title: "Datos inválidos", text: msgs, type: "warning" });
+    } else if (res && res.mensaje) {
+        swal({ title: "Error", text: res.mensaje, type: res.tipo || "error" });
     } else {
-        swal("Sesión expirada", "No se puede identificar al usuario. Inicie sesión nuevamente.", "error");
-        window.location.href = '../../index.html';
+        swal({ title: "Error", text: "Ocurrió un error inesperado (HTTP " + xhr.status + ").", type: "error" });
     }
 }

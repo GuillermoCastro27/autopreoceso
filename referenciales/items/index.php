@@ -46,20 +46,12 @@
             <div class="section-title">Datos del Item</div>
             <div class="row clearfix">
                 <div class="col-sm-1">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="id" class="form-control" disabled>
-                            <label class="form-label">Código</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Código</label>
+                    <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
                 <div class="col-sm-5">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="item_decripcion" class="form-control" disabled>
-                            <label class="form-label">Descripción del Ítem</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Descripción del Ítem</label>
+                    <input type="text" id="item_decripcion" class="form-control" disabled placeholder="Descripción del Ítem">
                 </div>
             </div>
         </div>
@@ -69,20 +61,12 @@
             <div class="section-title">Precios</div>
             <div class="row clearfix">
                 <div class="col-sm-3">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="item_costo" class="form-control" disabled>
-                            <label class="form-label">Costo</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Costo</label>
+                    <input type="text" id="item_costo" class="form-control" disabled placeholder="Costo">
                 </div>
                 <div class="col-sm-3">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="item_precio" class="form-control" disabled>
-                            <label class="form-label">Precio</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Precio</label>
+                    <input type="text" id="item_precio" class="form-control" disabled placeholder="Precio">
                 </div>
             </div>
         </div>
@@ -92,24 +76,16 @@
             <div class="section-title">Clasificación</div>
             <div class="row clearfix">
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="tipo_descripcion" class="form-control" disabled onkeyup="buscarTipoItems();">
-                            <label class="form-label">Tipo Item</label>
-                        </div>
-                        <input type="hidden" id="tipo_id">
-                        <div id="listaTipoItems"></div>
-                    </div>
+                    <label class="field-label">Tipo Item</label>
+                    <input type="text" id="tipo_descripcion" class="form-control" disabled onkeyup="buscarTipoItems();" placeholder="Tipo Item">
+                    <input type="hidden" id="tipo_id">
+                    <div id="listaTipoItems"></div>
                 </div>
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="tip_imp_nom" class="form-control" disabled onkeyup="buscarTipoImpuestos();">
-                            <label class="form-label">Tipo Impuesto</label>
-                        </div>
-                        <input type="hidden" id="tipo_impuesto_id">
-                        <div id="listaTipoImpuestos"></div>
-                    </div>
+                    <label class="field-label">Tipo Impuesto</label>
+                    <input type="text" id="tip_imp_nom" class="form-control" disabled onkeyup="buscarTipoImpuestos();" placeholder="Tipo Impuesto">
+                    <input type="hidden" id="tipo_impuesto_id">
+                    <div id="listaTipoImpuestos"></div>
                 </div>
             </div>
         </div>

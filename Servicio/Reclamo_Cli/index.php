@@ -49,30 +49,37 @@
                 <div class="section-title">Datos Generales</div>
                 <div class="row clearfix">
                     <div class="col-sm-1">
+                        <label class="field-label">Código</label>
                         <input type="text" id="id" class="form-control" disabled placeholder="Código">
                     </div>
                     <div class="col-sm-2">
+                        <label class="field-label">Empresa</label>
                         <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
                         <input type="hidden" id="empresa_id">
                         <div id="listaEmpresa" style="display:none;"></div>
                     </div>
                     <div class="col-sm-2">
+                        <label class="field-label">Sucursal</label>
                         <input type="text" id="suc_razon_social" class="form-control" disabled onkeyup="buscarSucursal();" placeholder="Sucursal">
                         <input type="hidden" id="sucursal_id">
                         <div id="listaSucursal" style="display:none;"></div>
                     </div>
                     <div class="col-sm-3">
+                        <label class="field-label">Fecha</label>
                         <input type="text" id="rec_cli_cab_fecha" class="datetimepicker form-control" disabled placeholder="Fecha">
                     </div>
                     <div class="col-sm-3">
+                        <label class="field-label">Fecha Inicio</label>
                         <input type="text" id="rec_cli_cab_fecha_inicio" class="datetimepicker form-control" disabled placeholder="Fecha Inicio">
                     </div>
                 </div>
                 <div class="row clearfix" style="margin-top:10px;">
                     <div class="col-sm-3">
+                        <label class="field-label">Fecha Fin</label>
                         <input type="text" id="rec_cli_cab_fecha_fin" class="datetimepicker form-control" disabled placeholder="Fecha Fin">
                     </div>
                     <div class="col-sm-2">
+                        <label class="field-label">Prioridad</label>
                         <select id="rec_cli_cab_prioridad" class="form-control" disabled>
                             <option value="ALTA">Alta</option>
                             <option value="MEDIA">Media</option>
@@ -80,6 +87,7 @@
                         </select>
                     </div>
                     <div class="col-sm-6">
+                        <label class="field-label">Observaciones</label>
                         <input type="text" id="rec_cli_cab_observacion" class="form-control" disabled placeholder="Observaciones">
                     </div>
                 </div>
@@ -90,14 +98,17 @@
                 <div class="section-title">Venta / Recibo Vinculado <small style="font-weight:normal;">(opcional)</small></div>
                 <div class="row clearfix">
                     <div class="col-sm-2">
+                        <label class="field-label">Buscar Venta</label>
                         <input type="text" id="nro_venta_display" class="form-control" disabled onkeyup="buscarVenta();" placeholder="Buscar N° venta o cliente">
                         <input type="hidden" id="venta_cab_id">
                         <div id="listaVentas" style="display:none;"></div>
                     </div>
                     <div class="col-sm-2">
+                        <label class="field-label">Fecha Venta</label>
                         <input type="text" id="venta_fecha_display" class="form-control" disabled placeholder="Fecha venta">
                     </div>
                     <div class="col-sm-3">
+                        <label class="field-label">Encargado</label>
                         <input type="text" id="encargado" class="form-control" disabled placeholder="Encargado">
                     </div>
                 </div>
@@ -108,25 +119,31 @@
                 <div class="section-title">Cliente</div>
                 <div class="row clearfix">
                     <div class="col-sm-2">
+                        <label class="field-label">Nombre</label>
                         <input type="text" id="cli_nombre" class="form-control" disabled onkeyup="buscarCliente();" placeholder="Nombre">
                         <input type="hidden" id="clientes_id">
                         <div id="listaClientes" style="display:none;"></div>
                     </div>
                     <div class="col-sm-2">
+                        <label class="field-label">Apellido</label>
                         <input type="text" id="cli_apellido" class="form-control" disabled placeholder="Apellido">
                     </div>
                     <div class="col-sm-2">
+                        <label class="field-label">RUC</label>
                         <input type="text" id="cli_ruc" class="form-control" disabled placeholder="RUC">
                     </div>
                     <div class="col-sm-2">
+                        <label class="field-label">Teléfono</label>
                         <input type="text" id="cli_telefono" class="form-control" disabled placeholder="Teléfono">
                     </div>
                     <div class="col-sm-3">
+                        <label class="field-label">Dirección</label>
                         <input type="text" id="cli_direccion" class="form-control" disabled placeholder="Dirección">
                     </div>
                 </div>
                 <div class="row clearfix" style="margin-top:10px;">
                     <div class="col-sm-3">
+                        <label class="field-label">Correo</label>
                         <input type="text" id="cli_correo" class="form-control" disabled placeholder="Correo">
                     </div>
                 </div>

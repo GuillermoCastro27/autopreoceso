@@ -73,11 +73,13 @@
 
                 <!-- CÓDIGO -->
                 <div class="col-sm-2">
+                    <label class="field-label">Código</label>
                     <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <!-- EMPRESA -->
                 <div class="col-sm-2">
+                    <label class="field-label">Empresa</label>
                     <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
                     <input type="hidden" id="empresa_id">
                     <div id="listaEmpresa" style="display:none;"></div>
@@ -85,6 +87,7 @@
 
                 <!-- SUCURSAL -->
                 <div class="col-sm-2">
+                    <label class="field-label">Sucursal</label>
                     <input type="text" id="suc_razon_social" class="form-control"
                            disabled onkeyup="buscarSucursal();" placeholder="Sucursal">
                     <input type="hidden" id="sucursal_id">
@@ -93,6 +96,7 @@
 
                 <!-- FECHA APERTURA -->
                 <div class="col-sm-3">
+                    <label class="field-label">Fecha Apertura</label>
                     <input type="text" id="fecha_apertura"
                            class="datetimepicker form-control" disabled
                            placeholder="Fecha Apertura">
@@ -100,6 +104,7 @@
 
                 <!-- CAJA -->
                 <div class="col-sm-3">
+                    <label class="field-label">Caja</label>
                     <input type="text" id="caja_descripcion"
                            class="form-control" disabled
                            onkeyup="buscarCaja();" placeholder="Caja">
@@ -116,6 +121,7 @@
 
             <div class="row clearfix">
                 <div class="col-sm-3">
+                    <label class="field-label">Monto Apertura</label>
                     <input type="number" id="monto_apertura"
                            class="form-control" disabled
                            placeholder="Monto Apertura">
@@ -130,30 +136,35 @@
             <div class="row clearfix">
 
                 <div class="col-sm-4">
+                    <label class="field-label">Fecha Cierre</label>
                     <input type="text" id="fecha_cierre"
                            class="form-control" disabled
                            placeholder="Fecha Cierre">
                 </div>
 
                 <div class="col-sm-4">
+                    <label class="field-label">Total Efectivo</label>
                     <input type="text" id="monto_efectivo_cierre"
                            class="form-control" disabled
                            placeholder="Total Efectivo">
                 </div>
 
                 <div class="col-sm-4">
+                    <label class="field-label">Total Tarjeta</label>
                     <input type="text" id="monto_tarjeta_cierre"
                            class="form-control" disabled
                            placeholder="Total Tarjeta">
                 </div>
 
                 <div class="col-sm-4" style="margin-top:10px;">
+                    <label class="field-label">Total Cheque</label>
                     <input type="text" id="monto_cheque_cierre"
                            class="form-control" disabled
                            placeholder="Total Cheque">
                 </div>
 
                 <div class="col-sm-4" style="margin-top:10px;">
+                    <label class="field-label">Monto Total Cierre</label>
                     <input type="text" id="monto_cierre"
                            class="form-control" disabled
                            placeholder="Monto Total Cierre">

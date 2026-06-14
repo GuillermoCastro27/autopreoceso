@@ -42,28 +42,35 @@
             <div class="section-title">Datos del Timbrado</div>
             <div class="row clearfix">
                 <div class="col-sm-1">
+                    <label class="field-label">Código</label>
                     <input type="text" id="txtCodigo" class="form-control" disabled placeholder="Código">
                 </div>
                 <div class="col-sm-2">
+                    <label class="field-label">Nro. Timbrado (SET)</label>
                     <input type="text" id="tim_numero" class="form-control" maxlength="20" disabled placeholder="Nro. de Timbrado (SET)">
                 </div>
                 <div class="col-sm-1">
+                    <label class="field-label">Establecimiento</label>
                     <input type="text" id="tim_establecimiento" class="form-control" maxlength="3" disabled placeholder="Est. (001)">
                 </div>
                 <div class="col-sm-1">
+                    <label class="field-label">Pto. Expedición</label>
                     <input type="text" id="tim_punto_expedicion" class="form-control" maxlength="3" disabled placeholder="Exp. (001)">
                 </div>
                 <div class="col-sm-3">
+                    <label class="field-label">Tipo de Comprobante</label>
                     <select id="tipo_comprobante_id" class="form-control" disabled>
                         <option value="">-- Tipo de Comprobante --</option>
                     </select>
                 </div>
                 <div class="col-sm-3">
+                    <label class="field-label">Empresa</label>
                     <select id="empresa_id" class="form-control" disabled>
                         <option value="">-- Empresa --</option>
                     </select>
                 </div>
                 <div class="col-sm-3">
+                    <label class="field-label">Sucursal</label>
                     <select id="sucursal_id" class="form-control" disabled>
                         <option value="">-- Sucursal --</option>
                     </select>
@@ -76,23 +83,27 @@
             <div class="section-title">Vigencia y Rangos</div>
             <div class="row clearfix">
                 <div class="col-sm-2">
-                    <label class="control-label">Fecha Inicio Vigencia</label>
+                    <label class="field-label">Fecha Inicio Vigencia</label>
                     <input type="date" id="tim_fecha_inicio" class="form-control" disabled>
                 </div>
                 <div class="col-sm-2">
-                    <label class="control-label">Fecha Fin Vigencia</label>
+                    <label class="field-label">Fecha Fin Vigencia</label>
                     <input type="date" id="tim_fecha_fin" class="form-control" disabled>
                 </div>
                 <div class="col-sm-2">
+                    <label class="field-label">Nro. Desde</label>
                     <input type="number" id="tim_nro_desde" class="form-control" min="1" disabled placeholder="Nro. Desde">
                 </div>
                 <div class="col-sm-2">
+                    <label class="field-label">Nro. Hasta</label>
                     <input type="number" id="tim_nro_hasta" class="form-control" min="1" disabled placeholder="Nro. Hasta">
                 </div>
                 <div class="col-sm-2">
+                    <label class="field-label">Últ. Nro. Usado</label>
                     <input type="text" id="tim_nro_actual" class="form-control" disabled placeholder="Últ. Nro. Usado">
                 </div>
                 <div class="col-sm-2">
+                    <label class="field-label">Estado</label>
                     <select id="tim_estado" class="form-control" disabled>
                         <option value="activo">Activo</option>
                         <option value="agotado">Agotado</option>

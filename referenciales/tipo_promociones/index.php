@@ -56,78 +56,50 @@
 
                                 <!-- CÓDIGO -->
                                 <div class="col-sm-2">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="txtCodigo" class="form-control" disabled>
-                                            <label class="form-label">Código</label>
-                                        </div>
-                                    </div>
+                                    <label class="field-label">Código</label>
+                                    <input type="text" id="txtCodigo" class="form-control" disabled placeholder="Código">
                                 </div>
 
                                 <!-- NOMBRE -->
                                 <div class="col-sm-5">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="tipo_prom_nombre" class="form-control" disabled>
-                                            <label class="form-label">Nombre</label>
-                                        </div>
-                                    </div>
+                                    <label class="field-label">Nombre</label>
+                                    <input type="text" id="tipo_prom_nombre" class="form-control" disabled placeholder="Nombre">
                                 </div>
 
                                 <!-- DESCRIPCIÓN -->
                                 <div class="col-sm-5">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="tipo_prom_descrip" class="form-control" disabled>
-                                            <label class="form-label">Descripción</label>
-                                        </div>
-                                    </div>
+                                    <label class="field-label">Descripción</label>
+                                    <input type="text" id="tipo_prom_descrip" class="form-control" disabled placeholder="Descripción">
                                 </div>
 
                                 <!-- FECHA INICIO -->
                                 <div class="col-sm-6">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="tipo_prom_fechaInicio" class="datetimepicker form-control" disabled>
-                                            <label class="form-label">Fecha Inicio</label>
-                                        </div>
-                                    </div>
+                                    <label class="field-label">Fecha Inicio</label>
+                                    <input type="text" id="tipo_prom_fechaInicio" class="datetimepicker form-control" disabled placeholder="Fecha Inicio">
                                 </div>
 
                                 <!-- FECHA FIN -->
                                 <div class="col-sm-6">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" id="tipo_prom_fechaFin" class="datetimepicker form-control" disabled>
-                                            <label class="form-label">Fecha Fin</label>
-                                        </div>
-                                    </div>
+                                    <label class="field-label">Fecha Fin</label>
+                                    <input type="text" id="tipo_prom_fechaFin" class="datetimepicker form-control" disabled placeholder="Fecha Fin">
                                 </div>
 
                                 <!-- MODO -->
                                 <div class="col-sm-6">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <select id="tipo_prom_modo" class="form-control" disabled>
-                                                <option value="" selected disabled>Seleccione un modo</option>
-                                                <option value="PORCENTAJE">Porcentaje (%)</option>
-                                                <option value="MONTO_FIJO">Monto fijo (Gs.)</option>
-                                                <option value="2X1">2x1</option>
-                                            </select>
-                                            <label class="form-label">Modo</label>
-                                        </div>
-                                    </div>
+                                    <label class="field-label">Modo</label>
+                                    <select id="tipo_prom_modo" class="form-control" disabled>
+                                        <option value="" selected disabled>Seleccione un modo</option>
+                                        <option value="PORCENTAJE">Porcentaje (%)</option>
+                                        <option value="MONTO_FIJO">Monto fijo (Gs.)</option>
+                                        <option value="2X1">2x1</option>
+                                    </select>
                                 </div>
 
                                 <!-- VALOR -->
                                 <div class="col-sm-6">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="number" id="tipo_prom_valor" class="form-control" min="0" step="0.01" disabled>
-                                            <label class="form-label">Valor</label>
-                                        </div>
-                                        <small id="lbl_valor_hint" style="color:#888;display:none;"></small>
-                                    </div>
+                                    <label class="field-label">Valor</label>
+                                    <input type="number" id="tipo_prom_valor" class="form-control" min="0" step="0.01" disabled placeholder="Valor">
+                                    <small id="lbl_valor_hint" style="color:#888;display:none;"></small>
                                 </div>
                             </div>
 

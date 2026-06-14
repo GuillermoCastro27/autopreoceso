@@ -40,6 +40,14 @@
         <div class="collapse navbar-collapse" id="navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li>
+                    <a href="/taller_front/manual"
+                       style="padding-top:12px; padding-bottom:12px; display:flex; align-items:center; gap:4px;"
+                       title="Manual de Usuario">
+                        <i class="material-icons" style="color:#fff; vertical-align:middle;">help_outline</i>
+                        <span style="color:#fff; font-size:13px; font-weight:600;">Manual</span>
+                    </a>
+                </li>
+                <li>
                     <a href="javascript:void(0);" onclick="cerrarSesion();"
                        style="padding-top:12px; padding-bottom:12px; display:flex; align-items:center; gap:4px;">
                         <i class="material-icons" style="color:#e74c3c; vertical-align:middle;">power_settings_new</i>
@@ -140,6 +148,7 @@
 
     /* --- Verificación de acceso a una ventana --- */
     function tieneAcceso(modulo, entidad) {
+        if (!modulo) return true;             // sin módulo = siempre visible (manual, ayuda)
         if (superadmin) return true;
         // Sesión sin datos de módulos → no filtrar (compatible con sesiones viejas)
         if (modulos.length === 0) return true;
@@ -249,6 +258,7 @@
                 { label: 'Registrar Promociones',               url: '/taller_front/Servicio/Promociones',        modulo: 'servicios', entidad: 'promociones'       },
                 { label: 'Registrar Descuentos',                url: '/taller_front/Servicio/Descuentos',         modulo: 'servicios', entidad: 'descuentos'        },
                 { label: 'Registrar Orden de Servicio',         url: '/taller_front/Servicio/OrdenServicio',      modulo: 'servicios', entidad: 'orden_servicio'    },
+                { label: 'Registrar Insumos Utilizados',        url: '/taller_front/Servicio/InsumoUtilizados',   modulo: 'servicios', entidad: 'insumos_utilizados' },
                 { label: 'Registrar Contrato',      url: '/taller_front/Servicio/contrato_servicio',  modulo: 'servicios', entidad: 'contrato_servicio' },
                 { label: 'Registrar Reclamo de Clientes',       url: '/taller_front/Servicio/Reclamo_cli',        modulo: 'servicios', entidad: 'reclamos'          }
             ]
@@ -268,11 +278,16 @@
         {
             label: 'Informes Varios', icono: 'bar_chart',
             ventanas: [
-                { label: 'Informes Web Compras',  url: '/taller_front/compras/Informes_Compra',      modulo: 'compras',   entidad: null },
-                { label: 'Informes Web Servicio', url: '/taller_front/Servicio/Informes_Servicio',   modulo: 'servicios', entidad: null },
-                { label: 'Informes Web Ventas',   url: '/taller_front/Ventas/Informes_Ventas',       modulo: 'ventas',    entidad: null }
+                { label: 'Informes Web Compras',           url: '/taller_front/compras/Informes_Compra',                    modulo: 'compras',       entidad: null },
+                { label: 'Informes Web Servicio',          url: '/taller_front/Servicio/Informes_Servicio',                 modulo: 'servicios',     entidad: null },
+                { label: 'Informes Web Ventas',            url: '/taller_front/Ventas/Informes_Ventas',                     modulo: 'ventas',        entidad: null },
+                { label: 'Informes Ref. Compras',          url: '/taller_front/referenciales/Informes_Ref_Compras',         modulo: 'referenciales', entidad: null },
+                { label: 'Informes Ref. Taller',           url: '/taller_front/referenciales/Informes_Ref_Servicio',        modulo: 'referenciales', entidad: null },
+                { label: 'Informes Ref. Ventas y Cobros',  url: '/taller_front/referenciales/Informes_Ref_Ventas',          modulo: 'referenciales', entidad: null },
+                { label: 'Informes Ref. Varios',           url: '/taller_front/referenciales/Informes_Ref_Varios',          modulo: 'referenciales', entidad: null },
+                { label: 'Informes Ref. Seguridad',        url: '/taller_front/referenciales/Informes_Ref_Seguridad',       modulo: 'seguridad',     entidad: null }
             ]
-        }
+        },
     ];
 
     /* ============================================================
@@ -367,6 +382,16 @@ function getFrontUrl() {
         return 'http://localhost/taller_front/';
     }
     return 'https://remarkable-axolotl-f9d663.netlify.app/';
+}
+
+/* --- Modo foto: muestra panel de detalle para capturas del manual --- */
+if (new URLSearchParams(window.location.search).get('foto') === '1') {
+    document.addEventListener('DOMContentLoaded', function () {
+        setTimeout(function () {
+            $('#detalle, #cardDetalle').show();
+            $('#formDetalles, #formDetalle').show();
+        }, 800);
+    });
 }
 
 function tienePermiso(permiso) {

@@ -56,29 +56,17 @@
 
             <div class="row clearfix">
                 <div class="col-sm-2">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="txtCodigo" class="form-control" disabled>
-                            <label class="form-label">Código</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Código</label>
+                    <input type="text" id="txtCodigo" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-6">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="pref_descripcion" class="form-control" disabled>
-                            <label class="form-label">Nombre</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Nombre</label>
+                    <input type="text" id="pref_descripcion" class="form-control" disabled placeholder="Nombre">
                 </div>
                 <div class="col-sm-6">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="pref_abreviatura" class="form-control" disabled>
-                            <label class="form-label">Abreviatura</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Abreviatura</label>
+                    <input type="text" id="pref_abreviatura" class="form-control" disabled placeholder="Abreviatura">
                 </div>
             </div>
         </div>

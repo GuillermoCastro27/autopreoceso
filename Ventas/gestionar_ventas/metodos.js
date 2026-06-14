@@ -320,9 +320,7 @@ function seleccionVenta(
         $("#rowAgregarOrden").hide();
     }
 
-    listarDetalles();
-    listarPedidosVenta();
-    listarOrdenesVenta();
+    cargarDetalleVenta(id);
 
     // Reset botones
     $("#btnAgregar").attr("disabled", true);
@@ -337,11 +335,13 @@ function seleccionVenta(
         $("#btnEditar").removeAttr("disabled");
         $("#btnEliminar").removeAttr("disabled");
         $("#btnConfirmar").removeAttr("disabled");
-    }
-
-    if (vent_estado === "CONFIRMADO") {
+    } else if (vent_estado === "CONFIRMADO") {
         $("#btnEliminar").removeAttr("disabled");
         $("#btnImprimir").removeAttr("disabled");
+    } else if (vent_estado === "PROCESADO") {
+        $("#btnImprimir").removeAttr("disabled");
+    } else if (vent_estado === "ANULADO") {
+        // Todos los botones permanecen deshabilitados
     }
 
     $(".form-line").addClass("focused");
@@ -354,86 +354,138 @@ function formatearNumero(numero) {
         maximumFractionDigits: 2
     });
 }
-function listarDetalles() {
+function cargarDetalleVenta(ventaId) {
+    $.ajax({
+        url: getUrl() + "ventas_cab/detalle/" + ventaId,
+        method: "GET",
+        dataType: "json"
+    })
+    .done(function(res) {
+        renderizarDetalles(res.detalles || []);
+        renderizarPedidosVinculados(res.pedidos || []);
+        renderizarOrdenesVinculadas(res.ordenes || []);
+    })
+    .fail(function(xhr) {
+        mostrarErrores(xhr);
+    });
+}
 
+function renderizarDetalles(resultado) {
     let cantidadDetalle = 0;
     let TotalGral  = 0;
     let TotalIva10 = 0;
     let TotalIva5  = 0;
-
-    const ventasCabId = $("#id").val();
     const estadoVenta = $("#vent_estado").val();
+    let lista = "";
 
+    if (resultado && resultado.length > 0) {
+        for (let rs of resultado) {
+            const cantidad = parseFloat(rs.vent_det_cantidad) || 0;
+            const precio   = parseFloat(rs.vent_det_precio) || 0;
+            const subtotal = parseFloat(rs.subtotal) || (cantidad * precio);
+            const imp = (rs.tip_imp_nom || '').toUpperCase();
+            let iva = 0;
+            if (imp.indexOf('EXENT') !== -1) {
+                iva = 0;
+            } else if (imp.indexOf('5') !== -1) {
+                iva = Math.round(subtotal / 21);
+                TotalIva5 += iva;
+            } else {
+                iva = Math.round(subtotal / 11);
+                TotalIva10 += iva;
+            }
+            lista += "<tr>";
+            lista += "<td>" + rs.item_id + "</td>";
+            lista += "<td>" + rs.item_decripcion + "</td>";
+            lista += "<td>" + cantidad + "</td>";
+            lista += "<td class='text-right'>" + formatearNumero(precio) + "</td>";
+            lista += "<td>" + rs.tip_imp_nom + "</td>";
+            lista += "<td>" + (rs.dep_nombre || '-') + "</td>";
+            lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>";
+            lista += "<td class='text-right'>" + formatearNumero(iva) + "</td>";
+            lista += "</tr>";
+            cantidadDetalle++;
+            TotalGral += subtotal;
+        }
+        $("#tableDetalle").html(lista);
+    } else {
+        $("#tableDetalle").html(
+            "<tr><td colspan='8' class='text-center'>No se encontraron detalles para esta venta.</td></tr>"
+        );
+    }
+
+    $("#txtTotalGral").text(formatearNumero(TotalGral));
+    $("#txtIva10").text(formatearNumero(TotalIva10));
+    $("#txtIva5").text(formatearNumero(TotalIva5));
+    $("#txtTotalConImpuesto").text(formatearNumero(TotalIva10 + TotalIva5));
+
+    if (estadoVenta === "PENDIENTE" && cantidadDetalle > 0) {
+        $("#btnConfirmar").removeAttr("disabled");
+    } else {
+        $("#btnConfirmar").attr("disabled", true);
+    }
+}
+
+function renderizarPedidosVinculados(resultado) {
+    var lista = "";
+    var estadoVenta = $("#vent_estado").val();
+    for (var rs of resultado) {
+        lista += "<tr>";
+        lista += "<td>" + (rs.pedido_descripcion || rs.pedidos_ventas_id) + "</td>";
+        lista += "<td>" + (rs.ped_ven_estado || '') + "</td>";
+        lista += "<td>" + (rs.cli_nombre || '') + " " + (rs.cli_apellido || '') + "</td>";
+        lista += "<td>" + (rs.ped_ven_fecha || '') + "</td>";
+        lista += "<td>";
+        if (estadoVenta === "PENDIENTE" && rs.id > 0) {
+            lista += "<button class='btn btn-xs btn-danger waves-effect' onclick='eliminarPedidoVenta(" + rs.id + ");'>" +
+                     "<i class='material-icons' style='font-size:16px;line-height:1;'>delete</i></button>";
+        }
+        lista += "</td></tr>";
+    }
+    if (!lista) {
+        lista = "<tr><td colspan='5' class='text-center text-muted'>Sin pedidos vinculados</td></tr>";
+    }
+    $("#tablePedidosVinculados").html(lista);
+}
+
+function renderizarOrdenesVinculadas(resultado) {
+    var lista = "";
+    var estadoVenta = $("#vent_estado").val();
+    var etiquetas = [];
+    for (var rs of resultado) {
+        etiquetas.push("ORD: " + String(rs.orden_serv_cab_id).padStart(7, '0'));
+        lista += "<tr>";
+        lista += "<td>" + rs.orden_descripcion + "</td>";
+        lista += "<td>" + rs.ord_serv_estado + "</td>";
+        lista += "<td>" + rs.cli_nombre + " " + rs.cli_apellido + "</td>";
+        lista += "<td>" + rs.contrato_descripcion + "</td>";
+        lista += "<td>";
+        if (estadoVenta === "PENDIENTE") {
+            lista += "<button class='btn btn-xs btn-danger waves-effect' onclick='eliminarOrdenServVenta(" + rs.id + ");'>" +
+                     "<i class='material-icons' style='font-size:16px;line-height:1;'>delete</i></button>";
+        }
+        lista += "</td></tr>";
+    }
+    if (!lista) {
+        lista = "<tr><td colspan='5' class='text-center text-muted'>Sin órdenes vinculadas</td></tr>";
+    }
+    $("#tableOrdenes").html(lista);
+    $("#orden_buscar").val(etiquetas.join(", "));
+}
+
+function listarDetalles() {
+    const ventasCabId = $("#id").val();
     if (!ventasCabId) {
         swal("Atención", "No hay venta seleccionada.", "warning");
         return;
     }
-
     $.ajax({
         url: getUrl() + "ventas_det/read/" + ventasCabId,
         method: "GET",
         dataType: "json"
     })
     .done(function(resultado) {
-
-        let lista = "";
-
-        if (resultado && resultado.length > 0) {
-
-            for (let rs of resultado) {
-
-                const cantidad = parseFloat(rs.vent_det_cantidad) || 0;
-                const precio   = parseFloat(rs.vent_det_precio) || 0;
-                const subtotal = parseFloat(rs.subtotal) || (cantidad * precio);
-
-                const imp = (rs.tip_imp_nom || '').toUpperCase();
-                let iva = 0;
-                if (imp.indexOf('EXENT') !== -1) {
-                    iva = 0;
-                } else if (imp.indexOf('5') !== -1) {
-                    iva = Math.round(subtotal / 21);
-                    TotalIva5 += iva;
-                } else {
-                    iva = Math.round(subtotal / 11);
-                    TotalIva10 += iva;
-                }
-
-                lista += "<tr>";
-                lista += "<td>" + rs.item_id + "</td>";
-                lista += "<td>" + rs.item_decripcion + "</td>";
-                lista += "<td>" + cantidad + "</td>";
-                lista += "<td class='text-right'>" + formatearNumero(precio) + "</td>";
-                lista += "<td>" + rs.tip_imp_nom + "</td>";
-                lista += "<td>" + (rs.dep_nombre || '-') + "</td>";
-                lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>";
-                lista += "<td class='text-right'>" + formatearNumero(iva) + "</td>";
-                lista += "</tr>";
-
-                cantidadDetalle++;
-                TotalGral += subtotal;
-            }
-
-            $("#tableDetalle").html(lista);
-
-        } else {
-
-            $("#tableDetalle").html(
-                "<tr><td colspan='8' class='text-center'>No se encontraron detalles para esta venta.</td></tr>"
-            );
-        }
-
-        // Totales
-        $("#txtTotalGral").text(formatearNumero(TotalGral));
-        $("#txtIva10").text(formatearNumero(TotalIva10));
-        $("#txtIva5").text(formatearNumero(TotalIva5));
-        $("#txtTotalConImpuesto").text(formatearNumero(TotalIva10 + TotalIva5));
-
-        // Botón confirmar
-        if (estadoVenta === "PENDIENTE" && cantidadDetalle > 0) {
-            $("#btnConfirmar").removeAttr("disabled");
-        } else {
-            $("#btnConfirmar").attr("disabled", true);
-        }
+        renderizarDetalles(resultado);
     })
     .fail(function(xhr) {
         mostrarErrores(xhr);
@@ -985,36 +1037,13 @@ function listarOrdenesVenta() {
         $("#tableOrdenes").html("<tr><td colspan='5' class='text-center text-muted'>Grabe la venta primero para poder vincular órdenes</td></tr>");
         return;
     }
-
     $.ajax({
         url: getUrl() + "ordenservventa/by-venta/" + ventas_cab_id,
         method: "GET",
         dataType: "json"
     })
     .done(function(resultado) {
-        var lista = "";
-        var estadoVenta = $("#vent_estado").val();
-
-        for (var rs of resultado) {
-            lista += "<tr>";
-            lista += "<td>" + rs.orden_descripcion + "</td>";
-            lista += "<td>" + rs.ord_serv_estado + "</td>";
-            lista += "<td>" + rs.cli_nombre + " " + rs.cli_apellido + "</td>";
-            lista += "<td>" + rs.contrato_descripcion + "</td>";
-            lista += "<td>";
-            if (estadoVenta === "PENDIENTE") {
-                lista += "<button class='btn btn-xs btn-danger waves-effect' onclick='eliminarOrdenServVenta(" + rs.id + ");'>" +
-                         "<i class='material-icons' style='font-size:16px;line-height:1;'>delete</i></button>";
-            }
-            lista += "</td>";
-            lista += "</tr>";
-        }
-
-        if (!lista) {
-            lista = "<tr><td colspan='5' class='text-center text-muted'>Sin órdenes vinculadas</td></tr>";
-        }
-
-        $("#tableOrdenes").html(lista);
+        renderizarOrdenesVinculadas(resultado);
     })
     .fail(function(xhr) { mostrarErrores(xhr); });
 }
@@ -1120,36 +1149,13 @@ function listarPedidosVenta() {
         );
         return;
     }
-
     $.ajax({
         url: getUrl() + "ventas-pedidos/by-venta/" + ventas_cab_id,
         method: "GET",
         dataType: "json"
     })
     .done(function(resultado) {
-        var lista = "";
-        var estadoVenta = $("#vent_estado").val();
-
-        for (var rs of resultado) {
-            lista += "<tr>";
-            lista += "<td>" + (rs.pedido_descripcion || rs.pedidos_ventas_id) + "</td>";
-            lista += "<td>" + (rs.ped_ven_estado || '') + "</td>";
-            lista += "<td>" + (rs.cli_nombre || '') + " " + (rs.cli_apellido || '') + "</td>";
-            lista += "<td>" + (rs.ped_ven_fecha || '') + "</td>";
-            lista += "<td>";
-            if (estadoVenta === "PENDIENTE" && rs.id > 0) {
-                lista += "<button class='btn btn-xs btn-danger waves-effect' onclick='eliminarPedidoVenta(" + rs.id + ");'>" +
-                         "<i class='material-icons' style='font-size:16px;line-height:1;'>delete</i></button>";
-            }
-            lista += "</td>";
-            lista += "</tr>";
-        }
-
-        if (!lista) {
-            lista = "<tr><td colspan='5' class='text-center text-muted'>Sin pedidos vinculados</td></tr>";
-        }
-
-        $("#tablePedidosVinculados").html(lista);
+        renderizarPedidosVinculados(resultado);
     })
     .fail(function(xhr) { mostrarErrores(xhr); });
 }

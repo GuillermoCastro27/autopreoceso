@@ -419,13 +419,14 @@ function seleccionPedidoVenta(
         $("#btnEliminar").removeAttr("disabled");
         $("#btnConfirmar").removeAttr("disabled");
         $("#formDetalles").show();
-        // Mostrar lista de sucursales para que el usuario seleccione
         $("#suc_razon_social").removeAttr("disabled");
         buscarSucursal();
-    }
-
-    if (ped_ven_estado === "CONFIRMADO") {
+    } else if (ped_ven_estado === "CONFIRMADO") {
         $("#btnEliminar").removeAttr("disabled");
+    } else if (ped_ven_estado === "PROCESADO") {
+        // Solo lectura: todos los botones permanecen deshabilitados
+    } else if (ped_ven_estado === "ANULADO") {
+        // Todos los botones permanecen deshabilitados
     }
 
     $(".form-line").addClass("focused");

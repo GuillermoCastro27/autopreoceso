@@ -51,40 +51,50 @@
     <div class="section-title">Datos Generales</div>
     <div class="row clearfix">
         <div class="col-sm-1">
+            <label class="field-label">Código</label>
             <input type="text" id="id" class="form-control" disabled placeholder="Código">
         </div>
         <div class="col-sm-2">
+            <label class="field-label">Nº Contrato</label>
             <input type="text" id="contrato_numero" class="form-control" disabled placeholder="Nº Contrato" style="font-weight:bold;color:#1565c0;">
         </div>
         <div class="col-sm-2">
+            <label class="field-label">Empresa</label>
             <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
             <input type="hidden" id="empresa_id">
             <div id="listaEmpresa" style="display:none;"></div>
         </div>
         <div class="col-sm-2">
+            <label class="field-label">Sucursal</label>
             <input type="text" id="suc_razon_social" class="form-control" disabled onkeyup="buscarSucursal();" placeholder="Sucursal">
             <input type="hidden" id="sucursal_id">
             <div id="listaSucursal" style="display:none;"></div>
         </div>
         <div class="col-sm-3">
+            <label class="field-label">Fecha</label>
             <input type="text" id="contrato_fecha" class="datetimepicker form-control" disabled placeholder="Fecha">
         </div>
         <div class="col-sm-3">
+            <label class="field-label">Fecha Inicio</label>
             <input type="text" id="contrato_fecha_inicio" class="datetimepicker form-control" disabled placeholder="Fecha Inicio">
         </div>
         <div class="col-sm-3" style="margin-top:10px;">
+            <label class="field-label">Fecha Fin</label>
             <input type="text" id="contrato_fecha_fin" class="datetimepicker form-control" disabled placeholder="Fecha Fin">
         </div>
         <div class="col-sm-2" style="margin-top:10px;">
+            <label class="field-label">Condición de Pago</label>
             <select id="contrato_condicion_pago" class="form-control" disabled onchange="controlarCamposPago();">
                 <option value="CONTADO">Al contado</option>
                 <option value="CREDITO">A crédito</option>
             </select>
         </div>
         <div class="col-sm-1" style="margin-top:10px;">
+            <label class="field-label">Cuota</label>
             <input type="text" id="contrato_cuotas" class="form-control" disabled placeholder="Cuota">
         </div>
         <div class="col-sm-3" style="margin-top:10px;">
+            <label class="field-label">Intervalo Fecha Vence</label>
             <input type="text" id="contrato_intervalo_fecha_vence" class="datetimepicker form-control" disabled placeholder="Intervalo Fecha Vence">
         </div>
     </div>
@@ -95,34 +105,43 @@
     <div class="section-title">Servicio y Contrato</div>
     <div class="row clearfix">
         <div class="col-sm-3">
+            <label class="field-label">Tipo de Servicio</label>
             <input type="text" id="tipo_serv_nombre" class="form-control" disabled onkeyup="buscarTipoServicio();" placeholder="Tipo de Servicio">
             <input type="hidden" id="tipo_servicio_id">
             <div id="listaTipoServ" style="display:none;"></div>
         </div>
         <div class="col-sm-4">
+            <label class="field-label">Tipo Contrato</label>
             <input type="text" id="tip_con_nombre" class="form-control" disabled onkeyup="buscarTipoContrato();" placeholder="Tipo Contrato">
             <input type="hidden" id="tipo_contrato_id">
             <div id="listaTipoCont" style="display:none;"></div>
         </div>
         <div class="col-sm-11" style="margin-top:10px;">
+            <label class="field-label">Objeto</label>
             <textarea id="contrato_objeto" class="form-control" rows="2" disabled placeholder="Objeto"></textarea>
         </div>
         <div class="col-sm-11" style="margin-top:10px;">
+            <label class="field-label">Alcance</label>
             <textarea id="contrato_alcance" class="form-control" rows="2" disabled placeholder="Alcance"></textarea>
         </div>
         <div class="col-sm-11" style="margin-top:10px;">
+            <label class="field-label">Responsabilidad</label>
             <textarea id="contrato_responsabilidad" class="form-control" rows="2" disabled placeholder="Responsabilidad"></textarea>
         </div>
         <div class="col-sm-11" style="margin-top:10px;">
+            <label class="field-label">Garantía</label>
             <textarea id="contrato_garantia" class="form-control" rows="2" disabled placeholder="Garantía"></textarea>
         </div>
         <div class="col-sm-11" style="margin-top:10px;">
+            <label class="field-label">Limitación</label>
             <textarea id="contrato_limitacion" class="form-control" rows="2" disabled placeholder="Limitación"></textarea>
         </div>
         <div class="col-sm-11" style="margin-top:10px;">
+            <label class="field-label">Fuerza Mayor</label>
             <textarea id="contrato_fuerza_mayor" class="form-control" rows="2" disabled placeholder="Fuerza Mayor"></textarea>
         </div>
         <div class="col-sm-11" style="margin-top:10px;">
+            <label class="field-label">Jurisdicción</label>
             <textarea id="contrato_jurisdiccion" class="form-control" rows="2" disabled placeholder="Jurisdicción"></textarea>
         </div>
     </div>
@@ -133,26 +152,33 @@
     <div class="section-title">Cliente</div>
     <div class="row clearfix">
         <div class="col-sm-2">
+            <label class="field-label">Nombre</label>
             <input type="text" id="cli_nombre" class="form-control" disabled onkeyup="buscarCliente();" placeholder="Nombre">
             <input type="hidden" id="clientes_id">
             <div id="listaClientes" style="display:none;"></div>
         </div>
         <div class="col-sm-2">
+            <label class="field-label">Apellido</label>
             <input type="text" id="cli_apellido" class="form-control" disabled placeholder="Apellido">
         </div>
         <div class="col-sm-2">
+            <label class="field-label">RUC</label>
             <input type="text" id="cli_ruc" class="form-control" disabled placeholder="RUC">
         </div>
         <div class="col-sm-2">
+            <label class="field-label">Teléfono</label>
             <input type="text" id="cli_telefono" class="form-control" disabled placeholder="Teléfono">
         </div>
         <div class="col-sm-3">
+            <label class="field-label">Dirección</label>
             <input type="text" id="cli_direccion" class="form-control" disabled placeholder="Dirección">
         </div>
         <div class="col-sm-3" style="margin-top:10px;">
+            <label class="field-label">Correo</label>
             <input type="text" id="cli_correo" class="form-control" disabled placeholder="Correo">
         </div>
         <div class="col-sm-4" style="margin-top:10px;">
+            <label class="field-label">Representante Firmante</label>
             <input type="text" id="contrato_representante" class="form-control" disabled placeholder="Representante firmante del cliente">
         </div>
     </div>
@@ -163,9 +189,11 @@
     <div class="section-title">Orden de Servicio Vinculada (opcional)</div>
     <div class="row clearfix">
         <div class="col-sm-5">
+            <label class="field-label">Buscar Orden</label>
             <input type="text" id="orden_buscar" class="form-control" disabled placeholder="Buscar orden por observación o cliente..." onkeyup="buscarOrdenParaContrato();">
         </div>
         <div class="col-sm-5" style="margin-top:0px;">
+            <label class="field-label">Orden Vinculada</label>
             <input type="text" id="orden_texto" class="form-control" disabled readonly placeholder="Orden vinculada">
         </div>
         <div class="col-sm-11" id="lista_orden"></div>
@@ -177,6 +205,7 @@
     <div class="section-title">Observaciones</div>
     <div class="row clearfix">
         <div class="col-sm-6">
+            <label class="field-label">Observaciones</label>
             <input type="text" id="contrato_observacion" class="form-control" disabled placeholder="Observaciones">
         </div>
     </div>

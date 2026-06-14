@@ -57,30 +57,18 @@
             <div class="row clearfix">
 
                 <div class="col-sm-2">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="txtCodigo" class="form-control" disabled>
-                            <label class="form-label">Código</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Código</label>
+                    <input type="text" id="txtCodigo" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-5">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="tipo_desc_nombre" class="form-control" disabled>
-                            <label class="form-label">Nombre</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Nombre</label>
+                    <input type="text" id="tipo_desc_nombre" class="form-control" disabled placeholder="Nombre">
                 </div>
 
                 <div class="col-sm-5">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="tipo_desc_descrip" class="form-control" disabled>
-                            <label class="form-label">Descripción</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Descripción</label>
+                    <input type="text" id="tipo_desc_descrip" class="form-control" disabled placeholder="Descripción">
                 </div>
 
             </div>
@@ -92,23 +80,13 @@
             <div class="row clearfix">
 
                 <div class="col-sm-6">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="tipo_desc_fechaInicio"
-                                   class="datetimepicker form-control" disabled>
-                            <label class="form-label">Fecha Inicio</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Fecha Inicio</label>
+                    <input type="text" id="tipo_desc_fechaInicio" class="datetimepicker form-control" disabled placeholder="Fecha Inicio">
                 </div>
 
                 <div class="col-sm-6">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="tipo_desc_fechaFin"
-                                   class="datetimepicker form-control" disabled>
-                            <label class="form-label">Fecha Fin</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Fecha Fin</label>
+                    <input type="text" id="tipo_desc_fechaFin" class="datetimepicker form-control" disabled placeholder="Fecha Fin">
                 </div>
 
             </div>

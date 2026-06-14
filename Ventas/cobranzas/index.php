@@ -77,11 +77,13 @@
 
                 <!-- CÓDIGO -->
                 <div class="col-sm-1">
+                    <label class="field-label">Código</label>
                     <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <!-- EMPRESA -->
                 <div class="col-sm-2">
+                    <label class="field-label">Empresa</label>
                     <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
                     <input type="hidden" id="empresa_id">
                     <div id="listaEmpresa" style="display:none;"></div>
@@ -89,6 +91,7 @@
 
                 <!-- SUCURSAL -->
                 <div class="col-sm-2">
+                    <label class="field-label">Sucursal</label>
                     <input type="text" id="suc_razon_social"
                            class="form-control" disabled
                            onkeyup="buscarSucursal();" placeholder="Sucursal">
@@ -98,6 +101,7 @@
 
                 <!-- CAJA -->
                 <div class="col-sm-2">
+                    <label class="field-label">Caja</label>
                     <input type="text" id="caja"
                            class="form-control" disabled
                            onkeyup="buscarApertCierCaja();" placeholder="Caja">
@@ -107,6 +111,7 @@
 
                 <!-- FECHA -->
                 <div class="col-sm-3">
+                    <label class="field-label">Fecha</label>
                     <input type="text" id="cobro_fecha"
                            class="datetimepicker form-control" disabled
                            placeholder="Fecha">
@@ -122,6 +127,7 @@
             <div class="row clearfix">
 
                 <div class="col-sm-2">
+                    <label class="field-label">Nombre</label>
                     <input type="text" id="cli_nombre"
                            class="form-control" disabled
                            onkeyup="buscarClienteCtasCobrar();"
@@ -131,6 +137,7 @@
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Apellido</label>
                     <input type="text" id="cli_apellido"
                            class="form-control" disabled
                            placeholder="Apellido">
@@ -147,21 +154,25 @@
 
         <!-- RUC -->
         <div class="col-sm-3">
+            <label class="field-label">RUC</label>
             <input type="text" id="cli_ruc" class="form-control" disabled placeholder="RUC">
         </div>
 
         <!-- DIRECCIÓN -->
         <div class="col-sm-3">
+            <label class="field-label">Dirección</label>
             <input type="text" id="cli_direccion" class="form-control" disabled placeholder="Dirección">
         </div>
 
         <!-- TELÉFONO -->
         <div class="col-sm-3">
+            <label class="field-label">Teléfono</label>
             <input type="text" id="cli_telefono" class="form-control" disabled placeholder="Teléfono">
         </div>
 
         <!-- CORREO -->
         <div class="col-sm-3">
+            <label class="field-label">Correo</label>
             <input type="text" id="cli_correo" class="form-control" disabled placeholder="Correo">
         </div>
 
@@ -205,6 +216,7 @@
 
         <!-- IMPORTE -->
         <div class="col-sm-3">
+            <label class="field-label">Importe</label>
             <input type="text" id="cobro_importe"
                    class="form-control" disabled
                    placeholder="Importe">
@@ -212,6 +224,7 @@
 
         <!-- MONTO EFECTIVO -->
         <div class="col-sm-3">
+            <label class="field-label">Monto Efectivo (Gs.)</label>
             <input type="text" id="monto_efectivo"
                    class="form-control" disabled
                    placeholder="Monto Efectivo (Gs.)"
@@ -220,6 +233,7 @@
 
         <!-- VUELTO -->
         <div class="col-sm-3">
+            <label class="field-label">Vuelto (Gs.)</label>
             <input type="text" id="vuelto"
                    class="form-control" disabled
                    placeholder="Vuelto (Gs.)"
@@ -232,6 +246,7 @@
 
         <!-- NRO DOCUMENTO -->
         <div class="col-sm-3">
+            <label class="field-label">Nro. Documento</label>
             <input type="text" id="numero_documento"
                    class="form-control" disabled
                    placeholder="Nro. Documento">
@@ -239,6 +254,7 @@
 
         <!-- OBSERVACIÓN -->
         <div class="col-sm-6">
+            <label class="field-label">Observación</label>
             <input type="text" id="cobro_observacion"
                    class="form-control" disabled
                    placeholder="Observación">

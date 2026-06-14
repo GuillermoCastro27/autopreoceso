@@ -56,48 +56,28 @@
             <div class="row clearfix">
 
                 <div class="col-sm-2">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="txtCodigo" class="form-control" disabled>
-                            <label class="form-label">Código</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Código</label>
+                    <input type="text" id="txtCodigo" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-5">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="ent_adh_nombre" class="form-control" disabled>
-                            <label class="form-label">Nombre de la Entidad</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Nombre de la Entidad</label>
+                    <input type="text" id="ent_adh_nombre" class="form-control" disabled placeholder="Nombre de la Entidad">
                 </div>
 
                 <div class="col-sm-5">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="ent_adh_direccion" class="form-control" disabled>
-                            <label class="form-label">Dirección</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Dirección</label>
+                    <input type="text" id="ent_adh_direccion" class="form-control" disabled placeholder="Dirección">
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="ent_adh_telefono" class="form-control" disabled>
-                            <label class="form-label">Teléfono</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Teléfono</label>
+                    <input type="text" id="ent_adh_telefono" class="form-control" disabled placeholder="Teléfono">
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="ent_adh_email" class="form-control" disabled>
-                            <label class="form-label">Correo</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Correo</label>
+                    <input type="text" id="ent_adh_email" class="form-control" disabled placeholder="Correo">
                 </div>
             </div>
         </div>
@@ -108,25 +88,17 @@
             <div class="row clearfix">
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="entidad_emisora" class="form-control" disabled onkeyup="buscarEntidadEmisora();">
-                            <label class="form-label">Entidad Emisora</label>
-                        </div>
-                        <input type="hidden" id="entidad_emisora_id">
-                        <div id="listaEntidadEmi" style="display:none;"></div>
-                    </div>
+                    <label class="field-label">Entidad Emisora</label>
+                    <input type="text" id="entidad_emisora" class="form-control" disabled onkeyup="buscarEntidadEmisora();" placeholder="Entidad Emisora">
+                    <input type="hidden" id="entidad_emisora_id">
+                    <div id="listaEntidadEmi" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="marca_tarjeta" class="form-control" disabled onkeyup="buscarMarcaTarjeta();">
-                            <label class="form-label">Marca Tarjeta</label>
-                        </div>
-                        <input type="hidden" id="marca_tarjeta_id">
-                        <div id="listaMarcaTarj" style="display:none;"></div>
-                    </div>
+                    <label class="field-label">Marca Tarjeta</label>
+                    <input type="text" id="marca_tarjeta" class="form-control" disabled onkeyup="buscarMarcaTarjeta();" placeholder="Marca Tarjeta">
+                    <input type="hidden" id="marca_tarjeta_id">
+                    <div id="listaMarcaTarj" style="display:none;"></div>
                 </div>
 
             </div>

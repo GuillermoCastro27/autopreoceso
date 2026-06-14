@@ -56,30 +56,18 @@
             <div class="row clearfix">
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="txtCodigo" class="form-control" disabled>
-                            <label class="form-label">Código</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Código</label>
+                    <input type="text" id="txtCodigo" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="tipo_descripcion" class="form-control" disabled>
-                            <label class="form-label">Descripción</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Descripción</label>
+                    <input type="text" id="tipo_descripcion" class="form-control" disabled placeholder="Descripción">
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="tipo_objeto" class="form-control" disabled>
-                            <label class="form-label">Objeto</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Objeto</label>
+                    <input type="text" id="tipo_objeto" class="form-control" disabled placeholder="Objeto">
                 </div>
 
             </div>

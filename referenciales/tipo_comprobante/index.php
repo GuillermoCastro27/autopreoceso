@@ -42,12 +42,15 @@
             <div class="section-title">Datos Generales</div>
             <div class="row clearfix">
                 <div class="col-sm-1">
+                    <label class="field-label">Código</label>
                     <input type="text" id="txtCodigo" class="form-control" disabled placeholder="Código">
                 </div>
                 <div class="col-sm-4">
+                    <label class="field-label">Nombre del Tipo de Comprobante</label>
                     <input type="text" id="tip_comp_nombre" class="form-control" maxlength="100" disabled placeholder="Nombre del Tipo de Comprobante">
                 </div>
                 <div class="col-sm-2">
+                    <label class="field-label">Abreviatura / Código SET</label>
                     <input type="text" id="tip_comp_abrev" class="form-control" maxlength="10" disabled placeholder="Abreviatura / Código SET">
                 </div>
             </div>

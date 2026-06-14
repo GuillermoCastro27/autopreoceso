@@ -369,12 +369,12 @@ function seleccionOrdenCompra(id_orde_compra_cab, proveedor_id, empresa_id, sucu
         $("#btnEditar").removeAttr("disabled");
         $("#btnConfirmar").removeAttr("disabled");
         $("#formDetalles").attr("style","display:block;");
-    }
-
-    if (ord_comp_estado === "CONFIRMADO") {
+    } else if (ord_comp_estado === "CONFIRMADO") {
         $("#btnEliminar").removeAttr("disabled");
         $('#btnImprimir').show().removeAttr('disabled');
-    } else {
+    } else if (ord_comp_estado === "PROCESADO") {
+        $('#btnImprimir').show().removeAttr('disabled');
+    } else if (ord_comp_estado === "ANULADO") {
         $('#btnImprimir').hide().attr('disabled', true);
     }
 
@@ -804,7 +804,8 @@ function buscarProductos(){
         dataType: "json",
         data: {
             "item_decripcion": $("#item_decripcion").val(),
-            "tipo_descripcion": "PRODUCTO"
+            "tipo_descripcion": "PRODUCTO",
+            "deposito_id": $("#deposito_id_det").val() || null
         }
     })
     .done(function(resultado){
@@ -884,6 +885,10 @@ function formatearNumero(numero) {
     });
 }
 
+function _esc(s) {
+    return (s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
 // Realiza una búsqueda de productos mediante una solicitud AJAX
 function listarDetalles() {
     var cantidadDetalle = 0;
@@ -923,7 +928,9 @@ function listarDetalles() {
                     TotalIva10 += iva;
                 }
 
-                lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" + rs.item_id + "," + rs.tipo_impuesto_id + ",'" + rs.item_decripcion + "','" + (rs.tip_imp_nom || '-') + "'," + cantidad + ", " + costo + ", '" + formatearNumero(subtotal) + "', '" + formatearNumero(iva) + "'," + (rs.deposito_id||0) + "," + rs.cantidad_disponible + "," + (rs.marca_id||0) + "," + (rs.modelo_id||0) + ");\">";
+                var _depNomOC = getNombreDeposito(rs.deposito_id);
+                var _modNomOC = rs.modelo_nom ? rs.modelo_nom + (rs.modelo_año ? ' (' + rs.modelo_año + ')' : '') : '';
+                lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" + rs.item_id + "," + rs.tipo_impuesto_id + ",'" + _esc(rs.item_decripcion) + "','" + _esc(rs.tip_imp_nom || '-') + "'," + cantidad + ", " + costo + ", '" + formatearNumero(subtotal) + "', '" + formatearNumero(iva) + "'," + (rs.deposito_id||0) + "," + rs.cantidad_disponible + "," + (rs.marca_id||0) + "," + (rs.modelo_id||0) + ",'" + _esc(_depNomOC) + "','" + _esc(rs.marc_nom||'') + "','" + _esc(_modNomOC) + "');\">";
                 lista += "<td>" + rs.item_id + "</td>";
                 lista += "<td>" + rs.item_decripcion + "</td>";
                 lista += "<td>" + (rs.marc_nom || '—') + "</td>";
@@ -963,7 +970,7 @@ function listarDetalles() {
 }
 
 // Selecciona un detalle de un pedido y actualiza el formulario
-function seleccionDetalle(item_id, tipo_impuesto_id, item_decripcion, tip_imp_nom, orden_compra_det_cantidad, costo, subtotal, totalConImpuesto, deposito_id, cantidad_disponible, marca_id, modelo_id) {
+function seleccionDetalle(item_id, tipo_impuesto_id, item_decripcion, tip_imp_nom, orden_compra_det_cantidad, costo, subtotal, totalConImpuesto, deposito_id, cantidad_disponible, marca_id, modelo_id, dep_nombre, marc_nom, modelo_nom_full) {
     $("#item_id").val(item_id);
     $("#tipo_impuesto_id").val(tipo_impuesto_id);
     $("#item_decripcion").val(item_decripcion);
@@ -971,18 +978,29 @@ function seleccionDetalle(item_id, tipo_impuesto_id, item_decripcion, tip_imp_no
     $("#orden_compra_det_cantidad").val(orden_compra_det_cantidad);
     $("#item_costo").val(formatearNumero(costo));
     $("#cantidad_stock").val('' + cantidad_disponible);
-    $("#deposito_id_det").html(getSelectDeposito(deposito_id)).attr("disabled", true);
-    // Autocompletar marca y modelo
+    var $dep = $('#deposito_id_det');
+    if (deposito_id && dep_nombre) {
+        $dep.html('<option value="' + deposito_id + '" selected>' + dep_nombre + '</option>');
+    } else {
+        $dep.html('<option value="">-- Depósito --</option>');
+    }
+    $dep.prop('disabled', true);
     _marcaIdOC  = marca_id  || null;
     _modeloIdOC = modelo_id || null;
-    if (marca_id) {
-        cargarMarcasOC(item_id, marca_id);
-        if (modelo_id) setTimeout(function() { cargarModelosOC(item_id, marca_id, modelo_id); }, 350);
+    var $marca = $('#marca_det_oc');
+    if (marca_id && marc_nom) {
+        $marca.html('<option value="' + marca_id + '" selected>' + marc_nom + '</option>');
     } else {
-        $('#marca_det_oc').html('<option value="">-- Marca --</option>').prop('disabled', true);
-        $('#modelo_det_oc').html('<option value="">-- Modelo --</option>').prop('disabled', true);
+        $marca.html('<option value="">-- Marca --</option>');
     }
-
+    $marca.prop('disabled', true);
+    var $modelo = $('#modelo_det_oc');
+    if (modelo_id && modelo_nom_full) {
+        $modelo.html('<option value="' + modelo_id + '" selected>' + modelo_nom_full + '</option>');
+    } else {
+        $modelo.html('<option value="">-- Modelo --</option>');
+    }
+    $modelo.prop('disabled', true);
     $("#listaProductos").html("").hide();
     $(".form-line").attr("class", "form-line focused");
 }

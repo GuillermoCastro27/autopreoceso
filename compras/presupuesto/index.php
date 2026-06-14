@@ -58,31 +58,37 @@
             <div class="row clearfix">
 
                 <div class="col-sm-1">
+                    <label class="field-label">Código</label>
                     <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Empresa</label>
                     <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
                     <input type="hidden" id="empresa_id">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Sucursal</label>
                     <input type="text" id="suc_razon_social" class="form-control" disabled onkeyup="buscarSucursal();" placeholder="Sucursal">
                     <input type="hidden" id="sucursal_id">
                     <div id="listaSucursal" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Fecha</label>
                     <input type="text" id="pre_fecha" class="datetimepicker form-control" disabled placeholder="Fecha">
                     <small id="avisoFechaPre" style="color:#e74c3c;display:none;"></small>
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Plazo de Entrega</label>
                     <input type="text" id="pre_vence" class="datetimepicker form-control" disabled placeholder="Plazo de Entrega">
                     <small id="avisoVencePre" style="color:#e74c3c;display:none;"></small>
                 </div>
 
                 <div class="col-sm-5">
+                    <label class="field-label">Observaciones</label>
                     <input type="text" id="pre_observaciones" class="form-control" disabled placeholder="Observaciones">
                 </div>
 
@@ -96,10 +102,34 @@
 
                 <div class="col-sm-12">
                     <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:#2d3436;margin-bottom:4px;display:block;">Pedidos</label>
-                    <div style="position:relative;">
-                        <input type="text" id="pedido" class="form-control" disabled onkeyup="buscarPedidos();" placeholder="Buscar por número de pedido...">
-                        <div id="listaPedidos" style="display:none;"></div>
+
+                    <!-- Multi-select de pedidos -->
+                    <div style="position:relative;" id="wrapperMultiPedidos">
+                        <button type="button" id="btnAbrirPedidos" onclick="togglePanelPedidos();" disabled
+                                style="width:100%;text-align:left;display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border:1px solid #ddd;border-radius:4px;background:#f9f9f9;cursor:pointer;font-size:13px;color:#555;">
+                            <span><i class="material-icons" style="font-size:16px;vertical-align:middle;margin-right:4px;color:#888;">receipt</i>Seleccionar pedidos confirmados...</span>
+                            <i class="material-icons" id="iconoPanelPedidos" style="font-size:18px;color:#888;">expand_more</i>
+                        </button>
+
+                        <div id="panelMultiPedidos" style="display:none;position:absolute;z-index:3000;background:#fff;border:1px solid #ccc;border-radius:4px;box-shadow:0 4px 16px rgba(0,0,0,.15);width:100%;top:calc(100% + 2px);left:0;">
+                            <div style="padding:8px 10px;border-bottom:1px solid #eee;">
+                                <input type="text" id="filtroPanelPedidos" class="form-control input-sm" placeholder="Filtrar por número de pedido..." onkeyup="filtrarPanelPedidos();">
+                            </div>
+                            <div id="listaPanelPedidos" style="max-height:250px;overflow-y:auto;">
+                                <div class="text-center text-muted" style="padding:16px;">Cargando...</div>
+                            </div>
+                            <div style="padding:8px 10px;border-top:1px solid #eee;display:flex;justify-content:space-between;align-items:center;">
+                                <small id="countPanelPedidos" class="text-muted"></small>
+                                <div>
+                                    <button type="button" class="btn btn-default btn-sm" onclick="cerrarPanelPedidos();">Cerrar</button>
+                                    <button type="button" class="btn btn-primary btn-sm waves-effect" onclick="agregarPedidosMarcados();">
+                                        <i class="material-icons" style="font-size:14px;vertical-align:text-bottom;">playlist_add_check</i> Agregar seleccionados
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                     <table class="table table-bordered table-condensed" style="font-size:12px;margin-top:8px;">
                         <thead>
                             <tr>
@@ -117,20 +147,24 @@
                 </div>
 
                 <div class="col-sm-4">
+                    <label class="field-label">Proveedor</label>
                     <input type="hidden" id="proveedor_id" value="0">
                     <input type="text" id="prov_razonsocial" class="form-control" disabled onkeyup="buscarProveedores();" placeholder="Proveedor">
                     <div id="listaProveedores" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">RUC</label>
                     <input type="text" id="prov_ruc" class="form-control" disabled placeholder="RUC">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Teléfono</label>
                     <input type="text" id="prov_telefono" class="form-control" disabled placeholder="Teléfono">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Correo</label>
                     <input type="text" id="prov_correo" class="form-control" disabled placeholder="Correo">
                 </div>
 
@@ -178,39 +212,47 @@
             <div class="row clearfix">
 
                 <div class="col-sm-1">
+                    <label class="field-label">Cód.</label>
                     <input type="text" id="item_id" class="form-control" disabled placeholder="Cód">
                 </div>
 
                 <div class="col-sm-3">
-                    <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
+                    <label class="field-label">Producto</label>
+                    <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Buscar...">
                     <div id="listaProductos" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-1">
-                    <input type="text" id="det_cantidad" class="form-control" disabled placeholder="Cant.">
+                    <label class="field-label">Cant.</label>
+                    <input type="text" id="det_cantidad" class="form-control" disabled placeholder="0">
                 </div>
 
                 <div class="col-sm-2">
-                    <input type="text" id="det_costo" class="form-control" disabled placeholder="Costo">
+                    <label class="field-label">Costo</label>
+                    <input type="text" id="det_costo" class="form-control" disabled placeholder="0">
                 </div>
 
                 <div class="col-sm-2">
-                    <input type="text" id="cantidad_stock" class="form-control" disabled placeholder="Stock">
+                    <label class="field-label">Stock</label>
+                    <input type="text" id="cantidad_stock" class="form-control" disabled placeholder="0">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Marca</label>
                     <select class="form-control" id="marca_det_pre" disabled>
                         <option value="">-- Marca --</option>
                     </select>
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Modelo</label>
                     <select class="form-control" id="modelo_det_pre" disabled>
                         <option value="">-- Modelo --</option>
                     </select>
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Depósito</label>
                     <select class="form-control" id="deposito_id_det" disabled>
                         <option value="">-- Depósito --</option>
                     </select>

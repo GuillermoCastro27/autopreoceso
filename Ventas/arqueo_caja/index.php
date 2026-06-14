@@ -73,11 +73,13 @@
 
                 <!-- CÓDIGO -->
                 <div class="col-sm-2">
+                    <label class="field-label">Código</label>
                     <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <!-- EMPRESA -->
                 <div class="col-sm-2">
+                    <label class="field-label">Empresa</label>
                     <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
                     <input type="hidden" id="empresa_id">
                     <div id="listaEmpresa" style="display:none;"></div>
@@ -85,6 +87,7 @@
 
                 <!-- SUCURSAL -->
                 <div class="col-sm-2">
+                    <label class="field-label">Sucursal</label>
                     <input type="text" id="suc_razon_social"
                            class="form-control" disabled
                            onkeyup="buscarSucursal();" placeholder="Sucursal">
@@ -94,6 +97,7 @@
 
                 <!-- FECHA -->
                 <div class="col-sm-3">
+                    <label class="field-label">Fecha</label>
                     <input type="text" id="arqueo_fecha"
                            class="datetimepicker form-control" disabled
                            placeholder="Fecha">
@@ -101,6 +105,7 @@
 
                 <!-- CAJA -->
                 <div class="col-sm-3">
+                    <label class="field-label">Caja</label>
                     <input type="text" id="caja"
                            class="form-control" disabled
                            onkeyup="buscarApertCierCaja();" placeholder="Caja">
@@ -118,6 +123,7 @@
             <div class="row clearfix">
 
                 <div class="col-sm-2">
+                    <label class="field-label">Tipo Arqueo</label>
                     <select id="tipo_arqueo" class="form-control" disabled>
                         <option value="EFECTIVO">EFECTIVO</option>
                         <option value="CHEQUE">CHEQUE</option>
@@ -136,24 +142,28 @@
             <div class="row clearfix">
 
                 <div class="col-sm-4">
+                    <label class="field-label">Total Efectivo</label>
                     <input type="text" id="total_efectivo"
                            class="form-control" disabled
                            placeholder="Total Efectivo">
                 </div>
 
                 <div class="col-sm-4">
+                    <label class="field-label">Total Cheque</label>
                     <input type="text" id="total_cheque"
                            class="form-control" disabled
                            placeholder="Total Cheque">
                 </div>
 
                 <div class="col-sm-4">
+                    <label class="field-label">Total Tarjeta</label>
                     <input type="text" id="total_tarjeta"
                            class="form-control" disabled
                            placeholder="Total Tarjeta">
                 </div>
 
                 <div class="col-sm-3" style="margin-top:10px;">
+                    <label class="field-label">Total General</label>
                     <input type="text" id="total_general"
                            class="form-control" disabled
                            placeholder="Total General">

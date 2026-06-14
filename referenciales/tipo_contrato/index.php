@@ -56,21 +56,13 @@
             <div class="row clearfix">
 
                 <div class="col-sm-2">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="txtCodigo" class="form-control" disabled>
-                            <label class="form-label">Código</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Código</label>
+                    <input type="text" id="txtCodigo" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="tip_con_nombre" class="form-control" disabled>
-                            <label class="form-label">Nombre</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Nombre</label>
+                    <input type="text" id="tip_con_nombre" class="form-control" disabled placeholder="Nombre">
                 </div>
 
             </div>
@@ -82,21 +74,13 @@
             <div class="row clearfix">
 
                 <div class="col-sm-6">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <textarea id="tip_con_objeto" class="form-control" disabled></textarea>
-                            <label class="form-label">Objeto</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Objeto</label>
+                    <textarea id="tip_con_objeto" class="form-control" disabled placeholder="Objeto"></textarea>
                 </div>
 
                 <div class="col-sm-6">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <textarea id="tip_con_alcance" class="form-control" disabled></textarea>
-                            <label class="form-label">Alcance</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Alcance</label>
+                    <textarea id="tip_con_alcance" class="form-control" disabled placeholder="Alcance"></textarea>
                 </div>
 
             </div>
@@ -108,30 +92,18 @@
             <div class="row clearfix">
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <textarea id="tip_con_garantia" class="form-control" disabled></textarea>
-                            <label class="form-label">Garantía</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Garantía</label>
+                    <textarea id="tip_con_garantia" class="form-control" disabled placeholder="Garantía"></textarea>
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <textarea id="tip_con_responsabilidad" class="form-control" disabled></textarea>
-                            <label class="form-label">Responsabilidad</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Responsabilidad</label>
+                    <textarea id="tip_con_responsabilidad" class="form-control" disabled placeholder="Responsabilidad"></textarea>
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <textarea id="tip_con_limitacion" class="form-control" disabled></textarea>
-                            <label class="form-label">Limitaciones</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Limitaciones</label>
+                    <textarea id="tip_con_limitacion" class="form-control" disabled placeholder="Limitaciones"></textarea>
                 </div>
 
             </div>
@@ -143,21 +115,13 @@
             <div class="row clearfix">
 
                 <div class="col-sm-6">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <textarea id="tip_con_fuerza_mayor" class="form-control" disabled></textarea>
-                            <label class="form-label">Fuerza Mayor</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Fuerza Mayor</label>
+                    <textarea id="tip_con_fuerza_mayor" class="form-control" disabled placeholder="Fuerza Mayor"></textarea>
                 </div>
 
                 <div class="col-sm-6">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <textarea id="tip_con_jurisdiccion" class="form-control" disabled></textarea>
-                            <label class="form-label">Jurisdicción</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Jurisdicción</label>
+                    <textarea id="tip_con_jurisdiccion" class="form-control" disabled placeholder="Jurisdicción"></textarea>
                 </div>
 
             </div>

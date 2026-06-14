@@ -75,11 +75,13 @@
 
                 <!-- CÓDIGO -->
                 <div class="col-sm-2">
+                    <label class="field-label">Código</label>
                     <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <!-- EMPRESA -->
                 <div class="col-sm-2">
+                    <label class="field-label">Empresa</label>
                     <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
                     <input type="hidden" id="empresa_id">
                     <div id="listaEmpresa" style="display:none;"></div>
@@ -87,6 +89,7 @@
 
                 <!-- SUCURSAL -->
                 <div class="col-sm-2">
+                    <label class="field-label">Sucursal</label>
                     <input type="text" id="suc_razon_social" class="form-control" disabled
                            onkeyup="buscarSucursal();" placeholder="Sucursal">
                     <input type="hidden" id="sucursal_id">
@@ -95,6 +98,7 @@
 
                 <!-- FECHA REGISTRO -->
                 <div class="col-sm-3">
+                    <label class="field-label">Fecha Registro</label>
                     <input type="text" id="desc_cab_fecha_registro"
                            class="datetimepicker form-control" disabled
                            placeholder="Fecha Registro">
@@ -110,12 +114,14 @@
             <div class="row clearfix">
 
                 <div class="col-sm-3">
+                    <label class="field-label">Fecha Inicio</label>
                     <input type="text" id="desc_cab_fecha_inicio"
                            class="datetimepicker form-control" disabled
                            placeholder="Fecha Inicio">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Fecha Fin</label>
                     <input type="text" id="desc_cab_fecha_fin"
                            class="datetimepicker form-control" disabled
                            placeholder="Fecha Fin">
@@ -131,12 +137,14 @@
             <div class="row clearfix">
 
                 <div class="col-sm-5">
+                    <label class="field-label">Nombre</label>
                     <input type="text" id="desc_cab_nombre"
                            class="form-control" disabled
                            placeholder="Nombre del Descuento">
                 </div>
 
                 <div class="col-sm-4">
+                    <label class="field-label">Tipo de Descuento</label>
                     <input type="text" id="tipo_desc_nombre"
                            class="form-control" disabled
                            onkeyup="buscarTipoDescuento();"
@@ -146,6 +154,7 @@
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Porcentaje (%)</label>
                     <input type="text" id="desc_cab_porcentaje"
                            class="form-control" disabled
                            placeholder="Porcentaje (%)">
@@ -160,6 +169,7 @@
 
             <div class="row clearfix">
                 <div class="col-sm-12">
+                    <label class="field-label">Observaciones</label>
                     <input type="text" id="desc_cab_observaciones"
                            class="form-control" disabled
                            placeholder="Observaciones">
@@ -299,24 +309,20 @@
                                     <tbody id="tableDetalle"></tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="5" class="text-right">IVA 10%</th>
+                                            <th colspan="8" class="text-right">IVA 10%</th>
                                             <th class="text-right"><span id="txtIva10">0,00</span></th>
-                                            <th colspan="3"></th>
                                         </tr>
                                         <tr>
-                                            <th colspan="5" class="text-right">IVA 5%</th>
+                                            <th colspan="8" class="text-right">IVA 5%</th>
                                             <th class="text-right"><span id="txtIva5">0,00</span></th>
-                                            <th colspan="3"></th>
                                         </tr>
                                         <tr>
-                                            <th colspan="5" class="text-right">Total IVA</th>
+                                            <th colspan="8" class="text-right">Total IVA</th>
                                             <th class="text-right"><span id="txtTotalConImpuesto">0,00</span></th>
-                                            <th colspan="3"></th>
                                         </tr>
                                         <tr>
-                                            <th colspan="5" class="text-right" style="font-weight:bold;"><strong>TOTAL:</strong></th>
+                                            <th colspan="8" class="text-right" style="font-weight:bold;"><strong>TOTAL:</strong></th>
                                             <th class="text-right"><span id="txtTotalGral">0,00</span></th>
-                                            <th colspan="3"></th>
                                         </tr>
                                     </tfoot>
                                 </table>

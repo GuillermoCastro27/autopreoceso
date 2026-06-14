@@ -57,35 +57,42 @@
 
             <div class="row clearfix">
                 <div class="col-sm-2">
+                    <label class="field-label">Código</label>
                     <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Empresa</label>
                     <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
                     <input type="hidden" id="empresa_id">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Sucursal</label>
                     <input type="text" id="suc_razon_social" class="form-control" disabled onkeyup="buscarSucursal();" placeholder="Sucursal">
                     <input type="hidden" id="sucursal_id">
                     <div id="listaSucursal" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Fecha</label>
                     <input type="text" id="soli_cab_fecha" class="datetimepicker form-control" disabled placeholder="Fecha">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Fecha Estimada</label>
                     <input type="text" id="soli_cab_fecha_estimada" class="datetimepicker form-control" disabled placeholder="Fecha Estimada">
                 </div>
             </div>
 
             <div class="row clearfix" style="margin-top:10px;">
                 <div class="col-sm-6">
+                    <label class="field-label">Observaciones</label>
                     <input type="text" id="soli_cab_observaciones" class="form-control" disabled placeholder="Observaciones">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Prioridad</label>
                     <select id="soli_cab_prioridad" class="form-control" disabled>
                         <option value="ALTA">Alta</option>
                         <option value="MEDIA">Media</option>
@@ -94,6 +101,7 @@
                 </div>
 
                 <div class="col-sm-4">
+                    <label class="field-label">Tipo de Servicio</label>
                     <input type="text" id="tipo_serv_nombre" class="form-control" disabled onkeyup="buscarTipoServicio();" placeholder="Tipo de Servicio">
                     <input type="hidden" id="tipo_servicio_id">
                     <div id="listaTipoServ" style="display:none;"></div>
@@ -106,30 +114,36 @@
 
             <div class="row clearfix">
                 <div class="col-sm-3">
+                    <label class="field-label">Nombre</label>
                     <input type="text" id="cli_nombre" class="form-control" disabled onkeyup="buscarCliente();" placeholder="Nombre">
                     <input type="hidden" id="clientes_id">
                     <div id="listaClientes" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Apellido</label>
                     <input type="text" id="cli_apellido" class="form-control" disabled placeholder="Apellido">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">RUC</label>
                     <input type="text" id="cli_ruc" class="form-control" disabled placeholder="RUC">
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Teléfono</label>
                     <input type="text" id="cli_telefono" class="form-control" disabled placeholder="Teléfono">
                 </div>
             </div>
 
             <div class="row clearfix" style="margin-top:10px;">
                 <div class="col-sm-6">
+                    <label class="field-label">Dirección</label>
                     <input type="text" id="cli_direccion" class="form-control" disabled placeholder="Dirección">
                 </div>
 
                 <div class="col-sm-6">
+                    <label class="field-label">Correo</label>
                     <input type="text" id="cli_correo" class="form-control" disabled placeholder="Correo">
                 </div>
             </div>
@@ -146,7 +160,7 @@
 
     </div>
 </div>
-<div class="card" id="detalle" style="display:none">
+<div class="card card-industrial" id="detalle" style="display:none">
     <div class="header">
         <h2>Detalle de la Solicitud</h2>
     </div>

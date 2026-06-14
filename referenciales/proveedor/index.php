@@ -56,31 +56,19 @@
             <div class="row clearfix">
 
                 <div class="col-sm-1">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="id" class="form-control" disabled>
-                            <label class="form-label">Código</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Código</label>
+                    <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="prov_razonsocial" class="form-control" disabled>
-                            <label class="form-label">Razón Social</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Razón Social</label>
+                    <input type="text" id="prov_razonsocial" class="form-control" disabled placeholder="Razón Social">
                 </div>
 
                 <div class="col-sm-3">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="prov_ruc" class="form-control" disabled>
-                            <label class="form-label">Nro. Documento</label>
-                        </div>
-                        <small style="color:#aaa; font-size:11px;">CI: 1234567 &nbsp;|&nbsp; RUC: 80123456-7 &nbsp;|&nbsp; Pasaporte: AA123456</small>
-                    </div>
+                    <label class="field-label">Nro. Documento</label>
+                    <input type="text" id="prov_ruc" class="form-control" disabled placeholder="Nro. Documento">
+                    <small style="color:#aaa; font-size:11px;">CI: 1234567 &nbsp;|&nbsp; RUC: 80123456-7 &nbsp;|&nbsp; Pasaporte: AA123456</small>
                 </div>
 
             </div>
@@ -92,30 +80,18 @@
             <div class="row clearfix">
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="prov_telefono" class="form-control" disabled>
-                            <label class="form-label">Teléfono</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Teléfono</label>
+                    <input type="text" id="prov_telefono" class="form-control" disabled placeholder="Teléfono">
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="prov_correo" class="form-control" disabled>
-                            <label class="form-label">Correo</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Correo</label>
+                    <input type="text" id="prov_correo" class="form-control" disabled placeholder="Correo">
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="prov_direccion" class="form-control" disabled>
-                            <label class="form-label">Dirección</label>
-                        </div>
-                    </div>
+                    <label class="field-label">Dirección</label>
+                    <input type="text" id="prov_direccion" class="form-control" disabled placeholder="Dirección">
                 </div>
 
             </div>
@@ -127,36 +103,24 @@
             <div class="row clearfix">
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="pais_descrpcion" class="form-control" disabled onkeyup="buscarPaises();">
-                            <label class="form-label">País</label>
-                        </div>
-                        <input type="hidden" id="pais_id">
-                        <div id="listaPaises" style="display:none;"></div>
-                    </div>
+                    <label class="field-label">País</label>
+                    <input type="text" id="pais_descrpcion" class="form-control" disabled onkeyup="buscarPaises();" placeholder="País">
+                    <input type="hidden" id="pais_id">
+                    <div id="listaPaises" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="ciu_descripcion" class="form-control" disabled onkeyup="buscarCiudades();">
-                            <label class="form-label">Ciudad</label>
-                        </div>
-                        <input type="hidden" id="ciudad_id">
-                        <div id="listaCiudades" style="display:none;"></div>
-                    </div>
+                    <label class="field-label">Ciudad</label>
+                    <input type="text" id="ciu_descripcion" class="form-control" disabled onkeyup="buscarCiudades();" placeholder="Ciudad">
+                    <input type="hidden" id="ciudad_id">
+                    <div id="listaCiudades" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="form-group form-float">
-                        <div class="form-line">
-                            <input type="text" id="nacio_descripcion" class="form-control" disabled onkeyup="buscarNacionalidades();">
-                            <label class="form-label">Nacionalidad</label>
-                        </div>
-                        <input type="hidden" id="nacionalidad_id">
-                        <div id="listaNacionalidades" style="display:none;"></div>
-                    </div>
+                    <label class="field-label">Nacionalidad</label>
+                    <input type="text" id="nacio_descripcion" class="form-control" disabled onkeyup="buscarNacionalidades();" placeholder="Nacionalidad">
+                    <input type="hidden" id="nacionalidad_id">
+                    <div id="listaNacionalidades" style="display:none;"></div>
                 </div>
 
             </div>

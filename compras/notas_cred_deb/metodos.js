@@ -404,9 +404,7 @@ function grabar() {
             }
         });
     })
-    .fail(function(a, b, c) {
-        alert(c);
-    });
+    .fail(function(a) { mostrarErrores(a); });
 }
 
 
@@ -550,9 +548,14 @@ function editarDetalle() {
     $('#item_costo').removeAttr('disabled');
     $('#tip_imp_nom_det').removeAttr('disabled');
     cargarDepositosNota($('#deposito_id_det').val());
-    // Depósito: solo visualización, no editable
     $('#deposito_id_det').prop('disabled', true);
-    $('#marca_det_mm, #modelo_det_mm').removeAttr('disabled');
+    var itemId = $('#item_id').val();
+    if (itemId && _mmMarcaId) {
+        mmCargarMarcas(itemId, _mmMarcaId);
+        if (_mmModeloId) setTimeout(function(){ mmCargarModelos(itemId, _mmMarcaId, _mmModeloId); }, 350);
+    } else {
+        $('#marca_det_mm, #modelo_det_mm').removeAttr('disabled');
+    }
     mostrarBotonesDetNota('grabar');
 }
 
@@ -619,7 +622,7 @@ function buscarProductos() {
     if (q.length < 2) { $('#listaProductos').html('').hide(); return; }
     debounceNota('prod', function() {
         $.ajax({ url: getUrl() + 'items/buscar', method: 'POST', dataType: 'json',
-                 data: { item_decripcion: q } })
+                 data: { item_decripcion: q, deposito_id: $('#deposito_id_det').val() || null } })
         .done(function(resultado) {
             var lista = '<ul class="list-group">';
             resultado.forEach(function(rs) {
@@ -667,9 +670,7 @@ function buscarTipoImpuestos(){
         $("#listaTipoImpuestos").html(lista);
         $("#listaTipoImpuestos").attr("style","display:block; position:absolute; z-index:2000;");
     })
-    .fail(function(a,b,c){
-        alert(c);
-    })
+    .fail(function(a) { mostrarErrores(a); })
 }
 
 function seleccionTipoImpuestos(id,tip_imp_nom,tipo_imp_tasa){
@@ -679,6 +680,10 @@ function seleccionTipoImpuestos(id,tip_imp_nom,tipo_imp_tasa){
 
     $("#listaTipoImpuestos").html("");
     $("#listaTipoImpuestos").attr("style","display:none;");
+}
+
+function _esc(s) {
+    return (s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 }
 
 function listarDetalles() {
@@ -707,11 +712,15 @@ function listarDetalles() {
                 TotalIva10 += iva;
             }
 
+            var _modNomNota = rs.modelo_nom ? rs.modelo_nom + (rs.modelo_año ? ' (' + rs.modelo_año + ')' : '') : '';
             lista += '<tr class="item-list" onclick="seleccionDetalle('
                 + rs.item_id + ',' + rs.tipo_impuesto_id + ",'"
-                + rs.item_decripcion + "','" + (rs.tip_imp_nom||'') + "',"
+                + _esc(rs.item_decripcion) + "','" + _esc(rs.tip_imp_nom||'') + "',"
                 + cantidad + ',' + costo + ',' + (rs.deposito_id||0) + ',' + (rs.stock_disponible||0) + ','
-                + (rs.marca_id||0) + ',' + (rs.modelo_id||0) + ')">';
+                + (rs.marca_id||0) + ',' + (rs.modelo_id||0) + ",'"
+                + _esc(rs.dep_nombre||'') + "','"
+                + _esc(rs.marc_nom||'') + "','"
+                + _esc(_modNomNota) + ')">';
             lista += '<td>' + rs.item_id + '</td>';
             lista += '<td>' + rs.item_decripcion + '</td>';
             lista += '<td>' + (rs.marc_nom||'-') + '</td>';
@@ -741,12 +750,10 @@ function listarDetalles() {
             $("#btnConfirmar").attr("disabled", "true"); // Deshabilitar si no hay detalles o la orden no está pendiente
         }
     })
-    .fail(function(a, b, c) {
-        alert("Error al obtener detalles: " + c);
-    });
+    .fail(function(a) { mostrarErrores(a); });
 }
 
-function seleccionDetalle(item_id, tipo_impuesto_id, item_decripcion, tip_imp_nom, cantidad, costo, deposito_id, stock_disponible, marca_id, modelo_id) {
+function seleccionDetalle(item_id, tipo_impuesto_id, item_decripcion, tip_imp_nom, cantidad, costo, deposito_id, stock_disponible, marca_id, modelo_id, dep_nombre, marc_nom, modelo_nom_full) {
     $('#item_id').val(item_id);
     $('#tipo_impuesto_id').val(tipo_impuesto_id);
     $('#item_decripcion').val(item_decripcion);
@@ -754,12 +761,32 @@ function seleccionDetalle(item_id, tipo_impuesto_id, item_decripcion, tip_imp_no
     $('#notas_comp_det_cantidad').val(cantidad);
     $('#item_costo').val(costo);
     $('#stock_disponible_det').val(stock_disponible || 0);
-    // Limpiar aviso de stock al seleccionar un nuevo ítem
     $('#notas_comp_det_cantidad').css('border-color', '');
     $('#avisoStockNota').hide();
     $('#btnGrabarDetalle').prop('disabled', false);
-    cargarDepositosNota(deposito_id);
-    mmAutocompletar(item_id, marca_id, modelo_id);
+    _mmMarcaId  = marca_id  || null;
+    _mmModeloId = modelo_id || null;
+    var $dep = $('#deposito_id_det');
+    if (deposito_id && dep_nombre) {
+        $dep.html('<option value="' + deposito_id + '" selected>' + dep_nombre + '</option>');
+    } else {
+        $dep.html('<option value="">-- Depósito --</option>');
+    }
+    $dep.prop('disabled', true);
+    var $marca = $('#marca_det_mm');
+    if (marca_id && marc_nom) {
+        $marca.html('<option value="' + marca_id + '" selected>' + marc_nom + '</option>');
+    } else {
+        $marca.html('<option value="">-- Marca --</option>');
+    }
+    $marca.prop('disabled', true);
+    var $modelo = $('#modelo_det_mm');
+    if (modelo_id && modelo_nom_full) {
+        $modelo.html('<option value="' + modelo_id + '" selected>' + modelo_nom_full + '</option>');
+    } else {
+        $modelo.html('<option value="">-- Modelo --</option>');
+    }
+    $modelo.prop('disabled', true);
     $('#listaProductos').html('').hide();
     $(".form-line").addClass("focused");
 }
@@ -862,9 +889,7 @@ function buscarEmpresas() {
             seleccionEmpresa(primeraEmpresa.id, primeraEmpresa.emp_razon_social, primeraEmpresa.emp_direccion, primeraEmpresa.emp_telefono, primeraEmpresa.emp_correo);
         }
     })
-    .fail(function(a,b,c) {
-        alert(c);
-    });
+    .fail(function(a) { mostrarErrores(a); });
 }
 
 function seleccionEmpresa(id, emp_razon_social, emp_direccion, emp_telefono, emp_correo) {
@@ -893,9 +918,7 @@ function buscarSucursal(){
         $("#listaSucursal").html(lista);
         $("#listaSucursal").attr("style","display:block; position:absolute; z-index:2000;");
     })
-    .fail(function(a,b,c){
-        alert(c);
-    })
+    .fail(function(a) { mostrarErrores(a); })
 }
 
 function seleccionSucursal(empresa_id,suc_razon_social,suc_direccion,suc_telefono,suc_correo){
@@ -917,11 +940,11 @@ function cargarFuncionarioIdLogueado() {
         if (datosSesion && datosSesion.user && datosSesion.user.funcionario_id) {
             $('#funcionario_id').val(datosSesion.user.funcionario_id);
         } else {
-            alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');
+            swal({ title: 'Error', text: 'No se puede identificar al usuario. Inicie sesión nuevamente.', type: 'error' });
             window.location.href = '../../index.html';
         }
     } catch (error) {
-        alert('Error al cargar datos del usuario. Inicie sesión nuevamente.');
+        swal({ title: 'Error', text: 'Error al cargar datos del usuario. Inicie sesión nuevamente.', type: 'error' });
         window.location.href = '../../index.html';
     }
 }

@@ -1,6 +1,21 @@
-listar();
-
 var tablaIniciada = false;
+
+$(function() {
+    $('.datetimepicker').bootstrapMaterialDatePicker({
+        format:      'DD/MM/YYYY',
+        time:        false,
+        clearButton: true,
+        weekStart:   1
+    });
+});
+
+function parseFecha(val) {
+    if (!val || val.length !== 10) return '';
+    var p = val.split('/');
+    return p.length === 3 ? p[2] + '-' + p[1] + '-' + p[0] : '';
+}
+
+listar();
 
 var ETIQUETAS = {
     'exitoso':              { label: 'Exitoso',              clase: 'badge-exitoso'           },
@@ -32,8 +47,8 @@ function listar() {
         data: {
             login:     $('#filtro_login').val().trim(),
             resultado: $('#filtro_resultado').val(),
-            desde:     $('#filtro_desde').val(),
-            hasta:     $('#filtro_hasta').val()
+            desde:     parseFecha($('#filtro_desde').val()),
+            hasta:     parseFecha($('#filtro_hasta').val())
         }
     })
     .done(function(data) {

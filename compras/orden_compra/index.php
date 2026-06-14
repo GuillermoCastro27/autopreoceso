@@ -60,21 +60,25 @@
 
             <div class="row clearfix">
                 <div class="col-sm-1">
+                    <label class="field-label">Código</label>
                     <input type="text" id="id" class="form-control" disabled placeholder="Código">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Empresa</label>
                     <input type="text" id="emp_razon_social" class="form-control" disabled placeholder="Empresa">
                     <input type="hidden" id="empresa_id">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Sucursal</label>
                     <input type="text" id="suc_razon_social" class="form-control" disabled onkeyup="buscarSucursal();" placeholder="Sucursal">
                     <input type="hidden" id="sucursal_id">
                     <div id="listaSucursal" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Condición de Pago</label>
                     <select id="condicion_pago" class="form-control" disabled onchange="controlarCamposPago();">
                         <option value="CONTADO">Al contado</option>
                         <option value="CREDITO">A crédito</option>
@@ -82,16 +86,19 @@
                 </div>
 
                 <div class="col-sm-3">
+                    <label class="field-label">Intervalo Vencimiento</label>
                     <input type="text" id="ord_comp_intervalo_fecha_vence" class="datetimepicker form-control" disabled placeholder="Intervalo Vencimiento">
                     <small id="avisoVenceOC" style="color:#e74c3c;display:none;"></small>
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Fecha</label>
                     <input type="text" id="ord_comp_fecha" class="datetimepicker form-control" readonly placeholder="Fecha">
                     <small id="avisoFechaOC" style="color:#e74c3c;display:none;"></small>
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Cuota</label>
                     <input type="text" id="ord_comp_cant_cuota" class="form-control" disabled placeholder="Cuota">
                 </div>
             </div>
@@ -150,20 +157,24 @@
             <!-- Proveedor -->
             <div class="row clearfix" style="margin-top:6px;">
                 <div class="col-sm-4">
+                    <label class="field-label">Proveedor</label>
                     <input type="hidden" id="proveedor_id" value="0">
                     <input type="text" id="prov_razonsocial" class="form-control" disabled onkeyup="buscarProveedorDirecto();" placeholder="Proveedor">
                     <div id="listaProveedor" style="display:none;"></div>
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">RUC</label>
                     <input type="text" id="prov_ruc" class="form-control" disabled placeholder="RUC">
                 </div>
 
                 <div class="col-sm-2">
+                    <label class="field-label">Teléfono</label>
                     <input type="text" id="prov_telefono" class="form-control" disabled placeholder="Teléfono">
                 </div>
 
                 <div class="col-sm-4">
+                    <label class="field-label">Correo</label>
                     <input type="text" id="prov_correo" class="form-control" disabled placeholder="Correo">
                 </div>
             </div>
@@ -199,35 +210,44 @@
                 <div class="section-title">Productos</div>
                 <div class="row clearfix">
                     <div class="col-sm-1">
+                        <label class="field-label">Cód.</label>
                         <input type="text" id="item_id" class="form-control" disabled placeholder="Cód">
                     </div>
                     <div class="col-sm-2">
-                        <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
+                        <label class="field-label">Producto</label>
+                        <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Buscar...">
                         <div id="listaProductos" style="display:none;"></div>
                     </div>
                     <div class="col-sm-1">
-                        <input type="text" id="orden_compra_det_cantidad" class="form-control" disabled placeholder="Cant.">
+                        <label class="field-label">Cant.</label>
+                        <input type="text" id="orden_compra_det_cantidad" class="form-control" disabled placeholder="0">
                     </div>
                     <div class="col-sm-1">
-                        <input type="text" id="cantidad_stock" class="form-control" disabled placeholder="Stock">
+                        <label class="field-label">Stock</label>
+                        <input type="text" id="cantidad_stock" class="form-control" disabled placeholder="0">
                     </div>
                     <div class="col-sm-2">
-                        <input type="text" id="item_costo" class="form-control" disabled placeholder="Costo">
+                        <label class="field-label">Costo</label>
+                        <input type="text" id="item_costo" class="form-control" disabled placeholder="0">
                     </div>
                     <div class="col-sm-2">
-                        <input type="text" id="tip_imp_nom" class="form-control" disabled placeholder="Impuesto">
+                        <label class="field-label">Impuesto</label>
+                        <input type="text" id="tip_imp_nom" class="form-control" disabled placeholder="—">
                     </div>
                     <div class="col-sm-2">
+                        <label class="field-label">Marca</label>
                         <select class="form-control" id="marca_det_oc" disabled>
                             <option value="">-- Marca --</option>
                         </select>
                     </div>
                     <div class="col-sm-2">
+                        <label class="field-label">Modelo</label>
                         <select class="form-control" id="modelo_det_oc" disabled>
                             <option value="">-- Modelo --</option>
                         </select>
                     </div>
                     <div class="col-sm-2">
+                        <label class="field-label">Depósito</label>
                         <select class="form-control" id="deposito_id_det" disabled>
                             <option value="">-- Depósito --</option>
                         </select>

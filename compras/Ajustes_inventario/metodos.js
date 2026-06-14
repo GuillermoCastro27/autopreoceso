@@ -256,10 +256,7 @@ function listar(){
         $("#tableBody").html(lista);
         formatoTabla();
     })
-    .fail(function(xhr, status, error) {
-        alert("Error: " + error);
-        console.error(xhr.responseText);
-    });
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 function seleccionAjuste(ajuste_id,empresa_id, sucursal_id,emp_razon_social,suc_razon_social, ajus_cab_fecha, motivo_ajuste_id, descripcion,tipo_ajuste, ajus_cab_estado){
     $("#id").val(ajuste_id);
@@ -599,10 +596,7 @@ function listarDetalles(){
             $("#btnConfirmar").attr("disabled","true");
         }
     })
-    .fail(function(xhr, status, error) {
-        alert("Error: " + error);
-        console.error(xhr.responseText);
-    })
+    .fail(function(xhr) { mostrarErrores(xhr); })
 }
 function seleccionDetalle(item_id, item_decripcion, ajus_det_cantidad, cantidad_stock, deposito_id, marca_id, modelo_id) {
     $("#item_id").val(item_id);
@@ -632,10 +626,7 @@ function buscarEmpresas() {
             seleccionEmpresa(primeraEmpresa.id, primeraEmpresa.emp_razon_social, primeraEmpresa.emp_direccion, primeraEmpresa.emp_telef, primeraEmpresa.emp_correo);
         }
     })
-    .fail(function(a,b,c) {
-        alert(c);
-        console.log(a.responseText);
-    });
+    .fail(function(xhr) { mostrarErrores(xhr); });
 }
 
 function seleccionEmpresa(id, emp_razon_social, emp_direccion, emp_telef, emp_correo) {
@@ -686,12 +677,12 @@ function cargarFuncionarioIdLogueado() {
             console.log('User ID cargado exitosamente:', datosSesion.user.funcionario_id);
         } else {
             console.error('No se encontraron datos de sesión válidos');
-            alert('Error: No se puede identificar al usuario. Inicie sesión nuevamente.');
+            swal({ title: 'Error', text: 'No se puede identificar al usuario. Inicie sesión nuevamente.', type: 'error' });
             window.location.href = '../../index.html';
         }
     } catch (error) {
         console.error('Error al cargar datos de usuario:', error);
-        alert('Error al cargar datos del usuario. Inicie sesión nuevamente.');
+        swal({ title: 'Error', text: 'Error al cargar datos del usuario. Inicie sesión nuevamente.', type: 'error' });
         window.location.href = '../../index.html';
     }
 }
