@@ -269,6 +269,25 @@
         <div class="col-sm-2">
             <input type="text" id="contrato_serv_det_costo" class="form-control" disabled placeholder="Costo">
         </div>
+        <!-- Marca -->
+        <div class="col-sm-2" style="margin-top:10px;">
+            <select class="form-control" id="marca_det_mm" disabled>
+                <option value="">-- Marca --</option>
+            </select>
+        </div>
+        <!-- Modelo -->
+        <div class="col-sm-2" style="margin-top:10px;">
+            <select class="form-control" id="modelo_det_mm" disabled>
+                <option value="">-- Modelo --</option>
+            </select>
+        </div>
+        <!-- Depósito -->
+        <div class="col-sm-2" style="margin-top:10px;">
+            <select class="form-control" id="deposito_id_det" disabled>
+                <option value="">-- Depósito --</option>
+            </select>
+        </div>
+
         <div class="col-sm-3" style="margin-top:10px;">
             <div class="icon-button-demo">
                 <button type="button" id="btnAgregarDetalle" class="btn btn-success waves-effect" onclick="agregarDetalle();"><i class="material-icons">add</i></button>
@@ -372,7 +391,8 @@
 <script src="../../js/admin.js?v=3"></script>
 <script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js"></script>
-<script src="metodos.js?v=2"></script>
+<script src="../../js/marcaModelo.js"></script>
+<script src="metodos.js"></script>
 
 <script>
 function controlarCamposPago() {

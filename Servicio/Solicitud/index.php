@@ -215,6 +215,13 @@
                 </select>
             </div>
 
+            <!-- Depósito -->
+            <div class="col-sm-2" style="margin-top:10px">
+                <select class="form-control" id="deposito_id_det" disabled>
+                    <option value="">-- Depósito --</option>
+                </select>
+            </div>
+
             <!-- Botones -->
             <div class="col-sm-4" style="margin-top:10px">
                 <button id="btnAgregarDetalle" class="btn btn-success waves-effect" onclick="agregarDetalle();">
