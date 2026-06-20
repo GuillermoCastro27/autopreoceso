@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("colordialog","km",{clear:"សម្អាត",highlight:"បន្លិច​ពណ៌",options:"ជម្រើស​ពណ៌",selected:"ពណ៌​ដែល​បាន​រើស",title:"រើស​ពណ៌"});
+CKEDITOR.plugins.setLang("colordialog","km",{clear:"ážŸáž˜áŸ’áž¢áž¶áž",highlight:"áž”áž“áŸ’áž›áž·áž…â€‹áž–ážŽáŸŒ",options:"áž‡áž˜áŸ’ážšáž¾ážŸâ€‹áž–ážŽáŸŒ",selected:"áž–ážŽáŸŒâ€‹ážŠáŸ‚áž›â€‹áž”áž¶áž“â€‹ážšáž¾ážŸ",title:"ážšáž¾ážŸâ€‹áž–ážŽáŸŒ"});

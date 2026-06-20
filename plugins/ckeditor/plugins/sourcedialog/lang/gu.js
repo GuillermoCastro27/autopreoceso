@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("sourcedialog","gu",{toolbar:"મૂળ કે પ્રાથમિક દસ્તાવેજ",title:"મૂળ કે પ્રાથમિક દસ્તાવેજ"});
+CKEDITOR.plugins.setLang("sourcedialog","gu",{toolbar:"àª®à«‚àª³ àª•à«‡ àªªà«àª°àª¾àª¥àª®àª¿àª• àª¦àª¸à«àª¤àª¾àªµà«‡àªœ",title:"àª®à«‚àª³ àª•à«‡ àªªà«àª°àª¾àª¥àª®àª¿àª• àª¦àª¸à«àª¤àª¾àªµà«‡àªœ"});

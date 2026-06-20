@@ -407,3 +407,4 @@ function seleccionarPerfil(id, descripcion) {
     $("#perfil_desc").val(descripcion);
     $("#listaPerfil").hide().html("");
 }
+

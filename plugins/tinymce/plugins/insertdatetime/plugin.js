@@ -119,3 +119,4 @@ tinymce.PluginManager.add('insertdatetime', function(editor) {
 		context: 'insert'
 	});
 });
+

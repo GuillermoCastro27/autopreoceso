@@ -174,7 +174,7 @@
         </div>
         <div class="col-sm-3" style="margin-top:10px;">
             <label class="field-label">Marca</label>
-            <input type="text" id="marc_nom" class="form-control" disabled placeholder="Marca">
+            <input type="text" id="mar_nom" class="form-control" disabled placeholder="Marca">
         </div>
         <div class="col-sm-3" style="margin-top:10px;">
             <label class="field-label">Modelo</label>
@@ -293,3 +293,4 @@
 
 </body>
 </html>
+

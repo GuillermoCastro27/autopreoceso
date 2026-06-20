@@ -26,12 +26,12 @@
     noneSelectedText: 'Niekas nepasirinkta',
     noneResultsText: 'Niekas nesutapo su {0}',
     countSelectedText: function (numSelected, numTotal) {
-      return (numSelected == 1) ? "{0} elementas pasirinktas" : "{0} elementai(-ų) pasirinkta";
+      return (numSelected == 1) ? "{0} elementas pasirinktas" : "{0} elementai(-Å³) pasirinkta";
     },
     maxOptionsText: function (numAll, numGroup) {
       return [
-        (numAll == 1) ? 'Pasiekta riba ({n} elementas daugiausiai)' : 'Riba pasiekta ({n} elementai(-ų) daugiausiai)',
-        (numGroup == 1) ? 'Grupės riba pasiekta ({n} elementas daugiausiai)' : 'Grupės riba pasiekta ({n} elementai(-ų) daugiausiai)'
+        (numAll == 1) ? 'Pasiekta riba ({n} elementas daugiausiai)' : 'Riba pasiekta ({n} elementai(-Å³) daugiausiai)',
+        (numGroup == 1) ? 'GrupÄ—s riba pasiekta ({n} elementas daugiausiai)' : 'GrupÄ—s riba pasiekta ({n} elementai(-Å³) daugiausiai)'
       ];
     },
     selectAllText: 'Pasirinkti visus',
@@ -42,3 +42,4 @@
 
 
 }));
+

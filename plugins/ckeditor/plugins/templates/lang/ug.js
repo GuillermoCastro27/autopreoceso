@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("templates","ug",{button:"قېلىپ",emptyListMsg:"(قېلىپ يوق)",insertOption:"نۆۋەتتىكى مەزمۇننى ئالماشتۇر",options:"قېلىپ تاللانمىسى",selectPromptMsg:"تەھرىرلىگۈچنىڭ مەزمۇن قېلىپىنى تاللاڭ:",title:"مەزمۇن قېلىپى"});
+CKEDITOR.plugins.setLang("templates","ug",{button:"Ù‚ÛÙ„Ù‰Ù¾",emptyListMsg:"(Ù‚ÛÙ„Ù‰Ù¾ ÙŠÙˆÙ‚)",insertOption:"Ù†Û†Û‹Û•ØªØªÙ‰ÙƒÙ‰ Ù…Û•Ø²Ù…Û‡Ù†Ù†Ù‰ Ø¦Ø§Ù„Ù…Ø§Ø´ØªÛ‡Ø±",options:"Ù‚ÛÙ„Ù‰Ù¾ ØªØ§Ù„Ù„Ø§Ù†Ù…Ù‰Ø³Ù‰",selectPromptMsg:"ØªÛ•Ú¾Ø±Ù‰Ø±Ù„Ù‰Ú¯ÛˆÚ†Ù†Ù‰Ú­ Ù…Û•Ø²Ù…Û‡Ù† Ù‚ÛÙ„Ù‰Ù¾Ù‰Ù†Ù‰ ØªØ§Ù„Ù„Ø§Ú­:",title:"Ù…Û•Ø²Ù…Û‡Ù† Ù‚ÛÙ„Ù‰Ù¾Ù‰"});

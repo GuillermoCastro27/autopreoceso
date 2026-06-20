@@ -379,7 +379,7 @@ var _ = _self.Prism = {
 
 				pattern = pattern.pattern || pattern;
 
-				for (var i=0; i<strarr.length; i++) { // Don’t cache length as it changes during the loop
+				for (var i=0; i<strarr.length; i++) { // Donâ€™t cache length as it changes during the loop
 
 					var str = strarr[i];
 

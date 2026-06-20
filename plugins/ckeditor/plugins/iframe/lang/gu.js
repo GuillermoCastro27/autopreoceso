@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("iframe","gu",{border:"ફ્રેમ બોર્ડેર બતાવવી",noUrl:"iframe URL ટાઈપ્ કરો",scrolling:"સ્ક્રોલબાર ચાલુ કરવા",title:"IFrame વિકલ્પો",toolbar:"IFrame"});
+CKEDITOR.plugins.setLang("iframe","gu",{border:"àª«à«àª°à«‡àª® àª¬à«‹àª°à«àª¡à«‡àª° àª¬àª¤àª¾àªµàªµà«€",noUrl:"iframe URL àªŸàª¾àªˆàªªà« àª•àª°à«‹",scrolling:"àª¸à«àª•à«àª°à«‹àª²àª¬àª¾àª° àªšàª¾àª²à« àª•àª°àªµàª¾",title:"IFrame àªµàª¿àª•àª²à«àªªà«‹",toolbar:"IFrame"});

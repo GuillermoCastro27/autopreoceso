@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("mathjax","vi",{title:"Toán học bằng TeX",button:"Toán",dialogInput:"Nhập mã TeX ở đây",docUrl:"http://en.wikibooks.org/wiki/LaTeX/Mathematics",docLabel:"Tài liệu TeX",loading:"đang nạp...",pathName:"toán"});
+CKEDITOR.plugins.setLang("mathjax","vi",{title:"ToÃ¡n há»c báº±ng TeX",button:"ToÃ¡n",dialogInput:"Nháº­p mÃ£ TeX á»Ÿ Ä‘Ã¢y",docUrl:"http://en.wikibooks.org/wiki/LaTeX/Mathematics",docLabel:"TÃ i liá»‡u TeX",loading:"Ä‘ang náº¡p...",pathName:"toÃ¡n"});

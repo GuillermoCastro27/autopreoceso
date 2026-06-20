@@ -409,8 +409,8 @@
 
         // Vehículo
         var vehiculoLabel = '';
-        if (cab.marc_nom || cab.modelo_nom) {
-            vehiculoLabel = ((cab.marc_nom || '') + ' ' + (cab.modelo_nom || '')).trim();
+        if (cab.mar_nom || cab.modelo_nom) {
+            vehiculoLabel = ((cab.mar_nom || '') + ' ' + (cab.modelo_nom || '')).trim();
         }
         document.getElementById('remVehiculo').textContent   = vehiculoLabel || '—';
         document.getElementById('remPlaca').textContent      = cab.tv_det_placa || '—';
@@ -429,7 +429,7 @@
 
             html += '<tr>' +
                 '<td class="tc">' + (idx + 1) + '</td>' +
-                '<td>' + (it.item_decripcion || '') + '</td>' +
+                '<td>' + (it.item_descripcion || '') + '</td>' +
                 '<td>' + origenBadge + '</td>' +
                 '<td class="tc">' + fmt(it.nota_remi_vent_det_cantidad) + '</td>' +
                 '<td class="tr">' + fmt(it.nota_remi_vent_det_precio) + '</td>' +
@@ -489,3 +489,4 @@
 </script>
 </body>
 </html>
+

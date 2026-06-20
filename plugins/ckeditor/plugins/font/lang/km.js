@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("font","km",{fontSize:{label:"ទំហំ",voiceLabel:"ទំហំ​អក្សរ",panelTitle:"ទំហំ​អក្សរ"},label:"ពុម្ព​អក្សរ",panelTitle:"ឈ្មោះ​ពុម្ព​អក្សរ",voiceLabel:"ពុម្ព​អក្សរ"});
+CKEDITOR.plugins.setLang("font","km",{fontSize:{label:"áž‘áŸ†áž áŸ†",voiceLabel:"áž‘áŸ†áž áŸ†â€‹áž¢áž€áŸ’ážŸážš",panelTitle:"áž‘áŸ†áž áŸ†â€‹áž¢áž€áŸ’ážŸážš"},label:"áž–áž»áž˜áŸ’áž–â€‹áž¢áž€áŸ’ážŸážš",panelTitle:"ážˆáŸ’áž˜áŸ„áŸ‡â€‹áž–áž»áž˜áŸ’áž–â€‹áž¢áž€áŸ’ážŸážš",voiceLabel:"áž–áž»áž˜áŸ’áž–â€‹áž¢áž€áŸ’ážŸážš"});

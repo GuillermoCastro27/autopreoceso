@@ -1,4 +1,4 @@
-﻿// Lista los registros de pedidos utilizando DataTables
+// Lista los registros de pedidos utilizando DataTables
 // Cargar funcionario_id del usuario logueado
 cargarFuncionarioIdLogueado();
 listar();
@@ -259,16 +259,16 @@ function _imprimirOrdenLegacy_unused() {
         detalles.forEach(function(d, i) {
             var sub = (d.orden_compra_det_cantidad||0) * (d.item_costo||0);
             var iva = 0;
-            if (d.tip_imp_nom === 'IVA10') iva = sub/11;
-            else if (d.tip_imp_nom === 'IVA5') iva = sub/21;
+            if (d.tipo_imp_nom === 'IVA10') iva = sub/11;
+            else if (d.tipo_imp_nom === 'IVA5') iva = sub/21;
             total += sub; totalIVA += iva;
 
             filas += '<tr>'
                 + '<td style="text-align:center;">' + (i+1) + '</td>'
-                + '<td>' + d.item_decripcion + '</td>'
+                + '<td>' + d.item_descripcion + '</td>'
                 + '<td style="text-align:right;">' + (d.orden_compra_det_cantidad||0) + '</td>'
                 + '<td style="text-align:right;">' + Number(d.item_costo||0).toLocaleString('es-PY') + '</td>'
-                + '<td>' + (d.tip_imp_nom||'-') + '</td>'
+                + '<td>' + (d.tipo_imp_nom||'-') + '</td>'
                 + '<td style="text-align:right;">' + Number(sub).toLocaleString('es-PY') + '</td>'
                 + '<td style="text-align:right;">' + Number(iva).toLocaleString('es-PY') + '</td>'
                 + '<td>' + (d.dep_nombre||'-') + '</td>'
@@ -480,10 +480,24 @@ function grabar() {
                 //location.reload(true);
                 $("#id").val(resultado.registro.id);
                 $("#detalle").attr("style","display:block;");
-                $("#formDetalles").attr("style","display:block;");
                 listarDetalles();
                 if(resultado.registro.ord_comp_estado!="PENDIENTE"){
                     location.reload(true);
+                } else {
+                    $("#ord_comp_fecha").attr("disabled", true);
+                    $("#condicion_pago").attr("disabled", true);
+                    $("#ord_comp_intervalo_fecha_vence").attr("disabled", true);
+                    $("#ord_comp_cant_cuota").attr("disabled", true);
+                    $("#presupuestos").attr("disabled", true);
+                    $("#pedido_desc").attr("disabled", true);
+                    $("#prov_razonsocial").attr("disabled", true);
+                    $("#seccionOrigen").hide();
+                    $("#formDetalles").attr("style","display:block;");
+                    $("#btnGrabar").attr("disabled", true);
+                    $("#btnAgregar").attr("disabled", true);
+                    $("#btnCancelar").removeAttr("disabled");
+                    $("#btnEditar").removeAttr("disabled");
+                    $("#btnEliminar").removeAttr("disabled");
                 }
             }
         });
@@ -592,7 +606,7 @@ function cargarMarcasOC(itemId, marcaSelId) {
         var opts = '<option value="">-- Marca --</option>';
         data.forEach(function(m) {
             var id = m.marca_id;
-            opts += '<option value="'+id+'"'+(id==marcaSelId?' selected':'')+'>'+m.marc_nom+'</option>';
+            opts += '<option value="'+id+'"'+(id==marcaSelId?' selected':'')+'>'+m.mar_nom+'</option>';
         });
         $('#marca_det_oc').html(opts).removeAttr('disabled');
         if (marcaSelId) { _marcaIdOC = marcaSelId; cargarModelosOC(itemId, marcaSelId, null); }
@@ -649,9 +663,9 @@ function cargarDepositosOrden(selectedId, callback) {
 function agregarDetalle(){
     $("#txtOperacionDetalle").val(1);
     $("#item_id").val("");
-    $("#item_decripcion").val("").removeAttr("disabled");
+    $("#item_descripcion").val("").removeAttr("disabled");
     $("#orden_compra_det_cantidad").val("").removeAttr("disabled");
-    $("#tip_imp_nom").val("").removeAttr("disabled");
+    $("#tipo_imp_nom").val("").removeAttr("disabled");
     $("#item_costo").val("").removeAttr("disabled");
     $("#cantidad_stock").val("");
     _marcaIdOC  = null;
@@ -674,9 +688,9 @@ function agregarDetalle(){
 // Prepara el formulario para editar un detalle existente del pedido
 function editarDetalle(){
     $("#txtOperacionDetalle").val(2);
-    $("#item_decripcion").removeAttr("disabled");
+    $("#item_descripcion").removeAttr("disabled");
     $("#orden_compra_det_cantidad").removeAttr("disabled");
-    $("#tip_imp_nom").removeAttr("disabled");
+    $("#tipo_imp_nom").removeAttr("disabled");
     $("#item_costo").removeAttr("disabled");
     var itemId = $('#item_id').val();
     cargarMarcasOC(itemId, _marcaIdOC);
@@ -710,10 +724,10 @@ function cancelarDetalle(){
 
     $("#txtOperacionDetalle").val(0);
     $("#item_id").val("");
-    $("#item_decripcion").val("").attr("disabled", true);
+    $("#item_descripcion").val("").attr("disabled", true);
     $("#orden_compra_det_cantidad").val("").attr("disabled", true);
     $("#item_costo").val("").attr("disabled", true);
-    $("#tip_imp_nom").val("").attr("disabled", true);
+    $("#tipo_imp_nom").val("").attr("disabled", true);
     $("#tipo_impuesto_id").val("");
     $("#cantidad_stock").val("");
     _marcaIdOC  = null;
@@ -781,10 +795,10 @@ function grabarDetalle() {
 
     $("#txtOperacionDetalle").val(0);
     $("#item_id").val("");
-    $("#item_decripcion").val("").attr("disabled", true);
+    $("#item_descripcion").val("").attr("disabled", true);
     $("#orden_compra_det_cantidad").val("").attr("disabled", true);
     $("#item_costo").val("").attr("disabled", true);
-    $("#tip_imp_nom").val("").attr("disabled", true);
+    $("#tipo_imp_nom").val("").attr("disabled", true);
     $("#tipo_impuesto_id").val("");
     $("#cantidad_stock").val("");
     $("#deposito_id_det").html('<option value="">-- Depósito --</option>').attr("disabled", true);
@@ -803,7 +817,7 @@ function buscarProductos(){
         method: "POST",
         dataType: "json",
         data: {
-            "item_decripcion": $("#item_decripcion").val(),
+            "item_descripcion": $("#item_descripcion").val(),
             "tipo_descripcion": "PRODUCTO",
             "deposito_id": $("#deposito_id_det").val() || null
         }
@@ -814,13 +828,13 @@ function buscarProductos(){
             var stock = rs.cantidad_disponible != null ? rs.cantidad_disponible : 0;
             lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto("
                 + rs.item_id + ",'"
-                + rs.item_decripcion + "',"
+                + rs.item_descripcion + "',"
                 + rs.tipo_impuesto_id + ","
                 + (rs.item_costo || 0) + ",'"
-                + rs.tip_imp_nom + "',"
+                + rs.tipo_imp_nom + "',"
                 + rs.tipo_imp_tasa + ","
                 + stock + ")\">"
-                + rs.item_decripcion
+                + rs.item_descripcion
                 + " <span class='badge' style='background:#3b82f6;color:#fff;'>Stock: " + stock + "</span>"
                 + "</li>";
         }
@@ -834,12 +848,12 @@ function buscarProductos(){
 }
 
 // Rellena el campo de producto seleccionado.
-function seleccionProducto(item_id, item_decripcion, tipo_impuesto_id, item_costo, tip_imp_nom, tipo_imp_tasa, cantidad_disponible){
+function seleccionProducto(item_id, item_descripcion, tipo_impuesto_id, item_costo, tipo_imp_nom, tipo_imp_tasa, cantidad_disponible){
     $("#item_id").val(item_id);
-    $("#item_decripcion").val(item_decripcion);
+    $("#item_descripcion").val(item_descripcion);
     $("#item_costo").val(formatearNumero(item_costo));
     $("#tipo_impuesto_id").val(tipo_impuesto_id);
-    $("#tip_imp_nom").val(tip_imp_nom);
+    $("#tipo_imp_nom").val(tipo_imp_nom);
     $("#cantidad_stock").val('' + cantidad_disponible);
     _marcaIdOC  = null;
     _modeloIdOC = null;
@@ -858,7 +872,7 @@ function buscarTipoImpuestos(){
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionTipoImpuestos("+rs.id+",'"+rs.tip_imp_nom+"','"+rs.tipo_imp_tasa+"');\">"+rs.tip_imp_nom+","+rs.tipo_imp_tasa+"</li>";
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionTipoImpuestos("+rs.id+",'"+rs.tipo_imp_nom+"','"+rs.tipo_imp_tasa+"');\">"+rs.tipo_imp_nom+","+rs.tipo_imp_tasa+"</li>";
         }
         lista += "</ul>";
         $("#listaTipoImpuestos").html(lista);
@@ -869,9 +883,9 @@ function buscarTipoImpuestos(){
     })
 }
 
-function seleccionTipoImpuestos(id,tip_imp_nom,tipo_imp_tasa){
+function seleccionTipoImpuestos(id,tipo_imp_nom,tipo_imp_tasa){
     $("#tipo_impuesto_id").val(id);
-    $("#tip_imp_nom").val(tip_imp_nom);
+    $("#tipo_imp_nom").val(tipo_imp_nom);
     $("#tipo_imp_tasa").val(tipo_imp_tasa);
 
     $("#listaTipoImpuestos").html("");
@@ -916,7 +930,7 @@ function listarDetalles() {
                 const cantidad = rs.orden_compra_det_cantidad || 0;
                 const costo    = rs.item_costo || 0;
                 const subtotal = cantidad * costo;
-                const imp = (rs.tip_imp_nom || '').toUpperCase();
+                const imp = (rs.tipo_imp_nom || '').toUpperCase();
                 let iva = 0;
                 if (imp.indexOf('EXENT') !== -1) {
                     iva = 0;
@@ -930,14 +944,14 @@ function listarDetalles() {
 
                 var _depNomOC = getNombreDeposito(rs.deposito_id);
                 var _modNomOC = rs.modelo_nom ? rs.modelo_nom + (rs.modelo_año ? ' (' + rs.modelo_año + ')' : '') : '';
-                lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" + rs.item_id + "," + rs.tipo_impuesto_id + ",'" + _esc(rs.item_decripcion) + "','" + _esc(rs.tip_imp_nom || '-') + "'," + cantidad + ", " + costo + ", '" + formatearNumero(subtotal) + "', '" + formatearNumero(iva) + "'," + (rs.deposito_id||0) + "," + rs.cantidad_disponible + "," + (rs.marca_id||0) + "," + (rs.modelo_id||0) + ",'" + _esc(_depNomOC) + "','" + _esc(rs.marc_nom||'') + "','" + _esc(_modNomOC) + "');\">";
+                lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" + rs.item_id + "," + rs.tipo_impuesto_id + ",'" + _esc(rs.item_descripcion) + "','" + _esc(rs.tipo_imp_nom || '-') + "'," + cantidad + ", " + costo + ", '" + formatearNumero(subtotal) + "', '" + formatearNumero(iva) + "'," + (rs.deposito_id||0) + "," + rs.cantidad_disponible + "," + (rs.marca_id||0) + "," + (rs.modelo_id||0) + ",'" + _esc(_depNomOC) + "','" + _esc(rs.mar_nom||'') + "','" + _esc(_modNomOC) + "');\">";
                 lista += "<td>" + rs.item_id + "</td>";
-                lista += "<td>" + rs.item_decripcion + "</td>";
-                lista += "<td>" + (rs.marc_nom || '—') + "</td>";
+                lista += "<td>" + rs.item_descripcion + "</td>";
+                lista += "<td>" + (rs.mar_nom || '—') + "</td>";
                 lista += "<td>" + (rs.modelo_nom || '—') + "</td>";
                 lista += "<td>" + cantidad + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(costo) + "</td>";
-                lista += "<td>" + (rs.tip_imp_nom || '-') + "</td>";
+                lista += "<td>" + (rs.tipo_imp_nom || '-') + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(iva) + "</td>";
                 lista += "<td>" + getNombreDeposito(rs.deposito_id) + "</td>";
@@ -970,11 +984,11 @@ function listarDetalles() {
 }
 
 // Selecciona un detalle de un pedido y actualiza el formulario
-function seleccionDetalle(item_id, tipo_impuesto_id, item_decripcion, tip_imp_nom, orden_compra_det_cantidad, costo, subtotal, totalConImpuesto, deposito_id, cantidad_disponible, marca_id, modelo_id, dep_nombre, marc_nom, modelo_nom_full) {
+function seleccionDetalle(item_id, tipo_impuesto_id, item_descripcion, tipo_imp_nom, orden_compra_det_cantidad, costo, subtotal, totalConImpuesto, deposito_id, cantidad_disponible, marca_id, modelo_id, dep_nombre, mar_nom, modelo_nom_full) {
     $("#item_id").val(item_id);
     $("#tipo_impuesto_id").val(tipo_impuesto_id);
-    $("#item_decripcion").val(item_decripcion);
-    $("#tip_imp_nom").val(tip_imp_nom);
+    $("#item_descripcion").val(item_descripcion);
+    $("#tipo_imp_nom").val(tipo_imp_nom);
     $("#orden_compra_det_cantidad").val(orden_compra_det_cantidad);
     $("#item_costo").val(formatearNumero(costo));
     $("#cantidad_stock").val('' + cantidad_disponible);
@@ -988,8 +1002,8 @@ function seleccionDetalle(item_id, tipo_impuesto_id, item_decripcion, tip_imp_no
     _marcaIdOC  = marca_id  || null;
     _modeloIdOC = modelo_id || null;
     var $marca = $('#marca_det_oc');
-    if (marca_id && marc_nom) {
-        $marca.html('<option value="' + marca_id + '" selected>' + marc_nom + '</option>');
+    if (marca_id && mar_nom) {
+        $marca.html('<option value="' + marca_id + '" selected>' + mar_nom + '</option>');
     } else {
         $marca.html('<option value="">-- Marca --</option>');
     }

@@ -1,4 +1,4 @@
-﻿listar();
+listar();
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -57,7 +57,7 @@ function agregar(){
     $("#fun_telefono").removeAttr("disabled");
     $("#fun_correo").removeAttr("disabled");
     $("#fun_ci").removeAttr("disabled");
-    $("#pais_descrpcion").removeAttr("disabled");
+    $("#pais_descripcion").removeAttr("disabled");
     $("#ciu_descripcion").removeAttr("disabled");
     $("#nacio_descripcion").removeAttr("disabled");
 
@@ -79,7 +79,7 @@ function editar(){
     $("#fun_telefono").removeAttr("disabled");
     $("#fun_correo").removeAttr("disabled");
     $("#fun_ci").removeAttr("disabled");
-    $("#pais_descrpcion").removeAttr("disabled");
+    $("#pais_descripcion").removeAttr("disabled");
     $("#ciu_descripcion").removeAttr("disabled");
     $("#nacio_descripcion").removeAttr("disabled");
 
@@ -151,7 +151,7 @@ function listar(){
             var badge  = estado === 'activo'
                 ? '<span class="badge" style="background:#27ae60;">Activo</span>'
                 : '<span class="badge" style="background:#c0392b;">Inactivo</span>';
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionFuncionario("+rs.id+","+rs.pais_id+","+rs.ciudad_id+","+rs.nacionalidad_id+",'"+rs.fun_nom+"','"+rs.fun_apellido+"','"+rs.fun_direccion+"','"+rs.fun_telefono+"','"+rs.fun_correo+"','"+rs.fun_ci+"','"+rs.pais_descrpcion+"','"+rs.ciu_descripcion+"','"+rs.nacio_descripcion+"','"+estado+"');\">";
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionFuncionario("+rs.id+","+rs.pais_id+","+rs.ciudad_id+","+rs.nacionalidad_id+",'"+rs.fun_nom+"','"+rs.fun_apellido+"','"+rs.fun_direccion+"','"+rs.fun_telefono+"','"+rs.fun_correo+"','"+rs.fun_ci+"','"+rs.pais_descripcion+"','"+rs.ciu_descripcion+"','"+rs.nacio_descripcion+"','"+estado+"');\">";
                 lista = lista + "<td>";
                 lista = lista + rs.id;
                 lista = lista +"</td>";
@@ -174,7 +174,7 @@ function listar(){
                 lista = lista + rs.fun_ci;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
-                lista = lista + rs.pais_descrpcion;
+                lista = lista + rs.pais_descripcion;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
                 lista = lista + rs.ciu_descripcion;
@@ -193,12 +193,12 @@ function listar(){
     })
 }
 
-function seleccionFuncionario(id,ciudad_id,pais_id,nacionalidad_id,pais_descrpcion,ciu_descripcion,nacio_descripcion, fun_nom, fun_apellido, fun_direccion, fun_telefono, fun_correo, fun_ci, estado){
+function seleccionFuncionario(id,ciudad_id,pais_id,nacionalidad_id,pais_descripcion,ciu_descripcion,nacio_descripcion, fun_nom, fun_apellido, fun_direccion, fun_telefono, fun_correo, fun_ci, estado){
     $("#id").val(id);
     $("#ciudad_id").val(ciudad_id);
     $("#pais_id").val(pais_id);
     $("#nacionalidad_id").val(nacionalidad_id);
-    $("#pais_descrpcion").val(pais_descrpcion);
+    $("#pais_descripcion").val(pais_descripcion);
     $("#ciu_descripcion").val(ciu_descripcion);
     $("#nacio_descripcion").val(nacio_descripcion);
     $("#fun_nom").val(fun_nom);
@@ -234,13 +234,13 @@ function buscarPaises(){
         method:"GET",
         dataType: "json",
         data: {
-            'pais_descrpcion': $("#pais_descrpcion").val()
+            'pais_descripcion': $("#pais_descripcion").val()
         }
     })
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionPais("+rs.id+",'"+rs.pais_descrpcion+"');\">"+rs.pais_descrpcion+"</li>";
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionPais("+rs.id+",'"+rs.pais_descripcion+"');\">"+rs.pais_descripcion+"</li>";
         }
         lista += "</ul>";
         $("#listaPaises").html(lista);
@@ -254,7 +254,7 @@ function buscarPaises(){
 
 function seleccionPais(id,descri){
     $("#pais_id").val(id);
-    $("#pais_descrpcion").val(descri);
+    $("#pais_descripcion").val(descri);
 
     $("#listaPaises").html("");
     $("#listaPaises").attr("style","display:none;");

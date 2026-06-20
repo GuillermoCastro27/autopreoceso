@@ -1,4 +1,4 @@
-﻿listar();
+listar();
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -50,8 +50,8 @@ function cancelar(){
 
 function agregar(){
     $("#txtOperacion").val(1);
-    $("#item_decripcion").removeAttr("disabled");
-    $("#marc_nom").removeAttr("disabled");
+    $("#item_descripcion").removeAttr("disabled");
+    $("#mar_nom").removeAttr("disabled");
     $("#item_marca_descrip").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
@@ -66,8 +66,8 @@ function agregar(){
 
 function editar(){
     $("#txtOperacion").val(2);
-    $("#item_decripcion").removeAttr("disabled");
-    $("#marc_nom").removeAttr("disabled");
+    $("#item_descripcion").removeAttr("disabled");
+    $("#mar_nom").removeAttr("disabled");
     $("#item_marca_descrip").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
@@ -127,12 +127,12 @@ function listar(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionItemMarca("+rs.marca_id+",'"+rs.marc_nom+"',"+rs.item_id+",'"+rs.item_decripcion+"','"+rs.item_marca_descrip+"');\">";   
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionItemMarca("+rs.marca_id+",'"+rs.mar_nom+"',"+rs.item_id+",'"+rs.item_descripcion+"','"+rs.item_marca_descrip+"');\">";   
                 lista = lista + "<td>";
-                lista = lista + rs.marc_nom;
+                lista = lista + rs.mar_nom;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
-                lista = lista + rs.item_decripcion;
+                lista = lista + rs.item_descripcion;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
                 lista = lista + rs.item_marca_descrip;
@@ -147,12 +147,12 @@ function listar(){
     })
 }
 
-function seleccionItemMarca(marca_id,marc_nom,item_id, item_decripcion, item_marca_descrip){
+function seleccionItemMarca(marca_id,mar_nom,item_id, item_descripcion, item_marca_descrip){
     $("#marca_id").val(marca_id);
     $("#item_id").val(item_id);
     $("#item_marca_descrip").val(item_marca_descrip);
-    $("#item_decripcion").val(item_decripcion);
-    $("#marc_nom").val(marc_nom);
+    $("#item_descripcion").val(item_descripcion);
+    $("#mar_nom").val(mar_nom);
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").removeAttr("disabled");
@@ -172,14 +172,14 @@ function buscarProductos(){
         method: "POST",
         dataType: "json",
         data:{
-            "item_decripcion":$("#item_decripcion").val(),
+            "item_descripcion":$("#item_descripcion").val(),
             "tipo_descripcion":"PRODUCTO"
         }
     })
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto("+rs.item_id+",'"+rs.item_decripcion+"')\">"+rs.item_decripcion+"</li>";   
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto("+rs.item_id+",'"+rs.item_descripcion+"')\">"+rs.item_descripcion+"</li>";   
         }
         lista += "</ul>";
         $("#listaProductos").html(lista);
@@ -192,9 +192,9 @@ function buscarProductos(){
 }
 
 // Rellena el campo de producto seleccionado.
-function seleccionProducto(item_id, item_decripcion) {
+function seleccionProducto(item_id, item_descripcion) {
     $("#item_id").val(item_id);  // Asegúrate de asignar correctamente item_id
-    $("#item_decripcion").val(item_decripcion);
+    $("#item_descripcion").val(item_descripcion);
     $("#listaProductos").html("");
     $("#listaProductos").attr("style", "display:none;");
     $(".form-line").attr("class", "form-line focused");
@@ -206,13 +206,13 @@ function buscarMarca(){
         method:"GET",
         dataType: "json",
         data: {
-            'marc_nom': $("#marc_nom").val()
+            'mar_nom': $("#mar_nom").val()
         }
     })
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionMarca("+rs.id+",'"+rs.marc_nom+"');\">"+rs.marc_nom+"</li>";
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionMarca("+rs.id+",'"+rs.mar_nom+"');\">"+rs.mar_nom+"</li>";
         }
         lista += "</ul>";
         $("#listaMarcas").html(lista);
@@ -226,7 +226,7 @@ function buscarMarca(){
 
 function seleccionMarca(id, nombre) {
     $("#marca_id").val(id);  // Asegúrate de asignar correctamente marca_id
-    $("#marc_nom").val(nombre);
+    $("#mar_nom").val(nombre);
     $("#listaMarcas").html("");
     $("#listaMarcas").attr("style", "display:none;");
 }
@@ -234,7 +234,7 @@ function grabar() {
     var op = parseInt($("#txtOperacion").val());
 
     if (op !== 3) {
-        if (!$("#item_decripcion").val().trim() || !$("#marc_nom").val().trim() || !$("#item_marca_descrip").val().trim()) {
+        if (!$("#item_descripcion").val().trim() || !$("#mar_nom").val().trim() || !$("#item_marca_descrip").val().trim()) {
             swal('Error', 'Producto, marca y descripción son obligatorios.', 'error');
             return;
         }
@@ -289,3 +289,4 @@ function grabar() {
         }
     });
 }
+

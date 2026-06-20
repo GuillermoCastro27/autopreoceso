@@ -1,4 +1,4 @@
-﻿cargarFuncionarioIdLogueado();
+cargarFuncionarioIdLogueado();
 listar();
 campoFecha();
 function formatoTabla(){
@@ -215,7 +215,7 @@ function listar() {
                 ${rs.tip_veh_capacidad || 0},
                 '${esc(rs.tip_veh_combustible)}',
                 '${esc(rs.tip_veh_categoria)}',
-                '${esc(rs.marc_nom)}',
+                '${esc(rs.mar_nom)}',
                 '${esc(rs.modelo_nom)}',
                 '${esc(rs.equipo_nombre)}',
                 '${esc(rs.equipo_descripcion)}',
@@ -256,7 +256,7 @@ function seleccionOrdenServicio(
     observaciones, estado, tipo, encargado,
     tip_veh_nombre, tip_veh_capacidad,
     tip_veh_combustible, tip_veh_categoria,
-    marc_nom, modelo_nom,
+    mar_nom, modelo_nom,
     equipo_nombre, equipo_descripcion, equipo_categoria
 ) {
     // 🧩 IDs principales
@@ -295,7 +295,7 @@ function seleccionOrdenServicio(
     $("#tip_veh_capacidad").val(tip_veh_capacidad);
     $("#tip_veh_combustible").val(tip_veh_combustible);
     $("#tip_veh_categoria").val(tip_veh_categoria);
-    $("#marc_nom").val(marc_nom);
+    $("#mar_nom").val(mar_nom);
     $("#modelo_nom").val(modelo_nom);
 
     $("#equipo_trabajo_id").val(equipo_trabajo_id);
@@ -364,7 +364,7 @@ function buscarPresupuestoServ() {
                     + "'" + esc2(rs.tip_veh_nombre) + "',"
                     + (rs.tip_veh_capacidad || 0) + ","
                     + "'" + esc2(rs.tip_veh_combustible) + "','" + esc2(rs.tip_veh_categoria) + "',"
-                    + "'" + esc2(rs.marc_nom) + "','" + esc2(rs.modelo_nom) + "'"
+                    + "'" + esc2(rs.mar_nom) + "','" + esc2(rs.modelo_nom) + "'"
                     + ");\">"
                     + (function(p) {
                         var c = p === 'ALTA' ? '#c0392b' : p === 'MEDIA' ? '#e67e22' : '#27ae60';
@@ -395,7 +395,7 @@ function seleccionarPresupuestoServ(
     encargado, fecha_vence_presupuesto,
     tipo_vehiculo_id, tip_veh_nombre, tip_veh_capacidad,
     tip_veh_combustible, tip_veh_categoria,
-    marc_nom, modelo_nom
+    mar_nom, modelo_nom
 ) {
     // 🧩 Guardar IDs
     $("#presupuesto_serv_cab_id").val(id);
@@ -440,7 +440,7 @@ function seleccionarPresupuestoServ(
     $("#tip_veh_capacidad").val(tip_veh_capacidad);
     $("#tip_veh_combustible").val(tip_veh_combustible);
     $("#tip_veh_categoria").val(tip_veh_categoria);
-    $("#marc_nom").val(marc_nom);
+    $("#mar_nom").val(mar_nom);
     $("#modelo_nom").val(modelo_nom);
 
     $("#listaPresupuestoServ").hide();
@@ -552,9 +552,18 @@ function grabar() {
                 $("#detalle").show();
                 listarDetalles();
 
-                // 🔄 Recargar si la orden fue confirmada o actualizada
                 if (resultado.registro.ord_serv_estado !== "PENDIENTE" || $("#txtOperacion").val() == 2) {
                     location.reload(true);
+                } else {
+                    $("#ord_serv_fecha").attr("disabled","true");
+                    $("#presupuesto_serv").attr("disabled","true");
+                    $("#ord_serv_observaciones").attr("disabled","true");
+                    $("#equipo_nombre").attr("disabled","true");
+
+                    $("#btnAgregar").attr("disabled","true");
+                    $("#btnGrabar").attr("disabled","true");
+                    $("#btnEditar").removeAttr("disabled");
+                    $("#btnEliminar").removeAttr("disabled");
                 }
             }
         });
@@ -583,10 +592,10 @@ function listarDetalles(){
         for(rs of resultado){
             lista += `<tr class="item-list">
                 <td>${rs.item_id}</td>
-                <td>${rs.item_decripcion || ''}</td>
+                <td>${rs.item_descripcion || ''}</td>
                 <td>${rs.orden_serv_det_cantidad}</td>
                 <td>${rs.orden_serv_det_costo}</td>
-                <td>${rs.marc_nom || '-'}</td>
+                <td>${rs.mar_nom || '-'}</td>
                 <td>${rs.modelo_nom || '-'}</td>
             </tr>`;
             cantidadDetalle++;
@@ -632,4 +641,5 @@ function mostrarErrores(xhr) {
     }
     swal({ title: 'Error', text: mensaje, type: 'error' });
 }
+
 

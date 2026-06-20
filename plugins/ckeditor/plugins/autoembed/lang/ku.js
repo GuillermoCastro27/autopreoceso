@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("autoembed","ku",{embeddingInProgress:"لەهەوڵی لکاندنی بەستەری ناونیشانە...",embeddingFailed:"ئەم بەستەرە خۆکارانە ناتواندرێت بخرێتە ناوێ."});
+CKEDITOR.plugins.setLang("autoembed","ku",{embeddingInProgress:"Ù„Û•Ù‡Û•ÙˆÚµÛŒ Ù„Ú©Ø§Ù†Ø¯Ù†ÛŒ Ø¨Û•Ø³ØªÛ•Ø±ÛŒ Ù†Ø§ÙˆÙ†ÛŒØ´Ø§Ù†Û•...",embeddingFailed:"Ø¦Û•Ù… Ø¨Û•Ø³ØªÛ•Ø±Û• Ø®Û†Ú©Ø§Ø±Ø§Ù†Û• Ù†Ø§ØªÙˆØ§Ù†Ø¯Ø±ÛŽØª Ø¨Ø®Ø±ÛŽØªÛ• Ù†Ø§ÙˆÛŽ."});

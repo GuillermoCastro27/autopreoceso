@@ -1104,3 +1104,4 @@
   $.fn.colorpicker.constructor = Colorpicker;
 
 }));
+

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("mathjax","ru",{title:"Математика в TeX-системе",button:"Математика",dialogInput:"Введите здесь TeX",docUrl:"http://en.wikibooks.org/wiki/LaTeX/Mathematics",docLabel:"TeX документация",loading:"загрузка...",pathName:"мат."});
+CKEDITOR.plugins.setLang("mathjax","ru",{title:"ÐœÐ°Ñ‚ÐµÐ¼Ð°Ñ‚Ð¸ÐºÐ° Ð² TeX-ÑÐ¸ÑÑ‚ÐµÐ¼Ðµ",button:"ÐœÐ°Ñ‚ÐµÐ¼Ð°Ñ‚Ð¸ÐºÐ°",dialogInput:"Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð·Ð´ÐµÑÑŒ TeX",docUrl:"http://en.wikibooks.org/wiki/LaTeX/Mathematics",docLabel:"TeX Ð´Ð¾ÐºÑƒÐ¼ÐµÐ½Ñ‚Ð°Ñ†Ð¸Ñ",loading:"Ð·Ð°Ð³Ñ€ÑƒÐ·ÐºÐ°...",pathName:"Ð¼Ð°Ñ‚."});

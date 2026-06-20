@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("pagebreak","ru",{alt:"Разрыв страницы",toolbar:"Вставить разрыв страницы для печати"});
+CKEDITOR.plugins.setLang("pagebreak","ru",{alt:"Ð Ð°Ð·Ñ€Ñ‹Ð² ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñ‹",toolbar:"Ð’ÑÑ‚Ð°Ð²Ð¸Ñ‚ÑŒ Ñ€Ð°Ð·Ñ€Ñ‹Ð² ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñ‹ Ð´Ð»Ñ Ð¿ÐµÑ‡Ð°Ñ‚Ð¸"});

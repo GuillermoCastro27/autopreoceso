@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("font","ug",{fontSize:{label:"چوڭلۇقى",voiceLabel:"خەت چوڭلۇقى",panelTitle:"چوڭلۇقى"},label:"خەت نۇسخا",panelTitle:"خەت نۇسخا",voiceLabel:"خەت نۇسخا"});
+CKEDITOR.plugins.setLang("font","ug",{fontSize:{label:"Ú†ÙˆÚ­Ù„Û‡Ù‚Ù‰",voiceLabel:"Ø®Û•Øª Ú†ÙˆÚ­Ù„Û‡Ù‚Ù‰",panelTitle:"Ú†ÙˆÚ­Ù„Û‡Ù‚Ù‰"},label:"Ø®Û•Øª Ù†Û‡Ø³Ø®Ø§",panelTitle:"Ø®Û•Øª Ù†Û‡Ø³Ø®Ø§",voiceLabel:"Ø®Û•Øª Ù†Û‡Ø³Ø®Ø§"});

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("font","sq",{fontSize:{label:"Madhësia",voiceLabel:"Madhësia e Shkronjës",panelTitle:"Madhësia e Shkronjës"},label:"Shkronja",panelTitle:"Emri i Shkronjës",voiceLabel:"Shkronja"});
+CKEDITOR.plugins.setLang("font","sq",{fontSize:{label:"MadhÃ«sia",voiceLabel:"MadhÃ«sia e ShkronjÃ«s",panelTitle:"MadhÃ«sia e ShkronjÃ«s"},label:"Shkronja",panelTitle:"Emri i ShkronjÃ«s",voiceLabel:"Shkronja"});

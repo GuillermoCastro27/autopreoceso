@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("font","ko",{fontSize:{label:"크기",voiceLabel:"글자 크기",panelTitle:"글자 크기"},label:"글꼴",panelTitle:"글꼴",voiceLabel:"글꼴"});
+CKEDITOR.plugins.setLang("font","ko",{fontSize:{label:"í¬ê¸°",voiceLabel:"ê¸€ìž í¬ê¸°",panelTitle:"ê¸€ìž í¬ê¸°"},label:"ê¸€ê¼´",panelTitle:"ê¸€ê¼´",voiceLabel:"ê¸€ê¼´"});

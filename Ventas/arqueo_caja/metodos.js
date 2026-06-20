@@ -1,4 +1,4 @@
-﻿// Cargar funcionario_id del usuario logueado
+// Cargar funcionario_id del usuario logueado
 cargarFuncionarioIdLogueado();
 listar();
 campoFecha();

@@ -97,3 +97,4 @@ module.exports = function(grunt) {
   grunt.registerTask('test', ['jshint', 'jasmine']);
   grunt.registerTask('default', ['test', 'concat', 'umd', 'uglify']);
 };
+

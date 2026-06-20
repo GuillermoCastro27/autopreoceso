@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("font","gu",{fontSize:{label:"ફૉન્ટ સાઇઝ/કદ",voiceLabel:"ફોન્ટ સાઈઝ",panelTitle:"ફૉન્ટ સાઇઝ/કદ"},label:"ફૉન્ટ",panelTitle:"ફૉન્ટ",voiceLabel:"ફોન્ટ"});
+CKEDITOR.plugins.setLang("font","gu",{fontSize:{label:"àª«à«‰àª¨à«àªŸ àª¸àª¾àª‡àª/àª•àª¦",voiceLabel:"àª«à«‹àª¨à«àªŸ àª¸àª¾àªˆàª",panelTitle:"àª«à«‰àª¨à«àªŸ àª¸àª¾àª‡àª/àª•àª¦"},label:"àª«à«‰àª¨à«àªŸ",panelTitle:"àª«à«‰àª¨à«àªŸ",voiceLabel:"àª«à«‹àª¨à«àªŸ"});

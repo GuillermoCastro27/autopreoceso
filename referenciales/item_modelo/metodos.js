@@ -1,4 +1,4 @@
-﻿listar();
+listar();
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -50,7 +50,7 @@ function cancelar(){
 
 function agregar(){
     $("#txtOperacion").val(1);
-    $("#item_decripcion").removeAttr("disabled");
+    $("#item_descripcion").removeAttr("disabled");
     $("#modelo_nom").removeAttr("disabled");
     $("#item_modelo_descrip").removeAttr("disabled");
 
@@ -66,7 +66,7 @@ function agregar(){
 
 function editar(){
     $("#txtOperacion").val(2);
-    $("#item_decripcion").removeAttr("disabled");
+    $("#item_descripcion").removeAttr("disabled");
     $("#modelo_nom").removeAttr("disabled");
     $("#item_modelo_descrip").removeAttr("disabled");
 
@@ -133,12 +133,12 @@ function listar(){
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionItemModelo("+rs.modelo_id+",'"+rs.modelo_nom+"',"+rs.item_id+",'"+rs.item_decripcion+"','"+rs.item_modelo_descrip+"');\">";   
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionItemModelo("+rs.modelo_id+",'"+rs.modelo_nom+"',"+rs.item_id+",'"+rs.item_descripcion+"','"+rs.item_modelo_descrip+"');\">";   
                 lista = lista + "<td>";
                 lista = lista + rs.modelo_nom;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
-                lista = lista + rs.item_decripcion;
+                lista = lista + rs.item_descripcion;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
                 lista = lista + rs.item_modelo_descrip;
@@ -153,11 +153,11 @@ function listar(){
     })
 }
 
-function seleccionItemModelo(modelo_id,modelo_nom,item_id, item_decripcion, item_modelo_descrip){
+function seleccionItemModelo(modelo_id,modelo_nom,item_id, item_descripcion, item_modelo_descrip){
     $("#modelo_id").val(modelo_id);
     $("#item_id").val(item_id);
     $("#item_modelo_descrip").val(item_modelo_descrip);
-    $("#item_decripcion").val(item_decripcion);
+    $("#item_descripcion").val(item_descripcion);
     $("#modelo_nom").val(modelo_nom);
 
     $("#btnAgregar").attr("disabled","true");
@@ -175,7 +175,7 @@ function grabar() {
     var op = parseInt($("#txtOperacion").val());
 
     if (op !== 3) {
-        if (!$("#item_decripcion").val().trim() || !$("#modelo_nom").val().trim() || !$("#item_modelo_descrip").val().trim()) {
+        if (!$("#item_descripcion").val().trim() || !$("#modelo_nom").val().trim() || !$("#item_modelo_descrip").val().trim()) {
             swal('Error', 'Producto, modelo y descripción son obligatorios.', 'error');
             return;
         }
@@ -236,14 +236,14 @@ function buscarProductos(){
         method: "POST",
         dataType: "json",
         data:{
-            "item_decripcion":$("#item_decripcion").val(),
+            "item_descripcion":$("#item_descripcion").val(),
             "tipo_descripcion":"PRODUCTO"
         }
     })
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto("+rs.item_id+",'"+rs.item_decripcion+"')\">"+rs.item_decripcion+"</li>";   
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto("+rs.item_id+",'"+rs.item_descripcion+"')\">"+rs.item_descripcion+"</li>";   
         }
         lista += "</ul>";
         $("#listaProductos").html(lista);
@@ -256,9 +256,9 @@ function buscarProductos(){
 }
 
 // Rellena el campo de producto seleccionado.
-function seleccionProducto(item_id, item_decripcion) {
+function seleccionProducto(item_id, item_descripcion) {
     $("#item_id").val(item_id);  // Asegúrate de asignar correctamente item_id
-    $("#item_decripcion").val(item_decripcion);
+    $("#item_descripcion").val(item_descripcion);
     $("#listaProductos").html("");
     $("#listaProductos").attr("style", "display:none;");
     $(".form-line").attr("class", "form-line focused");

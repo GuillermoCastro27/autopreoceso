@@ -23,22 +23,23 @@
 
 (function ($) {
   $.fn.selectpicker.defaults = {
-    noneSelectedText: 'Aucune sélection',
-    noneResultsText: 'Aucun résultat pour {0}',
+    noneSelectedText: 'Aucune sÃ©lection',
+    noneResultsText: 'Aucun rÃ©sultat pour {0}',
     countSelectedText: function (numSelected, numTotal) {
-      return (numSelected > 1) ? "{0} éléments sélectionnés" : "{0} élément sélectionné";
+      return (numSelected > 1) ? "{0} Ã©lÃ©ments sÃ©lectionnÃ©s" : "{0} Ã©lÃ©ment sÃ©lectionnÃ©";
     },
     maxOptionsText: function (numAll, numGroup) {
       return [
-        (numAll > 1) ? 'Limite atteinte ({n} éléments max)' : 'Limite atteinte ({n} élément max)',
-        (numGroup > 1) ? 'Limite du groupe atteinte ({n} éléments max)' : 'Limite du groupe atteinte ({n} élément max)'
+        (numAll > 1) ? 'Limite atteinte ({n} Ã©lÃ©ments max)' : 'Limite atteinte ({n} Ã©lÃ©ment max)',
+        (numGroup > 1) ? 'Limite du groupe atteinte ({n} Ã©lÃ©ments max)' : 'Limite du groupe atteinte ({n} Ã©lÃ©ment max)'
       ];
     },
     multipleSeparator: ', ',
-    selectAllText: 'Tout Sélectionner',
-    deselectAllText: 'Tout Dé-selectionner',
+    selectAllText: 'Tout SÃ©lectionner',
+    deselectAllText: 'Tout DÃ©-selectionner',
   };
 })(jQuery);
 
 
 }));
+

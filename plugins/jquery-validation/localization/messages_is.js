@@ -10,24 +10,24 @@
 
 /*
  * Translated default messages for the jQuery validation plugin.
- * Locale: IS (Icelandic; íslenska)
+ * Locale: IS (Icelandic; Ã­slenska)
  */
 $.extend( $.validator.messages, {
-	required: "Þessi reitur er nauðsynlegur.",
-	remote: "Lagaðu þennan reit.",
-	maxlength: $.validator.format( "Sláðu inn mest {0} stafi." ),
-	minlength: $.validator.format( "Sláðu inn minnst {0} stafi." ),
-	rangelength: $.validator.format( "Sláðu inn minnst {0} og mest {1} stafi." ),
-	email: "Sláðu inn gilt netfang.",
-	url: "Sláðu inn gilda vefslóð.",
-	date: "Sláðu inn gilda dagsetningu.",
-	number: "Sláðu inn tölu.",
-	digits: "Sláðu inn tölustafi eingöngu.",
-	equalTo: "Sláðu sama gildi inn aftur.",
-	range: $.validator.format( "Sláðu inn gildi milli {0} og {1}." ),
-	max: $.validator.format( "Sláðu inn gildi sem er minna en eða jafnt og {0}." ),
-	min: $.validator.format( "Sláðu inn gildi sem er stærra en eða jafnt og {0}." ),
-	creditcard: "Sláðu inn gilt greiðslukortanúmer."
+	required: "Ãžessi reitur er nauÃ°synlegur.",
+	remote: "LagaÃ°u Ã¾ennan reit.",
+	maxlength: $.validator.format( "SlÃ¡Ã°u inn mest {0} stafi." ),
+	minlength: $.validator.format( "SlÃ¡Ã°u inn minnst {0} stafi." ),
+	rangelength: $.validator.format( "SlÃ¡Ã°u inn minnst {0} og mest {1} stafi." ),
+	email: "SlÃ¡Ã°u inn gilt netfang.",
+	url: "SlÃ¡Ã°u inn gilda vefslÃ³Ã°.",
+	date: "SlÃ¡Ã°u inn gilda dagsetningu.",
+	number: "SlÃ¡Ã°u inn tÃ¶lu.",
+	digits: "SlÃ¡Ã°u inn tÃ¶lustafi eingÃ¶ngu.",
+	equalTo: "SlÃ¡Ã°u sama gildi inn aftur.",
+	range: $.validator.format( "SlÃ¡Ã°u inn gildi milli {0} og {1}." ),
+	max: $.validator.format( "SlÃ¡Ã°u inn gildi sem er minna en eÃ°a jafnt og {0}." ),
+	min: $.validator.format( "SlÃ¡Ã°u inn gildi sem er stÃ¦rra en eÃ°a jafnt og {0}." ),
+	creditcard: "SlÃ¡Ã°u inn gilt greiÃ°slukortanÃºmer."
 } );
 
 }));

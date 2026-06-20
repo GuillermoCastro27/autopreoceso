@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("pagebreak","ko",{alt:"페이지 나누기",toolbar:"인쇄시 페이지 나누기 삽입"});
+CKEDITOR.plugins.setLang("pagebreak","ko",{alt:"íŽ˜ì´ì§€ ë‚˜ëˆ„ê¸°",toolbar:"ì¸ì‡„ì‹œ íŽ˜ì´ì§€ ë‚˜ëˆ„ê¸° ì‚½ìž…"});

@@ -24,7 +24,7 @@ if (typeof(jQuery) === 'undefined') {
  *
  * Open source under the BSD License.
  *
- * Copyright © 2008 George McGinley Smith
+ * Copyright Â© 2008 George McGinley Smith
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -193,7 +193,7 @@ jQuery.extend( jQuery.easing,
  *
  * Open source under the BSD License.
  *
- * Copyright © 2001 Robert Penner
+ * Copyright Â© 2001 Robert Penner
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -4419,7 +4419,7 @@ var $html = $( document.documentElement )
  */
 function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
 
-    // If there’s no element, return the picker constructor.
+    // If thereâ€™s no element, return the picker constructor.
     if ( !ELEMENT ) return PickerConstructor
 
 
@@ -4464,7 +4464,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
              */
             start: function() {
 
-                // If it’s already started, do nothing.
+                // If itâ€™s already started, do nothing.
                 if ( STATE && STATE.start ) return P
 
 
@@ -4494,7 +4494,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                 prepareElementRoot()
 
 
-                // If there’s a format for the hidden input element, create the element.
+                // If thereâ€™s a format for the hidden input element, create the element.
                 if ( SETTINGS.formatSubmit ) {
                     prepareElementHidden()
                 }
@@ -4527,7 +4527,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                 })
 
 
-                // Once we’re all set, check the theme in use.
+                // Once weâ€™re all set, check the theme in use.
                 IS_DEFAULT_THEME = isUsingDefaultTheme( P.$root.children()[ 0 ] )
 
 
@@ -4537,7 +4537,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                 }
 
 
-                // Trigger queued the “start” and “render” events.
+                // Trigger queued the â€œstartâ€ and â€œrenderâ€ events.
                 return P.trigger( 'start' ).trigger( 'render' )
             }, //start
 
@@ -4551,7 +4551,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                 if ( entireComponent ) P.$root.html( createWrappedComponent() )
                 else P.$root.find( '.' + CLASSES.box ).html( P.component.nodes( STATE.open ) )
 
-                // Trigger the queued “render” events.
+                // Trigger the queued â€œrenderâ€ events.
                 return P.trigger( 'render' )
             }, //render
 
@@ -4561,7 +4561,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
              */
             stop: function() {
 
-                // If it’s already stopped, do nothing.
+                // If itâ€™s already stopped, do nothing.
                 if ( !STATE.start ) return P
 
                 // Then close the picker.
@@ -4586,7 +4586,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                 ELEMENT.type = STATE.type
                 ELEMENT.readOnly = false
 
-                // Trigger the queued “stop” events.
+                // Trigger the queued â€œstopâ€ events.
                 P.trigger( 'stop' )
 
                 // Reset the picker states.
@@ -4602,19 +4602,19 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
              */
             open: function( dontGiveFocus ) {
 
-                // If it’s already open, do nothing.
+                // If itâ€™s already open, do nothing.
                 if ( STATE.open ) return P
 
-                // Add the “active” class.
+                // Add the â€œactiveâ€ class.
                 $ELEMENT.addClass( CLASSES.active )
                 aria( ELEMENT, 'expanded', true )
 
                 // * A Firefox bug, when `html` has `overflow:hidden`, results in
-                //   killing transitions :(. So add the “opened” state on the next tick.
+                //   killing transitions :(. So add the â€œopenedâ€ state on the next tick.
                 //   Bug: https://bugzilla.mozilla.org/show_bug.cgi?id=625289
                 setTimeout( function() {
 
-                    // Add the “opened” class to the picker root.
+                    // Add the â€œopenedâ€ class to the picker root.
                     P.$root.addClass( CLASSES.opened )
                     aria( P.$root[0], 'hidden', false )
 
@@ -4633,8 +4633,8 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                             css( 'padding-right', '+=' + getScrollbarWidth() )
                     }
 
-                    // Pass focus to the root element’s jQuery object.
-                    // * Workaround for iOS8 to bring the picker’s root into view.
+                    // Pass focus to the root elementâ€™s jQuery object.
+                    // * Workaround for iOS8 to bring the pickerâ€™s root into view.
                     P.$root.eq(0).focus()
 
                     // Bind the document events.
@@ -4643,12 +4643,12 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                         var target = event.target
 
                         // If the target of the event is not the element, close the picker picker.
-                        // * Don’t worry about clicks or focusins on the root because those don’t bubble up.
+                        // * Donâ€™t worry about clicks or focusins on the root because those donâ€™t bubble up.
                         //   Also, for Firefox, a click on an `option` element bubbles up directly
                         //   to the doc. So make sure the target wasn't the doc.
-                        // * In Firefox stopPropagation() doesn’t prevent right-click events from bubbling,
+                        // * In Firefox stopPropagation() doesnâ€™t prevent right-click events from bubbling,
                         //   which causes the picker to unexpectedly close when right-clicking it. So make
-                        //   sure the event wasn’t a right-click.
+                        //   sure the event wasnâ€™t a right-click.
                         if ( target != ELEMENT && target != document && event.which != 3 ) {
 
                             // If the target was the holder that covers the screen,
@@ -4675,7 +4675,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                         }
 
 
-                        // Check if there is a key movement or “enter” keypress on the element.
+                        // Check if there is a key movement or â€œenterâ€ keypress on the element.
                         else if ( target == P.$root[0] && ( keycodeToMove || keycode == 13 ) ) {
 
                             // Prevent the default action to stop page movement.
@@ -4686,14 +4686,14 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                                 PickerConstructor._.trigger( P.component.key.go, P, [ PickerConstructor._.trigger( keycodeToMove ) ] )
                             }
 
-                            // On “enter”, if the highlighted item isn’t disabled, set the value and close.
+                            // On â€œenterâ€, if the highlighted item isnâ€™t disabled, set the value and close.
                             else if ( !P.$root.find( '.' + CLASSES.highlighted ).hasClass( CLASSES.disabled ) ) {
                                 P.set( 'select', P.component.item.highlight ).close()
                             }
                         }
 
 
-                        // If the target is within the root and “enter” is pressed,
+                        // If the target is within the root and â€œenterâ€ is pressed,
                         // prevent the default action and trigger a click on the target instead.
                         else if ( $.contains( P.$root[0], target ) && keycode == 13 ) {
                             event.preventDefault()
@@ -4702,7 +4702,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                     })
                 }
 
-                // Trigger the queued “open” events.
+                // Trigger the queued â€œopenâ€ events.
                 return P.trigger( 'open' )
             }, //open
 
@@ -4714,7 +4714,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
 
                 // If we need to give focus, do it before changing states.
                 if ( giveFocus ) {
-                    // ....ah yes! It would’ve been incomplete without a crazy workaround for IE :|
+                    // ....ah yes! It wouldâ€™ve been incomplete without a crazy workaround for IE :|
                     // The focus is triggered *after* the close has completed - causing it
                     // to open again. So unbind and rebind the event at the next tick.
                     P.$root.off( 'focus.toOpen' ).eq(0).focus()
@@ -4723,22 +4723,22 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                     }, 0 )
                 }
 
-                // Remove the “active” class.
+                // Remove the â€œactiveâ€ class.
                 $ELEMENT.removeClass( CLASSES.active )
                 aria( ELEMENT, 'expanded', false )
 
                 // * A Firefox bug, when `html` has `overflow:hidden`, results in
-                //   killing transitions :(. So remove the “opened” state on the next tick.
+                //   killing transitions :(. So remove the â€œopenedâ€ state on the next tick.
                 //   Bug: https://bugzilla.mozilla.org/show_bug.cgi?id=625289
                 setTimeout( function() {
 
-                    // Remove the “opened” and “focused” class from the picker root.
+                    // Remove the â€œopenedâ€ and â€œfocusedâ€ class from the picker root.
                     P.$root.removeClass( CLASSES.opened + ' ' + CLASSES.focused )
                     aria( P.$root[0], 'hidden', true )
 
                 }, 0 )
 
-                // If it’s already closed, do nothing more.
+                // If itâ€™s already closed, do nothing more.
                 if ( !STATE.open ) return P
 
                 // Set it as closed.
@@ -4754,7 +4754,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                 // Unbind the document events.
                 $document.off( '.' + STATE.id )
 
-                // Trigger the queued “close” events.
+                // Trigger the queued â€œcloseâ€ events.
                 return P.trigger( 'close' )
             }, //close
 
@@ -4781,7 +4781,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
 
                 if ( thing ) {
 
-                    // If the thing isn’t an object, make it one.
+                    // If the thing isnâ€™t an object, make it one.
                     if ( !thingIsObject ) {
                         thingObject[ thing ] = value
                     }
@@ -4792,7 +4792,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                         // Grab the value of the thing.
                         thingValue = thingObject[ thingItem ]
 
-                        // First, if the item exists and there’s a value, set it.
+                        // First, if the item exists and thereâ€™s a value, set it.
                         if ( thingItem in P.component.item ) {
                             if ( thingValue === undefined ) thingValue = null
                             P.component.set( thingItem, thingValue, options )
@@ -4810,7 +4810,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                     P.render()
                 }
 
-                // When the method isn’t muted, trigger queued “set” events and pass the `thingObject`.
+                // When the method isnâ€™t muted, trigger queued â€œsetâ€ events and pass the `thingObject`.
                 return options.muted ? P : P.trigger( 'set', thingObject )
             }, //set
 
@@ -4820,7 +4820,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
              */
             get: function( thing, format ) {
 
-                // Make sure there’s something to get.
+                // Make sure thereâ€™s something to get.
                 thing = thing || 'value'
 
                 // If a picker state exists, return that.
@@ -4869,7 +4869,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
 
                 if ( thing ) {
 
-                    // If the thing isn’t an object, make it one.
+                    // If the thing isnâ€™t an object, make it one.
                     if ( !thingIsObject ) {
                         thingObject[ thing ] = method
                     }
@@ -4982,20 +4982,20 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
             // Store the picker data by component name.
             data(NAME, P).
 
-            // Add the “input” class name.
+            // Add the â€œinputâ€ class name.
             addClass(CLASSES.input).
 
             // Remove the tabindex.
             attr('tabindex', -1).
 
-            // If there’s a `data-value`, update the value of the element.
+            // If thereâ€™s a `data-value`, update the value of the element.
             val( $ELEMENT.data('value') ?
                 P.get('select', SETTINGS.format) :
                 ELEMENT.value
             )
 
 
-        // Only bind keydown events if the element isn’t editable.
+        // Only bind keydown events if the element isnâ€™t editable.
         if ( !SETTINGS.editable ) {
 
             $ELEMENT.
@@ -5034,7 +5034,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                 keydown: handleKeydownEvent,
 
                 // When something within the root is focused, stop from bubbling
-                // to the doc and remove the “focused” state from the root.
+                // to the doc and remove the â€œfocusedâ€ state from the root.
                 focusin: function( event ) {
                     P.$root.removeClass( CLASSES.focused )
                     event.stopPropagation()
@@ -5046,7 +5046,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
 
                     var target = event.target
 
-                    // Make sure the target isn’t the root holder so it can bubble up.
+                    // Make sure the target isnâ€™t the root holder so it can bubble up.
                     if ( target != P.$root.children()[ 0 ] ) {
 
                         event.stopPropagation()
@@ -5054,7 +5054,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                         // * For mousedown events, cancel the default action in order to
                         //   prevent cases where focus is shifted onto external elements
                         //   when using things like jQuery mobile or MagnificPopup (ref: #249 & #120).
-                        //   Also, for Firefox, don’t prevent action on the `option` element.
+                        //   Also, for Firefox, donâ€™t prevent action on the `option` element.
                         if ( event.type == 'mousedown' && !$( target ).is( 'input, select, textarea, button, option' )) {
 
                             event.preventDefault()
@@ -5067,7 +5067,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                 }
             }).
 
-            // Add/remove the “target” class on focus and blur.
+            // Add/remove the â€œtargetâ€ class on focus and blur.
             on({
                 focus: function() {
                     $ELEMENT.addClass( CLASSES.target )
@@ -5077,10 +5077,10 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                 }
             }).
 
-            // Open the picker and adjust the root “focused” state
+            // Open the picker and adjust the root â€œfocusedâ€ state
             on( 'focus.toOpen', handleFocusToOpenEvent ).
 
-            // If there’s a click on an actionable element, carry out the actions.
+            // If thereâ€™s a click on an actionable element, carry out the actions.
             on( 'click', '[data-pick], [data-nav], [data-clear], [data-close]', function() {
 
                 var $target = $( this ),
@@ -5092,7 +5092,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                     activeElement = getActiveElement()
                     activeElement = activeElement && ( activeElement.type || activeElement.href )
 
-                // If it’s disabled or nothing inside is actively focused, re-focus the element.
+                // If itâ€™s disabled or nothing inside is actively focused, re-focus the element.
                 if ( targetDisabled || activeElement && !$.contains( P.$root[0], activeElement ) ) {
                     P.$root.eq(0).focus()
                 }
@@ -5107,7 +5107,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                     P.set( 'select', targetData.pick )
                 }
 
-                // If a “clear” button is pressed, empty the values and close with focus.
+                // If a â€œclearâ€ button is pressed, empty the values and close with focus.
                 else if ( targetData.clear ) {
                     P.clear().close( true )
                 }
@@ -5145,7 +5145,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
             '<input ' +
             'type=hidden ' +
 
-            // Create the name using the original input’s with a prefix and suffix.
+            // Create the name using the original inputâ€™s with a prefix and suffix.
             'name="' + name + '"' +
 
             // If the element has a value, set the hidden value as well.
@@ -5181,7 +5181,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
             // Check if one of the delete keys was pressed.
             isKeycodeDelete = /^(8|46)$/.test(keycode)
 
-        // For some reason IE clears the input value on “escape”.
+        // For some reason IE clears the input value on â€œescapeâ€.
         if ( keycode == 27 ) {
             P.close()
             return false
@@ -5208,7 +5208,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
         // Stop the event from propagating to the doc.
         event.stopPropagation()
 
-        // If it’s a focus event, add the “focused” class to the root.
+        // If itâ€™s a focus event, add the â€œfocusedâ€ class to the root.
         if ( event.type == 'focus' ) {
             P.$root.addClass( CLASSES.focused )
         }
@@ -5274,7 +5274,7 @@ function isUsingDefaultTheme( element ) {
 
 
 /**
- * Get the width of the browser’s scrollbar.
+ * Get the width of the browserâ€™s scrollbar.
  * Taken from: https://github.com/VodkaBears/Remodal/blob/master/src/jquery.remodal.js
  */
 function getScrollbarWidth() {
@@ -5449,7 +5449,7 @@ PickerConstructor.extend = function( name, Component ) {
         }
 
         // Otherwise go through each matched element and if the component
-        // doesn’t exist, create a new picker using `this` element
+        // doesnâ€™t exist, create a new picker using `this` element
         // and merging the defaults and options with a deep copy.
         return this.each( function() {
             var $this = $( this )
@@ -5591,13 +5591,13 @@ function DatePicker( picker, settings ) {
         set( 'max', settings.max ).
         set( 'now' )
 
-    // When there’s a value, set the `select`, which in turn
+    // When thereâ€™s a value, set the `select`, which in turn
     // also sets the `highlight` and `view`.
     if ( valueString ) {
         calendar.set( 'select', valueString, { format: formatString })
     }
 
-    // If there’s no value, default to highlighting “today”.
+    // If thereâ€™s no value, default to highlighting â€œtodayâ€.
     else {
         calendar.
             set( 'select', null ).
@@ -5716,33 +5716,33 @@ DatePicker.prototype.create = function( type, value, options ) {
     var isInfiniteValue,
         calendar = this
 
-    // If there’s no value, use the type as the value.
+    // If thereâ€™s no value, use the type as the value.
     value = value === undefined ? type : value
 
 
-    // If it’s infinity, update the value.
+    // If itâ€™s infinity, update the value.
     if ( value == -Infinity || value == Infinity ) {
         isInfiniteValue = value
     }
 
-    // If it’s an object, use the native date object.
+    // If itâ€™s an object, use the native date object.
     else if ( $.isPlainObject( value ) && _.isInteger( value.pick ) ) {
         value = value.obj
     }
 
-    // If it’s an array, convert it into a date and make sure
-    // that it’s a valid date – otherwise default to today.
+    // If itâ€™s an array, convert it into a date and make sure
+    // that itâ€™s a valid date â€“ otherwise default to today.
     else if ( $.isArray( value ) ) {
         value = new Date( value[ 0 ], value[ 1 ], value[ 2 ] )
         value = _.isDate( value ) ? value : calendar.create().obj
     }
 
-    // If it’s a number or date object, make a normalized date.
+    // If itâ€™s a number or date object, make a normalized date.
     else if ( _.isInteger( value ) || _.isDate( value ) ) {
         value = calendar.normalize( new Date( value ), options )
     }
 
-    // If it’s a literal true or any other case, set it to now.
+    // If itâ€™s a literal true or any other case, set it to now.
     else /*if ( value === true )*/ {
         value = calendar.now( type, value, options )
     }
@@ -5761,7 +5761,7 @@ DatePicker.prototype.create = function( type, value, options ) {
 
 /**
  * Create a range limit object using an array, date object,
- * literal “true”, or integer relative to another time.
+ * literal â€œtrueâ€, or integer relative to another time.
  */
 DatePicker.prototype.createRange = function( from, to ) {
 
@@ -5861,8 +5861,8 @@ DatePicker.prototype.navigate = function( type, value, options ) {
             targetDate = +value[2]
         }
 
-        // If we’re navigating months but the view is in a different
-        // month, navigate to the view’s year and month.
+        // If weâ€™re navigating months but the view is in a different
+        // month, navigate to the viewâ€™s year and month.
         if ( options && options.nav && viewsetObject && viewsetObject.month !== targetMonth ) {
             targetYear = viewsetObject.year
             targetMonth = viewsetObject.month
@@ -5873,8 +5873,8 @@ DatePicker.prototype.navigate = function( type, value, options ) {
         targetYear = targetDateObject.getFullYear()
         targetMonth = targetDateObject.getMonth()
 
-        // If the month we’re going to doesn’t have enough days,
-        // keep decreasing the date until we reach the month’s last date.
+        // If the month weâ€™re going to doesnâ€™t have enough days,
+        // keep decreasing the date until we reach the monthâ€™s last date.
         while ( /*safety &&*/ new Date( targetYear, targetMonth, targetDate ).getMonth() !== targetMonth ) {
             targetDate -= 1
             /*safety -= 1
@@ -5906,12 +5906,12 @@ DatePicker.prototype.measure = function( type, value/*, options*/ ) {
 
     var calendar = this
 
-    // If it’s anything false-y, remove the limits.
+    // If itâ€™s anything false-y, remove the limits.
     if ( !value ) {
         value = type == 'min' ? -Infinity : Infinity
     }
 
-    // If it’s a string, parse it.
+    // If itâ€™s a string, parse it.
     else if ( typeof value == 'string' ) {
         value = calendar.parse( type, value )
     }
@@ -5956,13 +5956,13 @@ DatePicker.prototype.validate = function( type, dateObject, options ) {
         minLimitObject = calendar.item.min,
         maxLimitObject = calendar.item.max,
 
-        // Check if we’ve reached the limit during shifting.
+        // Check if weâ€™ve reached the limit during shifting.
         reachedMin, reachedMax,
 
         // Check if the calendar is inverted and at least one weekday is enabled.
         hasEnabledWeekdays = isFlippedBase && calendar.item.disable.filter( function( value ) {
 
-            // If there’s a date, check where it is relative to the target.
+            // If thereâ€™s a date, check where it is relative to the target.
             if ( $.isArray( value ) ) {
                 var dateTime = calendar.create( value ).pick
                 if ( dateTime < dateObject.pick ) hasEnabledBeforeTarget = true
@@ -5983,10 +5983,10 @@ DatePicker.prototype.validate = function( type, dateObject, options ) {
     // [3] Not inverted and out of range.
     //
     // Cases to **not** validate for:
-    // • Navigating months.
-    // • Not inverted and date enabled.
-    // • Inverted and all dates disabled.
-    // • ..and anything else.
+    // â€¢ Navigating months.
+    // â€¢ Not inverted and date enabled.
+    // â€¢ Inverted and all dates disabled.
+    // â€¢ ..and anything else.
     if ( !options || !options.nav ) if (
         /* 1 */ ( !isFlippedBase && calendar.disabled( dateObject ) ) ||
         /* 2 */ ( isFlippedBase && calendar.disabled( dateObject ) && ( hasEnabledWeekdays || hasEnabledBeforeTarget || hasEnabledAfterTarget ) ) ||
@@ -5994,7 +5994,7 @@ DatePicker.prototype.validate = function( type, dateObject, options ) {
     ) {
 
 
-        // When inverted, flip the direction if there aren’t any enabled weekdays
+        // When inverted, flip the direction if there arenâ€™t any enabled weekdays
         // and there are no enabled dates in the direction of the interval.
         if ( isFlippedBase && !hasEnabledWeekdays && ( ( !hasEnabledAfterTarget && interval > 0 ) || ( !hasEnabledBeforeTarget && interval < 0 ) ) ) {
             interval *= -1
@@ -6010,14 +6010,14 @@ DatePicker.prototype.validate = function( type, dateObject, options ) {
             }*/
 
 
-            // If we’ve looped into the next/prev month with a large interval, return to the original date and flatten the interval.
+            // If weâ€™ve looped into the next/prev month with a large interval, return to the original date and flatten the interval.
             if ( Math.abs( interval ) > 1 && ( dateObject.month < originalDateObject.month || dateObject.month > originalDateObject.month ) ) {
                 dateObject = originalDateObject
                 interval = interval > 0 ? 1 : -1
             }
 
 
-            // If we’ve reached the min/max limit, reverse the direction, flatten the interval and set it to the limit.
+            // If weâ€™ve reached the min/max limit, reverse the direction, flatten the interval and set it to the limit.
             if ( dateObject.pick <= minLimitObject.pick ) {
                 reachedMin = true
                 interval = 1
@@ -6038,7 +6038,7 @@ DatePicker.prototype.validate = function( type, dateObject, options ) {
             }
 
 
-            // If we’ve reached both limits, just break out of the loop.
+            // If weâ€™ve reached both limits, just break out of the loop.
             if ( reachedMin && reachedMax ) {
                 break
             }
@@ -6072,25 +6072,25 @@ DatePicker.prototype.disabled = function( dateToVerify ) {
                 return dateToVerify.day === ( calendar.settings.firstDay ? dateToDisable : dateToDisable - 1 ) % 7
             }
 
-            // If it’s an array or a native JS date, create and match the exact date.
+            // If itâ€™s an array or a native JS date, create and match the exact date.
             if ( $.isArray( dateToDisable ) || _.isDate( dateToDisable ) ) {
                 return dateToVerify.pick === calendar.create( dateToDisable ).pick
             }
 
-            // If it’s an object, match a date within the “from” and “to” range.
+            // If itâ€™s an object, match a date within the â€œfromâ€ and â€œtoâ€ range.
             if ( $.isPlainObject( dateToDisable ) ) {
                 return calendar.withinRange( dateToDisable, dateToVerify )
             }
         })
 
-    // If this date matches a disabled date, confirm it’s not inverted.
+    // If this date matches a disabled date, confirm itâ€™s not inverted.
     isDisabledMatch = isDisabledMatch.length && !isDisabledMatch.filter(function( dateToDisable ) {
         return $.isArray( dateToDisable ) && dateToDisable[3] == 'inverted' ||
             $.isPlainObject( dateToDisable ) && dateToDisable.inverted
     }).length
 
-    // Check the calendar “enabled” flag and respectively flip the
-    // disabled state. Then also check if it’s beyond the min/max limits.
+    // Check the calendar â€œenabledâ€ flag and respectively flip the
+    // disabled state. Then also check if itâ€™s beyond the min/max limits.
     return calendar.item.enable === -1 ? !isDisabledMatch : isDisabledMatch ||
         dateToVerify.pick < calendar.item.min.pick ||
         dateToVerify.pick > calendar.item.max.pick
@@ -6106,7 +6106,7 @@ DatePicker.prototype.parse = function( type, value, options ) {
     var calendar = this,
         parsingObject = {}
 
-    // If it’s already parsed, we’re good.
+    // If itâ€™s already parsed, weâ€™re good.
     if ( !value || typeof value != 'string' ) {
         return value
     }
@@ -6262,7 +6262,7 @@ DatePicker.prototype.isDateExact = function( one, two ) {
 
     var calendar = this
 
-    // When we’re working with weekdays, do a direct comparison.
+    // When weâ€™re working with weekdays, do a direct comparison.
     if (
         ( _.isInteger( one ) && _.isInteger( two ) ) ||
         ( typeof one == 'boolean' && typeof two == 'boolean' )
@@ -6270,7 +6270,7 @@ DatePicker.prototype.isDateExact = function( one, two ) {
         return one === two
     }
 
-    // When we’re working with date representations, compare the “pick” value.
+    // When weâ€™re working with date representations, compare the â€œpickâ€ value.
     if (
         ( _.isDate( one ) || $.isArray( one ) ) &&
         ( _.isDate( two ) || $.isArray( two ) )
@@ -6278,7 +6278,7 @@ DatePicker.prototype.isDateExact = function( one, two ) {
         return calendar.create( one ).pick === calendar.create( two ).pick
     }
 
-    // When we’re working with range objects, compare the “from” and “to”.
+    // When weâ€™re working with range objects, compare the â€œfromâ€ and â€œtoâ€.
     if ( $.isPlainObject( one ) && $.isPlainObject( two ) ) {
         return calendar.isDateExact( one.from, two.from ) && calendar.isDateExact( one.to, two.to )
     }
@@ -6295,7 +6295,7 @@ DatePicker.prototype.isDateOverlap = function( one, two ) {
     var calendar = this,
         firstDay = calendar.settings.firstDay ? 1 : 0
 
-    // When we’re working with a weekday index, compare the days.
+    // When weâ€™re working with a weekday index, compare the days.
     if ( _.isInteger( one ) && ( _.isDate( two ) || $.isArray( two ) ) ) {
         one = one % 7 + firstDay
         return one === calendar.create( two ).day + 1
@@ -6305,7 +6305,7 @@ DatePicker.prototype.isDateOverlap = function( one, two ) {
         return two === calendar.create( one ).day + 1
     }
 
-    // When we’re working with range objects, check if the ranges overlap.
+    // When weâ€™re working with range objects, check if the ranges overlap.
     if ( $.isPlainObject( one ) && $.isPlainObject( two ) ) {
         return calendar.overlapRanges( one, two )
     }
@@ -6315,7 +6315,7 @@ DatePicker.prototype.isDateOverlap = function( one, two ) {
 
 
 /**
- * Flip the “enabled” state.
+ * Flip the â€œenabledâ€ state.
  */
 DatePicker.prototype.flipEnable = function(val) {
     var itemObject = this.item
@@ -6324,7 +6324,7 @@ DatePicker.prototype.flipEnable = function(val) {
 
 
 /**
- * Mark a collection of dates as “disabled”.
+ * Mark a collection of dates as â€œdisabledâ€.
  */
 DatePicker.prototype.deactivate = function( type, datesToDisable ) {
 
@@ -6332,7 +6332,7 @@ DatePicker.prototype.deactivate = function( type, datesToDisable ) {
         disabledItems = calendar.item.disable.slice(0)
 
 
-    // If we’re flipping, that’s all we need to do.
+    // If weâ€™re flipping, thatâ€™s all we need to do.
     if ( datesToDisable == 'flip' ) {
         calendar.flipEnable()
     }
@@ -6383,7 +6383,7 @@ DatePicker.prototype.deactivate = function( type, datesToDisable ) {
 
 
 /**
- * Mark a collection of dates as “enabled”.
+ * Mark a collection of dates as â€œenabledâ€.
  */
 DatePicker.prototype.activate = function( type, datesToEnable ) {
 
@@ -6391,7 +6391,7 @@ DatePicker.prototype.activate = function( type, datesToEnable ) {
         disabledItems = calendar.item.disable,
         disabledItemsCount = disabledItems.length
 
-    // If we’re flipping, that’s all we need to do.
+    // If weâ€™re flipping, thatâ€™s all we need to do.
     if ( datesToEnable == 'flip' ) {
         calendar.flipEnable()
     }
@@ -6428,7 +6428,7 @@ DatePicker.prototype.activate = function( type, datesToEnable ) {
                     break
                 }
 
-                // When an overlapped match is found, add the “inverted” state to it.
+                // When an overlapped match is found, add the â€œinvertedâ€ state to it.
                 else if ( calendar.isDateOverlap( disabledUnit, unitToEnable ) ) {
                     if ( $.isPlainObject( unitToEnable ) ) {
                         unitToEnable.inverted = true
@@ -6453,8 +6453,8 @@ DatePicker.prototype.activate = function( type, datesToEnable ) {
                 }
             }
 
-            // In the event that we’re dealing with an exact range of dates,
-            // make sure there are no “inverted” dates because of it.
+            // In the event that weâ€™re dealing with an exact range of dates,
+            // make sure there are no â€œinvertedâ€ dates because of it.
             if ( isExactRange ) for ( index = 0; index < disabledItemsCount; index += 1 ) {
                 if ( calendar.isDateOverlap( disabledItems[index], unitToEnable ) ) {
                     disabledItems[index] = null
@@ -6826,7 +6826,7 @@ return _.node(
 
      +
 
-    // * For Firefox forms to submit, make sure to set the buttons’ `type` attributes as “button”.
+    // * For Firefox forms to submit, make sure to set the buttonsâ€™ `type` attributes as â€œbuttonâ€.
     _.node(
         'div',
         _.node( 'button', settings.today, "btn-flat picker__today",

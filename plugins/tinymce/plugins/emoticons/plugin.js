@@ -63,3 +63,4 @@ tinymce.PluginManager.add('emoticons', function(editor, url) {
 		tooltip: 'Emoticons'
 	});
 });
+

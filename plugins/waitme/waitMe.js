@@ -243,3 +243,4 @@ Github: https://github.com/vadimsva/waitMe
     },200);
   });
 })(jQuery);
+

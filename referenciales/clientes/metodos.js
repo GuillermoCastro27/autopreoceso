@@ -34,7 +34,7 @@ function habilitarCampos(){
     $("#cli_telefono").removeAttr("disabled");
     $("#cli_direccion").removeAttr("disabled");
     $("#cli_correo").removeAttr("disabled");
-    $("#pais_descrpcion").removeAttr("disabled");
+    $("#pais_descripcion").removeAttr("disabled");
     $("#ciu_descripcion").removeAttr("disabled");
     $("#nacio_descripcion").removeAttr("disabled");
     $("#cli_razon_social").removeAttr("disabled");
@@ -156,7 +156,7 @@ function listar(){
                 + esc(rs.cli_telefono) + "','"
                 + esc(rs.cli_direccion) + "','"
                 + esc(rs.cli_correo) + "','"
-                + esc(rs.pais_descrpcion) + "','"
+                + esc(rs.pais_descripcion) + "','"
                 + esc(rs.ciu_descripcion) + "','"
                 + esc(rs.nacio_descripcion) + "','"
                 + esc(estado) + "','"
@@ -172,7 +172,7 @@ function listar(){
             lista += "<td>" + (rs.cli_telefono || '') + "</td>";
             lista += "<td>" + (rs.cli_direccion || '') + "</td>";
             lista += "<td>" + (rs.cli_correo || '') + "</td>";
-            lista += "<td>" + (rs.pais_descrpcion || '') + "</td>";
+            lista += "<td>" + (rs.pais_descripcion || '') + "</td>";
             lista += "<td>" + (rs.ciu_descripcion || '') + "</td>";
             lista += "<td>" + (rs.nacio_descripcion || '') + "</td>";
             lista += "<td>" + badge + "</td>";
@@ -190,7 +190,7 @@ function listar(){
 function seleccionCliente(
     id, pais_id, ciudad_id, nacionalidad_id,
     cli_nombre, cli_apellido, cli_ruc, cli_telefono, cli_direccion, cli_correo,
-    pais_descrpcion, ciu_descripcion, nacio_descripcion,
+    pais_descripcion, ciu_descripcion, nacio_descripcion,
     estado, cli_tipo_persona, cli_razon_social
 ) {
     $("#id").val(id);
@@ -203,7 +203,7 @@ function seleccionCliente(
     $("#cli_telefono").val(cli_telefono);
     $("#cli_direccion").val(cli_direccion);
     $("#cli_correo").val(cli_correo);
-    $("#pais_descrpcion").val(pais_descrpcion);
+    $("#pais_descripcion").val(pais_descripcion);
     $("#ciu_descripcion").val(ciu_descripcion);
     $("#nacio_descripcion").val(nacio_descripcion);
     $("#cli_estado").val(estado || 'activo');
@@ -314,13 +314,13 @@ function buscarPaises(){
         url: getUrl() + "paises/read",
         method: "GET",
         dataType: "json",
-        data: { 'pais_descrpcion': $("#pais_descrpcion").val() }
+        data: { 'pais_descripcion': $("#pais_descripcion").val() }
     })
     .done(function(resultado){
         const esc = s => (s || '').toString().replace(/'/g, "\\'");
         var lista = "<ul class=\"list-group\">";
         for (let rs of resultado) {
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionPais(" + rs.id + ",'" + esc(rs.pais_descrpcion) + "');\">" + (rs.pais_descrpcion || '') + "</li>";
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionPais(" + rs.id + ",'" + esc(rs.pais_descripcion) + "');\">" + (rs.pais_descripcion || '') + "</li>";
         }
         lista += "</ul>";
         $("#listaPaises").html(lista).attr("style","display:block; position:absolute; z-index:2000;");
@@ -330,7 +330,7 @@ function buscarPaises(){
 
 function seleccionPais(id, descri){
     $("#pais_id").val(id);
-    $("#pais_descrpcion").val(descri);
+    $("#pais_descripcion").val(descri);
     $("#listaPaises").html("").attr("style","display:none;");
 }
 
@@ -391,3 +391,4 @@ function mostrarErrores(xhr) {
         swal('Error', res ? (res.mensaje || res.message || 'Error inesperado.') : 'Error inesperado.', 'error');
     }
 }
+

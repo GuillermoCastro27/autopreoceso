@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("justify","el",{block:"Πλήρης Στοίχιση",center:"Στο Κέντρο",left:"Στοίχιση Αριστερά",right:"Στοίχιση Δεξιά"});
+CKEDITOR.plugins.setLang("justify","el",{block:"Î Î»Î®ÏÎ·Ï‚ Î£Ï„Î¿Î¯Ï‡Î¹ÏƒÎ·",center:"Î£Ï„Î¿ ÎšÎ­Î½Ï„ÏÎ¿",left:"Î£Ï„Î¿Î¯Ï‡Î¹ÏƒÎ· Î‘ÏÎ¹ÏƒÏ„ÎµÏÎ¬",right:"Î£Ï„Î¿Î¯Ï‡Î¹ÏƒÎ· Î”ÎµÎ¾Î¹Î¬"});

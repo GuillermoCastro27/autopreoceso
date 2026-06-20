@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("colordialog","uk",{clear:"Очистити",highlight:"Колір, на який вказує курсор",options:"Опції кольорів",selected:"Обраний колір",title:"Обрати колір"});
+CKEDITOR.plugins.setLang("colordialog","uk",{clear:"ÐžÑ‡Ð¸ÑÑ‚Ð¸Ñ‚Ð¸",highlight:"ÐšÐ¾Ð»Ñ–Ñ€, Ð½Ð° ÑÐºÐ¸Ð¹ Ð²ÐºÐ°Ð·ÑƒÑ” ÐºÑƒÑ€ÑÐ¾Ñ€",options:"ÐžÐ¿Ñ†Ñ–Ñ— ÐºÐ¾Ð»ÑŒÐ¾Ñ€Ñ–Ð²",selected:"ÐžÐ±Ñ€Ð°Ð½Ð¸Ð¹ ÐºÐ¾Ð»Ñ–Ñ€",title:"ÐžÐ±Ñ€Ð°Ñ‚Ð¸ ÐºÐ¾Ð»Ñ–Ñ€"});

@@ -24,14 +24,15 @@
 (function ($) {
   $.fn.selectpicker.defaults = {
     noneSelectedText: 'Vyberte zo zoznamu',
-    noneResultsText: 'Pre výraz {0} neboli nájdené žiadne výsledky',
-    countSelectedText: 'Vybrané {0} z {1}',
-    maxOptionsText: ['Limit prekročený ({n} {var} max)', 'Limit skupiny prekročený ({n} {var} max)', ['položiek', 'položka']],
-    selectAllText: 'Vybrať všetky',
-    deselectAllText: 'Zrušiť výber',
+    noneResultsText: 'Pre vÃ½raz {0} neboli nÃ¡jdenÃ© Å¾iadne vÃ½sledky',
+    countSelectedText: 'VybranÃ© {0} z {1}',
+    maxOptionsText: ['Limit prekroÄenÃ½ ({n} {var} max)', 'Limit skupiny prekroÄenÃ½ ({n} {var} max)', ['poloÅ¾iek', 'poloÅ¾ka']],
+    selectAllText: 'VybraÅ¥ vÅ¡etky',
+    deselectAllText: 'ZruÅ¡iÅ¥ vÃ½ber',
     multipleSeparator: ', '
   };
 })(jQuery);
 
 
 }));
+

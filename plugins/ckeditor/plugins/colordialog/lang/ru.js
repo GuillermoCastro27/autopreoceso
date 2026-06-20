@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("colordialog","ru",{clear:"Очистить",highlight:"Под курсором",options:"Настройки цвета",selected:"Выбранный цвет",title:"Выберите цвет"});
+CKEDITOR.plugins.setLang("colordialog","ru",{clear:"ÐžÑ‡Ð¸ÑÑ‚Ð¸Ñ‚ÑŒ",highlight:"ÐŸÐ¾Ð´ ÐºÑƒÑ€ÑÐ¾Ñ€Ð¾Ð¼",options:"ÐÐ°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ¸ Ñ†Ð²ÐµÑ‚Ð°",selected:"Ð’Ñ‹Ð±Ñ€Ð°Ð½Ð½Ñ‹Ð¹ Ñ†Ð²ÐµÑ‚",title:"Ð’Ñ‹Ð±ÐµÑ€Ð¸Ñ‚Ðµ Ñ†Ð²ÐµÑ‚"});

@@ -579,10 +579,10 @@ function mostrarBotonesDetalle(modo) {
 function agregarDetalle() {
     cancelarDetalle();
     $('#txtOperacionDetalle').val(1);
-    $('#item_decripcion').removeAttr('disabled');
+    $('#item_descripcion').removeAttr('disabled');
     $('#notas_vent_det_cantidad').removeAttr('disabled');
     $('#notas_vent_det_precio').removeAttr('disabled');
-    $('#tip_imp_nom').removeAttr('disabled');
+    $('#tipo_imp_nom').removeAttr('disabled');
     cargarDepositosDetalle(null);
     $('#deposito_id_det').prop('disabled', true);
     mostrarBotonesDetalle('grabar');
@@ -590,10 +590,10 @@ function agregarDetalle() {
 
 function editarDetalle() {
     $('#txtOperacionDetalle').val(2);
-    $('#item_decripcion').removeAttr('disabled');
+    $('#item_descripcion').removeAttr('disabled');
     $('#notas_vent_det_cantidad').removeAttr('disabled');
     $('#notas_vent_det_precio').removeAttr('disabled');
-    $('#tip_imp_nom').removeAttr('disabled');
+    $('#tipo_imp_nom').removeAttr('disabled');
     cargarDepositosDetalle($('#deposito_id_det').val());
     $('#deposito_id_det').prop('disabled', true);
     if (typeof mmCargarMarcas === 'function') {
@@ -613,10 +613,10 @@ function cancelarDetalle() {
     if (typeof mmLimpiar === 'function') mmLimpiar();
     $('#txtOperacionDetalle').val(0);
     $('#item_id').val('');
-    $('#item_decripcion').val('').prop('disabled', true);
+    $('#item_descripcion').val('').prop('disabled', true);
     $('#notas_vent_det_cantidad').val('').prop('disabled', true).css('border-color','');
     $('#notas_vent_det_precio').val('').prop('disabled', true);
-    $('#tip_imp_nom').val('').prop('disabled', true);
+    $('#tipo_imp_nom').val('').prop('disabled', true);
     $('#tipo_impuesto_id').val('');
     $('#stock_disponible_det').val(0);
     $('#avisoStockNota').hide();
@@ -735,7 +735,7 @@ function listarDetalles() {
             var precio   = parseFloat(rs.notas_vent_det_precio)   || 0;
             var subtotal = cantidad * precio;
 
-            var imp = (rs.tip_imp_nom || '').toUpperCase();
+            var imp = (rs.tipo_imp_nom || '').toUpperCase();
             var iva = 0;
             if (imp.indexOf('EXENT') !== -1)      { iva = 0; }
             else if (imp.indexOf('5') !== -1)      { iva = Math.round(subtotal / 21); TotalIva5 += iva; }
@@ -745,8 +745,8 @@ function listarDetalles() {
             var det = JSON.stringify({
                 item_id:         rs.item_id,
                 tipo_impuesto_id:rs.tipo_impuesto_id,
-                item_decripcion: rs.item_decripcion  || '',
-                tip_imp_nom:     rs.tip_imp_nom       || '',
+                item_descripcion: rs.item_descripcion  || '',
+                tipo_imp_nom:     rs.tipo_imp_nom       || '',
                 cantidad:        cantidad,
                 precio:          precio,
                 deposito_id:     rs.deposito_id       || 0,
@@ -757,12 +757,12 @@ function listarDetalles() {
 
             lista += '<tr class="nota-det-row" style="cursor:pointer;" data-det=\'' + det + '\'>';
             lista += '<td>' + rs.item_id + '</td>';
-            lista += '<td>' + rs.item_decripcion + '</td>';
-            lista += '<td>' + (rs.marc_nom||'-') + '</td>';
+            lista += '<td>' + rs.item_descripcion + '</td>';
+            lista += '<td>' + (rs.mar_nom||'-') + '</td>';
             lista += '<td>' + (rs.modelo_nom||'-') + '</td>';
             lista += '<td class="text-right">' + cantidad + '</td>';
             lista += '<td class="text-right">' + formatearNumero(precio) + '</td>';
-            lista += '<td>' + (rs.tip_imp_nom||'-') + '</td>';
+            lista += '<td>' + (rs.tipo_imp_nom||'-') + '</td>';
             lista += '<td class="text-right">' + formatearNumero(subtotal) + '</td>';
             lista += '<td class="text-right">' + formatearNumero(iva) + '</td>';
             lista += '<td>' + (rs.dep_nombre||'-') + '</td>';
@@ -789,17 +789,17 @@ function listarDetalles() {
 $(document).on('click', '.nota-det-row', function() {
     var d = $(this).data('det');
     if (!d) return;
-    seleccionDetalle(d.item_id, d.tipo_impuesto_id, d.item_decripcion, d.tip_imp_nom,
+    seleccionDetalle(d.item_id, d.tipo_impuesto_id, d.item_descripcion, d.tipo_imp_nom,
         d.cantidad, d.precio, d.deposito_id, d.stock_disponible, d.marca_id, d.modelo_id);
 });
 
-function seleccionDetalle(item_id, tipo_impuesto_id, item_decripcion, tip_imp_nom, cantidad, precio, deposito_id, stock_disponible, marca_id, modelo_id) {
+function seleccionDetalle(item_id, tipo_impuesto_id, item_descripcion, tipo_imp_nom, cantidad, precio, deposito_id, stock_disponible, marca_id, modelo_id) {
     if ($("#nota_vent_estado").val() === 'CONFIRMADO') return;
 
     $('#item_id').val(item_id);
     $('#tipo_impuesto_id').val(tipo_impuesto_id);
-    $('#item_decripcion').val(item_decripcion);
-    $('#tip_imp_nom').val(tip_imp_nom);
+    $('#item_descripcion').val(item_descripcion);
+    $('#tipo_imp_nom').val(tipo_imp_nom);
     $('#notas_vent_det_cantidad').val(cantidad);
     $('#notas_vent_det_precio').val(precio);
     $('#stock_disponible_det').val(stock_disponible || 0);
@@ -814,7 +814,7 @@ function seleccionDetalle(item_id, tipo_impuesto_id, item_decripcion, tip_imp_no
 
 // ─── PRODUCTOS ───────────────────────────────────────────────────────────────
 function buscarProductos() {
-    var q = $('#item_decripcion').val();
+    var q = $('#item_descripcion').val();
     if (q.length < 2) { $('#listaProductos').html('').hide(); return; }
     _debounce('prod', function() {
         $.ajax({
@@ -822,7 +822,7 @@ function buscarProductos() {
             method: 'POST',
             dataType: 'json',
             headers: { Authorization: 'Bearer ' + getToken() },
-            data: { item_decripcion: q }
+            data: { item_descripcion: q }
         })
         .done(function(resultado) {
             var lista = '<ul class="list-group">';
@@ -830,16 +830,16 @@ function buscarProductos() {
                 var stock = rs.cantidad_disponible || 0;
                 var info = JSON.stringify({
                     item_id:          rs.item_id,
-                    item_decripcion:  rs.item_decripcion  || '',
+                    item_descripcion:  rs.item_descripcion  || '',
                     tipo_impuesto_id: rs.tipo_impuesto_id || null,
                     item_costo:       rs.item_costo       || 0,
-                    tip_imp_nom:      rs.tip_imp_nom       || '',
+                    tipo_imp_nom:      rs.tipo_imp_nom       || '',
                     tipo_imp_tasa:    rs.tipo_imp_tasa     || 0,
                     stock:            stock
                 }).replace(/'/g, "&#39;");
 
                 lista += '<li class="list-group-item lista-prod-item" style="cursor:pointer;" data-info=\'' + info + '\'>'
-                    + rs.item_decripcion
+                    + rs.item_descripcion
                     + ' <span class="badge" style="background:#3b82f6;color:#fff;">Stock: ' + stock + '</span>'
                     + '</li>';
             });
@@ -853,15 +853,15 @@ function buscarProductos() {
 $(document).on('click', '.lista-prod-item', function() {
     var d = $(this).data('info');
     if (!d) return;
-    seleccionProducto(d.item_id, d.item_decripcion, d.tipo_impuesto_id, d.item_costo, d.tip_imp_nom, d.tipo_imp_tasa, d.stock);
+    seleccionProducto(d.item_id, d.item_descripcion, d.tipo_impuesto_id, d.item_costo, d.tipo_imp_nom, d.tipo_imp_tasa, d.stock);
 });
 
-function seleccionProducto(item_id, item_decripcion, tipo_impuesto_id, item_costo, tip_imp_nom, tipo_imp_tasa, cantidad_disponible) {
+function seleccionProducto(item_id, item_descripcion, tipo_impuesto_id, item_costo, tipo_imp_nom, tipo_imp_tasa, cantidad_disponible) {
     $('#item_id').val(item_id);
-    $('#item_decripcion').val(item_decripcion);
+    $('#item_descripcion').val(item_descripcion);
     $('#notas_vent_det_precio').val('' + item_costo);
     $('#tipo_impuesto_id').val(tipo_impuesto_id);
-    $('#tip_imp_nom').val(tip_imp_nom);
+    $('#tipo_imp_nom').val(tipo_imp_nom);
     $('#stock_disponible_det').val(cantidad_disponible || 0);
     if (typeof mmCargarMarcas === 'function') { mmCargarMarcas(item_id, null); $('#marca_det_mm').removeAttr('disabled'); }
     $('#listaProductos').html('').hide();
@@ -879,7 +879,7 @@ function buscarTipoImpuestos() {
     .done(function(resultado) {
         var lista = "<ul class='list-group'>";
         resultado.forEach(function(rs) {
-            lista += "<li class='list-group-item' onclick=\"seleccionTipoImpuestos(" + rs.id + ",'" + rs.tip_imp_nom + "','" + rs.tipo_imp_tasa + "');\">" + rs.tip_imp_nom + ', ' + rs.tipo_imp_tasa + "</li>";
+            lista += "<li class='list-group-item' onclick=\"seleccionTipoImpuestos(" + rs.id + ",'" + rs.tipo_imp_nom + "','" + rs.tipo_imp_tasa + "');\">" + rs.tipo_imp_nom + ', ' + rs.tipo_imp_tasa + "</li>";
         });
         lista += "</ul>";
         $('#listaTipoImpuestos').html(lista).css({ display:'block', position:'absolute', zIndex:2000 });
@@ -887,9 +887,9 @@ function buscarTipoImpuestos() {
     .fail(function() { swal('Error', 'No se pudo cargar tipos de impuesto.', 'error'); });
 }
 
-function seleccionTipoImpuestos(id, tip_imp_nom, tipo_imp_tasa) {
+function seleccionTipoImpuestos(id, tipo_imp_nom, tipo_imp_tasa) {
     $('#tipo_impuesto_id').val(id);
-    $('#tip_imp_nom').val(tip_imp_nom);
+    $('#tipo_imp_nom').val(tipo_imp_nom);
     $('#listaTipoImpuestos').html('').hide();
 }
 
@@ -919,3 +919,4 @@ function cargarFuncionarioIdLogueado() {
         window.location.href = '../../index.html';
     }
 }
+

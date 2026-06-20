@@ -23,15 +23,15 @@
 
 (function ($) {
   $.fn.selectpicker.defaults = {
-    noneSelectedText: 'Válasszon!',
-    noneResultsText: 'Nincs találat {0}',
+    noneSelectedText: 'VÃ¡lasszon!',
+    noneResultsText: 'Nincs talÃ¡lat {0}',
     countSelectedText: function (numSelected, numTotal) {
-      return '{0} elem kiválasztva';
+      return '{0} elem kivÃ¡lasztva';
     },
     maxOptionsText: function (numAll, numGroup) {
       return [
-        'Legfeljebb {n} elem választható',
-        'A csoportban legfeljebb {n} elem választható'
+        'Legfeljebb {n} elem vÃ¡laszthatÃ³',
+        'A csoportban legfeljebb {n} elem vÃ¡laszthatÃ³'
       ];
     },
     selectAllText: 'Mind',
@@ -42,3 +42,4 @@
 
 
 }));
+

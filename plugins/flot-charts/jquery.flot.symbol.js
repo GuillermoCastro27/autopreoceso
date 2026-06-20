@@ -69,3 +69,4 @@ The symbols are accessed as strings through the standard symbol options:
         version: '1.0'
     });
 })(jQuery);
+

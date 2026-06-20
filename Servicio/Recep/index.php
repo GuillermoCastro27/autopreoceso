@@ -211,7 +211,7 @@ Recepción de Vehículos
 
     <div class="col-sm-4">
         <label class="field-label">Marca</label>
-        <input type="text" id="marc_nom" class="form-control" disabled onkeyup="buscarMarcasVehiculo();" placeholder="Marca">
+        <input type="text" id="mar_nom" class="form-control" disabled onkeyup="buscarMarcasVehiculo();" placeholder="Marca">
         <input type="hidden" id="marca_id">
         <div id="listaMarcasVehiculo" style="display:none;"></div>
     </div>
@@ -263,11 +263,11 @@ Recepción de Vehículos
                 <input type="text" id="item_id" class="form-control" disabled placeholder="Código">
             </div>
             <div class="col-sm-5">
-                <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
+                <input type="text" id="item_descripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
                 <div id="listaProductos" style="display:none;"></div>
             </div>
             <div class="col-sm-2">
-                <input type="text" id="tip_imp_nom" class="form-control" disabled placeholder="Tipo impuesto">
+                <input type="text" id="tipo_imp_nom" class="form-control" disabled placeholder="Tipo impuesto">
                 <input type="hidden" id="tipo_impuesto_id" name="tipo_impuesto_id">
             </div>
             <div class="col-sm-2">
@@ -416,3 +416,4 @@ Recepción de Vehículos
 
 </body>
 </html>
+

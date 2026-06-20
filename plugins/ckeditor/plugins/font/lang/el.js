@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("font","el",{fontSize:{label:"Μέγεθος",voiceLabel:"Μέγεθος Γραμματοσειράς",panelTitle:"Μέγεθος Γραμματοσειράς"},label:"Γραμματοσειρά",panelTitle:"Όνομα Γραμματοσειράς",voiceLabel:"Γραμματοσειρά"});
+CKEDITOR.plugins.setLang("font","el",{fontSize:{label:"ÎœÎ­Î³ÎµÎ¸Î¿Ï‚",voiceLabel:"ÎœÎ­Î³ÎµÎ¸Î¿Ï‚ Î“ÏÎ±Î¼Î¼Î±Ï„Î¿ÏƒÎµÎ¹ÏÎ¬Ï‚",panelTitle:"ÎœÎ­Î³ÎµÎ¸Î¿Ï‚ Î“ÏÎ±Î¼Î¼Î±Ï„Î¿ÏƒÎµÎ¹ÏÎ¬Ï‚"},label:"Î“ÏÎ±Î¼Î¼Î±Ï„Î¿ÏƒÎµÎ¹ÏÎ¬",panelTitle:"ÎŒÎ½Î¿Î¼Î± Î“ÏÎ±Î¼Î¼Î±Ï„Î¿ÏƒÎµÎ¹ÏÎ¬Ï‚",voiceLabel:"Î“ÏÎ±Î¼Î¼Î±Ï„Î¿ÏƒÎµÎ¹ÏÎ¬"});

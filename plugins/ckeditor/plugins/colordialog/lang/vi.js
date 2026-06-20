@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("colordialog","vi",{clear:"Xóa bỏ",highlight:"Màu chọn",options:"Tùy chọn màu",selected:"Màu đã chọn",title:"Chọn màu"});
+CKEDITOR.plugins.setLang("colordialog","vi",{clear:"XÃ³a bá»",highlight:"MÃ u chá»n",options:"TÃ¹y chá»n mÃ u",selected:"MÃ u Ä‘Ã£ chá»n",title:"Chá»n mÃ u"});

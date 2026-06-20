@@ -427,3 +427,4 @@ function exportarPagina() {
 $(function () {
     document.getElementById('contenedor_tabla').style.display = 'none';
 });
+

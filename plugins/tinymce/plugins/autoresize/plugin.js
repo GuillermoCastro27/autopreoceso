@@ -160,3 +160,4 @@ tinymce.PluginManager.add('autoresize', function(editor) {
 	// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceExample');
 	editor.addCommand('mceAutoResize', resize);
 });
+

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("font","ru",{fontSize:{label:"Размер",voiceLabel:"Размер шрифта",panelTitle:"Размер шрифта"},label:"Шрифт",panelTitle:"Шрифт",voiceLabel:"Шрифт"});
+CKEDITOR.plugins.setLang("font","ru",{fontSize:{label:"Ð Ð°Ð·Ð¼ÐµÑ€",voiceLabel:"Ð Ð°Ð·Ð¼ÐµÑ€ ÑˆÑ€Ð¸Ñ„Ñ‚Ð°",panelTitle:"Ð Ð°Ð·Ð¼ÐµÑ€ ÑˆÑ€Ð¸Ñ„Ñ‚Ð°"},label:"Ð¨Ñ€Ð¸Ñ„Ñ‚",panelTitle:"Ð¨Ñ€Ð¸Ñ„Ñ‚",voiceLabel:"Ð¨Ñ€Ð¸Ñ„Ñ‚"});

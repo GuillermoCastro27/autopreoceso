@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("justify","ja",{block:"両端揃え",center:"中央揃え",left:"左揃え",right:"右揃え"});
+CKEDITOR.plugins.setLang("justify","ja",{block:"ä¸¡ç«¯æƒãˆ",center:"ä¸­å¤®æƒãˆ",left:"å·¦æƒãˆ",right:"å³æƒãˆ"});

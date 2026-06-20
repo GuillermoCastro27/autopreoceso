@@ -51,7 +51,7 @@
                 </div>
                 <div class="col-sm-5">
                     <label class="field-label">Descripción del Ítem</label>
-                    <input type="text" id="item_decripcion" class="form-control" disabled placeholder="Descripción del Ítem">
+                    <input type="text" id="item_descripcion" class="form-control" disabled placeholder="Descripción del Ítem">
                 </div>
             </div>
         </div>
@@ -83,7 +83,7 @@
                 </div>
                 <div class="col-sm-4">
                     <label class="field-label">Tipo Impuesto</label>
-                    <input type="text" id="tip_imp_nom" class="form-control" disabled onkeyup="buscarTipoImpuestos();" placeholder="Tipo Impuesto">
+                    <input type="text" id="tipo_imp_nom" class="form-control" disabled onkeyup="buscarTipoImpuestos();" placeholder="Tipo Impuesto">
                     <input type="hidden" id="tipo_impuesto_id">
                     <div id="listaTipoImpuestos"></div>
                 </div>
@@ -96,7 +96,7 @@
             <div class="row clearfix">
                 <div class="col-sm-5">
                     <div class="pivot-search-wrap">
-                        <input type="text" id="marc_nom_add" class="form-control" disabled
+                        <input type="text" id="mar_nom_add" class="form-control" disabled
                                placeholder="Buscar marca..." onkeyup="buscarMarcaAdd();">
                         <div id="listaMarcasAdd"></div>
                     </div>
@@ -226,3 +226,4 @@
 
 </body>
 </html>
+

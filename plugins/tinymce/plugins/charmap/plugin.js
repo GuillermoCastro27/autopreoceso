@@ -460,3 +460,4 @@ tinymce.PluginManager.add('charmap', function(editor) {
 		insertChar: insertChar
 	};
 });
+

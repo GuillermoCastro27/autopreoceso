@@ -121,3 +121,4 @@ tinymce.PluginManager.add('visualchars', function(editor) {
 		}
 	});
 });
+

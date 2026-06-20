@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("preview","nb",{preview:"Forhåndsvis"});
+CKEDITOR.plugins.setLang("preview","nb",{preview:"ForhÃ¥ndsvis"});

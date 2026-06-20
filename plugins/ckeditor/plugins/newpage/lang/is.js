@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("newpage","is",{toolbar:"Ný síða"});
+CKEDITOR.plugins.setLang("newpage","is",{toolbar:"NÃ½ sÃ­Ã°a"});

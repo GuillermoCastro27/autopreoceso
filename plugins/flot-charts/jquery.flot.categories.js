@@ -188,3 +188,4 @@ as "categories" on the axis object, e.g. plot.getAxes().xaxis.categories.
         version: '1.0'
     });
 })(jQuery);
+

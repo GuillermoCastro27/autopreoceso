@@ -1,4 +1,4 @@
-﻿listar();
+listar();
 campoFecha();
 function formatoTabla(){
     //Exportable table

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("colordialog","et",{clear:"Eemalda",highlight:"Näidis",options:"Värvi valikud",selected:"Valitud värv",title:"Värvi valimine"});
+CKEDITOR.plugins.setLang("colordialog","et",{clear:"Eemalda",highlight:"NÃ¤idis",options:"VÃ¤rvi valikud",selected:"Valitud vÃ¤rv",title:"VÃ¤rvi valimine"});

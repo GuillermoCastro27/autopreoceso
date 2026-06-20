@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("newpage","km",{toolbar:"ទំព័រ​ថ្មី"});
+CKEDITOR.plugins.setLang("newpage","km",{toolbar:"áž‘áŸ†áž–áŸážšâ€‹ážáŸ’áž˜áž¸"});

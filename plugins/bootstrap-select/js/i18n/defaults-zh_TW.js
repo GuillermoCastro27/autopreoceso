@@ -23,15 +23,16 @@
 
 (function ($) {
   $.fn.selectpicker.defaults = {
-    noneSelectedText: '沒有選取任何項目',
-    noneResultsText: '沒有找到符合的結果',
-    countSelectedText: '已經選取{0}個項目',
-    maxOptionsText: ['超過限制 (最多選擇{n}項)', '超過限制(最多選擇{n}組)'],
-    selectAllText: '選取全部',
-    deselectAllText: '全部取消',
+    noneSelectedText: 'æ²’æœ‰é¸å–ä»»ä½•é …ç›®',
+    noneResultsText: 'æ²’æœ‰æ‰¾åˆ°ç¬¦åˆçš„çµæžœ',
+    countSelectedText: 'å·²ç¶“é¸å–{0}å€‹é …ç›®',
+    maxOptionsText: ['è¶…éŽé™åˆ¶ (æœ€å¤šé¸æ“‡{n}é …)', 'è¶…éŽé™åˆ¶(æœ€å¤šé¸æ“‡{n}çµ„)'],
+    selectAllText: 'é¸å–å…¨éƒ¨',
+    deselectAllText: 'å…¨éƒ¨å–æ¶ˆ',
     multipleSeparator: ', '
   };
 })(jQuery);
 
 
 }));
+

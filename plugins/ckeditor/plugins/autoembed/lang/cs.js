@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("autoembed","cs",{embeddingInProgress:"Pokus o vnoření vložené URL",embeddingFailed:"Tato URL nemůže být automaticky vnořena."});
+CKEDITOR.plugins.setLang("autoembed","cs",{embeddingInProgress:"Pokus o vnoÅ™enÃ­ vloÅ¾enÃ© URL",embeddingFailed:"Tato URL nemÅ¯Å¾e bÃ½t automaticky vnoÅ™ena."});

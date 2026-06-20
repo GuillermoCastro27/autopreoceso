@@ -23,13 +23,13 @@ $.extend( $.validator.messages, {
 	digits: "Unesite samo cifre.",
 	creditcard: "Unesite ispravan broj kreditne kartice.",
 	equalTo: "Unesite istu vrednost ponovo.",
-	extension: "Unesite vrednost sa odgovarajućom ekstenzijom.",
+	extension: "Unesite vrednost sa odgovarajuÄ‡om ekstenzijom.",
 	maxlength: $.validator.format( "Unesite manje od {0} karaktera." ),
 	minlength: $.validator.format( "Unesite barem {0} karaktera." ),
-	rangelength: $.validator.format( "Unesite vrednost dugačku između {0} i {1} karaktera." ),
-	range: $.validator.format( "Unesite vrednost između {0} i {1}." ),
+	rangelength: $.validator.format( "Unesite vrednost dugaÄku izmeÄ‘u {0} i {1} karaktera." ),
+	range: $.validator.format( "Unesite vrednost izmeÄ‘u {0} i {1}." ),
 	max: $.validator.format( "Unesite vrednost manju ili jednaku {0}." ),
-	min: $.validator.format( "Unesite vrednost veću ili jednaku {0}." )
+	min: $.validator.format( "Unesite vrednost veÄ‡u ili jednaku {0}." )
 } );
 
 }));

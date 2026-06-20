@@ -169,7 +169,17 @@ function grabar() {
                 if (r.registro && r.registro.id) $("#id").val(r.registro.id);
                 $("#detalle").show();
                 listarDetalles();
-                if (op !== 1 || (r.registro && r.registro.nota_remi_vent_estado !== "PENDIENTE")) {
+                var estadoReg = (r.registro && r.registro.nota_remi_vent_estado) || "";
+                if (op === 1 && estadoReg === "PENDIENTE") {
+                    $("#nota_remi_vent_fecha").prop("disabled", true);
+                    $("#nota_remi_vent_observaciones").prop("disabled", true);
+                    $("#nro_venta").prop("disabled", true);
+                    $("#buscar_funcionario_entrega").prop("disabled", true);
+                    $("#buscar_vehiculo").prop("disabled", true);
+                    $("#nota_remi_vent_estado").val("PENDIENTE");
+                    $("#btnAgregar, #btnGrabar").prop("disabled", true);
+                    $("#btnEditar, #btnEliminar").prop("disabled", false);
+                } else {
                     location.reload(true);
                 }
             }
@@ -193,7 +203,7 @@ function listar() {
         for (var rs of resultado) {
             var badge = badgeEstado(rs.nota_remi_vent_estado);
             var vehiculo = rs.tv_det_placa
-                ? (rs.marc_nom + " " + rs.modelo_nom + " — " + rs.tv_det_placa).trim()
+                ? (rs.mar_nom + " " + rs.modelo_nom + " — " + rs.tv_det_placa).trim()
                 : "—";
             lista += "<tr style='cursor:pointer;' onclick='seleccionNotaRemi(" + rs.id + ");'>";
             lista += "<td>" + rs.id + "</td>";
@@ -251,7 +261,7 @@ function seleccionNotaRemi(id) {
         // Vehículo
         $("#tipo_vehiculo_det_id").val(rs.tipo_vehiculo_det_id || "");
         if (rs.tv_det_placa) {
-            $("#buscar_vehiculo").val(rs.marc_nom + " " + rs.modelo_nom + " — " + rs.tv_det_placa);
+            $("#buscar_vehiculo").val(rs.mar_nom + " " + rs.modelo_nom + " — " + rs.tv_det_placa);
         } else {
             $("#buscar_vehiculo").val("");
         }
@@ -313,7 +323,7 @@ function listarDetalles() {
 
             lista += "<tr>";
             lista += "<td>" + n + "</td>";
-            lista += "<td>" + rs.item_decripcion + "</td>";
+            lista += "<td>" + rs.item_descripcion + "</td>";
             lista += "<td>" + origenBadge + "</td>";
             lista += "<td class='text-right'>" + formatearNumero(rs.nota_remi_vent_det_cantidad) + "</td>";
             lista += "<td class='text-right'>" + formatearNumero(rs.nota_remi_vent_det_precio) + "</td>";
@@ -459,7 +469,7 @@ function buscarVehiculo() {
     .done(function(resultado) {
         var lista = "<ul class='list-group'>";
         for (var rs of resultado) {
-            var label = (rs.marc_nom || "") + " " + (rs.modelo_nom || "") +
+            var label = (rs.mar_nom || "") + " " + (rs.modelo_nom || "") +
                         (rs.tv_anio  ? " " + rs.tv_anio  : "") +
                         (rs.tv_color ? " — " + rs.tv_color : "") +
                         (rs.tv_det_placa ? " | Placa: " + rs.tv_det_placa : "");
@@ -610,3 +620,4 @@ function mostrarErrores(xhr) {
         swal({ title: "Error", text: "Ocurrió un error inesperado (HTTP " + xhr.status + ").", type: "error" });
     }
 }
+

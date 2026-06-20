@@ -174,3 +174,4 @@ The plugin also adds four public methods:
         version: '1.0'
     });
 })(jQuery);
+

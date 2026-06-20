@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("mathjax","ko",{title:"TeX 문법 수식",button:"수식",dialogInput:"여기 TeX 를 입력하세요",docUrl:"http://ko.wikipedia.org/wiki/%EC%9C%84%ED%82%A4%EB%B0%B1%EA%B3%BC:TeX_%EB%AC%B8%EB%B2%95",docLabel:"TeX 문서",loading:"불러오는 중...",pathName:"수식"});
+CKEDITOR.plugins.setLang("mathjax","ko",{title:"TeX ë¬¸ë²• ìˆ˜ì‹",button:"ìˆ˜ì‹",dialogInput:"ì—¬ê¸° TeX ë¥¼ ìž…ë ¥í•˜ì„¸ìš”",docUrl:"http://ko.wikipedia.org/wiki/%EC%9C%84%ED%82%A4%EB%B0%B1%EA%B3%BC:TeX_%EB%AC%B8%EB%B2%95",docLabel:"TeX ë¬¸ì„œ",loading:"ë¶ˆëŸ¬ì˜¤ëŠ” ì¤‘...",pathName:"ìˆ˜ì‹"});

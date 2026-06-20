@@ -36,7 +36,7 @@ function mmCargarMarcas(itemId, marcaSelId) {
         var opts = '<option value="">-- Marca --</option>';
         data.forEach(function(m) {
             var id = m.marca_id;
-            opts += '<option value="'+id+'"'+(id==marcaSelId?' selected':'')+'>'+m.marc_nom+'</option>';
+            opts += '<option value="'+id+'"'+(id==marcaSelId?' selected':'')+'>'+m.mar_nom+'</option>';
         });
         $('#marca_det_mm').html(opts).removeAttr('disabled');
         if (marcaSelId) { _mmMarcaId = marcaSelId; mmCargarModelos(itemId, marcaSelId, null); }
@@ -84,3 +84,4 @@ function mmAutocompletar(itemId, marcaId, modeloId) {
         mmLimpiar();
     }
 }
+

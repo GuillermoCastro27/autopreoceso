@@ -129,8 +129,8 @@
             </div>
         </div>
 
-        <!-- ================= CIERRE ================= -->
-        <div class="section-box">
+        <!-- ================= CIERRE (vista datos de registro cerrado) ================= -->
+        <div class="section-box" id="seccionDatosCierre">
             <div class="section-title">Datos de Cierre</div>
 
             <div class="row clearfix">
@@ -164,13 +164,136 @@
                 </div>
 
                 <div class="col-sm-4" style="margin-top:10px;">
+                    <label class="field-label">Total Transferencia</label>
+                    <input type="text" id="monto_transferencia_cierre"
+                           class="form-control" disabled
+                           placeholder="Total Transferencia">
+                </div>
+
+                <div class="col-sm-4" style="margin-top:10px;">
+                    <label class="field-label">Total QR</label>
+                    <input type="text" id="monto_qr_cierre"
+                           class="form-control" disabled
+                           placeholder="Total QR">
+                </div>
+
+                <div class="col-sm-4" style="margin-top:10px;">
                     <label class="field-label">Monto Total Cierre</label>
                     <input type="text" id="monto_cierre"
                            class="form-control" disabled
                            placeholder="Monto Total Cierre">
                 </div>
 
+                <div class="col-sm-4" style="margin-top:10px;">
+                    <label class="field-label" style="color:#27ae60; font-weight:bold;">Sobrante</label>
+                    <input type="text" id="sobrante_cierre"
+                           class="form-control" disabled
+                           placeholder="0"
+                           style="color:#27ae60; font-weight:bold;">
+                </div>
+
+                <div class="col-sm-4" style="margin-top:10px;">
+                    <label class="field-label" style="color:#c0392b; font-weight:bold;">Faltante</label>
+                    <input type="text" id="faltante_cierre"
+                           class="form-control" disabled
+                           placeholder="0"
+                           style="color:#c0392b; font-weight:bold;">
+                </div>
+
             </div>
+        </div>
+
+        <!-- ================= PANEL CIERRE INTERACTIVO ================= -->
+        <div class="section-box" id="panelCierre" style="display:none; border:2px solid #e74c3c; border-radius:6px;">
+            <div class="section-title" style="color:#c0392b;">
+                <i class="material-icons" style="vertical-align:middle;">lock</i>
+                Proceso de Cierre de Caja
+            </div>
+
+            <!-- Fila 1: Selección de caja -->
+            <div class="row clearfix">
+                <div class="col-sm-6">
+                    <label class="field-label">Seleccionar Caja a Cerrar</label>
+                    <select id="select_caja_cierre" class="form-control"
+                            onchange="seleccionarCajaCierre(this.value);">
+                        <option value="">-- Seleccione una caja abierta --</option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <label class="field-label">Sucursal</label>
+                    <input type="text" id="cierre_suc_razon_social" class="form-control" disabled>
+                </div>
+                <div class="col-sm-3">
+                    <label class="field-label">Fecha Apertura</label>
+                    <input type="text" id="cierre_fecha_apertura" class="form-control" disabled>
+                </div>
+            </div>
+
+            <!-- Fila 2: Totales del sistema -->
+            <div class="row clearfix" style="margin-top:12px;">
+                <div class="col-sm-12">
+                    <div class="section-title" style="font-size:12px; color:#666; margin-bottom:6px;">
+                        Totales del Sistema (cobros confirmados)
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <label class="field-label">Monto Apertura</label>
+                    <input type="text" id="cierre_monto_apertura" class="form-control" disabled
+                           style="background:#eaf3fb; font-weight:bold;">
+                </div>
+                <div class="col-sm-2">
+                    <label class="field-label" style="color:#27ae60;">Efectivo Neto</label>
+                    <input type="text" id="cierre_sistema_efectivo_neto" class="form-control" disabled
+                           style="color:#27ae60; font-weight:bold;">
+                </div>
+                <div class="col-sm-2">
+                    <label class="field-label">Sistema: Tarjeta</label>
+                    <input type="text" id="cierre_sistema_tarjeta" class="form-control" disabled>
+                </div>
+                <div class="col-sm-2">
+                    <label class="field-label">Sistema: Cheque</label>
+                    <input type="text" id="cierre_sistema_cheque" class="form-control" disabled>
+                </div>
+                <div class="col-sm-2" style="margin-top:10px;">
+                    <label class="field-label">Sistema: Transferencia</label>
+                    <input type="text" id="cierre_sistema_transferencia" class="form-control" disabled>
+                </div>
+                <div class="col-sm-2" style="margin-top:10px;">
+                    <label class="field-label">Sistema: QR</label>
+                    <input type="text" id="cierre_sistema_qr" class="form-control" disabled>
+                </div>
+            </div>
+
+            <!-- Fila 3: Validación de efectivo -->
+            <div class="row clearfix" style="margin-top:12px;">
+                <div class="col-sm-3">
+                    <label class="field-label" style="color:#e67e22; font-weight:bold;">
+                        <i class="material-icons" style="font-size:14px;vertical-align:middle;">info</i>
+                        Esperado en Caja (Apertura + Neto)
+                    </label>
+                    <input type="text" id="cierre_efectivo_esperado" class="form-control" disabled
+                           style="background:#fef9e7; font-weight:bold; color:#e67e22;">
+                </div>
+                <div class="col-sm-3">
+                    <label class="field-label" style="color:#27ae60; font-weight:bold;">
+                        Efectivo Físico (lo que contó)
+                    </label>
+                    <input type="number" id="cierre_efectivo_fisico" class="form-control"
+                           placeholder="0.00" oninput="calcularDiferenciaCierre();"
+                           style="border:2px solid #27ae60;">
+                </div>
+                <div class="col-sm-3">
+                    <label class="field-label">Diferencia</label>
+                    <input type="text" id="cierre_diferencia" class="form-control" disabled>
+                </div>
+                <div class="col-sm-3">
+                    <label class="field-label">Total General Sistema</label>
+                    <input type="text" id="cierre_total_sistema" class="form-control" disabled
+                           style="font-weight:bold;">
+                </div>
+            </div>
+
+            <input type="hidden" id="cierre_apertura_id">
         </div>
 
         <!-- ================= BOTONES ================= -->
@@ -188,7 +311,7 @@
                 <i class="material-icons">delete</i> Anular
             </button>
 
-            <button id="btnCierre" class="btn btn-success" onclick="cierre();" disabled>
+            <button id="btnCierre" class="btn btn-success" onclick="cierre();">
                 <i class="material-icons">lock</i> Cierre
             </button>
 

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("preview","ko",{preview:"미리보기"});
+CKEDITOR.plugins.setLang("preview","ko",{preview:"ë¯¸ë¦¬ë³´ê¸°"});

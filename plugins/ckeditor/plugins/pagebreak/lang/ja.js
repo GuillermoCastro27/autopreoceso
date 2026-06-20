@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("pagebreak","ja",{alt:"改ページ",toolbar:"印刷の為に改ページ挿入"});
+CKEDITOR.plugins.setLang("pagebreak","ja",{alt:"æ”¹ãƒšãƒ¼ã‚¸",toolbar:"å°åˆ·ã®ç‚ºã«æ”¹ãƒšãƒ¼ã‚¸æŒ¿å…¥"});

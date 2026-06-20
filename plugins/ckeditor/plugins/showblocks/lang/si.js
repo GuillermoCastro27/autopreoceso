@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("showblocks","si",{toolbar:"කොටස පෙන්නන්න"});
+CKEDITOR.plugins.setLang("showblocks","si",{toolbar:"à¶šà·œà¶§à·ƒ à¶´à·™à¶±à·Šà¶±à¶±à·Šà¶±"});

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("bidi","fo",{ltr:"Tekstkós frá vinstru til høgru",rtl:"Tekstkós frá høgru til vinstru"});
+CKEDITOR.plugins.setLang("bidi","fo",{ltr:"TekstkÃ³s frÃ¡ vinstru til hÃ¸gru",rtl:"TekstkÃ³s frÃ¡ hÃ¸gru til vinstru"});

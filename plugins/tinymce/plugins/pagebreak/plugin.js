@@ -86,3 +86,4 @@ tinymce.PluginManager.add('pagebreak', function(editor) {
 		});
 	});
 });
+

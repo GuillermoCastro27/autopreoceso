@@ -1,4 +1,4 @@
-﻿function getToken() {
+function getToken() {
     var s = JSON.parse(localStorage.getItem('datosSesion'));
     return s ? s.token : '';
 }
@@ -28,7 +28,7 @@ var _marcaIdSel    = null;
 var _modeloIdSel   = null;
 var _ajaxMarcas    = null;
 var _ajaxModelos   = null;
-var _cacheMarcas   = {};   // { item_id: [{ marca_id, marc_nom }] }
+var _cacheMarcas   = {};   // { item_id: [{ marca_id, mar_nom }] }
 var _cacheModelos  = {};   // { item_id: [{ modelo_id, modelo_nom, marca_id, modelo_año }] }
 
 // Crear selects de marca/modelo en el DOM si no existen (HTML viejo)
@@ -101,7 +101,7 @@ function _poblarMarcaSelect(data, marcaSelId, select, itemId) {
         data.forEach(function(m) {
             var id  = m.marca_id || m.id;
             var sel = (id == marcaSelId) ? ' selected' : '';
-            opts += '<option value="' + id + '"' + sel + '>' + m.marc_nom + '</option>';
+            opts += '<option value="' + id + '"' + sel + '>' + m.mar_nom + '</option>';
         });
         if (select.length) {
             select.html(opts).removeAttr('disabled');
@@ -406,7 +406,7 @@ function _imprimirPedidoLegacy_unused() {
         detalles.forEach(function(d, i) {
             filas += '<tr>'
                 + '<td style="text-align:center;">' + (i+1) + '</td>'
-                + '<td>' + d.item_decripcion + '</td>'
+                + '<td>' + d.item_descripcion + '</td>'
                 + '<td style="text-align:center;">' + d.det_cantidad + '</td>'
                 + '<td style="text-align:center;">' + (d.cantidad_stock || 0) + '</td>'
                 + '<td style="text-align:center;">' + (d.dep_nombre || '-') + '</td>'
@@ -580,7 +580,8 @@ function grabar(){
                 } else {
                     // Cabecera grabada y pendiente: bloquear campos, habilitar Modificar/Anular
                     $('#ped_fecha, #ped_vence, #ped_pbservaciones, #suc_razon_social').attr('disabled', 'true');
-                    $('#btnGrabar, #btnCancelar').attr('disabled', 'true');
+                    $('#btnGrabar, #btnAgregar').attr('disabled', 'true');
+                    $('#btnCancelar').removeAttr('disabled');
                     $('#btnEditar, #btnEliminar').removeAttr('disabled');
                 }
             }
@@ -679,7 +680,7 @@ function cancelarDetalle() {
 
     $('#txtOperacionDetalle').val(0);
     $('#item_id').val('');
-    $('#item_decripcion').val('').prop('disabled', true);
+    $('#item_descripcion').val('').prop('disabled', true);
     $('#det_cantidad').val('').prop('disabled', true);
     $('#cantidad_stock').val('');
     // Resetear marca y modelo (variables + TODOS los elementos del DOM)
@@ -697,7 +698,7 @@ function cancelarDetalle() {
 function agregarDetalle() {
     cancelarDetalle();
     $('#txtOperacionDetalle').val(1);
-    $('#item_decripcion').removeAttr('disabled');
+    $('#item_descripcion').removeAttr('disabled');
     $('#det_cantidad').removeAttr('disabled');
     cargarDepositosPedido(null);
     $('#deposito_id_det').removeAttr('disabled');
@@ -706,7 +707,7 @@ function agregarDetalle() {
 
 function editarDetalle() {
     $('#txtOperacionDetalle').val(2);
-    $('#item_decripcion').removeAttr('disabled');
+    $('#item_descripcion').removeAttr('disabled');
     $('#det_cantidad').removeAttr('disabled');
 
     // Habilitar depósito con los valores ya cargados por seleccionDetalle
@@ -724,7 +725,7 @@ function editarDetalle() {
         $.get(getUrl() + 'items/' + itemId + '/marcas', function(data) {
             var opts = '<option value="">-- Marca --</option>';
             data.forEach(function(m) {
-                opts += '<option value="'+m.id+'"'+(m.id==marcaActual?' selected':'')+'>'+m.marc_nom+'</option>';
+                opts += '<option value="'+m.id+'"'+(m.id==marcaActual?' selected':'')+'>'+m.mar_nom+'</option>';
             });
             $('#marca_det').html(opts).removeAttr('disabled');
             // Cargar modelos de la marca actual
@@ -799,21 +800,21 @@ function grabarDetalle() {
 }
 
 function buscarProductos() {
-    var q = $('#item_decripcion').val();
+    var q = $('#item_descripcion').val();
     if (q.length < 2) { $('#listaProductos').html('').hide(); return; }
     debounce('prod', function() {
         var depId = $('#deposito_id_det').val();
         $.ajax({
             url: getUrl() + 'items/buscar', method: 'POST', dataType: 'json',
             headers: { Authorization: 'Bearer ' + getToken() },
-            data: { item_decripcion: q, deposito_id: depId || null }
+            data: { item_descripcion: q, deposito_id: depId || null }
         })
         .done(function(resultado) {
             var lista = '<ul class="list-group">';
             resultado.forEach(function(rs) {
                 var stock = rs.cantidad_disponible || 0;
-                lista += '<li class="list-group-item" onclick="seleccionProducto(' + rs.item_id + ",'" + rs.item_decripcion + "'," + stock + ')">'
-                    + rs.item_decripcion
+                lista += '<li class="list-group-item" onclick="seleccionProducto(' + rs.item_id + ",'" + rs.item_descripcion + "'," + stock + ')">'
+                    + rs.item_descripcion
                     + ' <span class="badge" style="background:#3b82f6;color:#fff;">Stock: ' + stock + '</span>'
                     + '</li>';
             });
@@ -823,9 +824,9 @@ function buscarProductos() {
         .fail(function(xhr) { console.error(xhr.responseText); });
     });
 }
-function seleccionProducto(item_id, item_decripcion, cantidad_disponible){
+function seleccionProducto(item_id, item_descripcion, cantidad_disponible){
     $("#item_id").val(item_id);
-    $("#item_decripcion").val(item_decripcion);
+    $("#item_descripcion").val(item_descripcion);
     $("#cantidad_stock").val(cantidad_disponible);
     _marcaIdSel  = null;
     _modeloIdSel = null;
@@ -854,18 +855,18 @@ function listarDetalles(){
                 : '';
             lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle("
                 + rs.item_id + ",'"
-                + _esc(rs.item_decripcion) + "',"
+                + _esc(rs.item_descripcion) + "',"
                 + rs.det_cantidad + ","
                 + rs.cantidad_stock + ","
                 + (rs.deposito_id||0) + ","
                 + (rs.marca_id||0) + ","
                 + (rs.modelo_id||0) + ",'"
                 + _esc(rs.dep_nombre||'') + "','"
-                + _esc(rs.marc_nom||'') + "','"
+                + _esc(rs.mar_nom||'') + "','"
                 + _esc(modeloNomFull) + "')\">";
             lista += "<td>" + rs.item_id + "</td>";
-            lista += "<td>" + rs.item_decripcion + "</td>";
-            lista += "<td>" + (rs.marc_nom || '—') + "</td>";
+            lista += "<td>" + rs.item_descripcion + "</td>";
+            lista += "<td>" + (rs.mar_nom || '—') + "</td>";
             lista += "<td>" + (modeloNomFull || '—') + "</td>";
             lista += "<td>" + rs.det_cantidad + "</td>";
             lista += "<td>" + rs.cantidad_stock + "</td>";
@@ -886,9 +887,9 @@ function listarDetalles(){
         console.error(xhr.responseText);
     })
 }
-function seleccionDetalle(item_id, item_decripcion, det_cantidad, cantidad_stock, deposito_id, marca_id, modelo_id, dep_nombre, marc_nom, modelo_nom_full) {
+function seleccionDetalle(item_id, item_descripcion, det_cantidad, cantidad_stock, deposito_id, marca_id, modelo_id, dep_nombre, mar_nom, modelo_nom_full) {
     $("#item_id").val(item_id);
-    $("#item_decripcion").val(item_decripcion);
+    $("#item_descripcion").val(item_descripcion);
     $("#det_cantidad").val(det_cantidad);
     $("#cantidad_stock").val(cantidad_stock);
     _marcaIdSel  = marca_id  || null;
@@ -905,8 +906,8 @@ function seleccionDetalle(item_id, item_decripcion, det_cantidad, cantidad_stock
 
     // Marca: poblar directamente
     var $marca = $('#marca_det');
-    if (marca_id && marc_nom) {
-        $marca.html('<option value="' + marca_id + '" selected>' + marc_nom + '</option>');
+    if (marca_id && mar_nom) {
+        $marca.html('<option value="' + marca_id + '" selected>' + mar_nom + '</option>');
     } else {
         $marca.html('<option value="">-- Marca --</option>');
     }

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("smiley","vi",{options:"Tùy chọn hình  biểu lộ cảm xúc",title:"Chèn hình biểu lộ cảm xúc (mặt cười)",toolbar:"Hình biểu lộ cảm xúc (mặt cười)"});
+CKEDITOR.plugins.setLang("smiley","vi",{options:"TÃ¹y chá»n hÃ¬nh  biá»ƒu lá»™ cáº£m xÃºc",title:"ChÃ¨n hÃ¬nh biá»ƒu lá»™ cáº£m xÃºc (máº·t cÆ°á»i)",toolbar:"HÃ¬nh biá»ƒu lá»™ cáº£m xÃºc (máº·t cÆ°á»i)"});

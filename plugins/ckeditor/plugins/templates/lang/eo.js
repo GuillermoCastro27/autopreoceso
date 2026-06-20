@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("templates","eo",{button:"Ŝablonoj",emptyListMsg:"(Neniu ŝablono difinita)",insertOption:"Anstataŭigi la nunan enhavon",options:"Opcioj pri ŝablonoj",selectPromptMsg:"Bonvolu selekti la ŝablonon por malfermi ĝin en la redaktilo",title:"Enhavo de ŝablonoj"});
+CKEDITOR.plugins.setLang("templates","eo",{button:"Åœablonoj",emptyListMsg:"(Neniu Åablono difinita)",insertOption:"AnstataÅ­igi la nunan enhavon",options:"Opcioj pri Åablonoj",selectPromptMsg:"Bonvolu selekti la Åablonon por malfermi Äin en la redaktilo",title:"Enhavo de Åablonoj"});

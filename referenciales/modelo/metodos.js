@@ -1,4 +1,4 @@
-﻿listar();
+listar();
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -52,7 +52,7 @@ function agregar(){
     $("#txtOperacion").val(1);
     $("#txtCodigo").val(0);
     $("#txtNom").removeAttr("disabled");
-    $("#marc_nom").attr("disabled","true");
+    $("#mar_nom").attr("disabled","true");
     $("#modelo_tipo").removeAttr("disabled");
     $("#modelo_año").removeAttr("disabled");
 
@@ -69,7 +69,7 @@ function agregar(){
 function editar(){
     $("#txtOperacion").val(2);
     $("#txtNom").removeAttr("disabled");
-    $("#marc_nom").removeAttr("disabled");
+    $("#mar_nom").removeAttr("disabled");
     $("#modelo_tipo").removeAttr("disabled");
     $("#modelo_año").removeAttr("disabled");
 
@@ -141,12 +141,12 @@ function listar(){
             var badge  = estado === 'activo'
                 ? '<span class="badge" style="background:#27ae60;">Activo</span>'
                 : '<span class="badge" style="background:#c0392b;">Inactivo</span>';
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionModelo("+rs.id+","+rs.marca_id+",'"+rs.marc_nom+"','"+rs.modelo_nom+"','"+rs.modelo_tipo+"','"+rs.modelo_año+"','"+estado+"');\">";
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionModelo("+rs.id+","+rs.marca_id+",'"+rs.mar_nom+"','"+rs.modelo_nom+"','"+rs.modelo_tipo+"','"+rs.modelo_año+"','"+estado+"');\">";
                 lista = lista + "<td>";
                 lista = lista + rs.id;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
-                lista = lista + rs.marc_nom;
+                lista = lista + rs.mar_nom;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
                 lista = lista + rs.modelo_nom;
@@ -167,10 +167,10 @@ function listar(){
         alert(c);
     })
 }
-function seleccionModelo(codigo, marca_id, marc_nom, modelo_nom, modelo_tipo, modelo_año, estado){
+function seleccionModelo(codigo, marca_id, mar_nom, modelo_nom, modelo_tipo, modelo_año, estado){
     $("#txtCodigo").val(codigo);
     $("#marca_id").val(marca_id);
-    $("#marc_nom").val(marc_nom);
+    $("#mar_nom").val(mar_nom);
     $("#txtNom").val(modelo_nom);
     $("#modelo_tipo").val(modelo_tipo);
     $("#modelo_año").val(modelo_año);
@@ -196,7 +196,7 @@ function seleccionModelo(codigo, marca_id, marc_nom, modelo_nom, modelo_tipo, mo
     $(".form-line").attr("class","form-line focused");
 }
 function buscarMarcas() {
-    let texto = $("#marc_nom").val();
+    let texto = $("#mar_nom").val();
     let tipo = $("#modelo_tipo").val();
 
     if (tipo === "") {
@@ -219,8 +219,8 @@ function buscarMarcas() {
             for (let rs of resultado) {
                 lista += `
                     <li class="list-group-item"
-                        onclick="seleccionMarca(${rs.id}, '${rs.marc_nom}', '${rs.mar_tipo}')">
-                        ${rs.marc_nom}
+                        onclick="seleccionMarca(${rs.id}, '${rs.mar_nom}', '${rs.mar_tipo}')">
+                        ${rs.mar_nom}
                     </li>
                 `;
             }
@@ -230,9 +230,9 @@ function buscarMarcas() {
         $("#listaMarcas").html(lista).show().css({position:"absolute", zIndex:2000});
     });
 }
-function seleccionMarca(id,marc_nom){
+function seleccionMarca(id,mar_nom){
     $("#marca_id").val(id);
-    $("#marc_nom").val(marc_nom);
+    $("#mar_nom").val(mar_nom);
 
     $("#listaMarcas").html("");
     $("#listaMarcas").attr("style","display:none;");
@@ -242,8 +242,8 @@ function habilitarMarca() {
 
     // Si no seleccionó nada
     if (tipo === "") {
-        $("#marc_nom").prop("disabled", true);
-        $("#marc_nom").val("");
+        $("#mar_nom").prop("disabled", true);
+        $("#mar_nom").val("");
         $("#marca_id").val("");
         $("#listaMarcas").hide();
 
@@ -254,8 +254,8 @@ function habilitarMarca() {
     }
 
     // Si seleccionó algún tipo → habilitar MARCA
-    $("#marc_nom").prop("disabled", false);
-    $("#marc_nom").val("");
+    $("#mar_nom").prop("disabled", false);
+    $("#mar_nom").val("");
     $("#marca_id").val("");
     $("#listaMarcas").hide();
 

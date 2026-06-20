@@ -1,4 +1,4 @@
-﻿listar();
+listar();
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -344,3 +344,4 @@ function cambiarEstado() {
         swal('Error', res && res.mensaje ? res.mensaje : 'Error inesperado.', 'error');
     });
 }
+

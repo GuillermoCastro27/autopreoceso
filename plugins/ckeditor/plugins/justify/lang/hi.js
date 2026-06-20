@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("justify","hi",{block:"ब्लॉक जस्टीफ़ाई",center:"बीच में",left:"बायीं तरफ",right:"दायीं तरफ"});
+CKEDITOR.plugins.setLang("justify","hi",{block:"à¤¬à¥à¤²à¥‰à¤• à¤œà¤¸à¥à¤Ÿà¥€à¥žà¤¾à¤ˆ",center:"à¤¬à¥€à¤š à¤®à¥‡à¤‚",left:"à¤¬à¤¾à¤¯à¥€à¤‚ à¤¤à¤°à¤«",right:"à¤¦à¤¾à¤¯à¥€à¤‚ à¤¤à¤°à¤«"});

@@ -96,3 +96,4 @@ tinymce.PluginManager.add('save', function(editor) {
 
 	editor.addShortcut('Meta+S', '', 'mceSave');
 });
+

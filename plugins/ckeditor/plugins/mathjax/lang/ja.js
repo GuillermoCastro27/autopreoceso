@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("mathjax","ja",{title:"TeX形式の数式",button:"数式",dialogInput:"TeX形式の数式を入力してください",docUrl:"http://en.wikibooks.org/wiki/LaTeX/Mathematics",docLabel:"TeXの解説",loading:"読み込み中…",pathName:"math"});
+CKEDITOR.plugins.setLang("mathjax","ja",{title:"TeXå½¢å¼ã®æ•°å¼",button:"æ•°å¼",dialogInput:"TeXå½¢å¼ã®æ•°å¼ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„",docUrl:"http://en.wikibooks.org/wiki/LaTeX/Mathematics",docLabel:"TeXã®è§£èª¬",loading:"èª­ã¿è¾¼ã¿ä¸­â€¦",pathName:"math"});

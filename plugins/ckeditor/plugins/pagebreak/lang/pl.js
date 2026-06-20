@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("pagebreak","pl",{alt:"Wstaw podział strony",toolbar:"Wstaw podział strony"});
+CKEDITOR.plugins.setLang("pagebreak","pl",{alt:"Wstaw podziaÅ‚ strony",toolbar:"Wstaw podziaÅ‚ strony"});

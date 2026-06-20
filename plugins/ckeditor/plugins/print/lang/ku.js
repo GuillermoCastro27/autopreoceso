@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("print","ku",{toolbar:"چاپکردن"});
+CKEDITOR.plugins.setLang("print","ku",{toolbar:"Ú†Ø§Ù¾Ú©Ø±Ø¯Ù†"});

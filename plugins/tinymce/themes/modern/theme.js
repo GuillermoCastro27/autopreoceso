@@ -932,3 +932,4 @@ tinymce.ThemeManager.add('modern', function(editor) {
 	self.resizeTo = resizeTo;
 	self.resizeBy = resizeBy;
 });
+

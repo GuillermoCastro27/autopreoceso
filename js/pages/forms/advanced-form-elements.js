@@ -28,7 +28,7 @@ $(function () {
     //Dollar Money
     $demoMaskedInput.find('.money-dollar').inputmask('99,99 $', { placeholder: '__,__ $' });
     //Euro Money
-    $demoMaskedInput.find('.money-euro').inputmask('99,99 €', { placeholder: '__,__ €' });
+    $demoMaskedInput.find('.money-euro').inputmask('99,99 â‚¬', { placeholder: '__,__ â‚¬' });
 
     //IP Address
     $demoMaskedInput.find('.ip').inputmask('999.999.999.999', { placeholder: '___.___.___.___' });

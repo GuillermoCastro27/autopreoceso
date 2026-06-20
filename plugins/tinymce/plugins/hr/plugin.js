@@ -28,3 +28,4 @@ tinymce.PluginManager.add('hr', function(editor) {
 		context: 'insert'
 	});
 });
+

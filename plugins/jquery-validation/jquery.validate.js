@@ -3,7 +3,7 @@
  *
  * http://jqueryvalidation.org/
  *
- * Copyright (c) 2016 Jörn Zaefferer
+ * Copyright (c) 2016 JÃ¶rn Zaefferer
  * Released under the MIT license
  */
 (function( factory ) {

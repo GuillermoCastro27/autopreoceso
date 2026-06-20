@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("mathjax","tr",{title:"TeX ile Matematik",button:"Matematik",dialogInput:"TeX kodunuzu buraya yazın",docUrl:"http://en.wikibooks.org/wiki/LaTeX/Mathematics",docLabel:"TeX yardım dökümanı",loading:"yükleniyor...",pathName:"matematik"});
+CKEDITOR.plugins.setLang("mathjax","tr",{title:"TeX ile Matematik",button:"Matematik",dialogInput:"TeX kodunuzu buraya yazÄ±n",docUrl:"http://en.wikibooks.org/wiki/LaTeX/Mathematics",docLabel:"TeX yardÄ±m dÃ¶kÃ¼manÄ±",loading:"yÃ¼kleniyor...",pathName:"matematik"});

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("pagebreak","th",{alt:"ตัวแบ่งหน้า",toolbar:"แทรกตัวแบ่งหน้า Page Break"});
+CKEDITOR.plugins.setLang("pagebreak","th",{alt:"à¸•à¸±à¸§à¹à¸šà¹ˆà¸‡à¸«à¸™à¹‰à¸²",toolbar:"à¹à¸—à¸£à¸à¸•à¸±à¸§à¹à¸šà¹ˆà¸‡à¸«à¸™à¹‰à¸² Page Break"});

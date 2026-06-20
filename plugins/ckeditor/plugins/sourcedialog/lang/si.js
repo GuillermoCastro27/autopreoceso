@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("sourcedialog","si",{toolbar:"මුලාශ්‍රය",title:"මුලාශ්‍රය"});
+CKEDITOR.plugins.setLang("sourcedialog","si",{toolbar:"à¶¸à·”à¶½à·à·à·Šâ€à¶»à¶º",title:"à¶¸à·”à¶½à·à·à·Šâ€à¶»à¶º"});

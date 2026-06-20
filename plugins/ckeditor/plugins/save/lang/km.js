@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("save","km",{toolbar:"រក្សាទុក"});
+CKEDITOR.plugins.setLang("save","km",{toolbar:"ážšáž€áŸ’ážŸáž¶áž‘áž»áž€"});

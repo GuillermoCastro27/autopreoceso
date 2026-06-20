@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("font","ja",{fontSize:{label:"サイズ",voiceLabel:"フォントサイズ",panelTitle:"フォントサイズ"},label:"フォント",panelTitle:"フォント",voiceLabel:"フォント"});
+CKEDITOR.plugins.setLang("font","ja",{fontSize:{label:"ã‚µã‚¤ã‚º",voiceLabel:"ãƒ•ã‚©ãƒ³ãƒˆã‚µã‚¤ã‚º",panelTitle:"ãƒ•ã‚©ãƒ³ãƒˆã‚µã‚¤ã‚º"},label:"ãƒ•ã‚©ãƒ³ãƒˆ",panelTitle:"ãƒ•ã‚©ãƒ³ãƒˆ",voiceLabel:"ãƒ•ã‚©ãƒ³ãƒˆ"});

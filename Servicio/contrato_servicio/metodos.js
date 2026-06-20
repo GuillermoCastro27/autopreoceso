@@ -1,4 +1,4 @@
-﻿cargarFuncionarioIdLogueado();
+cargarFuncionarioIdLogueado();
 listar();
 campoFecha();
 function formatoTabla(){
@@ -638,6 +638,30 @@ function grabar() {
                 if (resultado.registro.contrato_estado !== "PENDIENTE"
                     || $("#txtOperacion").val() == 2) {
                     location.reload(true);
+                } else {
+                    $("#contrato_fecha").attr("disabled","true");
+                    $("#contrato_fecha_inicio").attr("disabled","true");
+                    $("#contrato_fecha_fin").attr("disabled","true");
+                    $("#contrato_condicion_pago").attr("disabled","true");
+                    $("#contrato_observacion").attr("disabled","true");
+                    $("#tipo_serv_nombre").attr("disabled","true");
+                    $("#suc_razon_social").attr("disabled","true");
+                    $("#cli_nombre").attr("disabled","true");
+                    $("#tip_con_nombre").attr("disabled","true");
+                    $("#contrato_objeto").attr("disabled","true");
+                    $("#contrato_alcance").attr("disabled","true");
+                    $("#contrato_responsabilidad").attr("disabled","true");
+                    $("#contrato_garantia").attr("disabled","true");
+                    $("#contrato_limitacion").attr("disabled","true");
+                    $("#contrato_fuerza_mayor").attr("disabled","true");
+                    $("#contrato_jurisdiccion").attr("disabled","true");
+                    $("#contrato_representante").attr("disabled","true");
+                    $("#orden_buscar").attr("disabled","true");
+
+                    $("#btnAgregar").attr("disabled","true");
+                    $("#btnGrabar").attr("disabled","true");
+                    $("#btnEditar").removeAttr("disabled");
+                    $("#btnEliminar").removeAttr("disabled");
                 }
             }
         });
@@ -698,8 +722,8 @@ function parseNumero(str) {
 
 function agregarDetalle() {
     $("#txtOperacionDetalle").val(1);
-    $("#item_decripcion").removeAttr("disabled");
-    $("#tip_imp_nom").attr("disabled","true");
+    $("#item_descripcion").removeAttr("disabled");
+    $("#tipo_imp_nom").attr("disabled","true");
     $("#contrato_serv_det_cantidad_stock").attr("disabled","true");
     $("#contrato_serv_det_cantidad").removeAttr("disabled");
     $("#contrato_serv_det_costo").attr("disabled","true");
@@ -713,8 +737,8 @@ function agregarDetalle() {
 
 function editarDetalle() {
     $("#txtOperacionDetalle").val(2);
-    $("#item_decripcion").removeAttr("disabled");
-    $("#tip_imp_nom").attr("disabled","true");
+    $("#item_descripcion").removeAttr("disabled");
+    $("#tipo_imp_nom").attr("disabled","true");
     $("#contrato_serv_det_cantidad_stock").attr("disabled","true");
     $("#contrato_serv_det_cantidad").removeAttr("disabled");
     $("#contrato_serv_det_costo").attr("disabled","true");
@@ -743,8 +767,8 @@ function cancelarDetalle() {
     $("#txtOperacionDetalle").val(1);
     $("#item_id").val("");
     $("#original_item_id").val("");
-    $("#item_decripcion").val("");
-    $("#tip_imp_nom").val("");
+    $("#item_descripcion").val("");
+    $("#tipo_imp_nom").val("");
     $("#tipo_impuesto_id").val("");
     $("#contrato_serv_det_cantidad_stock").val("");
     $("#contrato_serv_det_cantidad").val("");
@@ -820,7 +844,7 @@ function buscarProductos(){
         method: "POST",
         dataType: "json",
         data: {
-            "item_decripcion": $("#item_decripcion").val()
+            "item_descripcion": $("#item_descripcion").val()
         }
     })
     .done(function(resultado){
@@ -828,13 +852,13 @@ function buscarProductos(){
         for (let rs of resultado) {
             lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto("
                 + rs.item_id + ",'"
-                + rs.item_decripcion + "',"
+                + rs.item_descripcion + "',"
                 + rs.tipo_impuesto_id + ",'"
                 + rs.item_costo + "','"
-                + rs.tip_imp_nom + "',"
+                + rs.tipo_imp_nom + "',"
                 + rs.tipo_imp_tasa + ","
                 + rs.cantidad_disponible + ")\">"
-                + rs.item_decripcion + " (Stock: " + rs.cantidad_disponible + ")</li>";   
+                + rs.item_descripcion + " (Stock: " + rs.cantidad_disponible + ")</li>";   
         }
         lista += "</ul>";
         $("#listaProductos").html(lista);
@@ -845,13 +869,13 @@ function buscarProductos(){
     });
 }
 
-function seleccionProducto(item_id, item_decripcion, tipo_impuesto_id, item_costo, tip_imp_nom, tipo_imp_tasa, cantidad_disponible){
+function seleccionProducto(item_id, item_descripcion, tipo_impuesto_id, item_costo, tipo_imp_nom, tipo_imp_tasa, cantidad_disponible){
     // Asignar valores a los campos del detalle
     $("#item_id").val(item_id);
-    $("#item_decripcion").val(item_decripcion);
+    $("#item_descripcion").val(item_descripcion);
     $("#contrato_serv_det_costo").val(item_costo); // <- Asignar el costo al campo del detalle
     $("#tipo_impuesto_id").val(tipo_impuesto_id);
-    $("#tip_imp_nom").val(tip_imp_nom);
+    $("#tipo_imp_nom").val(tipo_imp_nom);
     
     // Asignar cantidad disponible al campo correspondiente
     $("#contrato_serv_det_cantidad_stock").val(cantidad_disponible);
@@ -892,7 +916,7 @@ function listarDetalles() {
                 const costo = parseFloat(rs.contrato_serv_det_costo) || 0;
                 const subtotal = cantidad * costo;
 
-                const imp = (rs.tip_imp_nom || '').toUpperCase();
+                const imp = (rs.tipo_imp_nom || '').toUpperCase();
                 let iva = 0;
                 if (imp.indexOf('EXENT') !== -1) {
                     iva = 0;
@@ -907,20 +931,20 @@ function listarDetalles() {
                 // Generar fila
                 lista += "<tr class='item-list' onclick=\"seleccionSolicitudDet("
                     + rs.item_id + ", '"
-                    + rs.item_decripcion + "', "
+                    + rs.item_descripcion + "', "
                     + cantidad + ", "
                     + rs.contrato_serv_det_cantidad_stock + ", "
                     + costo + ", "
                     + rs.tipo_impuesto_id + ", '"
-                    + rs.tip_imp_nom + "'"
+                    + rs.tipo_imp_nom + "'"
                     + ");\">";
 
                 lista += "<td>" + rs.item_id + "</td>";
-                lista += "<td>" + rs.item_decripcion + "</td>";
+                lista += "<td>" + rs.item_descripcion + "</td>";
                 lista += "<td class='text-right'>" + cantidad + "</td>";
                 lista += "<td class='text-right'>" + rs.contrato_serv_det_cantidad_stock + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(costo) + "</td>";
-                lista += "<td>" + rs.tip_imp_nom + "</td>";
+                lista += "<td>" + rs.tipo_imp_nom + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(iva) + "</td>";
                 lista += "</tr>";
@@ -951,22 +975,22 @@ function listarDetalles() {
     });
 }
 
-function seleccionSolicitudDet(item_id, item_decripcion, contrato_serv_det_cantidad, contrato_serv_det_cantidad_stock, contrato_serv_det_costo, tipo_impuesto_id, tip_imp_nom) {
+function seleccionSolicitudDet(item_id, item_descripcion, contrato_serv_det_cantidad, contrato_serv_det_cantidad_stock, contrato_serv_det_costo, tipo_impuesto_id, tipo_imp_nom) {
     $("#original_item_id").val(item_id);
     $("#item_id").val(item_id);
-    $("#item_decripcion").val(item_decripcion);
+    $("#item_descripcion").val(item_descripcion);
     $("#contrato_serv_det_cantidad").val(contrato_serv_det_cantidad);
     $("#contrato_serv_det_cantidad_stock").val(contrato_serv_det_cantidad_stock);
     $("#contrato_serv_det_costo").val(contrato_serv_det_costo);
     $("#tipo_impuesto_id").val(tipo_impuesto_id);
-    $("#tip_imp_nom").val(tip_imp_nom);
+    $("#tipo_imp_nom").val(tipo_imp_nom);
 
     // Calcular subtotal y IVA para mostrar en el formulario si quieres
     const subtotal = contrato_serv_det_cantidad * contrato_serv_det_costo;
     let iva = 0;
-    if (tip_imp_nom === "IVA10") {
+    if (tipo_imp_nom === "IVA10") {
         iva = subtotal / 11;
-    } else if (tip_imp_nom === "IVA5") {
+    } else if (tipo_imp_nom === "IVA5") {
         iva = subtotal / 21;
     }
 
@@ -1120,3 +1144,4 @@ function mostrarErrores(xhr) {
     }
     swal({ title: 'Error', text: mensaje, type: 'error' });
 }
+

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("bidi","tr",{ltr:"Metin yönü soldan sağa",rtl:"Metin yönü sağdan sola"});
+CKEDITOR.plugins.setLang("bidi","tr",{ltr:"Metin yÃ¶nÃ¼ soldan saÄŸa",rtl:"Metin yÃ¶nÃ¼ saÄŸdan sola"});

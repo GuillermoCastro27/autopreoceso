@@ -23,13 +23,14 @@
 
 (function ($) {
   $.fn.selectpicker.defaults = {
-    noneSelectedText: 'Nic není vybráno',
-    noneResultsText: 'Žádné výsledky {0}',
-    countSelectedText: 'Označeno {0} z {1}',
-    maxOptionsText: ['Limit překročen ({n} {var} max)', 'Limit skupiny překročen ({n} {var} max)', ['položek', 'položka']],
+    noneSelectedText: 'Nic nenÃ­ vybrÃ¡no',
+    noneResultsText: 'Å½Ã¡dnÃ© vÃ½sledky {0}',
+    countSelectedText: 'OznaÄeno {0} z {1}',
+    maxOptionsText: ['Limit pÅ™ekroÄen ({n} {var} max)', 'Limit skupiny pÅ™ekroÄen ({n} {var} max)', ['poloÅ¾ek', 'poloÅ¾ka']],
     multipleSeparator: ', '
   };
 })(jQuery);
 
 
 }));
+

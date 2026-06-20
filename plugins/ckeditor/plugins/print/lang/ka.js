@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("print","ka",{toolbar:"ბეჭდვა"});
+CKEDITOR.plugins.setLang("print","ka",{toolbar:"áƒ‘áƒ”áƒ­áƒ“áƒ•áƒ"});

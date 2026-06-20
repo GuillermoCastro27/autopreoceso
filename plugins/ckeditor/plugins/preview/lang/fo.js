@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("preview","fo",{preview:"Frumsýning"});
+CKEDITOR.plugins.setLang("preview","fo",{preview:"FrumsÃ½ning"});

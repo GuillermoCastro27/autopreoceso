@@ -10,7 +10,7 @@
 
 /*
  * Translated default messages for the jQuery validation plugin.
- * Locale: PT (Portuguese; português)
+ * Locale: PT (Portuguese; portuguÃªs)
  * Region: BR (Brazil)
  */
 $.extend( $.validator.messages, {
@@ -55,7 +55,7 @@ $.extend( $.validator.messages, {
 	ipv4: "Por favor, forne&ccedil;a um IPv4 v&aacute;lido.",
 	ipv6: "Por favor, forne&ccedil;a um IPv6 v&aacute;lido.",
 	lettersonly: "Por favor, forne&ccedil;a apenas com letras.",
-	letterswithbasicpunc: "Por favor, forne&ccedil;a apenas letras ou pontua&ccedil;ões.",
+	letterswithbasicpunc: "Por favor, forne&ccedil;a apenas letras ou pontua&ccedil;Ãµes.",
 	mobileNL: "Por favor, fornece&ccedil;a um n&uacute;mero v&aacute;lido de telefone.",
 	mobileUK: "Por favor, fornece&ccedil;a um n&uacute;mero v&aacute;lido de telefone.",
 	nieES: "Por favor, forne&ccedil;a um NIE v&aacute;lido.",

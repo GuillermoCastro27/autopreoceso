@@ -358,3 +358,4 @@ The plugin allso adds the following methods to the plot object:
         version: '1.1'
     });
 })(jQuery);
+

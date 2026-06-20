@@ -51,3 +51,4 @@ tinymce.PluginManager.add('nonbreaking', function(editor) {
 		});
 	}
 });
+

@@ -1,34 +1,13 @@
-﻿listar();
+listar();
 function formatoTabla(){
-    //Exportable table
     $('.js-exportable').DataTable({
         dom: 'Bfrtip',
         responsive: true,
         buttons: [
-            {
-                extend:'copy',
-                text:'COPIAR',
-                className:'btn btn-primary waves-effect',
-                title:'Listado de Nacionalidades'
-            },
-            {
-                extend:'excel',
-                text:'EXCEL',
-                className:'btn btn-success waves-effect',
-                title:'Listado de Nacionalidades'
-            },
-            {
-                extend:'pdf',
-                text:'PDF',
-                className:'btn btn-danger waves-effect',
-                title:'Listado de Nacionalidades'
-            },
-            {
-                extend:'print',
-                text:'IMPRIMIR',
-                className:'btn btn-warning waves-effect',
-                title:'Listado de Nacionalidades'
-            }
+            { extend:'copy',  text:'COPIAR',   className:'btn btn-primary waves-effect',  title:'Listado de Nacionalidades' },
+            { extend:'excel', text:'EXCEL',    className:'btn btn-success waves-effect',  title:'Listado de Nacionalidades' },
+            { extend:'pdf',   text:'PDF',      className:'btn btn-danger waves-effect',   title:'Listado de Nacionalidades' },
+            { extend:'print', text:'IMPRIMIR', className:'btn btn-warning waves-effect',  title:'Listado de Nacionalidades' }
         ],
         iDisplayLength:3,
         language:{
@@ -37,16 +16,12 @@ function formatoTabla(){
             sInfoFiltered: '(filtrado de entre _MAX_ registros)',
             sZeroRecords: 'No se encontraron resultados',
             sInfoEmpty: 'Mostrando resultado del 0 al 0 de un total de 0 registros',
-            oPaginate:{
-                sNext: 'Siguiente',
-                sPrevious: 'Anterior'
-            }
+            oPaginate:{ sNext: 'Siguiente', sPrevious: 'Anterior' }
         }
     });
 }
-function cancelar(){
-    location.reload(true);
-}
+
+function cancelar(){ location.reload(true); }
 
 function agregar(){
     $("#txtOperacion").val(1);
@@ -55,7 +30,7 @@ function agregar(){
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -69,7 +44,7 @@ function editar(){
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
+    $("#btnEstado").attr("disabled","true");
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -77,30 +52,30 @@ function editar(){
     $(".form-line").attr("class","form-line focused");
 }
 
-function eliminar(){
-    $("#txtOperacion").val(3);
-
+function confirmarCambioEstado(){
+    $("#txtOperacion").val(4);
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
-    $("#btnEliminar").attr("disabled","true");
-
+    $("#btnEstado").attr("disabled","true");
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
 }
 
-
 function confirmarOperacion() {
     var oper = parseInt($("#txtOperacion").val());
-    var titulo = "AGREGAR";
+    var titulo   = "AGREGAR";
     var pregunta = "¿DESEA GRABAR EL NUEVO REGISTRO?";
 
     if(oper===2){
-        titulo = "EDITAR";
+        titulo   = "EDITAR";
         pregunta = "¿DESEA EDITAR EL REGISTRO SELECCIONADO?";
     }
-    if(oper===3){
-        titulo = "ELIMINAR";
-        pregunta = "¿DESEA ELIMINAR EL REGISTRO SELECCIONADO?";
+    if(oper===4){
+        var estado = $("#nacio_estado").val();
+        titulo   = estado === 'activo' ? 'DESACTIVAR' : 'ACTIVAR';
+        pregunta = estado === 'activo'
+            ? '¿Desea desactivar esta nacionalidad? No aparecerá en búsquedas.'
+            : '¿Desea activar esta nacionalidad nuevamente?';
     }
     swal({
         title: titulo,
@@ -111,166 +86,108 @@ function confirmarOperacion() {
         confirmButtonText: "SI",
         cancelButtonText: "NO",
         closeOnConfirm: false
-    }, function () {
-        grabar();
-    });
+    }, function(){ grabar(); });
 }
 
-function mensajeOperacion(titulo,mensaje,tipo) {
-    swal(titulo, mensaje, tipo);
-}
-
-
-function buscarProductos(){
-    $.ajax({
-        url: getUrl()+"items/buscar",
-        method: "POST",
-        dataType: "json",
-        data:{
-            "item_decripcion":$("#item_decripcion").val(),
-            "tipo_descripcion":"PRODUCTO"
-        }
-    })
-    .done(function(resultado){
-        var lista = "<ul class=\"list-group\">";
-        for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto("+rs.item_id+",'"+rs.item_decripcion+"')\">"+rs.item_decripcion+"</li>";   
-        }
-        lista += "</ul>";
-        $("#listaProductos").html(lista);
-        $("#listaProductos").attr("style","display:block; position: absolute; z-index: 2000;");
-    })
-    .fail(function(a,b,c){
-        alert(c);
-        console.log(a.responseText);
-    });
-}
-
-// Rellena el campo de producto seleccionado.
-function seleccionProducto(item_id, item_decripcion){
-    $("#item_id").val(item_id);
-    $("#item_decripcion").val(item_decripcion);
-
-    $("#listaProductos").html("");
-    $("#listaProductos").attr("style","display:none;");
-
-    $(".form-line").attr("class","form-line focused");
-}
-
-function seleccionPais(codigo, descripcion, gentilicio, siglas){
-    $("#txtCodigo").val(codigo);
-    $("#txtDescripcion").val(descripcion);
-    $("#txtGentilicio").val(gentilicio);
-    $("#txtSiglas").val(siglas);
-
-    $(".form-line").attr("class","form-line focused");
-}
+function mensajeOperacion(titulo,mensaje,tipo){ swal(titulo, mensaje, tipo); }
 
 function listar(){
-    $.ajax({
-        url:getUrl() + "nacionalidad/read",
-        method:"GET",
-        dataType: "json"
-    })
+    $.ajax({ url: getUrl()+"nacionalidad/read", method:"GET", dataType:"json" })
     .done(function(resultado){
         var lista = "";
         for(rs of resultado){
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionNacionalidad("+rs.id+","+(rs.pais_id||0)+",'"+(rs.nacio_descripcion||'').replace(/'/g,"\\'")+"','"+(rs.pais_descrpcion||'').replace(/'/g,"\\'")+"');\">";
-                lista = lista + "<td>" + rs.id + "</td>";
-                lista = lista + "<td>" + rs.nacio_descripcion + "</td>";
-            lista = lista + "</tr>";
+            var estado = rs.nacio_estado || 'activo';
+            var badge  = estado === 'activo'
+                ? '<span class="badge" style="background:#27ae60;">Activo</span>'
+                : '<span class="badge" style="background:#c0392b;">Inactivo</span>';
+            lista += "<tr class=\"item-list\" onclick=\"seleccionNacionalidad("+rs.id+","+(rs.pais_id||0)+",'"+rs.nacio_descripcion.replace(/'/g,"\\'")+"','"+estado+"');\">";
+            lista += "<td>"+rs.id+"</td>";
+            lista += "<td>"+rs.nacio_descripcion+"</td>";
+            lista += "<td>"+badge+"</td>";
+            lista += "</tr>";
         }
         $("#tableBody").html(lista);
         formatoTabla();
     })
-    .fail(function(a,b,c){
-        alert(c);
-    })
+    .fail(function(a,b,c){ alert(c); });
 }
-function seleccionNacionalidad(codigo, pais_id, nacio_descripcion, pais_descrpcion){
+
+function seleccionNacionalidad(codigo, pais_id, nacio_descripcion, estado){
     $("#txtCodigo").val(codigo);
     $("#nacio_descripcion").val(nacio_descripcion);
+    $("#nacio_estado").val(estado || 'activo');
+
+    var activo = (estado || 'activo') === 'activo';
+    if(activo){
+        $("#btnEstado").removeClass("btn-success").addClass("btn-danger");
+        $("#lblEstado").text("Desactivar");
+        $("#btnEstado").find("i").text("block");
+    } else {
+        $("#btnEstado").removeClass("btn-danger").addClass("btn-success");
+        $("#lblEstado").text("Activar");
+        $("#btnEstado").find("i").text("check_circle");
+    }
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").removeAttr("disabled");
+    $("#btnEstado").removeAttr("disabled");
     $("#btnGrabar").attr("disabled","true");
-    $("#btnCancelar").attr("disabled","true");
-    $("#btnEliminar").removeAttr("disabled");
-    
     $("#btnCancelar").removeAttr("disabled");
 
     $(".form-line").attr("class","form-line focused");
 }
 
+function grabar(){
+    var op = parseInt($("#txtOperacion").val());
+    if(op === 4){ cambiarEstado(); return; }
 
-function grabar() {
     var descripcion = $("#nacio_descripcion").val().trim();
-
-    // Validar que el campo descripción no esté vacío
-    if (descripcion === "") {
-        swal({
-            title: "Error",
-            text: "El campo no debe estar vacío.",
-            type: "error"
-        });
-        return;  // Salir de la función si la validación falla
+    if(descripcion === ""){
+        swal({ title:"Error", text:"El campo no debe estar vacío.", type:"error" });
+        return;
     }
-
     var CHARS_INVALIDOS = /[*<>{}|]/;
-    if (CHARS_INVALIDOS.test(descripcion)) {
+    if(CHARS_INVALIDOS.test(descripcion)){
         swal('Caracteres no permitidos', 'El campo no puede contener los caracteres: * < > { } |', 'error');
         return;
     }
 
     var endpoint = "nacionalidad/create";
-    var metodo = "POST";
-    
-    if($("#txtOperacion").val() == 2) {
-        endpoint = "nacionalidad/update/" + $("#txtCodigo").val();
-        metodo = "PUT";
-    }
-    if($("#txtOperacion").val() == 3) {
-        endpoint = "nacionalidad/delete/" + $("#txtCodigo").val();
-        metodo = "DELETE";
-    }
+    var metodo   = "POST";
+    if(op == 2){ endpoint = "nacionalidad/update/"+$("#txtCodigo").val(); metodo = "PUT"; }
 
     $.ajax({
-        url: getUrl() + "" + endpoint,
-        method: metodo,
-        dataType: "json",
-        data: {
-            'id': $("#txtCodigo").val(),
-            'nacio_descripcion': descripcion
-        }
-
+        url: getUrl()+endpoint, method: metodo, dataType:"json",
+        data: { 'id': $("#txtCodigo").val(), 'nacio_descripcion': descripcion }
     })
-    .done(function(resultado) {
-        swal({
-            title: "Respuesta",
-            text: resultado.mensaje,
-            type: resultado.tipo
-        },
-        function() {
-            if (resultado.tipo == "success") {
-                location.reload(true);
-            }
-        });
+    .done(function(resultado){
+        swal({ title:"Respuesta", text:resultado.mensaje, type:resultado.tipo },
+            function(){ if(resultado.tipo=="success") location.reload(true); });
     })
-    .fail(function(xhr) {
+    .fail(function(xhr){
         var res = xhr.responseJSON;
-        if (xhr.status === 422) {
+        if(xhr.status===422){
             var msg = '';
-            if (res && res.errors) {
-                $.each(res.errors, function(k, v){ msg += v[0] + '\n'; });
-            } else {
-                msg = 'Ningún campo debe estar vacío.';
-            }
+            if(res && res.errors) $.each(res.errors, function(k,v){ msg += v[0]+'\n'; });
+            else msg = 'Ningún campo debe estar vacío.';
             swal('Error de validación', msg, 'error');
-        } else if (xhr.status === 500 && xhr.responseText.indexOf('SQLSTATE[23') !== -1) {
-            swal('Error', 'Este registro está en uso y no puede ser eliminado.', 'error');
         } else {
-            swal('Error', res ? (res.mensaje || res.message || 'Error inesperado.') : 'Error inesperado.', 'error');
+            swal('Error', res ? (res.mensaje||res.message||'Error inesperado.') : 'Error inesperado.', 'error');
         }
     });
 }
 
+function cambiarEstado(){
+    $.ajax({
+        url: getUrl()+'nacionalidad/estado/'+$("#txtCodigo").val(),
+        method: 'PATCH', dataType: 'json'
+    })
+    .done(function(res){
+        swal({ title:'Respuesta', text:res.mensaje, type:res.tipo },
+            function(){ if(res.tipo==='success') location.reload(true); });
+    })
+    .fail(function(xhr){
+        var res = xhr.responseJSON;
+        swal('Error', res && res.mensaje ? res.mensaje : 'Error inesperado.', 'error');
+    });
+}

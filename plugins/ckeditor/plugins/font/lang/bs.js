@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("font","bs",{fontSize:{label:"Velièina",voiceLabel:"Font Size",panelTitle:"Velièina"},label:"Font",panelTitle:"Font",voiceLabel:"Font"});
+CKEDITOR.plugins.setLang("font","bs",{fontSize:{label:"VeliÃ¨ina",voiceLabel:"Font Size",panelTitle:"VeliÃ¨ina"},label:"Font",panelTitle:"Font",voiceLabel:"Font"});

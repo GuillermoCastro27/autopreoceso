@@ -74,7 +74,7 @@ function _poblarMarcaSelect(data, marcaSelId, select, itemId) {
     data.forEach(function(m) {
         var id  = m.marca_id || m.id;
         var sel = (id == marcaSelId) ? ' selected' : '';
-        opts += '<option value="' + id + '"' + sel + '>' + m.marc_nom + '</option>';
+        opts += '<option value="' + id + '"' + sel + '>' + m.mar_nom + '</option>';
     });
     select.html(opts).prop('disabled', false);
     if (marcaSelId) {
@@ -121,7 +121,7 @@ function cargarDepositosPedido(selectedId) {
         select.html(opts);
         // Si hay selectedId, habilitar búsqueda de producto
         if (selectedId) {
-            $('#item_decripcion').prop('disabled', false).attr('placeholder', 'Buscar producto...');
+            $('#item_descripcion').prop('disabled', false).attr('placeholder', 'Buscar producto...');
         }
     });
 }
@@ -131,7 +131,7 @@ function onDepositoChange() {
     var depId = $('#deposito_id_det').val();
     // Limpiar producto y filtros
     $('#item_id').val('');
-    $('#item_decripcion').val('');
+    $('#item_descripcion').val('');
     $('#cantidad_stock').val('');
     _marcaIdSel  = null;
     _modeloIdSel = null;
@@ -140,9 +140,9 @@ function onDepositoChange() {
     $('#listaProductos').html('').hide();
 
     if (depId) {
-        $('#item_decripcion').prop('disabled', false).attr('placeholder', 'Buscar producto...');
+        $('#item_descripcion').prop('disabled', false).attr('placeholder', 'Buscar producto...');
     } else {
-        $('#item_decripcion').prop('disabled', true).attr('placeholder', 'Buscar producto (requiere depósito)');
+        $('#item_descripcion').prop('disabled', true).attr('placeholder', 'Buscar producto (requiere depósito)');
         $('#det_cantidad').prop('disabled', true);
     }
 }
@@ -538,10 +538,17 @@ function grabar(){
                 $("#id").val(resultado.registro.id);
                 $("#detalle").show();
 
-                if (
-                    resultado.registro.ped_ven_estado !== "PENDIENTE" ||
-                    $("#txtOperacion").val() == 2
-                ) {
+                if (resultado.registro.ped_ven_estado === "PENDIENTE" && $("#txtOperacion").val() == 1) {
+                    $("#ped_ven_fecha").attr("disabled", true);
+                    $("#ped_ven_vence").attr("disabled", true);
+                    $("#ped_ven_observaciones").attr("disabled", true);
+                    $("#suc_razon_social").attr("disabled", true);
+                    $("#cli_nombre").attr("disabled", true);
+                    $("#btnAgregar, #btnGrabar").attr("disabled", true);
+                    $("#btnEditar, #btnEliminar").removeAttr("disabled");
+                    $("#formDetalles").show();
+                    listarDetalles();
+                } else {
                     location.reload(true);
                 }
             }
@@ -566,7 +573,7 @@ function cancelarDetalle() {
 
     $('#txtOperacionDetalle').val(0);
     $('#item_id').val('');
-    $('#item_decripcion').val('').prop('disabled', true).attr('placeholder', 'Buscar producto (requiere depósito)');
+    $('#item_descripcion').val('').prop('disabled', true).attr('placeholder', 'Buscar producto (requiere depósito)');
     $('#det_cantidad').val('').prop('disabled', true);
     $('#cantidad_stock').val('');
     _marcaIdSel  = null;
@@ -589,7 +596,7 @@ function agregarDetalle() {
     // El depósito se habilita primero; el producto queda bloqueado hasta que se elija depósito
     cargarDepositosPedido(null);
     $("#deposito_id_det").prop('disabled', false);
-    $("#item_decripcion").prop('disabled', true).attr('placeholder', 'Buscar producto (requiere depósito)');
+    $("#item_descripcion").prop('disabled', true).attr('placeholder', 'Buscar producto (requiere depósito)');
     $("#det_cantidad").prop('disabled', false);
 
     $("#btnAgregarDetalle").attr("style", "display:none");
@@ -606,7 +613,7 @@ function editarDetalle() {
     $("#deposito_id_det").prop('disabled', false);
     // Habilitar producto solo si ya hay depósito
     if (currentDeposito) {
-        $("#item_decripcion").prop('disabled', false).attr('placeholder', 'Buscar producto...');
+        $("#item_descripcion").prop('disabled', false).attr('placeholder', 'Buscar producto...');
     }
     $("#det_cantidad").prop('disabled', false);
 
@@ -621,7 +628,7 @@ function editarDetalle() {
             var opts = '<option value="">-- Marca --</option>';
             marcaData.forEach(function(m) {
                 var id = m.marca_id || m.id;
-                opts += '<option value="' + id + '"' + (id == marcaActual ? ' selected' : '') + '>' + m.marc_nom + '</option>';
+                opts += '<option value="' + id + '"' + (id == marcaActual ? ' selected' : '') + '>' + m.mar_nom + '</option>';
             });
             $('#marca_det').html(opts).removeAttr('disabled');
         } else {
@@ -630,7 +637,7 @@ function editarDetalle() {
                 var opts = '<option value="">-- Marca --</option>';
                 data.forEach(function(m) {
                     var id = m.marca_id || m.id;
-                    opts += '<option value="' + id + '"' + (id == marcaActual ? ' selected' : '') + '>' + m.marc_nom + '</option>';
+                    opts += '<option value="' + id + '"' + (id == marcaActual ? ' selected' : '') + '>' + m.mar_nom + '</option>';
                 });
                 $('#marca_det').html(opts).removeAttr('disabled');
             });
@@ -722,7 +729,7 @@ var _timers = {};
 function debounce(key, fn) { clearTimeout(_timers[key]); _timers[key] = setTimeout(fn, 300); }
 
 function buscarProductos() {
-    var q = $('#item_decripcion').val();
+    var q = $('#item_descripcion').val();
     if (q.length < 2) { $('#listaProductos').html('').hide(); return; }
     var depositoId = $('#deposito_id_det').val() || '';
     if (!depositoId) {
@@ -735,7 +742,7 @@ function buscarProductos() {
             method: "POST",
             dataType: "json",
             data: {
-                "item_decripcion": q,
+                "item_descripcion": q,
                 "deposito_id":     depositoId
             }
         })
@@ -743,8 +750,8 @@ function buscarProductos() {
             var lista = "<ul class=\"list-group\">";
             resultado.forEach(function(rs) {
                 var stock = rs.cantidad_disponible || 0;
-                lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto(" + rs.item_id + ",'" + rs.item_decripcion + "'," + stock + ")\">"
-                    + rs.item_decripcion
+                lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto(" + rs.item_id + ",'" + rs.item_descripcion + "'," + stock + ")\">"
+                    + rs.item_descripcion
                     + " <span class='badge' style='background:#3b82f6;color:#fff;'>Stock: " + stock + "</span>"
                     + "</li>";
             });
@@ -758,9 +765,9 @@ function buscarProductos() {
     });
 }
 
-function seleccionProducto(item_id, item_decripcion, cantidad_disponible){
+function seleccionProducto(item_id, item_descripcion, cantidad_disponible){
     $("#item_id").val(item_id);
-    $("#item_decripcion").val(item_decripcion);
+    $("#item_descripcion").val(item_descripcion);
     $("#cantidad_stock").val(cantidad_disponible);
     _marcaIdSel  = null;
     _modeloIdSel = null;
@@ -781,15 +788,15 @@ function listarDetalles(){
         for (var rs of resultado) {
             lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle("
                 + rs.item_id + ",'"
-                + rs.item_decripcion + "',"
+                + rs.item_descripcion + "',"
                 + rs.det_cantidad + ","
                 + rs.cantidad_stock + ","
                 + (rs.deposito_id || 0) + ","
                 + (rs.marca_id   || 0) + ","
                 + (rs.modelo_id  || 0) + ")\">";
             lista += "<td>" + rs.item_id + "</td>";
-            lista += "<td>" + rs.item_decripcion + "</td>";
-            lista += "<td>" + (rs.marc_nom || '—') + "</td>";
+            lista += "<td>" + rs.item_descripcion + "</td>";
+            lista += "<td>" + (rs.mar_nom || '—') + "</td>";
             lista += "<td>" + (rs.modelo_nom ? rs.modelo_nom + (rs.modelo_año ? ' (' + rs.modelo_año + ')' : '') : '—') + "</td>";
             lista += "<td>" + rs.det_cantidad + "</td>";
             lista += "<td>" + rs.cantidad_stock + "</td>";
@@ -810,9 +817,9 @@ function listarDetalles(){
     });
 }
 
-function seleccionDetalle(item_id, item_decripcion, det_cantidad, cantidad_stock, deposito_id, marca_id, modelo_id) {
+function seleccionDetalle(item_id, item_descripcion, det_cantidad, cantidad_stock, deposito_id, marca_id, modelo_id) {
     $("#item_id").val(item_id);
-    $("#item_decripcion").val(item_decripcion);
+    $("#item_descripcion").val(item_descripcion);
     $("#det_cantidad").val(det_cantidad);
     $("#cantidad_stock").val(cantidad_stock);
     _marcaIdSel  = marca_id  || null;
@@ -827,7 +834,7 @@ function seleccionDetalle(item_id, item_decripcion, det_cantidad, cantidad_stock
             var opts = '<option value="">-- Marca --</option>';
             marcas.forEach(function(m) {
                 var id = m.marca_id || m.id;
-                opts += '<option value="' + id + '"' + (id == marca_id ? ' selected' : '') + '>' + m.marc_nom + '</option>';
+                opts += '<option value="' + id + '"' + (id == marca_id ? ' selected' : '') + '>' + m.mar_nom + '</option>';
             });
             $('#marca_det').html(opts).val(marca_id).prop('disabled', true);
         }
@@ -940,3 +947,4 @@ function mostrarErrores(xhr) {
         swal({ title: 'Error', text: 'Ocurrió un error inesperado (HTTP ' + xhr.status + ').', type: 'error' });
     }
 }
+

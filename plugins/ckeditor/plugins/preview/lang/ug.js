@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("preview","ug",{preview:"ئالدىن كۆزەت"});
+CKEDITOR.plugins.setLang("preview","ug",{preview:"Ø¦Ø§Ù„Ø¯Ù‰Ù† ÙƒÛ†Ø²Û•Øª"});

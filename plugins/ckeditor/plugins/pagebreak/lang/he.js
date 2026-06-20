@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("pagebreak","he",{alt:"שבירת דף",toolbar:"הוספת שבירת דף"});
+CKEDITOR.plugins.setLang("pagebreak","he",{alt:"×©×‘×™×¨×ª ×“×£",toolbar:"×”×•×¡×¤×ª ×©×‘×™×¨×ª ×“×£"});

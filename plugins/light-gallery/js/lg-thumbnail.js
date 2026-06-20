@@ -452,3 +452,4 @@
     $.fn.lightGallery.modules.Thumbnail = Thumbnail;
 
 })(jQuery, window, document);
+

@@ -67,7 +67,7 @@ function agregar(){
     $("#tip_veh_observacion").removeAttr("disabled");
     $("#tv_anio").removeAttr("disabled");
     $("#tv_color").removeAttr("disabled");
-    $("#marc_nom").removeAttr("disabled");
+    $("#mar_nom").removeAttr("disabled");
     $("#modelo_nom").attr("disabled", "true");
     $("#modelo_año").attr("disabled", "true");
 
@@ -91,7 +91,7 @@ function editar(){
     $("#tip_veh_observacion").removeAttr("disabled");
     $("#tv_anio").removeAttr("disabled");
     $("#tv_color").removeAttr("disabled");
-    $("#marc_nom").removeAttr("disabled");
+    $("#mar_nom").removeAttr("disabled");
     $("#modelo_nom").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled", "true");
@@ -221,7 +221,7 @@ function seleccionTipoVehiculo(
     $("#tv_anio").val(tv_anio);
     $("#tv_color").val(tv_color);
 
-    $("#marc_nom").val(marca_nombre);
+    $("#mar_nom").val(marca_nombre);
     $("#marca_id").val(marca_id);
     $("#modelo_nom").val(modelo_nombre);
     $("#modelo_id").val(modelo_id);
@@ -259,7 +259,7 @@ function grabar(){
 
     var nombre = $("#tip_veh_nombre").val().trim();
     var capacidad = $("#tip_veh_capacidad").val().trim();
-    var marca = $("#marc_nom").val().trim();
+    var marca = $("#mar_nom").val().trim();
     var modelo = $("#modelo_nom").val().trim();
 
     var combustible = $("#tip_veh_combustible").val().trim();
@@ -358,7 +358,7 @@ function cambiarEstado() {
 }
 
 function buscarMarcas() {
-    var texto = $("#marc_nom").val();
+    var texto = $("#mar_nom").val();
     $.ajax({
         url: getUrl() + "marca/buscarPorTipo",
         method: "POST",
@@ -372,7 +372,7 @@ function buscarMarcas() {
         } else {
             for (var i = 0; i < resultado.length; i++) {
                 var rs = resultado[i];
-                lista += "<li class='list-group-item' onclick=\"seleccionMarca(" + rs.id + ",'" + esc(rs.marc_nom) + "');\">" + (rs.marc_nom || '') + "</li>";
+                lista += "<li class='list-group-item' onclick=\"seleccionMarca(" + rs.id + ",'" + esc(rs.mar_nom) + "');\">" + (rs.mar_nom || '') + "</li>";
             }
         }
         lista += "</ul>";
@@ -380,9 +380,9 @@ function buscarMarcas() {
     });
 }
 
-function seleccionMarca(id, marc_nom) {
+function seleccionMarca(id, mar_nom) {
     $("#marca_id").val(id);
-    $("#marc_nom").val(marc_nom);
+    $("#mar_nom").val(mar_nom);
     $("#modelo_nom").prop("disabled", false);
     $("#modelo_id").val("");
     $("#modelo_nom").val("");
@@ -570,3 +570,4 @@ function eliminarDetalle(id) {
         });
     });
 }
+

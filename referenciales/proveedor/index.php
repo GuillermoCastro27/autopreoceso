@@ -104,7 +104,7 @@
 
                 <div class="col-sm-4">
                     <label class="field-label">País</label>
-                    <input type="text" id="pais_descrpcion" class="form-control" disabled onkeyup="buscarPaises();" placeholder="País">
+                    <input type="text" id="pais_descripcion" class="form-control" disabled onkeyup="buscarPaises();" placeholder="País">
                     <input type="hidden" id="pais_id">
                     <div id="listaPaises" style="display:none;"></div>
                 </div>
@@ -219,3 +219,4 @@
 
 </body>
 </html>
+

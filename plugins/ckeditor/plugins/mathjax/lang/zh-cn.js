@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("mathjax","zh-cn",{title:"TeX 语法的数学公式编辑器",button:"数学公式",dialogInput:"在此编写您的 TeX 指令",docUrl:"http://zh.wikipedia.org/wiki/TeX",docLabel:"TeX 语法（可以参考维基百科自身关于数学公式显示方式的帮助）",loading:"正在加载...",pathName:"数字公式"});
+CKEDITOR.plugins.setLang("mathjax","zh-cn",{title:"TeX è¯­æ³•çš„æ•°å­¦å…¬å¼ç¼–è¾‘å™¨",button:"æ•°å­¦å…¬å¼",dialogInput:"åœ¨æ­¤ç¼–å†™æ‚¨çš„ TeX æŒ‡ä»¤",docUrl:"http://zh.wikipedia.org/wiki/TeX",docLabel:"TeX è¯­æ³•ï¼ˆå¯ä»¥å‚è€ƒç»´åŸºç™¾ç§‘è‡ªèº«å…³äºŽæ•°å­¦å…¬å¼æ˜¾ç¤ºæ–¹å¼çš„å¸®åŠ©ï¼‰",loading:"æ­£åœ¨åŠ è½½...",pathName:"æ•°å­—å…¬å¼"});

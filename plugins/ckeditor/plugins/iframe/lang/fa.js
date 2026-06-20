@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("iframe","fa",{border:"نمایش خطوط frame",noUrl:"لطفا مسیر URL iframe را درج کنید",scrolling:"نمایش خطکشها",title:"ویژگیهای IFrame",toolbar:"IFrame"});
+CKEDITOR.plugins.setLang("iframe","fa",{border:"Ù†Ù…Ø§ÛŒØ´ Ø®Ø·ÙˆØ· frame",noUrl:"Ù„Ø·ÙØ§ Ù…Ø³ÛŒØ± URL iframe Ø±Ø§ Ø¯Ø±Ø¬ Ú©Ù†ÛŒØ¯",scrolling:"Ù†Ù…Ø§ÛŒØ´ Ø®Ø·Ú©Ø´Ù‡Ø§",title:"ÙˆÛŒÚ˜Ú¯ÛŒÙ‡Ø§ÛŒ IFrame",toolbar:"IFrame"});

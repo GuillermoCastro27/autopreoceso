@@ -166,7 +166,7 @@
             </div>
 
             <div class="col-sm-5">
-                <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Buscar producto (requiere depósito)">
+                <input type="text" id="item_descripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Buscar producto (requiere depósito)">
                 <div id="listaProductos" style="display:none;"></div>
             </div>
 
@@ -293,3 +293,4 @@
 
 </body>
 </html>
+

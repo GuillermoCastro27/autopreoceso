@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("pagebreak","hu",{alt:"Oldaltörés",toolbar:"Oldaltörés beillesztése"});
+CKEDITOR.plugins.setLang("pagebreak","hu",{alt:"OldaltÃ¶rÃ©s",toolbar:"OldaltÃ¶rÃ©s beillesztÃ©se"});

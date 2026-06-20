@@ -249,3 +249,4 @@ function tarjeta(icono, label, valor, color) {
          + '<div style="font-size:12px;color:#888;">' + label + '</div></div>'
          + '</div></div></div>';
 }
+

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("iframe","ja",{border:"フレームの枠を表示",noUrl:"iframeのURLを入力してください。",scrolling:"スクロールバーの表示を許可",title:"iFrameのプロパティ",toolbar:"IFrame"});
+CKEDITOR.plugins.setLang("iframe","ja",{border:"ãƒ•ãƒ¬ãƒ¼ãƒ ã®æž ã‚’è¡¨ç¤º",noUrl:"iframeã®URLã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚",scrolling:"ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ã®è¡¨ç¤ºã‚’è¨±å¯",title:"iFrameã®ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£",toolbar:"IFrame"});

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("justify","ko",{block:"양쪽 맞춤",center:"가운데 정렬",left:"왼쪽 정렬",right:"오른쪽 정렬"});
+CKEDITOR.plugins.setLang("justify","ko",{block:"ì–‘ìª½ ë§žì¶¤",center:"ê°€ìš´ë° ì •ë ¬",left:"ì™¼ìª½ ì •ë ¬",right:"ì˜¤ë¥¸ìª½ ì •ë ¬"});

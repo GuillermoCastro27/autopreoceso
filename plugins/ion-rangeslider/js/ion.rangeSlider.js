@@ -1,6 +1,6 @@
 // Ion.RangeSlider
 // version 2.1.4 Build: 355
-// © Denis Ineshin, 2016
+// Â© Denis Ineshin, 2016
 // https://github.com/IonDen
 //
 // Project page:    http://ionden.com/a/plugins/ion.rangeSlider/en.html
@@ -313,7 +313,7 @@
             postfix: "",
             max_postfix: "",
             decorate_both: true,
-            values_separator: " — ",
+            values_separator: " â€” ",
 
             input_values_separator: ";",
 
@@ -2285,7 +2285,7 @@
     // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
     // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 
-    // requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
+    // requestAnimationFrame polyfill by Erik MÃ¶ller. fixes from Paul Irish and Tino Zijdel
 
     // MIT license
 
@@ -2315,3 +2315,4 @@
     }());
 
 }));
+

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("smiley","sk",{options:"Možnosti smajlíkov",title:"Vložiť smajlíka",toolbar:"Smajlíky"});
+CKEDITOR.plugins.setLang("smiley","sk",{options:"MoÅ¾nosti smajlÃ­kov",title:"VloÅ¾iÅ¥ smajlÃ­ka",toolbar:"SmajlÃ­ky"});

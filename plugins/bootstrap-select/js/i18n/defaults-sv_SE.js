@@ -24,14 +24,14 @@
 (function ($) {
   $.fn.selectpicker.defaults = {
     noneSelectedText: 'Inget valt',
-    noneResultsText: 'Inget sökresultat matchar {0}',
+    noneResultsText: 'Inget sÃ¶kresultat matchar {0}',
     countSelectedText: function (numSelected, numTotal) {
       return (numSelected === 1) ? "{0} alternativ valt" : "{0} alternativ valda";
     },
     maxOptionsText: function (numAll, numGroup) {
       return [
-        'Gräns uppnåd (max {n} alternativ)',
-        'Gräns uppnåd (max {n} gruppalternativ)'
+        'GrÃ¤ns uppnÃ¥d (max {n} alternativ)',
+        'GrÃ¤ns uppnÃ¥d (max {n} gruppalternativ)'
       ];
     },
     selectAllText: 'Markera alla',
@@ -42,3 +42,4 @@
 
 
 }));
+

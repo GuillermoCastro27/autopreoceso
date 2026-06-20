@@ -351,7 +351,7 @@
                                     </div>
                                     <div class="col-sm-3">
                                         <label style="font-size:12px;color:#636e72;">Producto</label>
-                                        <input type="text" id="item_decripcion" class="form-control" disabled
+                                        <input type="text" id="item_descripcion" class="form-control" disabled
                                                onkeyup="buscarProductos();" placeholder="Buscar producto...">
                                         <div id="listaProductos" style="display:none; position:absolute; z-index:2000; width:100%;"></div>
                                     </div>
@@ -367,7 +367,7 @@
                                     </div>
                                     <div class="col-sm-2">
                                         <label style="font-size:12px;color:#636e72;">Impuesto</label>
-                                        <input type="text" id="tip_imp_nom" class="form-control" disabled placeholder="Tipo Impuesto">
+                                        <input type="text" id="tipo_imp_nom" class="form-control" disabled placeholder="Tipo Impuesto">
                                     </div>
                                     <div class="col-sm-3">
                                         <label style="font-size:12px;color:#636e72;">Depósito</label>

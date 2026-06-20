@@ -1677,3 +1677,4 @@ define('tinymce/inlite/Theme', [
 
 dem('tinymce/inlite/Theme')();
 })();
+

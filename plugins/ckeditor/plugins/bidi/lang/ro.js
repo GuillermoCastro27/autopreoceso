@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("bidi","ro",{ltr:"Direcția textului de la stânga la dreapta",rtl:"Direcția textului de la dreapta la stânga"});
+CKEDITOR.plugins.setLang("bidi","ro",{ltr:"DirecÈ›ia textului de la stÃ¢nga la dreapta",rtl:"DirecÈ›ia textului de la dreapta la stÃ¢nga"});

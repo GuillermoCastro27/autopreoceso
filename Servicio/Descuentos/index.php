@@ -222,14 +222,14 @@
                                         <input type="text" id="item_id" class="form-control" disabled placeholder="Cód.">
                                     </div>
                                     <div class="col-sm-4">
-                                        <input type="text" id="item_decripcion" class="form-control" disabled
+                                        <input type="text" id="item_descripcion" class="form-control" disabled
                                                onkeyup="buscarProductos();" placeholder="Producto">
                                         <div id="listaProductos" style="display:none;"></div>
                                     </div>
 
                                     <!-- Impuesto -->
                                     <div class="col-sm-2">
-                                        <input type="text" id="tip_imp_nom" class="form-control" disabled placeholder="Impuesto">
+                                        <input type="text" id="tipo_imp_nom" class="form-control" disabled placeholder="Impuesto">
                                         <input type="hidden" id="tipo_impuesto_id">
                                     </div>
 
@@ -437,3 +437,4 @@
 </body>
 
 </html>
+

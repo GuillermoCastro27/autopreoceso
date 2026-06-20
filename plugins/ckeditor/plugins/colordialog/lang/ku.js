@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("colordialog","ku",{clear:"پاکیکەوە",highlight:"نیشانکردن",options:"هەڵبژاردەی ڕەنگەکان",selected:"ڕەنگی هەڵبژێردراو",title:"هەڵبژاردنی ڕەنگ"});
+CKEDITOR.plugins.setLang("colordialog","ku",{clear:"Ù¾Ø§Ú©ÛŒÚ©Û•ÙˆÛ•",highlight:"Ù†ÛŒØ´Ø§Ù†Ú©Ø±Ø¯Ù†",options:"Ù‡Û•ÚµØ¨Ú˜Ø§Ø±Ø¯Û•ÛŒ Ú•Û•Ù†Ú¯Û•Ú©Ø§Ù†",selected:"Ú•Û•Ù†Ú¯ÛŒ Ù‡Û•ÚµØ¨Ú˜ÛŽØ±Ø¯Ø±Ø§Ùˆ",title:"Ù‡Û•ÚµØ¨Ú˜Ø§Ø±Ø¯Ù†ÛŒ Ú•Û•Ù†Ú¯"});

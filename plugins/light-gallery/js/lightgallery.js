@@ -1315,3 +1315,4 @@
     $.fn.lightGallery.modules = {};
 
 })(jQuery, window, document);
+

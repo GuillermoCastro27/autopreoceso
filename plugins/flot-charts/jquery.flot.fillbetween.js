@@ -224,3 +224,4 @@ jquery.flot.stack.js plugin, possibly some code could be shared.
 	});
 
 })(jQuery);
+

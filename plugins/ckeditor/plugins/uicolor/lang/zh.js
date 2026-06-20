@@ -2,4 +2,4 @@
  Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
  For licensing, see LICENSE.md or http://ckeditor.com/license
 */
-CKEDITOR.plugins.setLang("uicolor","zh",{title:"UI 色彩選擇器",preview:"即時預覽",config:"請將此段字串複製到您的 config.js 檔案中。",predefined:"設定預先定義的色彩"});
+CKEDITOR.plugins.setLang("uicolor","zh",{title:"UI è‰²å½©é¸æ“‡å™¨",preview:"å³æ™‚é è¦½",config:"è«‹å°‡æ­¤æ®µå­—ä¸²è¤‡è£½åˆ°æ‚¨çš„ config.js æª”æ¡ˆä¸­ã€‚",predefined:"è¨­å®šé å…ˆå®šç¾©çš„è‰²å½©"});

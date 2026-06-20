@@ -140,3 +140,4 @@ You may need to check for this in hover events.
         version: '1.2'
     });
 })(jQuery);
+

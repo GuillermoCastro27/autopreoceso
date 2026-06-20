@@ -23,22 +23,23 @@
 
 (function ($) {
   $.fn.selectpicker.defaults = {
-    noneSelectedText: '항목을 선택해주세요',
-    noneResultsText: '{0} 검색 결과가 없습니다',
+    noneSelectedText: 'í•­ëª©ì„ ì„ íƒí•´ì£¼ì„¸ìš”',
+    noneResultsText: '{0} ê²€ìƒ‰ ê²°ê³¼ê°€ ì—†ìŠµë‹ˆë‹¤',
     countSelectedText: function (numSelected, numTotal) {
-      return "{0}개를 선택하였습니다";
+      return "{0}ê°œë¥¼ ì„ íƒí•˜ì˜€ìŠµë‹ˆë‹¤";
     },
     maxOptionsText: function (numAll, numGroup) {
       return [
-        '{n}개까지 선택 가능합니다',
-        '해당 그룹은 {n}개까지 선택 가능합니다'
+        '{n}ê°œê¹Œì§€ ì„ íƒ ê°€ëŠ¥í•©ë‹ˆë‹¤',
+        'í•´ë‹¹ ê·¸ë£¹ì€ {n}ê°œê¹Œì§€ ì„ íƒ ê°€ëŠ¥í•©ë‹ˆë‹¤'
       ];
     },
-    selectAllText: '전체선택',
-    deselectAllText: '전체해제',
+    selectAllText: 'ì „ì²´ì„ íƒ',
+    deselectAllText: 'ì „ì²´í•´ì œ',
     multipleSeparator: ', '
   };
 })(jQuery);
 
 
 }));
+

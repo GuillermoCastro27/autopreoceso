@@ -223,3 +223,4 @@ tinymce.PluginManager.add('layer', function(editor) {
 
 	editor.on('NodeChange', visualAid);
 });
+

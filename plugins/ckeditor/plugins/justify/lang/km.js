@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("justify","km",{block:"តម្រឹម​ពេញ",center:"កណ្ដាល",left:"តម្រឹម​ឆ្វេង",right:"តម្រឹម​ស្ដាំ"});
+CKEDITOR.plugins.setLang("justify","km",{block:"ážáž˜áŸ’ážšáž¹áž˜â€‹áž–áŸáž‰",center:"áž€ážŽáŸ’ážŠáž¶áž›",left:"ážáž˜áŸ’ážšáž¹áž˜â€‹áž†áŸ’ážœáŸáž„",right:"ážáž˜áŸ’ážšáž¹áž˜â€‹ážŸáŸ’ážŠáž¶áŸ†"});

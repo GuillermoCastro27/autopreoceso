@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("preview","zh",{preview:"預覽"});
+CKEDITOR.plugins.setLang("preview","zh",{preview:"é è¦½"});

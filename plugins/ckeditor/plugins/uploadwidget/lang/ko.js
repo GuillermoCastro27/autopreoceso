@@ -2,4 +2,4 @@
  Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
  For licensing, see LICENSE.md or http://ckeditor.com/license
 */
-CKEDITOR.plugins.setLang("uploadwidget","ko",{abort:"사용자가 업로드를 중단했습니다.",doneOne:"파일이 성공적으로 업로드되었습니다.",doneMany:"파일 %1개를 성공적으로 업로드하였습니다.",uploadOne:"파일 업로드중 ({percentage}%)...",uploadMany:"파일 {max} 개 중 {current} 번째 파일 업로드 중 ({percentage}%)..."});
+CKEDITOR.plugins.setLang("uploadwidget","ko",{abort:"ì‚¬ìš©ìžê°€ ì—…ë¡œë“œë¥¼ ì¤‘ë‹¨í–ˆìŠµë‹ˆë‹¤.",doneOne:"íŒŒì¼ì´ ì„±ê³µì ìœ¼ë¡œ ì—…ë¡œë“œë˜ì—ˆìŠµë‹ˆë‹¤.",doneMany:"íŒŒì¼ %1ê°œë¥¼ ì„±ê³µì ìœ¼ë¡œ ì—…ë¡œë“œí•˜ì˜€ìŠµë‹ˆë‹¤.",uploadOne:"íŒŒì¼ ì—…ë¡œë“œì¤‘ ({percentage}%)...",uploadMany:"íŒŒì¼ {max} ê°œ ì¤‘ {current} ë²ˆì§¸ íŒŒì¼ ì—…ë¡œë“œ ì¤‘ ({percentage}%)..."});

@@ -290,3 +290,4 @@
     $.fn.lightGallery.modules.video = Video;
 
 })(jQuery, window, document);
+

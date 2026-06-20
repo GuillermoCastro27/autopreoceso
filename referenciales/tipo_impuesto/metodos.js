@@ -1,4 +1,4 @@
-﻿listar();
+listar();
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -51,7 +51,7 @@ function cancelar(){
 function agregar(){
     $("#txtOperacion").val(1);
     $("#txtCodigo").val(0);
-    $("#tip_imp_nom").removeAttr("disabled");
+    $("#tipo_imp_nom").removeAttr("disabled");
     $("#tipo_imp_tasa").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
@@ -66,7 +66,7 @@ function agregar(){
 
 function editar(){
     $("#txtOperacion").val(2);
-    $("#tip_imp_nom").removeAttr("disabled");
+    $("#tipo_imp_nom").removeAttr("disabled");
     $("#tipo_imp_tasa").removeAttr("disabled");
 
     $("#btnAgregar").attr("disabled","true");
@@ -130,14 +130,14 @@ function buscarProductos(){
         method: "POST",
         dataType: "json",
         data:{
-            "item_decripcion":$("#item_decripcion").val(),
+            "item_descripcion":$("#item_descripcion").val(),
             "tipo_descripcion":"PRODUCTO"
         }
     })
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto("+rs.item_id+",'"+rs.item_decripcion+"')\">"+rs.item_decripcion+"</li>";   
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto("+rs.item_id+",'"+rs.item_descripcion+"')\">"+rs.item_descripcion+"</li>";   
         }
         lista += "</ul>";
         $("#listaProductos").html(lista);
@@ -150,9 +150,9 @@ function buscarProductos(){
 }
 
 // Rellena el campo de producto seleccionado.
-function seleccionProducto(item_id, item_decripcion){
+function seleccionProducto(item_id, item_descripcion){
     $("#item_id").val(item_id);
-    $("#item_decripcion").val(item_decripcion);
+    $("#item_descripcion").val(item_descripcion);
 
     $("#listaProductos").html("");
     $("#listaProductos").attr("style","display:none;");
@@ -182,12 +182,12 @@ function listar(){
             var badge  = estado === 'activo'
                 ? '<span class="badge" style="background:#27ae60;">Activo</span>'
                 : '<span class="badge" style="background:#c0392b;">Inactivo</span>';
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipoImpuestos("+rs.id+",'"+rs.tip_imp_nom+"','"+rs.tipo_imp_tasa+"','"+estado+"');\">";
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionTipoImpuestos("+rs.id+",'"+rs.tipo_imp_nom+"','"+rs.tipo_imp_tasa+"','"+estado+"');\">";
                 lista = lista + "<td>";
                 lista = lista + rs.id;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
-                lista = lista + rs.tip_imp_nom;
+                lista = lista + rs.tipo_imp_nom;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
                 lista = lista + rs.tipo_imp_tasa;
@@ -202,9 +202,9 @@ function listar(){
         alert(c);
     })
 }
-function seleccionTipoImpuestos(codigo, tip_imp_nom,tipo_imp_tasa, estado){
+function seleccionTipoImpuestos(codigo, tipo_imp_nom,tipo_imp_tasa, estado){
     $("#txtCodigo").val(codigo);
-    $("#tip_imp_nom").val(tip_imp_nom);
+    $("#tipo_imp_nom").val(tipo_imp_nom);
     $("#tipo_imp_tasa").val(tipo_imp_tasa);
 
     $("#tip_imp_estado").val(estado || 'activo');
@@ -228,7 +228,7 @@ function seleccionTipoImpuestos(codigo, tip_imp_nom,tipo_imp_tasa, estado){
 }
 
 function grabar(){
-    var descripcion = $("#tip_imp_nom").val().trim();
+    var descripcion = $("#tipo_imp_nom").val().trim();
     var tasa = $("#tipo_imp_tasa").val().trim();
 
     // Validar que el campo descripción no esté vacío
@@ -270,7 +270,7 @@ function grabar(){
         dataType: "json",
         data: { 
             'id': $("#txtCodigo").val(), 
-            'tip_imp_nom': $("#tip_imp_nom").val(), 
+            'tipo_imp_nom': $("#tipo_imp_nom").val(), 
             'tipo_imp_tasa': $("#tipo_imp_tasa").val()
         }
 

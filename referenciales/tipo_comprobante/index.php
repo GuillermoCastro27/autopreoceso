@@ -36,6 +36,7 @@
     <div class="body">
 
         <input type="hidden" value="0" id="txtOperacion"/>
+        <input type="hidden" id="tip_comp_estado" value="activo"/>
 
         <!-- ================= DATOS GENERALES ================= -->
         <div class="section-box">
@@ -64,8 +65,8 @@
             <button type="button" id="btnEditar" class="btn btn-primary" onclick="editar();" disabled>
                 <i class="material-icons">edit</i> Modificar
             </button>
-            <button type="button" id="btnEliminar" class="btn btn-danger" onclick="eliminar();" disabled>
-                <i class="material-icons">delete</i> Eliminar
+            <button type="button" id="btnEstado" class="btn btn-danger" onclick="confirmarCambioEstado();" disabled>
+                <i class="material-icons">block</i> <span id="lblEstado">Desactivar</span>
             </button>
             <button type="button" id="btnGrabar" class="btn btn-default" onclick="confirmarOperacion();" disabled>
                 <i class="material-icons">save</i> Grabar
@@ -91,6 +92,7 @@
                         <th>Código</th>
                         <th>Nombre</th>
                         <th>Abreviatura</th>
+                        <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
@@ -99,6 +101,7 @@
                         <th>Código</th>
                         <th>Nombre</th>
                         <th>Abreviatura</th>
+                        <th>Estado</th>
                     </tr>
                 </tfoot>
             </table>
@@ -132,3 +135,4 @@
 <script src="metodos.js?v=1"></script>
 </body>
 </html>
+

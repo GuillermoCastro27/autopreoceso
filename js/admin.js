@@ -477,7 +477,7 @@ $(function () {
     $('input, select, textarea').not('[autocomplete]').attr('autocomplete', 'off');
 });
 
-// Envía el token Bearer en todas las llamadas AJAX automáticamente
+// EnvÃ­a el token Bearer en todas las llamadas AJAX automÃ¡ticamente
 $.ajaxSetup({
     beforeSend: function(xhr) {
         var session = JSON.parse(localStorage.getItem('datosSesion') || '{}');
@@ -487,9 +487,10 @@ $.ajaxSetup({
     }
 });
 
-// Handler global — cubre todas las llamadas AJAX de las páginas internas
+// Handler global â€” cubre todas las llamadas AJAX de las pÃ¡ginas internas
 $(document).ajaxError(function (event, xhr) {
     if (xhr.status === 403) {
         swal('Acceso denegado', 'No tiene permiso para acceder a este recurso.', 'error');
     }
 });
+

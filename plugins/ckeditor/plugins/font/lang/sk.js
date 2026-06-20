@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("font","sk",{fontSize:{label:"Veľkosť",voiceLabel:"Veľkosť písma",panelTitle:"Veľkosť písma"},label:"Písmo",panelTitle:"Názov písma",voiceLabel:"Písmo"});
+CKEDITOR.plugins.setLang("font","sk",{fontSize:{label:"VeÄ¾kosÅ¥",voiceLabel:"VeÄ¾kosÅ¥ pÃ­sma",panelTitle:"VeÄ¾kosÅ¥ pÃ­sma"},label:"PÃ­smo",panelTitle:"NÃ¡zov pÃ­sma",voiceLabel:"PÃ­smo"});

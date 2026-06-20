@@ -1,4 +1,4 @@
-﻿let cuotasActualesCobro = [];
+let cuotasActualesCobro = [];
 var formaCobro_mapa = {}; // { "EFECTIVO": id, "TARJETA": id, ... }
 
 (function () {
@@ -583,9 +583,10 @@ function listarCtasCobro(cobro_id) {
 
             filas += `
                 <tr>
-                    <td>${rs.venta_nro}</td>
-                    <td>${rs.nro_cuota}</td>
-                    <td>${rs.fecha_vencimiento}</td>
+                    <td></td>
+                    <td>${rs.nro_factura || rs.venta_nro}</td>
+                    <td class="text-center">${rs.nro_cuota}</td>
+                    <td>${rs.fecha_vencimiento ? moment(rs.fecha_vencimiento).format('DD/MM/YYYY') : ''}</td>
                     <td class="text-right">${formatearNumero(rs.monto_cobrado)}</td>
                 </tr>
             `;
@@ -1623,7 +1624,7 @@ function listarDetalles() {
                 const precio   = parseFloat(rs.cob_det_precio) || 0;
                 const subtotal = cantidad * precio;
 
-                const imp = (rs.tip_imp_nom || '').toUpperCase();
+                const imp = (rs.tipo_imp_nom || '').toUpperCase();
                 let iva = 0;
                 if (imp.indexOf('EXENT') !== -1) {
                     iva = 0;
@@ -1637,10 +1638,10 @@ function listarDetalles() {
 
                 lista += `<tr>
                     <td>${rs.item_id}</td>
-                    <td>${rs.item_decripcion}</td>
+                    <td>${rs.item_descripcion}</td>
                     <td class="text-center">${cantidad}</td>
                     <td class="text-right">${formatearNumero(precio)}</td>
-                    <td class="text-center">${rs.tip_imp_nom}</td>
+                    <td class="text-center">${rs.tipo_imp_nom}</td>
                     <td class="text-right">${formatearNumero(subtotal)}</td>
                     <td class="text-right">${formatearNumero(iva)}</td>
                 </tr>`;
@@ -2251,7 +2252,7 @@ function cargarDetalleCobro(id) {
                 var cantidad = parseFloat(rs.cob_det_cantidad) || 0;
                 var precio   = parseFloat(rs.cob_det_precio)   || 0;
                 var subtotal = cantidad * precio;
-                var imp = (rs.tip_imp_nom || '').toUpperCase();
+                var imp = (rs.tipo_imp_nom || '').toUpperCase();
                 var iva = 0;
                 if (imp.indexOf('EXENT') !== -1) {
                     iva = 0;
@@ -2262,10 +2263,10 @@ function cargarDetalleCobro(id) {
                     iva = Math.round(subtotal / 11);
                     cIva10 += iva;
                 }
-                lista += '<tr><td>' + rs.item_id + '</td><td>' + rs.item_decripcion + '</td>' +
+                lista += '<tr><td>' + rs.item_id + '</td><td>' + rs.item_descripcion + '</td>' +
                     '<td class="text-center">' + cantidad + '</td>' +
                     '<td class="text-right">' + formatearNumero(precio) + '</td>' +
-                    '<td class="text-center">' + rs.tip_imp_nom + '</td>' +
+                    '<td class="text-center">' + rs.tipo_imp_nom + '</td>' +
                     '<td class="text-right">' + formatearNumero(subtotal) + '</td>' +
                     '<td class="text-right">' + formatearNumero(iva) + '</td></tr>';
                 cantidadDetalle++; totalGral += subtotal;
@@ -2290,13 +2291,15 @@ function cargarDetalleCobro(id) {
         (resp.cuotas || []).forEach(function(q) {
             total += parseFloat(q.monto_cobrado);
             cuotasActualesCobro.push(q.cta_cobrar_id);
-            filas += '<tr><td>' + q.venta_nro + '</td><td>' + q.nro_cuota + '</td>' +
-                '<td>' + q.fecha_vencimiento + '</td>' +
+            filas += '<tr><td></td><td>' + (q.nro_factura || q.venta_nro) + '</td><td class="text-center">' + q.nro_cuota + '</td>' +
+                '<td>' + (q.fecha_vencimiento ? moment(q.fecha_vencimiento).format('DD/MM/YYYY') : '') + '</td>' +
                 '<td class="text-right">' + formatearNumero(q.monto_cobrado) + '</td></tr>';
         });
         $("#tablaCtasCobrar").html(filas);
         $("#totalCobrar").text(formatearNumero(total));
         $("#panelCtasCobrar").show();
+
+        calcularVuelto();
 
         $(".form-line").addClass("focused");
     })
@@ -2304,3 +2307,4 @@ function cargarDetalleCobro(id) {
         swal("Error", "No se pudo cargar el detalle del cobro", "error");
     });
 }
+

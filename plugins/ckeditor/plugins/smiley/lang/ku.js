@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("smiley","ku",{options:"هەڵبژاردەی زەردەخەنه",title:"دانانی زەردەخەنەیەك",toolbar:"زەردەخەنه"});
+CKEDITOR.plugins.setLang("smiley","ku",{options:"Ù‡Û•ÚµØ¨Ú˜Ø§Ø±Ø¯Û•ÛŒ Ø²Û•Ø±Ø¯Û•Ø®Û•Ù†Ù‡",title:"Ø¯Ø§Ù†Ø§Ù†ÛŒ Ø²Û•Ø±Ø¯Û•Ø®Û•Ù†Û•ÛŒÛ•Ùƒ",toolbar:"Ø²Û•Ø±Ø¯Û•Ø®Û•Ù†Ù‡"});

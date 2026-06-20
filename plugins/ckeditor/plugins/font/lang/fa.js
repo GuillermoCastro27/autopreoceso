@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("font","fa",{fontSize:{label:"اندازه",voiceLabel:"اندازه قلم",panelTitle:"اندازه قلم"},label:"قلم",panelTitle:"نام قلم",voiceLabel:"قلم"});
+CKEDITOR.plugins.setLang("font","fa",{fontSize:{label:"Ø§Ù†Ø¯Ø§Ø²Ù‡",voiceLabel:"Ø§Ù†Ø¯Ø§Ø²Ù‡ Ù‚Ù„Ù…",panelTitle:"Ø§Ù†Ø¯Ø§Ø²Ù‡ Ù‚Ù„Ù…"},label:"Ù‚Ù„Ù…",panelTitle:"Ù†Ø§Ù… Ù‚Ù„Ù…",voiceLabel:"Ù‚Ù„Ù…"});

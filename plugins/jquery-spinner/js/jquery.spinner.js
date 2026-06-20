@@ -253,3 +253,4 @@
 
   return $.fn.spinner;
 });
+

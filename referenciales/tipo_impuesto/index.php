@@ -62,7 +62,7 @@
 
                 <div class="col-sm-7">
                     <label class="field-label">Nombre</label>
-                    <input type="text" id="tip_imp_nom" class="form-control" disabled placeholder="Nombre">
+                    <input type="text" id="tipo_imp_nom" class="form-control" disabled placeholder="Nombre">
                 </div>
 
                 <div class="col-sm-3">
@@ -158,3 +158,4 @@
 
 </body>
 </html>
+

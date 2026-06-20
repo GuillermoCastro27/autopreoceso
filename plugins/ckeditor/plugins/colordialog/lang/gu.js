@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("colordialog","gu",{clear:"સાફ કરવું",highlight:"હાઈઈટ",options:"રંગના વિકલ્પ",selected:"પસંદ કરેલો રંગ",title:"રંગ પસંદ કરો"});
+CKEDITOR.plugins.setLang("colordialog","gu",{clear:"àª¸àª¾àª« àª•àª°àªµà«àª‚",highlight:"àª¹àª¾àªˆàªˆàªŸ",options:"àª°àª‚àª—àª¨àª¾ àªµàª¿àª•àª²à«àªª",selected:"àªªàª¸àª‚àª¦ àª•àª°à«‡àª²à«‹ àª°àª‚àª—",title:"àª°àª‚àª— àªªàª¸àª‚àª¦ àª•àª°à«‹"});

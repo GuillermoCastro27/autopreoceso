@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("font","mn",{fontSize:{label:"Хэмжээ",voiceLabel:"Үсгийн хэмжээ",panelTitle:"Үсгийн хэмжээ"},label:"Үсгийн хэлбэр",panelTitle:"Үгсийн хэлбэрийн нэр",voiceLabel:"Үгсийн хэлбэр"});
+CKEDITOR.plugins.setLang("font","mn",{fontSize:{label:"Ð¥ÑÐ¼Ð¶ÑÑ",voiceLabel:"Ò®ÑÐ³Ð¸Ð¹Ð½ Ñ…ÑÐ¼Ð¶ÑÑ",panelTitle:"Ò®ÑÐ³Ð¸Ð¹Ð½ Ñ…ÑÐ¼Ð¶ÑÑ"},label:"Ò®ÑÐ³Ð¸Ð¹Ð½ Ñ…ÑÐ»Ð±ÑÑ€",panelTitle:"Ò®Ð³ÑÐ¸Ð¹Ð½ Ñ…ÑÐ»Ð±ÑÑ€Ð¸Ð¹Ð½ Ð½ÑÑ€",voiceLabel:"Ò®Ð³ÑÐ¸Ð¹Ð½ Ñ…ÑÐ»Ð±ÑÑ€"});

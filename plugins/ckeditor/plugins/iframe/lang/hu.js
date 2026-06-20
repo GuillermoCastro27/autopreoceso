@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("iframe","hu",{border:"Legyen keret",noUrl:"Kérem írja be a iframe URL-t",scrolling:"Gördítősáv bekapcsolása",title:"IFrame Tulajdonságok",toolbar:"IFrame"});
+CKEDITOR.plugins.setLang("iframe","hu",{border:"Legyen keret",noUrl:"KÃ©rem Ã­rja be a iframe URL-t",scrolling:"GÃ¶rdÃ­tÅ‘sÃ¡v bekapcsolÃ¡sa",title:"IFrame TulajdonsÃ¡gok",toolbar:"IFrame"});

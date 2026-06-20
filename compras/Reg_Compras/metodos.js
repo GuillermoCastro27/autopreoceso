@@ -1,4 +1,4 @@
-﻿// Lista los registros de pedidos utilizando DataTables
+// Lista los registros de pedidos utilizando DataTables
 // Cargar funcionario_id del usuario logueado
 cargarFuncionarioIdLogueado();
 listar();
@@ -288,28 +288,6 @@ function formatearNumero(numero) {
     });
 }
 
-function mascararFechaComp(input) {
-    var v = input.value.replace(/\D/g, '').slice(0, 8);
-    if (v.length > 4) v = v.slice(0,2) + '/' + v.slice(2,4) + '/' + v.slice(4);
-    else if (v.length > 2) v = v.slice(0,2) + '/' + v.slice(2);
-    input.value = v;
-}
-
-function validarFechaEmisionComp() {
-    var val = $('#comp_fecha_emision').val().trim();
-    var aviso = $('#avisoFechaEmisionComp');
-    if (!val) { aviso.hide(); $('#comp_fecha_emision').css('border-color',''); return; }
-    var m = moment(val, 'DD/MM/YYYY', true);
-    if (!m.isValid()) {
-        $('#comp_fecha_emision').css('border-color','#e74c3c');
-        aviso.text('Formato: DD/MM/YYYY').show();
-    } else if (m.isAfter(moment(), 'day')) {
-        $('#comp_fecha_emision').css('border-color','#e74c3c');
-        aviso.text('La fecha de emisión no puede ser futura.').show();
-    } else {
-        $('#comp_fecha_emision').css('border-color',''); aviso.hide();
-    }
-}
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 function mostrarErrores(xhr) {
@@ -399,7 +377,7 @@ function listarDetalles() {
                 const cantidad = rs.comp_det_cantidad || 0;
                 const costo    = rs.item_costo || 0;
                 const subtotal = cantidad * costo;
-                const imp = (rs.tip_imp_nom || '').toUpperCase();
+                const imp = (rs.tipo_imp_nom || '').toUpperCase();
                 let iva = 0;
                 if (imp.indexOf('EXENT') !== -1) {
                     iva = 0;
@@ -411,14 +389,14 @@ function listarDetalles() {
                     TotalIva10 += iva;
                 }
 
-                lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" + rs.item_id + "," + rs.tipo_impuesto_id + ",'" + rs.item_decripcion + "','" + (rs.tip_imp_nom || '-') + "'," + cantidad + ", " + costo + ", '" + formatearNumero(subtotal) + "', '" + formatearNumero(iva) + "'," + (rs.deposito_id||0) + ");\">";
+                lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle(" + rs.item_id + "," + rs.tipo_impuesto_id + ",'" + rs.item_descripcion + "','" + (rs.tipo_imp_nom || '-') + "'," + cantidad + ", " + costo + ", '" + formatearNumero(subtotal) + "', '" + formatearNumero(iva) + "'," + (rs.deposito_id||0) + ");\">";
                 lista += "<td>" + rs.item_id + "</td>";
-                lista += "<td>" + rs.item_decripcion + "</td>";
-                lista += "<td>" + (rs.marc_nom  || '—') + "</td>";
+                lista += "<td>" + rs.item_descripcion + "</td>";
+                lista += "<td>" + (rs.mar_nom  || '—') + "</td>";
                 lista += "<td>" + (rs.modelo_nom || '—') + "</td>";
                 lista += "<td>" + cantidad + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(costo) + "</td>";
-                lista += "<td>" + (rs.tip_imp_nom || '-') + "</td>";
+                lista += "<td>" + (rs.tipo_imp_nom || '-') + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(iva) + "</td>";
                 lista += "<td>" + getNombreDeposito(rs.deposito_id) + "</td>";
@@ -523,51 +501,53 @@ function grabar() {
     }
     var errores = [];
     var condicion = $('#condicion_pago').val();
-
-    // Fecha de la compra (debe ser hoy)
-    var fechaVal = $('#comp_fecha').val().trim();
-    if (!fechaVal) {
-        errores.push('La fecha de la compra es obligatoria.');
-    } else {
-        var mFecha = moment(fechaVal, FMT_COMP, true);
-        if (!mFecha.isValid()) errores.push('El formato de la fecha es inválido.');
-        else if (!mFecha.clone().startOf('day').isSame(moment().startOf('day')))
-            errores.push('La fecha debe ser la de hoy (' + moment().format('DD/MM/YYYY') + ').');
-    }
-
-    // Fecha de emisión (requerida, no futura)
     var fechaEmision = $.trim($('#comp_fecha_emision').val());
-    if (!fechaEmision) {
-        errores.push('La fecha de emisión de la factura es obligatoria.');
-    } else {
-        var mEmision = moment(fechaEmision, 'DD/MM/YYYY', true);
-        if (!mEmision.isValid()) errores.push('La fecha de emisión tiene formato inválido. Use DD/MM/YYYY.');
-        else if (mEmision.isAfter(moment(), 'day')) errores.push('La fecha de emisión no puede ser futura.');
-    }
-
-    // Orden de compra requerida
-    if (!$('#orden_compra_cab_id').val() || $('#orden_compra_cab_id').val() == '0')
-        errores.push('Debe seleccionar una Orden de Compra.');
-
-    // Validaciones para CRÉDITO
-    if (condicion === 'CREDITO') {
-        var ifv = $('#comp_intervalo_fecha_vence').val().trim();
-        if (!ifv) {
-            errores.push('El intervalo de vencimiento es obligatorio para condición CRÉDITO.');
-        } else {
-            var mIFV = moment(ifv, FMT_COMP, true);
-            if (!mIFV.isValid()) errores.push('El formato del intervalo de vencimiento es inválido.');
-            else if (mIFV.clone().startOf('day').isBefore(moment().startOf('day')))
-                errores.push('El intervalo de vencimiento no puede ser una fecha pasada.');
-        }
-        var cuotas = parseInt($('#comp_cant_cuota').val());
-        if (!cuotas || cuotas <= 0) errores.push('La cantidad de cuotas es obligatoria para condición CRÉDITO.');
-    }
-
-    // Número de factura: si tiene valor, validar formato
     var nroFactura = $.trim($('#comp_nro_factura').val());
-    if (nroFactura && !/^\d{3}-\d{3}-\d{7}$/.test(nroFactura))
-        errores.push('El Nro. de Factura debe tener el formato 000-000-0000000.');
+
+    if (estado !== 'ANULADO' && estado !== 'RECIBIDO') {
+        // Fecha de la compra (debe ser hoy)
+        var fechaVal = $('#comp_fecha').val().trim();
+        if (!fechaVal) {
+            errores.push('La fecha de la compra es obligatoria.');
+        } else {
+            var mFecha = moment(fechaVal, FMT_COMP, true);
+            if (!mFecha.isValid()) errores.push('El formato de la fecha es inválido.');
+            else if (!mFecha.clone().startOf('day').isSame(moment().startOf('day')))
+                errores.push('La fecha debe ser la de hoy (' + moment().format('DD/MM/YYYY') + ').');
+        }
+
+        // Fecha de emisión (requerida, no futura)
+        if (!fechaEmision) {
+            errores.push('La fecha de emisión de la factura es obligatoria.');
+        } else {
+            var mEmision = moment(fechaEmision, 'DD/MM/YYYY', true);
+            if (!mEmision.isValid()) errores.push('La fecha de emisión tiene formato inválido. Use DD/MM/YYYY.');
+            else if (mEmision.isAfter(moment(), 'day')) errores.push('La fecha de emisión no puede ser futura.');
+        }
+
+        // Orden de compra requerida
+        if (!$('#orden_compra_cab_id').val() || $('#orden_compra_cab_id').val() == '0')
+            errores.push('Debe seleccionar una Orden de Compra.');
+
+        // Validaciones para CRÉDITO
+        if (condicion === 'CREDITO') {
+            var ifv = $('#comp_intervalo_fecha_vence').val().trim();
+            if (!ifv) {
+                errores.push('El intervalo de vencimiento es obligatorio para condición CRÉDITO.');
+            } else {
+                var mIFV = moment(ifv, FMT_COMP, true);
+                if (!mIFV.isValid()) errores.push('El formato del intervalo de vencimiento es inválido.');
+                else if (mIFV.clone().startOf('day').isBefore(moment().startOf('day')))
+                    errores.push('El intervalo de vencimiento no puede ser una fecha pasada.');
+            }
+            var cuotas = parseInt($('#comp_cant_cuota').val());
+            if (!cuotas || cuotas <= 0) errores.push('La cantidad de cuotas es obligatoria para condición CRÉDITO.');
+        }
+
+        // Número de factura: si tiene valor, validar formato
+        if (nroFactura && !/^\d{3}-\d{3}-\d{7}$/.test(nroFactura))
+            errores.push('El Nro. de Factura debe tener el formato 000-000-0000000.');
+    }
 
     if (errores.length > 0) {
         swal({ title: 'Datos incompletos', text: errores.map(function(e){ return '• '+e; }).join('\n'), type: 'warning' });
@@ -604,12 +584,22 @@ function grabar() {
         },
         function(){
             if(resultado.tipo == "success"){
-                //location.reload(true);
                 $("#id").val(resultado.registro.id);
                 $("#detalle").attr("style","display:block;");
                 listarDetalles();
                 if(resultado.registro.comp_estado!="PENDIENTE"){
                     location.reload(true);
+                } else {
+                    $("#comp_fecha").attr("disabled", true);
+                    $("#comp_timbrado").attr("disabled", true);
+                    $("#comp_nro_factura").attr("disabled", true);
+                    $("#comp_fecha_emision").attr("disabled", true);
+                    $("#ordencompra").attr("disabled", true);
+                    $("#btnGrabar").attr("disabled", true);
+                    $("#btnAgregar").attr("disabled", true);
+                    $("#btnCancelar").removeAttr("disabled");
+                    $("#btnEditar").removeAttr("disabled");
+                    $("#btnEliminar").removeAttr("disabled");
                 }
             }
         });
@@ -703,6 +693,14 @@ function campoFecha(){
         clearButton: true,
         weekStart: 1
     });
+    // Fecha emisión: clase propia para no mezclar con el formato YYYY-MM-DD HH:mm:ss
+    $('.datepicker-emision').bootstrapMaterialDatePicker({
+        format:      'DD/MM/YYYY',
+        time:        false,
+        clearButton: true,
+        weekStart:   1,
+        maxDate:     new Date()
+    });
     $('#comp_fecha').on('change', function() { validarFechaComp(); });
     $('#comp_intervalo_fecha_vence').on('change', function() { validarIFVComp(); });
     $('#condicion_pago').on('change', function() {
@@ -712,3 +710,4 @@ function campoFecha(){
         } else { validarIFVComp(); }
     });
 }
+

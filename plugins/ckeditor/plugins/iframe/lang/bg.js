@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("iframe","bg",{border:"Показва рамка на карето",noUrl:"Моля въведете URL за iFrame",scrolling:"Вкл. скролбаровете",title:"IFrame настройки",toolbar:"IFrame"});
+CKEDITOR.plugins.setLang("iframe","bg",{border:"ÐŸÐ¾ÐºÐ°Ð·Ð²Ð° Ñ€Ð°Ð¼ÐºÐ° Ð½Ð° ÐºÐ°Ñ€ÐµÑ‚Ð¾",noUrl:"ÐœÐ¾Ð»Ñ Ð²ÑŠÐ²ÐµÐ´ÐµÑ‚Ðµ URL Ð·Ð° iFrame",scrolling:"Ð’ÐºÐ». ÑÐºÑ€Ð¾Ð»Ð±Ð°Ñ€Ð¾Ð²ÐµÑ‚Ðµ",title:"IFrame Ð½Ð°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ¸",toolbar:"IFrame"});

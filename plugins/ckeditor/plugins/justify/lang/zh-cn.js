@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("justify","zh-cn",{block:"两端对齐",center:"居中",left:"左对齐",right:"右对齐"});
+CKEDITOR.plugins.setLang("justify","zh-cn",{block:"ä¸¤ç«¯å¯¹é½",center:"å±…ä¸­",left:"å·¦å¯¹é½",right:"å³å¯¹é½"});

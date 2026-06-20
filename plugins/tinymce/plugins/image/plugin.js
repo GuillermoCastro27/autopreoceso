@@ -628,3 +628,4 @@ tinymce.PluginManager.add('image', function(editor) {
 
 	editor.addCommand('mceImage', createImageList(showDialog));
 });
+

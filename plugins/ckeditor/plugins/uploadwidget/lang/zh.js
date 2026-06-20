@@ -2,4 +2,4 @@
  Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
  For licensing, see LICENSE.md or http://ckeditor.com/license
 */
-CKEDITOR.plugins.setLang("uploadwidget","zh",{abort:"上傳由使用者放棄。",doneOne:"檔案成功上傳。",doneMany:"成功上傳 %1 檔案。",uploadOne:"正在上傳檔案（{percentage}%）...",uploadMany:"正在上傳檔案，{max} 中的 {current} 已完成（{percentage}%）..."});
+CKEDITOR.plugins.setLang("uploadwidget","zh",{abort:"ä¸Šå‚³ç”±ä½¿ç”¨è€…æ”¾æ£„ã€‚",doneOne:"æª”æ¡ˆæˆåŠŸä¸Šå‚³ã€‚",doneMany:"æˆåŠŸä¸Šå‚³ %1 æª”æ¡ˆã€‚",uploadOne:"æ­£åœ¨ä¸Šå‚³æª”æ¡ˆï¼ˆ{percentage}%ï¼‰...",uploadMany:"æ­£åœ¨ä¸Šå‚³æª”æ¡ˆï¼Œ{max} ä¸­çš„ {current} å·²å®Œæˆï¼ˆ{percentage}%ï¼‰..."});

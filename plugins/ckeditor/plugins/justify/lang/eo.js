@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("justify","eo",{block:"Ĝisrandigi Ambaŭflanke",center:"Centrigi",left:"Ĝisrandigi maldekstren",right:"Ĝisrandigi dekstren"});
+CKEDITOR.plugins.setLang("justify","eo",{block:"Äœisrandigi AmbaÅ­flanke",center:"Centrigi",left:"Äœisrandigi maldekstren",right:"Äœisrandigi dekstren"});

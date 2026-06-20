@@ -85,3 +85,4 @@ angular.module('bootstrap-tagsinput', [])
     }
   };
 }]);
+

@@ -30,3 +30,4 @@ tinymce.PluginManager.add('print', function(editor) {
 		context: 'file'
 	});
 });
+

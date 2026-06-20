@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("print","ja",{toolbar:"印刷"});
+CKEDITOR.plugins.setLang("print","ja",{toolbar:"å°åˆ·"});

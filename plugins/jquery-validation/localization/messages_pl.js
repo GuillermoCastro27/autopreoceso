@@ -10,26 +10,26 @@
 
 /*
  * Translated default messages for the jQuery validation plugin.
- * Locale: PL (Polish; język polski, polszczyzna)
+ * Locale: PL (Polish; jÄ™zyk polski, polszczyzna)
  */
 $.extend( $.validator.messages, {
 	required: "To pole jest wymagane.",
-	remote: "Proszę o wypełnienie tego pola.",
-	email: "Proszę o podanie prawidłowego adresu email.",
-	url: "Proszę o podanie prawidłowego URL.",
-	date: "Proszę o podanie prawidłowej daty.",
-	dateISO: "Proszę o podanie prawidłowej daty (ISO).",
-	number: "Proszę o podanie prawidłowej liczby.",
-	digits: "Proszę o podanie samych cyfr.",
-	creditcard: "Proszę o podanie prawidłowej karty kredytowej.",
-	equalTo: "Proszę o podanie tej samej wartości ponownie.",
-	extension: "Proszę o podanie wartości z prawidłowym rozszerzeniem.",
-	maxlength: $.validator.format( "Proszę o podanie nie więcej niż {0} znaków." ),
-	minlength: $.validator.format( "Proszę o podanie przynajmniej {0} znaków." ),
-	rangelength: $.validator.format( "Proszę o podanie wartości o długości od {0} do {1} znaków." ),
-	range: $.validator.format( "Proszę o podanie wartości z przedziału od {0} do {1}." ),
-	max: $.validator.format( "Proszę o podanie wartości mniejszej bądź równej {0}." ),
-	min: $.validator.format( "Proszę o podanie wartości większej bądź równej {0}." ),
+	remote: "ProszÄ™ o wypeÅ‚nienie tego pola.",
+	email: "ProszÄ™ o podanie prawidÅ‚owego adresu email.",
+	url: "ProszÄ™ o podanie prawidÅ‚owego URL.",
+	date: "ProszÄ™ o podanie prawidÅ‚owej daty.",
+	dateISO: "ProszÄ™ o podanie prawidÅ‚owej daty (ISO).",
+	number: "ProszÄ™ o podanie prawidÅ‚owej liczby.",
+	digits: "ProszÄ™ o podanie samych cyfr.",
+	creditcard: "ProszÄ™ o podanie prawidÅ‚owej karty kredytowej.",
+	equalTo: "ProszÄ™ o podanie tej samej wartoÅ›ci ponownie.",
+	extension: "ProszÄ™ o podanie wartoÅ›ci z prawidÅ‚owym rozszerzeniem.",
+	maxlength: $.validator.format( "ProszÄ™ o podanie nie wiÄ™cej niÅ¼ {0} znakÃ³w." ),
+	minlength: $.validator.format( "ProszÄ™ o podanie przynajmniej {0} znakÃ³w." ),
+	rangelength: $.validator.format( "ProszÄ™ o podanie wartoÅ›ci o dÅ‚ugoÅ›ci od {0} do {1} znakÃ³w." ),
+	range: $.validator.format( "ProszÄ™ o podanie wartoÅ›ci z przedziaÅ‚u od {0} do {1}." ),
+	max: $.validator.format( "ProszÄ™ o podanie wartoÅ›ci mniejszej bÄ…dÅº rÃ³wnej {0}." ),
+	min: $.validator.format( "ProszÄ™ o podanie wartoÅ›ci wiÄ™kszej bÄ…dÅº rÃ³wnej {0}." ),
 	pattern: $.validator.format( "Pole zawiera niedozwolone znaki." )
 } );
 

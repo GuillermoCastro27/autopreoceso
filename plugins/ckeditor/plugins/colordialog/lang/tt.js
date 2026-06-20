@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("colordialog","tt",{clear:"Бушату",highlight:"Билгеләү",options:"Төс көйләүләре",selected:"Сайланган төсләр",title:"Төс сайлау"});
+CKEDITOR.plugins.setLang("colordialog","tt",{clear:"Ð‘ÑƒÑˆÐ°Ñ‚Ñƒ",highlight:"Ð‘Ð¸Ð»Ð³ÐµÐ»Ó™Ò¯",options:"Ð¢Ó©Ñ ÐºÓ©Ð¹Ð»Ó™Ò¯Ð»Ó™Ñ€Ðµ",selected:"Ð¡Ð°Ð¹Ð»Ð°Ð½Ð³Ð°Ð½ Ñ‚Ó©ÑÐ»Ó™Ñ€",title:"Ð¢Ó©Ñ ÑÐ°Ð¹Ð»Ð°Ñƒ"});

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("save","si",{toolbar:"ආරක්ෂා කරන්න"});
+CKEDITOR.plugins.setLang("save","si",{toolbar:"à¶†à¶»à¶šà·Šà·‚à· à¶šà¶»à¶±à·Šà¶±"});

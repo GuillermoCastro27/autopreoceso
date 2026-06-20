@@ -488,3 +488,4 @@ tinymce.PluginManager.add('fullpage', function(editor) {
 	editor.on('BeforeSetContent', setContent);
 	editor.on('GetContent', getContent);
 });
+

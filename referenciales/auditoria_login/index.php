@@ -20,6 +20,9 @@
         .badge-contrasena        { background:#e67e22; color:#fff; padding:3px 10px; border-radius:12px; font-size:12px; }
         .badge-bloqueado         { background:#c0392b; color:#fff; padding:3px 10px; border-radius:12px; font-size:12px; }
         .badge-usuario_no_existe { background:#8e44ad; color:#fff; padding:3px 10px; border-radius:12px; font-size:12px; }
+        .badge-desbloqueado      { background:#16a085; color:#fff; padding:3px 10px; border-radius:12px; font-size:12px; }
+        .card-bloqueados { border-left:4px solid #c0392b; border-radius:6px; background:#fff; padding:16px 20px; box-shadow:0 1px 4px rgba(0,0,0,.08); margin-bottom:20px; }
+        .tabla-bloqueados td, .tabla-bloqueados th { vertical-align:middle !important; }
     </style>
 </head>
 <body class="theme-red">
@@ -30,6 +33,35 @@
 <div class="container-fluid">
 <div class="row clearfix">
 <div class="col-md-12">
+
+<!-- USUARIOS BLOQUEADOS -->
+<div id="card-bloqueados" class="card-bloqueados" style="display:none;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <i class="material-icons" style="color:#c0392b; font-size:24px;">lock</i>
+            <strong style="font-size:16px; color:#c0392b;">Usuarios Bloqueados</strong>
+            <span id="badge-cant-bloqueados" style="background:#c0392b; color:#fff; border-radius:12px; padding:2px 10px; font-size:12px; font-weight:600;"></span>
+        </div>
+        <button class="btn btn-default btn-sm waves-effect" onclick="cargarBloqueados();" title="Actualizar">
+            <i class="material-icons" style="font-size:16px; vertical-align:middle;">refresh</i>
+        </button>
+    </div>
+    <div class="table-responsive">
+        <table class="tabla-bloqueados table table-bordered table-hover" style="margin-bottom:0;">
+            <thead style="background:#fdf2f2;">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Usuario</th>
+                    <th>Correo</th>
+                    <th>Bloqueado hasta</th>
+                    <th>Minutos restantes</th>
+                    <th style="width:120px;">Acción</th>
+                </tr>
+            </thead>
+            <tbody id="tbody-bloqueados"></tbody>
+        </table>
+    </div>
+</div>
 
 <div class="card card-industrial">
     <div class="header">
@@ -58,6 +90,7 @@
                         <option value="contrasena_incorrecta">Contraseña incorrecta</option>
                         <option value="usuario_no_existe">Usuario no existe</option>
                         <option value="bloqueado">Bloqueado</option>
+                        <option value="desbloqueado">Desbloqueado</option>
                     </select>
                 </div>
                 <div class="col-sm-2">
@@ -147,3 +180,4 @@
 <script src="metodos.js"></script>
 </body>
 </html>
+

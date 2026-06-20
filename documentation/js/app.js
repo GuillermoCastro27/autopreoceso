@@ -1,4 +1,4 @@
-﻿$.AdminBSB = {};
+$.AdminBSB = {};
 $.AdminBSB.options = {
     colors: {
         red: '#F44336',

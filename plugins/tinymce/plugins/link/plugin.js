@@ -401,3 +401,4 @@ tinymce.PluginManager.add('link', function(editor) {
 		prependToContext: true
 	});
 });
+

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("iframe","tr",{border:"Çerceve sınırlarını göster",noUrl:"Lütfen IFrame köprü (URL) bağlantısını yazın",scrolling:"Kaydırma çubuklarını aktif et",title:"IFrame Özellikleri",toolbar:"IFrame"});
+CKEDITOR.plugins.setLang("iframe","tr",{border:"Ã‡erceve sÄ±nÄ±rlarÄ±nÄ± gÃ¶ster",noUrl:"LÃ¼tfen IFrame kÃ¶prÃ¼ (URL) baÄŸlantÄ±sÄ±nÄ± yazÄ±n",scrolling:"KaydÄ±rma Ã§ubuklarÄ±nÄ± aktif et",title:"IFrame Ã–zellikleri",toolbar:"IFrame"});

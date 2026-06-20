@@ -1,4 +1,4 @@
-﻿<?php header('Cache-Control: no-store, no-cache, must-revalidate'); header('Pragma: no-cache'); ?>
+<?php header('Cache-Control: no-store, no-cache, must-revalidate'); header('Pragma: no-cache'); ?>
 <!DOCTYPE html>
 <html>
 
@@ -154,7 +154,7 @@
 
                 <div class="col-sm-5">
                     <label class="field-label">Producto</label>
-                    <input type="text" id="item_decripcion" class="form-control" disabled
+                    <input type="text" id="item_descripcion" class="form-control" disabled
                            onkeyup="buscarProductos();" placeholder="Buscar...">
                     <div id="listaProductos" style="display:none;"></div>
                 </div>
@@ -281,3 +281,4 @@
 
 </body>
 </html>
+

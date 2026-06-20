@@ -83,3 +83,4 @@
     $.fn.lightGallery.modules.pager = Pager;
 
 })(jQuery, window, document);
+

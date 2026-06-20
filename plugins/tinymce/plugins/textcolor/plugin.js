@@ -295,3 +295,4 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		onclick: onButtonClick
 	});
 });
+

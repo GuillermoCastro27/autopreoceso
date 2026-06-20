@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("colordialog","ar",{clear:"مسح",highlight:"تحديد",options:"اختيارات الألوان",selected:"اللون المختار",title:"اختر اللون"});
+CKEDITOR.plugins.setLang("colordialog","ar",{clear:"Ù…Ø³Ø­",highlight:"ØªØ­Ø¯ÙŠØ¯",options:"Ø§Ø®ØªÙŠØ§Ø±Ø§Øª Ø§Ù„Ø£Ù„ÙˆØ§Ù†",selected:"Ø§Ù„Ù„ÙˆÙ† Ø§Ù„Ù…Ø®ØªØ§Ø±",title:"Ø§Ø®ØªØ± Ø§Ù„Ù„ÙˆÙ†"});

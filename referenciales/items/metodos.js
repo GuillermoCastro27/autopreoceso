@@ -1,5 +1,5 @@
-﻿// Arrays en memoria para marcas y modelos del item en edición
-var marcasItem  = [];  // [{marca_id, marc_nom}]
+// Arrays en memoria para marcas y modelos del item en edición
+var marcasItem  = [];  // [{marca_id, mar_nom}]
 var modelosItem = [];  // [{modelo_id, modelo_nom}]
 
 listar();
@@ -13,7 +13,7 @@ $(document).on('click', function(e){
     if (!$(e.target).closest('#tipo_descripcion, #listaTipoItems').length) {
         $('#listaTipoItems').html('').hide();
     }
-    if (!$(e.target).closest('#tip_imp_nom, #listaTipoImpuestos').length) {
+    if (!$(e.target).closest('#tipo_imp_nom, #listaTipoImpuestos').length) {
         $('#listaTipoImpuestos').html('').hide();
     }
 });
@@ -89,12 +89,12 @@ function confirmarCambioEstado() {
 function habilitarCampos(habilitar){
     var action = habilitar ? "removeAttr" : "attr";
     var args   = habilitar ? ["disabled"] : ["disabled","true"];
-    $("#item_decripcion")[action](...args);
+    $("#item_descripcion")[action](...args);
     $("#item_costo")[action](...args);
     $("#item_precio")[action](...args);
     $("#tipo_descripcion")[action](...args);
-    $("#tip_imp_nom")[action](...args);
-    $("#marc_nom_add")[action](...args);
+    $("#tipo_imp_nom")[action](...args);
+    $("#mar_nom_add")[action](...args);
     $("#modelo_nom_add")[action](...args);
     $("#btnAgregarMarca")[action](...args);
     $("#btnAgregarModelo")[action](...args);
@@ -115,14 +115,14 @@ function listar(){
                 ? '<span class="badge" style="background:#27ae60;">Activo</span>'
                 : '<span class="badge" style="background:#c0392b;">Inactivo</span>';
             lista += "<tr class=\"item-list\" onclick=\"seleccionItems(" + rs.id + "," + rs.tipo_id + "," + rs.tipo_impuesto_id + ",'" +
-                rs.item_decripcion + "','" + rs.item_costo + "','" + rs.item_precio + "','" +
-                rs.tipo_descripcion + "','" + rs.tip_imp_nom + "','" + estado + "');\">";
+                rs.item_descripcion + "','" + rs.item_costo + "','" + rs.item_precio + "','" +
+                rs.tipo_descripcion + "','" + rs.tipo_imp_nom + "','" + estado + "');\">";
             lista += "<td>" + rs.id + "</td>";
-            lista += "<td>" + rs.item_decripcion + "</td>";
+            lista += "<td>" + rs.item_descripcion + "</td>";
             lista += "<td>" + rs.item_costo + "</td>";
             lista += "<td>" + rs.item_precio + "</td>";
             lista += "<td>" + rs.tipo_descripcion + "</td>";
-            lista += "<td>" + rs.tip_imp_nom + "</td>";
+            lista += "<td>" + rs.tipo_imp_nom + "</td>";
             lista += "<td>" + (rs.marcas  || '-') + "</td>";
             lista += "<td>" + (rs.modelos || '-') + "</td>";
             lista += "<td>" + badge + "</td>";
@@ -138,15 +138,15 @@ function listar(){
 }
 
 // ===================== SELECCIÓN DE FILA =====================
-function seleccionItems(id, tipo_id, tipo_impuesto_id, item_decripcion, item_costo, item_precio, tipo_descripcion, tip_imp_nom, estado){
+function seleccionItems(id, tipo_id, tipo_impuesto_id, item_descripcion, item_costo, item_precio, tipo_descripcion, tipo_imp_nom, estado){
     $("#id").val(id);
-    $("#item_decripcion").val(item_decripcion);
+    $("#item_descripcion").val(item_descripcion);
     $("#item_costo").val(item_costo);
     $("#item_precio").val(item_precio);
     $("#tipo_id").val(tipo_id);
     $("#tipo_descripcion").val(tipo_descripcion);
     $("#tipo_impuesto_id").val(tipo_impuesto_id);
-    $("#tip_imp_nom").val(tip_imp_nom);
+    $("#tipo_imp_nom").val(tipo_imp_nom);
     $("#item_estado").val(estado || 'activo');
 
     var activo = (estado || 'activo') === 'activo';
@@ -165,7 +165,7 @@ function seleccionItems(id, tipo_id, tipo_impuesto_id, item_decripcion, item_cos
     cargarModelosItem(id);
 
     habilitarCampos(false);
-    $("#marc_nom_add").attr("disabled","true");
+    $("#mar_nom_add").attr("disabled","true");
     $("#modelo_nom_add").attr("disabled","true");
     $("#btnAgregarMarca").attr("disabled","true");
     $("#btnAgregarModelo").attr("disabled","true");
@@ -186,17 +186,17 @@ function cargarMarcasItem(itemId){
         dataType: "json"
     })
     .done(function(resultado){
-        marcasItem = resultado.map(function(r){ return { marca_id: r.marca_id, marc_nom: r.marc_nom }; });
+        marcasItem = resultado.map(function(r){ return { marca_id: r.marca_id, mar_nom: r.mar_nom }; });
         renderMarcas();
     });
 }
 
 function buscarMarcaAdd(){
-    var texto = $("#marc_nom_add").val();
+    var texto = $("#mar_nom_add").val();
     $.ajax({
         url: getUrl() + "marca/read",
         method: "GET",
-        data: { marc_nom: texto, excluir_tipo: 'VEHICULO' },
+        data: { mar_nom: texto, excluir_tipo: 'VEHICULO' },
         dataType: "json"
     })
     .done(function(resultado){
@@ -205,7 +205,7 @@ function buscarMarcaAdd(){
             lista += "<li class='list-group-item text-muted'>Sin resultados</li>";
         } else {
             for (var rs of resultado) {
-                lista += "<li class='list-group-item' onclick=\"seleccionMarcaAdd(" + rs.id + ",'" + rs.marc_nom + "')\">" + rs.marc_nom + "</li>";
+                lista += "<li class='list-group-item' onclick=\"seleccionMarcaAdd(" + rs.id + ",'" + rs.mar_nom + "')\">" + rs.mar_nom + "</li>";
             }
         }
         lista += "</ul>";
@@ -215,13 +215,13 @@ function buscarMarcaAdd(){
 
 function seleccionMarcaAdd(id, nombre){
     $("#marca_add_id").val(id);
-    $("#marc_nom_add").val(nombre);
+    $("#mar_nom_add").val(nombre);
     $("#listaMarcasAdd").html("").hide();
 }
 
 function agregarMarca(){
     var id     = $("#marca_add_id").val();
-    var nombre = $("#marc_nom_add").val().trim();
+    var nombre = $("#mar_nom_add").val().trim();
     if (!id || !nombre) {
         swal('Error', 'Seleccione una marca de la lista.', 'error');
         return;
@@ -233,9 +233,9 @@ function agregarMarca(){
             return;
         }
     }
-    marcasItem.push({ marca_id: id, marc_nom: nombre });
+    marcasItem.push({ marca_id: id, mar_nom: nombre });
     renderMarcas();
-    $("#marc_nom_add").val('');
+    $("#mar_nom_add").val('');
     $("#marca_add_id").val('');
 }
 
@@ -252,7 +252,7 @@ function renderMarcas(){
     var html = "";
     for (var i = 0; i < marcasItem.length; i++) {
         html += "<tr>";
-        html += "<td>" + marcasItem[i].marc_nom + "</td>";
+        html += "<td>" + marcasItem[i].mar_nom + "</td>";
         html += "<td><button type='button' class='btn btn-danger btn-quitar waves-effect' onclick='quitarMarca(" + i + ");'>" +
                 "<i class='material-icons' style='font-size:14px;vertical-align:middle;'>close</i></button></td>";
         html += "</tr>";
@@ -373,16 +373,16 @@ function buscarTipoImpuestos(){
     .done(function(resultado){
         var lista = "<ul class='list-group'>";
         for (var rs of resultado) {
-            lista += "<li class='list-group-item' onclick=\"seleccionTipoImpuestos(" + rs.id + ",'" + rs.tip_imp_nom + "','" + rs.tipo_imp_tasa + "')\">" + rs.tip_imp_nom + " " + rs.tipo_imp_tasa + "</li>";
+            lista += "<li class='list-group-item' onclick=\"seleccionTipoImpuestos(" + rs.id + ",'" + rs.tipo_imp_nom + "','" + rs.tipo_imp_tasa + "')\">" + rs.tipo_imp_nom + " " + rs.tipo_imp_tasa + "</li>";
         }
         lista += "</ul>";
         $("#listaTipoImpuestos").html(lista).attr("style","display:block; position:absolute; z-index:2000;");
     });
 }
 
-function seleccionTipoImpuestos(id, tip_imp_nom, tipo_imp_tasa){
+function seleccionTipoImpuestos(id, tipo_imp_nom, tipo_imp_tasa){
     $("#tipo_impuesto_id").val(id);
-    $("#tip_imp_nom").val(tip_imp_nom);
+    $("#tipo_imp_nom").val(tipo_imp_nom);
     $("#listaTipoImpuestos").html("").hide();
 }
 
@@ -412,13 +412,13 @@ function grabar(){
     if (op === 4) { cambiarEstado(); return; }
 
     if (op !== 3) {
-        if (!$("#item_decripcion").val().trim() || !$("#item_costo").val().trim() ||
+        if (!$("#item_descripcion").val().trim() || !$("#item_costo").val().trim() ||
             !$("#item_precio").val().trim() || !$("#tipo_id").val() || !$("#tipo_impuesto_id").val()) {
             swal('Error', 'Descripción, costo, precio, tipo e impuesto son obligatorios.', 'error');
             return;
         }
         var CHARS_INVALIDOS = /[*<>{}|]/;
-        if (CHARS_INVALIDOS.test($("#item_decripcion").val().trim())) {
+        if (CHARS_INVALIDOS.test($("#item_descripcion").val().trim())) {
             swal('Caracteres no permitidos', 'El campo no puede contener los caracteres: * < > { } |', 'error');
             return;
         }
@@ -439,7 +439,7 @@ function grabar(){
         dataType: "json",
         traditional: true,   // para que los arrays lleguen como marcas[]=1&marcas[]=2
         data: {
-            'item_decripcion':  $("#item_decripcion").val(),
+            'item_descripcion':  $("#item_descripcion").val(),
             'item_costo':       $("#item_costo").val(),
             'item_precio':      $("#item_precio").val(),
             'tipo_id':          $("#tipo_id").val(),
@@ -488,3 +488,4 @@ function cambiarEstado() {
         swal('Error', res && res.mensaje ? res.mensaje : 'Error inesperado.', 'error');
     });
 }
+

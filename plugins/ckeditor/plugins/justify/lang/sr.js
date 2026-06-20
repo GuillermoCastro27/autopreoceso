@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("justify","sr",{block:"Обострано равнање",center:"Центриран текст",left:"Лево равнање",right:"Десно равнање"});
+CKEDITOR.plugins.setLang("justify","sr",{block:"ÐžÐ±Ð¾ÑÑ‚Ñ€Ð°Ð½Ð¾ Ñ€Ð°Ð²Ð½Ð°ÑšÐµ",center:"Ð¦ÐµÐ½Ñ‚Ñ€Ð¸Ñ€Ð°Ð½ Ñ‚ÐµÐºÑÑ‚",left:"Ð›ÐµÐ²Ð¾ Ñ€Ð°Ð²Ð½Ð°ÑšÐµ",right:"Ð”ÐµÑÐ½Ð¾ Ñ€Ð°Ð²Ð½Ð°ÑšÐµ"});

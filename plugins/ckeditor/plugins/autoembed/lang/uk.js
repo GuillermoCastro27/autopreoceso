@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("autoembed","uk",{embeddingInProgress:"Намагаюсь вбудувати вставлене URL посилання...",embeddingFailed:"Це URl посилання не може бути автоматично вбудовано."});
+CKEDITOR.plugins.setLang("autoembed","uk",{embeddingInProgress:"ÐÐ°Ð¼Ð°Ð³Ð°ÑŽÑÑŒ Ð²Ð±ÑƒÐ´ÑƒÐ²Ð°Ñ‚Ð¸ Ð²ÑÑ‚Ð°Ð²Ð»ÐµÐ½Ðµ URL Ð¿Ð¾ÑÐ¸Ð»Ð°Ð½Ð½Ñ...",embeddingFailed:"Ð¦Ðµ URl Ð¿Ð¾ÑÐ¸Ð»Ð°Ð½Ð½Ñ Ð½Ðµ Ð¼Ð¾Ð¶Ðµ Ð±ÑƒÑ‚Ð¸ Ð°Ð²Ñ‚Ð¾Ð¼Ð°Ñ‚Ð¸Ñ‡Ð½Ð¾ Ð²Ð±ÑƒÐ´Ð¾Ð²Ð°Ð½Ð¾."});

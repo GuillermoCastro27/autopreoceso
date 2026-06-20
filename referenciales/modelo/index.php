@@ -63,7 +63,7 @@
 
                 <div class="col-sm-4">
                     <label class="field-label">Marca</label>
-                    <input type="text" id="marc_nom" class="form-control" disabled onkeyup="buscarMarcas();" placeholder="Marca">
+                    <input type="text" id="mar_nom" class="form-control" disabled onkeyup="buscarMarcas();" placeholder="Marca">
                     <input type="hidden" id="marca_id">
                     <div id="listaMarcas" style="display:none;"></div>
                 </div>
@@ -176,3 +176,4 @@
 
 </body>
 </html>
+

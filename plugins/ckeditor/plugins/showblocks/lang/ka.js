@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("showblocks","ka",{toolbar:"არეების ჩვენება"});
+CKEDITOR.plugins.setLang("showblocks","ka",{toolbar:"áƒáƒ áƒ”áƒ”áƒ‘áƒ˜áƒ¡ áƒ©áƒ•áƒ”áƒœáƒ”áƒ‘áƒ"});

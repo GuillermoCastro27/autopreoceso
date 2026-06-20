@@ -351,3 +351,4 @@ shadowSize and lineWidth are derived as well from the points series.
                 version: '1.0'
             });
 })(jQuery);
+

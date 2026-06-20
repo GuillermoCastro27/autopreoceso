@@ -10,23 +10,23 @@
 
 /*
  * Translated default messages for the jQuery validation plugin.
- * Locale: SK (Slovak; slovenčina, slovenský jazyk)
+ * Locale: SK (Slovak; slovenÄina, slovenskÃ½ jazyk)
  */
 $.extend( $.validator.messages, {
-	required: "Povinné zadať.",
-	maxlength: $.validator.format( "Maximálne {0} znakov." ),
-	minlength: $.validator.format( "Minimálne {0} znakov." ),
-	rangelength: $.validator.format( "Minimálne {0} a maximálne {1} znakov." ),
-	email: "E-mailová adresa musí byť platná.",
-	url: "URL musí byť platná.",
-	date: "Musí byť dátum.",
-	number: "Musí byť číslo.",
-	digits: "Môže obsahovať iba číslice.",
-	equalTo: "Dve hodnoty sa musia rovnať.",
-	range: $.validator.format( "Musí byť medzi {0} a {1}." ),
-	max: $.validator.format( "Nemôže byť viac ako {0}." ),
-	min: $.validator.format( "Nemôže byť menej ako {0}." ),
-	creditcard: "Číslo platobnej karty musí byť platné."
+	required: "PovinnÃ© zadaÅ¥.",
+	maxlength: $.validator.format( "MaximÃ¡lne {0} znakov." ),
+	minlength: $.validator.format( "MinimÃ¡lne {0} znakov." ),
+	rangelength: $.validator.format( "MinimÃ¡lne {0} a maximÃ¡lne {1} znakov." ),
+	email: "E-mailovÃ¡ adresa musÃ­ byÅ¥ platnÃ¡.",
+	url: "URL musÃ­ byÅ¥ platnÃ¡.",
+	date: "MusÃ­ byÅ¥ dÃ¡tum.",
+	number: "MusÃ­ byÅ¥ ÄÃ­slo.",
+	digits: "MÃ´Å¾e obsahovaÅ¥ iba ÄÃ­slice.",
+	equalTo: "Dve hodnoty sa musia rovnaÅ¥.",
+	range: $.validator.format( "MusÃ­ byÅ¥ medzi {0} a {1}." ),
+	max: $.validator.format( "NemÃ´Å¾e byÅ¥ viac ako {0}." ),
+	min: $.validator.format( "NemÃ´Å¾e byÅ¥ menej ako {0}." ),
+	creditcard: "ÄŒÃ­slo platobnej karty musÃ­ byÅ¥ platnÃ©."
 } );
 
 }));

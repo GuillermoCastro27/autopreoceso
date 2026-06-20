@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("iframe","ko",{border:"프레임 테두리 표시",noUrl:"아이프레임 주소(URL)를 입력해주세요.",scrolling:"스크롤바 사용",title:"아이프레임 속성",toolbar:"아이프레임"});
+CKEDITOR.plugins.setLang("iframe","ko",{border:"í”„ë ˆìž„ í…Œë‘ë¦¬ í‘œì‹œ",noUrl:"ì•„ì´í”„ë ˆìž„ ì£¼ì†Œ(URL)ë¥¼ ìž…ë ¥í•´ì£¼ì„¸ìš”.",scrolling:"ìŠ¤í¬ë¡¤ë°” ì‚¬ìš©",title:"ì•„ì´í”„ë ˆìž„ ì†ì„±",toolbar:"ì•„ì´í”„ë ˆìž„"});

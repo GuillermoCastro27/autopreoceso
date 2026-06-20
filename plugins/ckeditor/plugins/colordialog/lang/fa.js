@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("colordialog","fa",{clear:"پاک کردن",highlight:"متمایز",options:"گزینه​های رنگ",selected:"رنگ انتخاب شده",title:"انتخاب رنگ"});
+CKEDITOR.plugins.setLang("colordialog","fa",{clear:"Ù¾Ø§Ú© Ú©Ø±Ø¯Ù†",highlight:"Ù…ØªÙ…Ø§ÛŒØ²",options:"Ú¯Ø²ÛŒÙ†Ù‡â€‹Ù‡Ø§ÛŒ Ø±Ù†Ú¯",selected:"Ø±Ù†Ú¯ Ø§Ù†ØªØ®Ø§Ø¨ Ø´Ø¯Ù‡",title:"Ø§Ù†ØªØ®Ø§Ø¨ Ø±Ù†Ú¯"});

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("iframe","el",{border:"Προβολή περιγράμματος πλαισίου",noUrl:"Παρακαλούμε εισάγεται το URL του iframe",scrolling:"Ενεργοποίηση μπαρών κύλισης",title:"Ιδιότητες IFrame",toolbar:"IFrame"});
+CKEDITOR.plugins.setLang("iframe","el",{border:"Î ÏÎ¿Î²Î¿Î»Î® Ï€ÎµÏÎ¹Î³ÏÎ¬Î¼Î¼Î±Ï„Î¿Ï‚ Ï€Î»Î±Î¹ÏƒÎ¯Î¿Ï…",noUrl:"Î Î±ÏÎ±ÎºÎ±Î»Î¿ÏÎ¼Îµ ÎµÎ¹ÏƒÎ¬Î³ÎµÏ„Î±Î¹ Ï„Î¿ URL Ï„Î¿Ï… iframe",scrolling:"Î•Î½ÎµÏÎ³Î¿Ï€Î¿Î¯Î·ÏƒÎ· Î¼Ï€Î±ÏÏŽÎ½ ÎºÏÎ»Î¹ÏƒÎ·Ï‚",title:"Î™Î´Î¹ÏŒÏ„Î·Ï„ÎµÏ‚ IFrame",toolbar:"IFrame"});

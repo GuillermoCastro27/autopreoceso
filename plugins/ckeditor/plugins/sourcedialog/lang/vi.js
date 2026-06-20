@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("sourcedialog","vi",{toolbar:"Mã HTML",title:"Mã HTML"});
+CKEDITOR.plugins.setLang("sourcedialog","vi",{toolbar:"MÃ£ HTML",title:"MÃ£ HTML"});

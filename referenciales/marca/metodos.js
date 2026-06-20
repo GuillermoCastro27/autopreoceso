@@ -1,4 +1,4 @@
-﻿listar();
+listar();
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -137,12 +137,12 @@ function listar(){
             var badge  = estado === 'activo'
                 ? '<span class="badge" style="background:#27ae60;">Activo</span>'
                 : '<span class="badge" style="background:#c0392b;">Inactivo</span>';
-            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionMarca("+rs.id+",'"+rs.marc_nom+"','"+rs.mar_tipo+"','"+estado+"');\">";
+            lista = lista + "<tr class=\"item-list\" onclick=\"seleccionMarca("+rs.id+",'"+rs.mar_nom+"','"+rs.mar_tipo+"','"+estado+"');\">";
                 lista = lista + "<td>";
                 lista = lista + rs.id;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
-                lista = lista + rs.marc_nom;
+                lista = lista + rs.mar_nom;
                 lista = lista +"</td>";
                 lista = lista + "<td>";
                 lista = lista + rs.mar_tipo;
@@ -157,9 +157,9 @@ function listar(){
         alert(c);
     })
 }
-function seleccionMarca(codigo, marc_nom, mar_tipo, estado){
+function seleccionMarca(codigo, mar_nom, mar_tipo, estado){
     $("#txtCodigo").val(codigo);
-    $("#txtNom").val(marc_nom);
+    $("#txtNom").val(mar_nom);
     $("#mar_tipo").val(mar_tipo);
     $("#marc_estado").val(estado || 'activo');
 
@@ -220,7 +220,7 @@ function grabar() {
         dataType: "json",
         data: { 
             'id': $("#txtCodigo").val(), 
-            'marc_nom': descripcion, 
+            'mar_nom': descripcion, 
             'mar_tipo': $("#mar_tipo").val()
         }
     })

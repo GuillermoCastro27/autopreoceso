@@ -307,3 +307,4 @@ function cambiarEstado() {
         swal('Error', res && res.mensaje ? res.mensaje : 'Error inesperado.', 'error');
     });
 }
+

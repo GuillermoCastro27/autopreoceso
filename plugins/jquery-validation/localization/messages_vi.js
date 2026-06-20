@@ -10,26 +10,26 @@
 
 /*
  * Translated default messages for the jQuery validation plugin.
- * Locale: VI (Vietnamese; Tiếng Việt)
+ * Locale: VI (Vietnamese; Tiáº¿ng Viá»‡t)
  */
 $.extend( $.validator.messages, {
-	required: "Hãy nhập.",
-	remote: "Hãy sửa cho đúng.",
-	email: "Hãy nhập email.",
-	url: "Hãy nhập URL.",
-	date: "Hãy nhập ngày.",
-	dateISO: "Hãy nhập ngày (ISO).",
-	number: "Hãy nhập số.",
-	digits: "Hãy nhập chữ số.",
-	creditcard: "Hãy nhập số thẻ tín dụng.",
-	equalTo: "Hãy nhập thêm lần nữa.",
-	extension: "Phần mở rộng không đúng.",
-	maxlength: $.validator.format( "Hãy nhập từ {0} kí tự trở xuống." ),
-	minlength: $.validator.format( "Hãy nhập từ {0} kí tự trở lên." ),
-	rangelength: $.validator.format( "Hãy nhập từ {0} đến {1} kí tự." ),
-	range: $.validator.format( "Hãy nhập từ {0} đến {1}." ),
-	max: $.validator.format( "Hãy nhập từ {0} trở xuống." ),
-	min: $.validator.format( "Hãy nhập từ {1} trở lên." )
+	required: "HÃ£y nháº­p.",
+	remote: "HÃ£y sá»­a cho Ä‘Ãºng.",
+	email: "HÃ£y nháº­p email.",
+	url: "HÃ£y nháº­p URL.",
+	date: "HÃ£y nháº­p ngÃ y.",
+	dateISO: "HÃ£y nháº­p ngÃ y (ISO).",
+	number: "HÃ£y nháº­p sá»‘.",
+	digits: "HÃ£y nháº­p chá»¯ sá»‘.",
+	creditcard: "HÃ£y nháº­p sá»‘ tháº» tÃ­n dá»¥ng.",
+	equalTo: "HÃ£y nháº­p thÃªm láº§n ná»¯a.",
+	extension: "Pháº§n má»Ÿ rá»™ng khÃ´ng Ä‘Ãºng.",
+	maxlength: $.validator.format( "HÃ£y nháº­p tá»« {0} kÃ­ tá»± trá»Ÿ xuá»‘ng." ),
+	minlength: $.validator.format( "HÃ£y nháº­p tá»« {0} kÃ­ tá»± trá»Ÿ lÃªn." ),
+	rangelength: $.validator.format( "HÃ£y nháº­p tá»« {0} Ä‘áº¿n {1} kÃ­ tá»±." ),
+	range: $.validator.format( "HÃ£y nháº­p tá»« {0} Ä‘áº¿n {1}." ),
+	max: $.validator.format( "HÃ£y nháº­p tá»« {0} trá»Ÿ xuá»‘ng." ),
+	min: $.validator.format( "HÃ£y nháº­p tá»« {1} trá»Ÿ lÃªn." )
 } );
 
 }));

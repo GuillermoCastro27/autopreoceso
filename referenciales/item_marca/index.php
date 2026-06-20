@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -60,13 +60,13 @@
                                 <div class="col-sm-4">
                                     <label class="field-label">Producto</label>
                                     <input type="hidden" id="item_id" value="0"/>
-                                    <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
+                                    <input type="text" id="item_descripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
                                     <div id="listaProductos" style="display:none;"></div>
                                 </div>
                                 <div class="col-sm-4">
                                     <label class="field-label">Marca</label>
                                     <input type="hidden" id="marca_id" value="0"/>
-                                    <input type="text" id="marc_nom" class="form-control" disabled onkeyup="buscarMarca();" placeholder="Marca">
+                                    <input type="text" id="mar_nom" class="form-control" disabled onkeyup="buscarMarca();" placeholder="Marca">
                                     <div id="listaMarcas" style="display:none;"></div>
                                 </div>
                             </div>
@@ -155,3 +155,4 @@
 </body>
 
 </html>
+

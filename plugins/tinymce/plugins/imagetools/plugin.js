@@ -2942,3 +2942,4 @@ define("tinymce/imagetoolsplugin/Plugin", [
 
 dem('tinymce/imagetoolsplugin/Plugin')();
 })();
+

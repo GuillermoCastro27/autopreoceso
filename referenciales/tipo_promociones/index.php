@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -182,3 +182,4 @@
     <script src="metodos.js?v=2"></script>
 </body>
 </html>
+

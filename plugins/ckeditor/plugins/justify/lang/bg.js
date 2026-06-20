@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("justify","bg",{block:"Двустранно подравняване",center:"Център",left:"Подравни в ляво",right:"Подравни в дясно"});
+CKEDITOR.plugins.setLang("justify","bg",{block:"Ð”Ð²ÑƒÑÑ‚Ñ€Ð°Ð½Ð½Ð¾ Ð¿Ð¾Ð´Ñ€Ð°Ð²Ð½ÑÐ²Ð°Ð½Ðµ",center:"Ð¦ÐµÐ½Ñ‚ÑŠÑ€",left:"ÐŸÐ¾Ð´Ñ€Ð°Ð²Ð½Ð¸ Ð² Ð»ÑÐ²Ð¾",right:"ÐŸÐ¾Ð´Ñ€Ð°Ð²Ð½Ð¸ Ð² Ð´ÑÑÐ½Ð¾"});

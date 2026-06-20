@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("colordialog","el",{clear:"Εκκαθάριση",highlight:"Σήμανση",options:"Επιλογές Χρωμάτων",selected:"Επιλεγμένο Χρώμα",title:"Επιλογή χρώματος"});
+CKEDITOR.plugins.setLang("colordialog","el",{clear:"Î•ÎºÎºÎ±Î¸Î¬ÏÎ¹ÏƒÎ·",highlight:"Î£Î®Î¼Î±Î½ÏƒÎ·",options:"Î•Ï€Î¹Î»Î¿Î³Î­Ï‚ Î§ÏÏ‰Î¼Î¬Ï„Ï‰Î½",selected:"Î•Ï€Î¹Î»ÎµÎ³Î¼Î­Î½Î¿ Î§ÏÏŽÎ¼Î±",title:"Î•Ï€Î¹Î»Î¿Î³Î® Ï‡ÏÏŽÎ¼Î±Ï„Î¿Ï‚"});

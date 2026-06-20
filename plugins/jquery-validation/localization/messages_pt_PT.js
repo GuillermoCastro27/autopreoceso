@@ -10,7 +10,7 @@
 
 /*
  * Translated default messages for the jQuery validation plugin.
- * Locale: PT (Portuguese; português)
+ * Locale: PT (Portuguese; portuguÃªs)
  * Region: PT (Portugal)
  */
 $.extend( $.validator.messages, {

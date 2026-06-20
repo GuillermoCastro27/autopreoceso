@@ -13,22 +13,22 @@
  * Locale: HU (Hungarian; Magyar)
  */
 $.extend( $.validator.messages, {
-	required: "Kötelező megadni.",
-	maxlength: $.validator.format( "Legfeljebb {0} karakter hosszú legyen." ),
-	minlength: $.validator.format( "Legalább {0} karakter hosszú legyen." ),
-	rangelength: $.validator.format( "Legalább {0} és legfeljebb {1} karakter hosszú legyen." ),
-	email: "Érvényes e-mail címnek kell lennie.",
-	url: "Érvényes URL-nek kell lennie.",
-	date: "Dátumnak kell lennie.",
-	number: "Számnak kell lennie.",
-	digits: "Csak számjegyek lehetnek.",
-	equalTo: "Meg kell egyeznie a két értéknek.",
-	range: $.validator.format( "{0} és {1} közé kell esnie." ),
+	required: "KÃ¶telezÅ‘ megadni.",
+	maxlength: $.validator.format( "Legfeljebb {0} karakter hosszÃº legyen." ),
+	minlength: $.validator.format( "LegalÃ¡bb {0} karakter hosszÃº legyen." ),
+	rangelength: $.validator.format( "LegalÃ¡bb {0} Ã©s legfeljebb {1} karakter hosszÃº legyen." ),
+	email: "Ã‰rvÃ©nyes e-mail cÃ­mnek kell lennie.",
+	url: "Ã‰rvÃ©nyes URL-nek kell lennie.",
+	date: "DÃ¡tumnak kell lennie.",
+	number: "SzÃ¡mnak kell lennie.",
+	digits: "Csak szÃ¡mjegyek lehetnek.",
+	equalTo: "Meg kell egyeznie a kÃ©t Ã©rtÃ©knek.",
+	range: $.validator.format( "{0} Ã©s {1} kÃ¶zÃ© kell esnie." ),
 	max: $.validator.format( "Nem lehet nagyobb, mint {0}." ),
 	min: $.validator.format( "Nem lehet kisebb, mint {0}." ),
-	creditcard: "Érvényes hitelkártyaszámnak kell lennie.",
-	remote: "Kérem javítsa ki ezt a mezőt.",
-	dateISO: "Kérem írjon be egy érvényes dátumot (ISO)."
+	creditcard: "Ã‰rvÃ©nyes hitelkÃ¡rtyaszÃ¡mnak kell lennie.",
+	remote: "KÃ©rem javÃ­tsa ki ezt a mezÅ‘t.",
+	dateISO: "KÃ©rem Ã­rjon be egy Ã©rvÃ©nyes dÃ¡tumot (ISO)."
 } );
 
 }));

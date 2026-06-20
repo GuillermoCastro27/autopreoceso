@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("justify","mn",{block:"Тэгшлэх",center:"Голлуулах",left:"Зүүн талд тулгах",right:"Баруун талд тулгах"});
+CKEDITOR.plugins.setLang("justify","mn",{block:"Ð¢ÑÐ³ÑˆÐ»ÑÑ…",center:"Ð“Ð¾Ð»Ð»ÑƒÑƒÐ»Ð°Ñ…",left:"Ð—Ò¯Ò¯Ð½ Ñ‚Ð°Ð»Ð´ Ñ‚ÑƒÐ»Ð³Ð°Ñ…",right:"Ð‘Ð°Ñ€ÑƒÑƒÐ½ Ñ‚Ð°Ð»Ð´ Ñ‚ÑƒÐ»Ð³Ð°Ñ…"});

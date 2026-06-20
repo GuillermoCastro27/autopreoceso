@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("save","mn",{toolbar:"Хадгалах"});
+CKEDITOR.plugins.setLang("save","mn",{toolbar:"Ð¥Ð°Ð´Ð³Ð°Ð»Ð°Ñ…"});

@@ -1,4 +1,4 @@
-﻿listar();
+listar();
 function formatoTabla(){
     //Exportable table
     $('.js-exportable').DataTable({
@@ -57,7 +57,7 @@ function agregar(){
     $("#prov_telefono").removeAttr("disabled");
     $("#prov_direccion").removeAttr("disabled");
     $("#prov_correo").removeAttr("disabled");
-    $("#pais_descrpcion").removeAttr("disabled");
+    $("#pais_descripcion").removeAttr("disabled");
     $("#ciu_descripcion").removeAttr("disabled");
     $("#nacio_descripcion").removeAttr("disabled");
 
@@ -78,7 +78,7 @@ function editar(){
     $("#prov_telefono").removeAttr("disabled");
     $("#prov_direccion").removeAttr("disabled");
     $("#prov_correo").removeAttr("disabled");
-    $("#pais_descrpcion").removeAttr("disabled");
+    $("#pais_descripcion").removeAttr("disabled");
     $("#ciu_descripcion").removeAttr("disabled");
     $("#nacio_descripcion").removeAttr("disabled");
 
@@ -146,7 +146,7 @@ function listar(){
             var tel   = (rs.prov_telefono||'').replace(/'/g,"\\'");
             var dir   = (rs.prov_direccion||'').replace(/'/g,"\\'");
             var cor   = (rs.prov_correo||'').replace(/'/g,"\\'");
-            var pdes  = (rs.pais_descrpcion||'').replace(/'/g,"\\'");
+            var pdes  = (rs.pais_descripcion||'').replace(/'/g,"\\'");
             var cdes  = (rs.ciu_descripcion||'').replace(/'/g,"\\'");
             var ndes  = (rs.nacio_descripcion||'').replace(/'/g,"\\'");
 
@@ -157,7 +157,7 @@ function listar(){
             lista += "<td>" + rs.prov_telefono + "</td>";
             lista += "<td>" + rs.prov_direccion + "</td>";
             lista += "<td>" + rs.prov_correo + "</td>";
-            lista += "<td>" + rs.pais_descrpcion + "</td>";
+            lista += "<td>" + rs.pais_descripcion + "</td>";
             lista += "<td>" + rs.ciu_descripcion + "</td>";
             lista += "<td>" + rs.nacio_descripcion + "</td>";
             lista += "<td>" + badge + "</td>";
@@ -171,14 +171,14 @@ function listar(){
     });
 }
 
-function seleccionProveedor(id, pais_id, ciudad_id, nacionalidad_id, prov_razonsocial, prov_ruc, prov_telefono, prov_direccion, prov_correo, pais_descrpcion, ciu_descripcion, nacio_descripcion, prov_estado) {
+function seleccionProveedor(id, pais_id, ciudad_id, nacionalidad_id, prov_razonsocial, prov_ruc, prov_telefono, prov_direccion, prov_correo, pais_descripcion, ciu_descripcion, nacio_descripcion, prov_estado) {
     $("#id").val(id);
     $("#prov_razonsocial").val(prov_razonsocial);
     $("#prov_ruc").val(prov_ruc);
     $("#prov_telefono").val(prov_telefono);
     $("#prov_direccion").val(prov_direccion);
     $("#prov_correo").val(prov_correo);
-    $("#pais_descrpcion").val(pais_descrpcion);
+    $("#pais_descripcion").val(pais_descripcion);
     $("#ciu_descripcion").val(ciu_descripcion);
     $("#nacio_descripcion").val(nacio_descripcion);
     $("#pais_id").val(pais_id);
@@ -213,7 +213,7 @@ function buscarPaises(){
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for (rs of resultado) {
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionPais("+rs.id+",'"+rs.pais_descrpcion+"')\">"+rs.pais_descrpcion+"</li>";   
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionPais("+rs.id+",'"+rs.pais_descripcion+"')\">"+rs.pais_descripcion+"</li>";   
         }
         lista += "</ul>";
         $("#listaPaises").html(lista);
@@ -225,9 +225,9 @@ function buscarPaises(){
     });
 }
 
-function seleccionPais(id, pais_descrpcion) {
+function seleccionPais(id, pais_descripcion) {
     $("#pais_id").val(id);
-    $("#pais_descrpcion").val(pais_descrpcion);
+    $("#pais_descripcion").val(pais_descripcion);
     $("#listaPaises").html("").attr("style", "display:none;");
 
     // Limpiar ciudad y nacionalidad al cambiar de país
@@ -415,4 +415,5 @@ function cambiarEstado() {
         swal('Error', res && res.mensaje ? res.mensaje : 'Error inesperado.', 'error');
     });
 }
+
 

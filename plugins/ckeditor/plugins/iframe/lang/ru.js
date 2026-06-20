@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("iframe","ru",{border:"Показать границы фрейма",noUrl:"Пожалуйста, введите ссылку фрейма",scrolling:"Отображать полосы прокрутки",title:"Свойства iFrame",toolbar:"iFrame"});
+CKEDITOR.plugins.setLang("iframe","ru",{border:"ÐŸÐ¾ÐºÐ°Ð·Ð°Ñ‚ÑŒ Ð³Ñ€Ð°Ð½Ð¸Ñ†Ñ‹ Ñ„Ñ€ÐµÐ¹Ð¼Ð°",noUrl:"ÐŸÐ¾Ð¶Ð°Ð»ÑƒÐ¹ÑÑ‚Ð°, Ð²Ð²ÐµÐ´Ð¸Ñ‚Ðµ ÑÑÑ‹Ð»ÐºÑƒ Ñ„Ñ€ÐµÐ¹Ð¼Ð°",scrolling:"ÐžÑ‚Ð¾Ð±Ñ€Ð°Ð¶Ð°Ñ‚ÑŒ Ð¿Ð¾Ð»Ð¾ÑÑ‹ Ð¿Ñ€Ð¾ÐºÑ€ÑƒÑ‚ÐºÐ¸",title:"Ð¡Ð²Ð¾Ð¹ÑÑ‚Ð²Ð° iFrame",toolbar:"iFrame"});

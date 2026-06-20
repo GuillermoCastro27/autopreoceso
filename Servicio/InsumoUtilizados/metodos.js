@@ -96,7 +96,7 @@ function listar() {
                 cli_apellido:           rs.cli_apellido || '',
                 ord_serv_fecha:         rs.ord_serv_fecha || '',
                 equipo_nombre:          rs.equipo_nombre || '',
-                marc_nom:               rs.marc_nom || '',
+                mar_nom:               rs.mar_nom || '',
                 modelo_nom:             rs.modelo_nom || '',
                 recep_cab_num_chasis:   rs.recep_cab_num_chasis || ''
             }).replace(/'/g, "&#39;");
@@ -108,7 +108,7 @@ function listar() {
             lista += '<td>' + (rs.ins_cab_fecha_registro || '') + '</td>';
             lista += '<td>' + (rs.cli_nombre || '') + ' ' + (rs.cli_apellido || '') + '</td>';
             lista += '<td>' + (rs.equipo_nombre || '') + '</td>';
-            lista += '<td>' + (rs.marc_nom || '') + ' ' + (rs.modelo_nom || '') + '</td>';
+            lista += '<td>' + (rs.mar_nom || '') + ' ' + (rs.modelo_nom || '') + '</td>';
             lista += '<td>' + (rs.emp_razon_social || '') + '</td>';
             lista += '<td>' + badgeEstado(rs.ins_cab_estado || '') + '</td>';
             lista += '</tr>';
@@ -144,7 +144,7 @@ function seleccionCab(d) {
     $('#suc_razon_social').val(d.suc_razon_social);
     $('#ord_cliente').val((d.cli_nombre || '') + ' ' + (d.cli_apellido || ''));
     $('#ord_equipo').val(d.equipo_nombre);
-    $('#ord_marca').val(d.marc_nom);
+    $('#ord_marca').val(d.mar_nom);
     $('#ord_modelo').val(d.modelo_nom);
     $('#ord_num_chasis').val(d.recep_cab_num_chasis);
 
@@ -325,13 +325,13 @@ function buscarOS() {
                     cli_nombre:       rs.cli_nombre || '',
                     cli_apellido:     rs.cli_apellido || '',
                     equipo_nombre:    rs.equipo_nombre || '',
-                    marc_nom:             rs.marc_nom || '',
+                    mar_nom:             rs.mar_nom || '',
                     modelo_nom:           rs.modelo_nom || '',
                     recep_cab_num_chasis: rs.recep_cab_num_chasis || ''
                 }).replace(/'/g, "&#39;");
                 lista += "<li class='list-group-item lista-os-item' style='cursor:pointer;' data-info='" + info + "'>"
                     + 'OS Nº ' + (rs.nro_os || '') + ' — ' + (rs.cli_nombre || '') + ' ' + (rs.cli_apellido || '')
-                    + ' <small class="text-muted">(' + (rs.marc_nom || '') + ' ' + (rs.modelo_nom || '') + ')</small>'
+                    + ' <small class="text-muted">(' + (rs.mar_nom || '') + ' ' + (rs.modelo_nom || '') + ')</small>'
                     + "</li>";
             });
             lista += "</ul>";
@@ -354,7 +354,7 @@ $(document).on('click', '.lista-os-item', function() {
     $('#clientes_id').val(d.clientes_id);
     $('#ord_cliente').val((d.cli_nombre || '') + ' ' + (d.cli_apellido || ''));
     $('#ord_equipo').val(d.equipo_nombre);
-    $('#ord_marca').val(d.marc_nom);
+    $('#ord_marca').val(d.mar_nom);
     $('#ord_modelo').val(d.modelo_nom);
     $('#ord_num_chasis').val(d.recep_cab_num_chasis);
     $('#listaOS').html('').hide();
@@ -422,7 +422,7 @@ function cancelarDet() {
     $('#item_id_display').val('');
     $('#buscar_item').val('').prop('disabled', true);
     $('#tipo_impuesto_id').val('');
-    $('#tip_imp_nom').val('').prop('disabled', true);
+    $('#tipo_imp_nom').val('').prop('disabled', true);
     $('#ins_det_cantidad').val('').prop('disabled', true);
     $('#ins_det_costo').val('').prop('disabled', true);
     $('#listaItems').html('').hide();
@@ -489,9 +489,9 @@ function listarDetalle() {
             var det = JSON.stringify({
                 id:              rs.id,
                 item_id:         rs.item_id,
-                item_decripcion: rs.item_decripcion || '',
+                item_descripcion: rs.item_descripcion || '',
                 tipo_impuesto_id:rs.tipo_impuesto_id,
-                tip_imp_nom:     rs.tip_imp_nom || '',
+                tipo_imp_nom:     rs.tipo_imp_nom || '',
                 ins_det_cantidad:rs.ins_det_cantidad,
                 ins_det_costo:   rs.ins_det_costo,
                 marca_id:        rs.marca_id  || 0,
@@ -500,10 +500,10 @@ function listarDetalle() {
 
             lista += '<tr class="det-row" style="cursor:pointer;" data-det=\'' + det + '\'>';
             lista += '<td>' + rs.item_id + '</td>';
-            lista += '<td>' + (rs.item_decripcion || '') + '</td>';
-            lista += '<td>' + (rs.marc_nom || '-') + '</td>';
+            lista += '<td>' + (rs.item_descripcion || '') + '</td>';
+            lista += '<td>' + (rs.mar_nom || '-') + '</td>';
             lista += '<td>' + (rs.modelo_nom || '-') + '</td>';
-            lista += '<td>' + (rs.tip_imp_nom || '-') + '</td>';
+            lista += '<td>' + (rs.tipo_imp_nom || '-') + '</td>';
             lista += '<td class="text-right">' + formatearNumero(rs.ins_det_cantidad) + '</td>';
             lista += '<td class="text-right">' + formatearNumero(rs.ins_det_costo) + '</td>';
             lista += '<td class="text-right">' + formatearNumero(subtotal) + '</td>';
@@ -528,9 +528,9 @@ $(document).on('click', '.det-row', function() {
     $('#det_id').val(d.id);
     $('#item_id').val(d.item_id);
     $('#item_id_display').val(d.item_id);
-    $('#buscar_item').val(d.item_decripcion);
+    $('#buscar_item').val(d.item_descripcion);
     $('#tipo_impuesto_id').val(d.tipo_impuesto_id);
-    $('#tip_imp_nom').val(d.tip_imp_nom);
+    $('#tipo_imp_nom').val(d.tipo_imp_nom);
     $('#ins_det_cantidad').val(d.ins_det_cantidad);
     $('#ins_det_costo').val(d.ins_det_costo);
     if (typeof mmAutocompletar === 'function') mmAutocompletar(d.item_id, d.marca_id, d.modelo_id);
@@ -546,20 +546,20 @@ function buscarItem() {
             url: getUrl() + 'items/buscar',
             method: 'POST',
             headers: { Authorization: 'Bearer ' + getToken() },
-            data: { item_decripcion: q }
+            data: { item_descripcion: q }
         })
         .done(function(data) {
             var lista = "<ul class='list-group'>";
             data.forEach(function(rs) {
                 var info = JSON.stringify({
                     item_id:          rs.item_id,
-                    item_decripcion:  rs.item_decripcion  || '',
+                    item_descripcion:  rs.item_descripcion  || '',
                     tipo_impuesto_id: rs.tipo_impuesto_id || null,
-                    tip_imp_nom:      rs.tip_imp_nom       || '',
+                    tipo_imp_nom:      rs.tipo_imp_nom       || '',
                     item_costo:       rs.item_costo        || 0
                 }).replace(/'/g, "&#39;");
                 lista += "<li class='list-group-item lista-item-ins' style='cursor:pointer;' data-info='" + info + "'>"
-                    + rs.item_decripcion + "</li>";
+                    + rs.item_descripcion + "</li>";
             });
             lista += "</ul>";
             $('#listaItems').html(lista).css({ display: 'block', position: 'absolute', zIndex: 2000 });
@@ -573,11 +573,12 @@ $(document).on('click', '.lista-item-ins', function() {
     if (!d) return;
     $('#item_id').val(d.item_id);
     $('#item_id_display').val(d.item_id);
-    $('#buscar_item').val(d.item_decripcion);
+    $('#buscar_item').val(d.item_descripcion);
     $('#tipo_impuesto_id').val(d.tipo_impuesto_id);
-    $('#tip_imp_nom').val(d.tip_imp_nom).prop('disabled', true);
+    $('#tipo_imp_nom').val(d.tipo_imp_nom).prop('disabled', true);
     if (!$('#ins_det_costo').val()) $('#ins_det_costo').val(d.item_costo);
     if (typeof mmCargarMarcas === 'function') mmCargarMarcas(d.item_id, null);
     $('#listaItems').html('').hide();
     $(".form-line").addClass("focused");
 });
+

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("smiley","zh-cn",{options:"表情图标选项",title:"插入表情图标",toolbar:"表情符"});
+CKEDITOR.plugins.setLang("smiley","zh-cn",{options:"è¡¨æƒ…å›¾æ ‡é€‰é¡¹",title:"æ’å…¥è¡¨æƒ…å›¾æ ‡",toolbar:"è¡¨æƒ…ç¬¦"});

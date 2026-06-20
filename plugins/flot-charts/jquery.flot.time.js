@@ -430,3 +430,4 @@ API.txt for details.
 	$.plot.dateGenerator = dateGenerator;
 
 })(jQuery);
+

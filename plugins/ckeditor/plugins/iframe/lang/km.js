@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("iframe","km",{border:"បង្ហាញ​បន្ទាត់​ស៊ុម",noUrl:"សូម​បញ្ចូល URL របស់ iframe",scrolling:"ប្រើ​របារ​រំកិល",title:"លក្ខណៈ​សម្បត្តិ IFrame",toolbar:"IFrame"});
+CKEDITOR.plugins.setLang("iframe","km",{border:"áž”áž„áŸ’áž áž¶áž‰â€‹áž”áž“áŸ’áž‘áž¶ážáŸ‹â€‹ážŸáŸŠáž»áž˜",noUrl:"ážŸáž¼áž˜â€‹áž”áž‰áŸ’áž…áž¼áž› URL ážšáž”ážŸáŸ‹ iframe",scrolling:"áž”áŸ’ážšáž¾â€‹ážšáž”áž¶ážšâ€‹ážšáŸ†áž€áž·áž›",title:"áž›áž€áŸ’ážážŽáŸˆâ€‹ážŸáž˜áŸ’áž”ážáŸ’ážáž· IFrame",toolbar:"IFrame"});

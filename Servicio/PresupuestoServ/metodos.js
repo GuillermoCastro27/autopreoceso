@@ -1,4 +1,4 @@
-﻿cargarFuncionarioIdLogueado();
+cargarFuncionarioIdLogueado();
 listar();
 campoFecha();
 function formatoTabla(){
@@ -312,7 +312,7 @@ function seleccionPresupuesto(
     $("#tip_veh_capacidad").val(tip_veh_capacidad);
     $("#tip_veh_combustible").val(tip_veh_combustible);
     $("#tip_veh_categoria").val(tip_veh_categoria);
-    $("#marc_nom").val(marca_nombre);
+    $("#mar_nom").val(marca_nombre);
     $("#modelo_nom").val(modelo_nombre);
 
     // Estado
@@ -377,7 +377,7 @@ function buscarDiagnostico() {
                     + (rs.tipo_vehiculo_id || 0) + ","
                     + "'" + esc2(rs.tip_veh_nombre) + "','" + esc2(rs.tip_veh_capacidad) + "',"
                     + "'" + esc2(rs.tip_veh_combustible) + "','" + esc2(rs.tip_veh_categoria) + "',"
-                    + "'" + esc2(rs.marc_nom) + "','" + esc2(rs.modelo_nom) + "'"
+                    + "'" + esc2(rs.mar_nom) + "','" + esc2(rs.modelo_nom) + "'"
                     + ");\">"
                     + (function(p) {
                         var c = p === 'ALTA' ? '#c0392b' : p === 'MEDIA' ? '#e67e22' : '#27ae60';
@@ -405,7 +405,7 @@ function seleccionarDiagnostico(
 
     // 🔥 CAMPOS DEL VEHÍCULO
     tipo_vehiculo_id,tip_veh_nombre, tip_veh_capacidad, tip_veh_combustible, tip_veh_categoria,
-    marc_nom, modelo_nom
+    mar_nom, modelo_nom
 ) {
     // Guardar IDs
     $("#diagnostico_cab_id").val(id);
@@ -435,7 +435,7 @@ function seleccionarDiagnostico(
     $("#tip_veh_capacidad").val(tip_veh_capacidad);
     $("#tip_veh_combustible").val(tip_veh_combustible);
     $("#tip_veh_categoria").val(tip_veh_categoria);
-    $("#marc_nom").val(marc_nom);
+    $("#mar_nom").val(mar_nom);
     $("#modelo_nom").val(modelo_nom);
 
     // Ocultar lista y estilizar
@@ -631,8 +631,23 @@ function grabar() {
         swal({ title: "Respuesta", text: resultado.mensaje, type: resultado.tipo },
         function() {
             if (resultado.tipo !== "success") return;
-            if (op === "1") { cargarPresupuesto(resultado.registro.id); }
-            else            { location.reload(true); }
+            if (op === "1") {
+                cargarPresupuesto(resultado.registro.id);
+
+                $("#pres_serv_cab_fecha").attr("disabled","true");
+                $("#pres_serv_cab_fecha_vence").attr("disabled","true");
+                $("#diagnostico").attr("disabled","true");
+                $("#pres_serv_cab_observaciones").attr("disabled","true");
+                $("#btnBuscarPromociones").attr("disabled","true");
+                $("#btnBuscarDescuentos").attr("disabled","true");
+
+                $("#btnAgregar").attr("disabled","true");
+                $("#btnGrabar").attr("disabled","true");
+                $("#btnEditar").removeAttr("disabled");
+                $("#btnEliminar").removeAttr("disabled");
+            } else {
+                location.reload(true);
+            }
         });
     })
     .fail(function(xhr) { mostrarErrores(xhr); });
@@ -708,8 +723,8 @@ function agregarDetalle() {
     mmLimpiar();
     $("#txtOperacionDetalle").val(1);
     $("#item_id").val('');
-    $("#item_decripcion").val('').removeAttr("disabled");
-    $("#tip_imp_nom").val('').attr("disabled","true");
+    $("#item_descripcion").val('').removeAttr("disabled");
+    $("#tipo_imp_nom").val('').attr("disabled","true");
     $("#pres_serv_det_cantidad_stock").val('').attr("disabled","true");
     $("#pres_serv_det_cantidad").val('').removeAttr("disabled");
     $("#pres_serv_det_costo").val('').attr("disabled","true");
@@ -720,8 +735,8 @@ function agregarDetalle() {
 
 function editarDetalle() {
     $("#txtOperacionDetalle").val(2);
-    $("#item_decripcion").removeAttr("disabled");
-    $("#tip_imp_nom").attr("disabled","true");
+    $("#item_descripcion").removeAttr("disabled");
+    $("#tipo_imp_nom").attr("disabled","true");
     $("#pres_serv_det_cantidad_stock").attr("disabled","true");
     $("#pres_serv_det_cantidad").removeAttr("disabled");
     $("#pres_serv_det_costo").attr("disabled","true");
@@ -735,8 +750,8 @@ function cancelarDetalle() {
     mmLimpiar();
     $("#txtOperacionDetalle").val(0);
     $("#item_id").val('');
-    $("#item_decripcion").val('').prop('disabled', true);
-    $("#tip_imp_nom").val('').prop('disabled', true);
+    $("#item_descripcion").val('').prop('disabled', true);
+    $("#tipo_imp_nom").val('').prop('disabled', true);
     $("#pres_serv_det_cantidad_stock").val('').prop('disabled', true);
     $("#pres_serv_det_cantidad").val('').prop('disabled', true);
     $("#pres_serv_det_costo").val('').prop('disabled', true);
@@ -753,7 +768,7 @@ function eliminarDetalle(){
     }
     swal({
         title: "Eliminar ítem",
-        text: "¿Desea eliminar \"" + $("#item_decripcion").val() + "\" del detalle?",
+        text: "¿Desea eliminar \"" + $("#item_descripcion").val() + "\" del detalle?",
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#e74c3c",
@@ -814,7 +829,7 @@ function buscarProductos(){
         method: "POST",
         dataType: "json",
         data: {
-            "item_decripcion": $("#item_decripcion").val(),
+            "item_descripcion": $("#item_descripcion").val(),
             "tipo_descripcion": "PRODUCTO"
         }
     })
@@ -823,13 +838,13 @@ function buscarProductos(){
         for (let rs of resultado) {
             lista += "<li class=\"list-group-item\" onclick=\"seleccionProducto("
                 + rs.item_id + ",'"
-                + rs.item_decripcion + "',"
+                + rs.item_descripcion + "',"
                 + rs.tipo_impuesto_id + ",'"
                 + rs.item_costo + "','"
-                + rs.tip_imp_nom + "',"
+                + rs.tipo_imp_nom + "',"
                 + rs.tipo_imp_tasa + ","
                 + rs.cantidad_disponible + ")\">"
-                + rs.item_decripcion + " (Stock: " + rs.cantidad_disponible + ")</li>";   
+                + rs.item_descripcion + " (Stock: " + rs.cantidad_disponible + ")</li>";   
         }
         lista += "</ul>";
         $("#listaProductos").html(lista);
@@ -838,12 +853,12 @@ function buscarProductos(){
     .fail(function(xhr) { mostrarErrores(xhr); });
 }
 
-function seleccionProducto(item_id, item_decripcion, tipo_impuesto_id, item_costo, tip_imp_nom, tipo_imp_tasa, cantidad_disponible){
+function seleccionProducto(item_id, item_descripcion, tipo_impuesto_id, item_costo, tipo_imp_nom, tipo_imp_tasa, cantidad_disponible){
     $("#item_id").val(item_id);
-    $("#item_decripcion").val(item_decripcion);
+    $("#item_descripcion").val(item_descripcion);
     $("#pres_serv_det_costo").val(item_costo);
     $("#tipo_impuesto_id").val(tipo_impuesto_id);
-    $("#tip_imp_nom").val(tip_imp_nom);
+    $("#tipo_imp_nom").val(tipo_imp_nom);
     $("#pres_serv_det_cantidad_stock").val(cantidad_disponible);
 
     mmCargarMarcas(item_id, null);
@@ -897,7 +912,7 @@ function listarDetalles() {
                 let totalItemNeto = subtotal - descMonto - promoMonto;
 
                 // IVA SOBRE EL NETO
-                const imp = (rs.tip_imp_nom || '').toUpperCase();
+                const imp = (rs.tipo_imp_nom || '').toUpperCase();
                 let ivaItem = 0;
                 if (imp.indexOf('EXENT') !== -1) {
                     ivaItem = 0;
@@ -914,7 +929,7 @@ function listarDetalles() {
                 cantidadDetalle++;
 
                 // FILA HTML
-                var itmDesc = (rs.item_decripcion || '').replace(/'/g, "\\'");
+                var itmDesc = (rs.item_descripcion || '').replace(/'/g, "\\'");
                 lista += `
                     <tr class='item-list' onclick="seleccionPresupuestoDet(
                         ${rs.item_id},
@@ -923,12 +938,12 @@ function listarDetalles() {
                         ${rs.pres_serv_det_cantidad_stock},
                         ${costo},
                         ${rs.tipo_impuesto_id},
-                        '${rs.tip_imp_nom}',
+                        '${rs.tipo_imp_nom}',
                         ${rs.marca_id  || 0},
                         ${rs.modelo_id || 0}
                     )">
-                        <td>${rs.item_decripcion}</td>
-                        <td>${rs.marc_nom   || '-'}</td>
+                        <td>${rs.item_descripcion}</td>
+                        <td>${rs.mar_nom   || '-'}</td>
                         <td>${rs.modelo_nom || '-'}</td>
                         <td class='text-right'>${cantidad}</td>
                         <td class='text-right'>${rs.pres_serv_det_cantidad_stock}</td>
@@ -973,23 +988,23 @@ function listarDetalles() {
 
 function seleccionPresupuestoDet(
     item_id,
-    item_decripcion,
+    item_descripcion,
     pres_serv_det_cantidad,
     pres_serv_det_cantidad_stock,
     pres_serv_det_costo,
     tipo_impuesto_id,
-    tip_imp_nom,
+    tipo_imp_nom,
     marca_id,
     modelo_id
 ) {
     $("#original_item_id").val(item_id);
     $("#item_id").val(item_id);
-    $("#item_decripcion").val(item_decripcion);
+    $("#item_descripcion").val(item_descripcion);
     $("#pres_serv_det_cantidad").val(pres_serv_det_cantidad);
     $("#pres_serv_det_cantidad_stock").val(pres_serv_det_cantidad_stock);
     $("#pres_serv_det_costo").val(pres_serv_det_costo);
     $("#tipo_impuesto_id").val(tipo_impuesto_id);
-    $("#tip_imp_nom").val(tip_imp_nom);
+    $("#tipo_imp_nom").val(tipo_imp_nom);
 
     // CÁLCULOS
     const cantidad = parseFloat(pres_serv_det_cantidad) || 0;
@@ -1010,8 +1025,8 @@ function seleccionPresupuestoDet(
     const baseIVA = subtotal - descMonto - promoMonto;
 
     let iva = 0;
-    if (tip_imp_nom === "IVA10") iva = baseIVA / 11;
-    else if (tip_imp_nom === "IVA5") iva = baseIVA / 21;
+    if (tipo_imp_nom === "IVA10") iva = baseIVA / 11;
+    else if (tipo_imp_nom === "IVA5") iva = baseIVA / 21;
 
     $("#subtotal").val(formatearNumero(subtotal));
     $("#iva").val(formatearNumero(iva));
@@ -1039,6 +1054,7 @@ function cargarFuncionarioIdLogueado() {
         setTimeout(function() { window.location.href = '../../index.html'; }, 2000);
     }
 }
+
 
 
 

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("colordialog","zh-cn",{clear:"清除",highlight:"高亮",options:"颜色选项",selected:"选择颜色",title:"选择颜色"});
+CKEDITOR.plugins.setLang("colordialog","zh-cn",{clear:"æ¸…é™¤",highlight:"é«˜äº®",options:"é¢œè‰²é€‰é¡¹",selected:"é€‰æ‹©é¢œè‰²",title:"é€‰æ‹©é¢œè‰²"});

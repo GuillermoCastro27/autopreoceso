@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -215,7 +215,7 @@
                     </div>
                     <div class="col-sm-2">
                         <label class="field-label">Producto</label>
-                        <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Buscar...">
+                        <input type="text" id="item_descripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Buscar...">
                         <div id="listaProductos" style="display:none;"></div>
                     </div>
                     <div class="col-sm-1">
@@ -232,7 +232,7 @@
                     </div>
                     <div class="col-sm-2">
                         <label class="field-label">Impuesto</label>
-                        <input type="text" id="tip_imp_nom" class="form-control" disabled placeholder="—">
+                        <input type="text" id="tipo_imp_nom" class="form-control" disabled placeholder="—">
                     </div>
                     <div class="col-sm-2">
                         <label class="field-label">Marca</label>
@@ -386,3 +386,4 @@ window.onload = function () {
 
 </body>
 </html>
+

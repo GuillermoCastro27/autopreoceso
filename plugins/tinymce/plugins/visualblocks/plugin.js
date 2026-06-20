@@ -84,3 +84,4 @@ tinymce.PluginManager.add('visualblocks', function(editor, url) {
 		editor.dom.removeClass(editor.getBody(), 'mce-visualblocks');
 	});
 });
+

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("templates","fi",{button:"Pohjat",emptyListMsg:"(Ei määriteltyjä pohjia)",insertOption:"Korvaa koko sisältö",options:"Sisältöpohjan ominaisuudet",selectPromptMsg:"Valitse editoriin avattava pohja",title:"Sisältöpohjat"});
+CKEDITOR.plugins.setLang("templates","fi",{button:"Pohjat",emptyListMsg:"(Ei mÃ¤Ã¤riteltyjÃ¤ pohjia)",insertOption:"Korvaa koko sisÃ¤ltÃ¶",options:"SisÃ¤ltÃ¶pohjan ominaisuudet",selectPromptMsg:"Valitse editoriin avattava pohja",title:"SisÃ¤ltÃ¶pohjat"});

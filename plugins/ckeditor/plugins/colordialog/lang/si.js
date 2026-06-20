@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("colordialog","si",{clear:"පැහැදිලි",highlight:"මතුකර පෙන්වන්න",options:"වර්ණ විකල්ප",selected:"තෙරු වර්ණ",title:"වර්ණ තෝරන්න"});
+CKEDITOR.plugins.setLang("colordialog","si",{clear:"à¶´à·à·„à·à¶¯à·’à¶½à·’",highlight:"à¶¸à¶­à·”à¶šà¶» à¶´à·™à¶±à·Šà·€à¶±à·Šà¶±",options:"à·€à¶»à·Šà¶« à·€à·’à¶šà¶½à·Šà¶´",selected:"à¶­à·™à¶»à·” à·€à¶»à·Šà¶«",title:"à·€à¶»à·Šà¶« à¶­à·à¶»à¶±à·Šà¶±"});

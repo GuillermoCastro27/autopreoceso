@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("smiley","sv",{options:"Smileyinställningar",title:"Infoga smiley",toolbar:"Smiley"});
+CKEDITOR.plugins.setLang("smiley","sv",{options:"SmileyinstÃ¤llningar",title:"Infoga smiley",toolbar:"Smiley"});

@@ -607,3 +607,4 @@
 
 	tinymce.PluginManager.add('searchreplace', Plugin);
 })();
+

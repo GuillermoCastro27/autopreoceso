@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("iframe","ka",{border:"ჩარჩოს გამოჩენა",noUrl:"აკრიფეთ iframe-ის URL",scrolling:"გადახვევის ზოლების დაშვება",title:"IFrame-ის პარამეტრები",toolbar:"IFrame"});
+CKEDITOR.plugins.setLang("iframe","ka",{border:"áƒ©áƒáƒ áƒ©áƒáƒ¡ áƒ’áƒáƒ›áƒáƒ©áƒ”áƒœáƒ",noUrl:"áƒáƒ™áƒ áƒ˜áƒ¤áƒ”áƒ— iframe-áƒ˜áƒ¡ URL",scrolling:"áƒ’áƒáƒ“áƒáƒ®áƒ•áƒ”áƒ•áƒ˜áƒ¡ áƒ–áƒáƒšáƒ”áƒ‘áƒ˜áƒ¡ áƒ“áƒáƒ¨áƒ•áƒ”áƒ‘áƒ",title:"IFrame-áƒ˜áƒ¡ áƒžáƒáƒ áƒáƒ›áƒ”áƒ¢áƒ áƒ”áƒ‘áƒ˜",toolbar:"IFrame"});

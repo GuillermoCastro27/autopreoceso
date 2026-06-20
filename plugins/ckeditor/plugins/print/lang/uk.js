@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("print","uk",{toolbar:"Друк"});
+CKEDITOR.plugins.setLang("print","uk",{toolbar:"Ð”Ñ€ÑƒÐº"});

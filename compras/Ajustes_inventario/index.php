@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -150,7 +150,7 @@
 
             <div class="col-sm-3">
                 <label class="field-label">Producto</label>
-                <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Buscar...">
+                <input type="text" id="item_descripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Buscar...">
                 <div id="listaProductos" style="display:none;"></div>
             </div>
 
@@ -306,3 +306,4 @@
 
 </body>
 </html>
+

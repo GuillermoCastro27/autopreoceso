@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("print","sk",{toolbar:"Tlač"});
+CKEDITOR.plugins.setLang("print","sk",{toolbar:"TlaÄ"});

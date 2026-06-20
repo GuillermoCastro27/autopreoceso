@@ -152,3 +152,4 @@ tinymce.PluginManager.add('fullscreen', function(editor) {
 		}
 	};
 });
+

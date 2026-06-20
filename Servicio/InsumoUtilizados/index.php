@@ -171,7 +171,7 @@
             </div>
             <div class="col-sm-2">
                 <label style="font-size:12px;color:#636e72;">Impuesto</label>
-                <input type="text" id="tip_imp_nom" class="form-control" disabled placeholder="Impuesto">
+                <input type="text" id="tipo_imp_nom" class="form-control" disabled placeholder="Impuesto">
             </div>
             <div class="col-sm-2">
                 <label style="font-size:12px;color:#636e72;">Cantidad</label>
@@ -303,3 +303,4 @@
 <script src="metodos.js?v=5"></script>
 </body>
 </html>
+

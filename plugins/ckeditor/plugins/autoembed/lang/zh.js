@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("autoembed","zh",{embeddingInProgress:"正在嘗試嵌入已貼上的 URL...",embeddingFailed:"這個 URL 無法被自動嵌入。"});
+CKEDITOR.plugins.setLang("autoembed","zh",{embeddingInProgress:"æ­£åœ¨å˜—è©¦åµŒå…¥å·²è²¼ä¸Šçš„ URL...",embeddingFailed:"é€™å€‹ URL ç„¡æ³•è¢«è‡ªå‹•åµŒå…¥ã€‚"});

@@ -16,12 +16,14 @@ function parseFecha(val) {
 }
 
 listar();
+cargarBloqueados();
 
 var ETIQUETAS = {
     'exitoso':              { label: 'Exitoso',              clase: 'badge-exitoso'           },
     'contrasena_incorrecta':{ label: 'Contraseña incorrecta', clase: 'badge-contrasena'        },
     'usuario_no_existe':    { label: 'Usuario no existe',    clase: 'badge-usuario_no_existe' },
     'bloqueado':            { label: 'Bloqueado',            clase: 'badge-bloqueado'         },
+    'desbloqueado':         { label: 'Desbloqueado',         clase: 'badge-desbloqueado'      },
 };
 
 function parsearNavegador(ua) {
@@ -116,6 +118,69 @@ function tarjetaResumen(icono, label, valor, color) {
          + '</div></div></div>';
 }
 
+function cargarBloqueados() {
+    $.ajax({
+        url:      getUrl() + 'users/bloqueados',
+        method:   'GET',
+        dataType: 'json'
+    })
+    .done(function(data) {
+        if (!data || data.length === 0) {
+            $('#card-bloqueados').hide();
+            return;
+        }
+        $('#badge-cant-bloqueados').text(data.length);
+        var filas = '';
+        data.forEach(function(u) {
+            var hasta = u.bloqueado_hasta
+                ? u.bloqueado_hasta.replace('T', ' ').substring(0, 19)
+                : '—';
+            filas += '<tr>'
+                   + '<td>' + (u.name || '—') + '</td>'
+                   + '<td><strong>' + (u.login || '—') + '</strong></td>'
+                   + '<td>' + (u.email || '—') + '</td>'
+                   + '<td>' + hasta + '</td>'
+                   + '<td style="text-align:center;"><span style="color:#c0392b; font-weight:700;">' + (u.minutos_restantes || 0) + ' min</span></td>'
+                   + '<td style="text-align:center;">'
+                   + '<button class="btn btn-success btn-sm waves-effect" onclick="desbloquear(' + u.id + ',\'' + (u.login || '') + '\')">'
+                   + '<i class="material-icons" style="font-size:16px; vertical-align:middle;">lock_open</i> Desbloquear'
+                   + '</button></td>'
+                   + '</tr>';
+        });
+        $('#tbody-bloqueados').html(filas);
+        $('#card-bloqueados').show();
+    })
+    .fail(function(xhr) {
+        if (xhr.status !== 403) console.warn('No se pudo cargar usuarios bloqueados');
+    });
+}
+
+function desbloquear(id, login) {
+    swal({
+        title:              '¿Desbloquear usuario?',
+        text:               'Se desbloqueará la cuenta de "' + login + '" y se registrará en la auditoría.',
+        type:               'warning',
+        showCancelButton:   true,
+        confirmButtonColor: '#16a085',
+        confirmButtonText:  'Sí, desbloquear',
+        cancelButtonText:   'Cancelar'
+    }, function() {
+        $.ajax({
+            url:    getUrl() + 'users/' + id + '/desbloquear',
+            method: 'POST'
+        })
+        .done(function(r) {
+            swal('Listo', r.mensaje, 'success');
+            cargarBloqueados();
+            listar();
+        })
+        .fail(function(xhr) {
+            var msg = (xhr.responseJSON && xhr.responseJSON.error) ? xhr.responseJSON.error : 'No se pudo desbloquear el usuario';
+            swal('Error', msg, 'error');
+        });
+    });
+}
+
 function confirmarLimpiar() {
     swal({
         title: 'Limpiar registros',
@@ -137,3 +202,4 @@ function confirmarLimpiar() {
         .fail(function() { swal('Error', 'No se pudo limpiar', 'error'); });
     });
 }
+

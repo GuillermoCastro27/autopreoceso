@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("font","hr",{fontSize:{label:"Veličina",voiceLabel:"Veličina slova",panelTitle:"Veličina"},label:"Font",panelTitle:"Font",voiceLabel:"Font"});
+CKEDITOR.plugins.setLang("font","hr",{fontSize:{label:"VeliÄina",voiceLabel:"VeliÄina slova",panelTitle:"VeliÄina"},label:"Font",panelTitle:"Font",voiceLabel:"Font"});

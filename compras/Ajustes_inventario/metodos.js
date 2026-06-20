@@ -1,4 +1,4 @@
-﻿// ─── DEBOUNCE HELPER ─────────────────────────────────────────────────────────
+// ─── DEBOUNCE HELPER ─────────────────────────────────────────────────────────
 var _timers = {};
 function buscarConDebounce(key, fn) {
     clearTimeout(_timers[key]);
@@ -386,7 +386,7 @@ function agregarDetalle() {
     mmLimpiar();
     $("#txtOperacionDetalle").val(1);
     $("#item_id").val('');
-    $("#item_decripcion").val('');
+    $("#item_descripcion").val('');
     $("#ajus_det_cantidad").val('').prop('disabled', true);
     $("#cantidad_stock").val('');
     $("#stock_disponible_det").val(0);
@@ -398,20 +398,20 @@ function agregarDetalle() {
 
     if (esSalida()) {
         // Salida: primero deposito, luego item filtrado
-        $('#item_decripcion').prop('disabled', true);
+        $('#item_descripcion').prop('disabled', true);
         $('#deposito_id_det').off('change.ajuste').on('change.ajuste', function() {
             $('#item_id').val('');
-            $('#item_decripcion').val('');
+            $('#item_descripcion').val('');
             $('#cantidad_stock').val('');
             $('#stock_disponible_det').val(0);
             if ($(this).val()) {
-                $('#item_decripcion').removeAttr('disabled');
+                $('#item_descripcion').removeAttr('disabled');
             } else {
-                $('#item_decripcion').prop('disabled', true);
+                $('#item_descripcion').prop('disabled', true);
             }
         });
     } else {
-        $('#item_decripcion').removeAttr('disabled');
+        $('#item_descripcion').removeAttr('disabled');
     }
 
     mostrarBotonesDetalle('grabar');
@@ -419,7 +419,7 @@ function agregarDetalle() {
 
 function editarDetalle() {
     $("#txtOperacionDetalle").val(2);
-    $("#item_decripcion").removeAttr("disabled");
+    $("#item_descripcion").removeAttr("disabled");
     $("#ajus_det_cantidad").removeAttr("disabled");
     cargarDepositosPorSucursal($('#sucursal_id').val(), $('#deposito_id_det').val());
     $('#deposito_id_det').removeAttr('disabled');
@@ -436,7 +436,7 @@ function cancelarDetalle() {
     mmLimpiar();
     $("#txtOperacionDetalle").val(0);
     $("#item_id").val('');
-    $("#item_decripcion").val('').prop('disabled', true);
+    $("#item_descripcion").val('').prop('disabled', true);
     $("#ajus_det_cantidad").val('').prop('disabled', true);
     $("#cantidad_stock").val('');
     $("#stock_disponible_det").val(0);
@@ -516,14 +516,14 @@ function validarCantidadAjuste() {
 }
 
 function buscarProductos() {
-    var q = $("#item_decripcion").val();
+    var q = $("#item_descripcion").val();
     if (q.length < 2) { $('#listaProductos').html('').hide(); return; }
 
     if (esSalida() && !$('#deposito_id_det').val()) {
         swal('Aviso', 'Seleccione el depósito antes de buscar ítems.', 'warning'); return;
     }
 
-    var data = { item_decripcion: q };
+    var data = { item_descripcion: q };
     if (esSalida()) data.deposito_id = $('#deposito_id_det').val();
 
     buscarConDebounce('prod', function() {
@@ -537,8 +537,8 @@ function buscarProductos() {
             var lista = '<ul class="list-group">';
             resultado.forEach(function(rs) {
                 var stock = rs.cantidad_disponible || 0;
-                lista += '<li class="list-group-item" onclick="seleccionProducto(' + rs.item_id + ",'" + rs.item_decripcion + "'," + stock + ')">'
-                    + rs.item_decripcion
+                lista += '<li class="list-group-item" onclick="seleccionProducto(' + rs.item_id + ",'" + rs.item_descripcion + "'," + stock + ')">'
+                    + rs.item_descripcion
                     + ' <span class="badge" style="background:#3b82f6;color:#fff;">Stock: ' + stock + '</span>'
                     + '</li>';
             });
@@ -548,9 +548,9 @@ function buscarProductos() {
         .fail(function(xhr) { mostrarErrores(xhr); });
     });
 }
-function seleccionProducto(item_id, item_decripcion, cantidad_disponible){
+function seleccionProducto(item_id, item_descripcion, cantidad_disponible){
     $("#item_id").val(item_id);
-    $("#item_decripcion").val(item_decripcion);
+    $("#item_descripcion").val(item_descripcion);
     $("#cantidad_stock").val('' + cantidad_disponible);
     $("#stock_disponible_det").val(cantidad_disponible || 0);
     $("#ajus_det_cantidad").removeAttr('disabled');
@@ -572,15 +572,15 @@ function listarDetalles(){
         for (var rs of resultado) {
             lista += "<tr class=\"item-list\" onclick=\"seleccionDetalle("
                 + rs.item_id + ",'"
-                + rs.item_decripcion + "',"
+                + rs.item_descripcion + "',"
                 + rs.ajus_det_cantidad + ","
                 + (rs.cantidad_stock || 0) + ","
                 + (rs.deposito_id || 0) + ","
                 + (rs.marca_id || 0) + ","
                 + (rs.modelo_id || 0) + ");\">";
             lista += "<td>" + rs.item_id + "</td>";
-            lista += "<td>" + rs.item_decripcion + "</td>";
-            lista += "<td>" + (rs.marc_nom || '-') + "</td>";
+            lista += "<td>" + rs.item_descripcion + "</td>";
+            lista += "<td>" + (rs.mar_nom || '-') + "</td>";
             lista += "<td>" + (rs.modelo_nom || '-') + "</td>";
             lista += "<td>" + rs.ajus_det_cantidad + "</td>";
             lista += "<td>" + (rs.cantidad_stock || 0) + "</td>";
@@ -598,9 +598,9 @@ function listarDetalles(){
     })
     .fail(function(xhr) { mostrarErrores(xhr); })
 }
-function seleccionDetalle(item_id, item_decripcion, ajus_det_cantidad, cantidad_stock, deposito_id, marca_id, modelo_id) {
+function seleccionDetalle(item_id, item_descripcion, ajus_det_cantidad, cantidad_stock, deposito_id, marca_id, modelo_id) {
     $("#item_id").val(item_id);
-    $("#item_decripcion").val(item_decripcion);
+    $("#item_descripcion").val(item_descripcion);
     $("#ajus_det_cantidad").val(ajus_det_cantidad);
     $("#cantidad_stock").val('' + cantidad_stock);
     $("#stock_disponible_det").val(cantidad_stock || 0);
@@ -710,3 +710,4 @@ function seleccionMotivoAjuste(id, descripcion, tipo_ajuste) {
     $("#listaMotivoajuste").html("");
     $("#listaMotivoajuste").attr("style", "display:none;");
 }
+

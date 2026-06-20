@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("templates","ar",{button:"القوالب",emptyListMsg:"(لم يتم تعريف أي قالب)",insertOption:"استبدال المحتوى",options:"خصائص القوالب",selectPromptMsg:"اختر القالب الذي تود وضعه في المحرر",title:"قوالب المحتوى"});
+CKEDITOR.plugins.setLang("templates","ar",{button:"Ø§Ù„Ù‚ÙˆØ§Ù„Ø¨",emptyListMsg:"(Ù„Ù… ÙŠØªÙ… ØªØ¹Ø±ÙŠÙ Ø£ÙŠ Ù‚Ø§Ù„Ø¨)",insertOption:"Ø§Ø³ØªØ¨Ø¯Ø§Ù„ Ø§Ù„Ù…Ø­ØªÙˆÙ‰",options:"Ø®ØµØ§Ø¦Øµ Ø§Ù„Ù‚ÙˆØ§Ù„Ø¨",selectPromptMsg:"Ø§Ø®ØªØ± Ø§Ù„Ù‚Ø§Ù„Ø¨ Ø§Ù„Ø°ÙŠ ØªÙˆØ¯ ÙˆØ¶Ø¹Ù‡ ÙÙŠ Ø§Ù„Ù…Ø­Ø±Ø±",title:"Ù‚ÙˆØ§Ù„Ø¨ Ø§Ù„Ù…Ø­ØªÙˆÙ‰"});

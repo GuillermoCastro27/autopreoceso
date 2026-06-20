@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("pagebreak","hi",{alt:"पेज ब्रेक",toolbar:"पेज ब्रेक इन्सर्ट् करें"});
+CKEDITOR.plugins.setLang("pagebreak","hi",{alt:"à¤ªà¥‡à¤œ à¤¬à¥à¤°à¥‡à¤•",toolbar:"à¤ªà¥‡à¤œ à¤¬à¥à¤°à¥‡à¤• à¤‡à¤¨à¥à¤¸à¤°à¥à¤Ÿà¥ à¤•à¤°à¥‡à¤‚"});

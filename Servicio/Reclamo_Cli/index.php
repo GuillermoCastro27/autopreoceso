@@ -194,11 +194,11 @@
                         <input type="text" id="item_id" class="form-control" disabled placeholder="Cód.">
                     </div>
                     <div class="col-sm-4">
-                        <input type="text" id="item_decripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
+                        <input type="text" id="item_descripcion" class="form-control" disabled onkeyup="buscarProductos();" placeholder="Producto">
                         <div id="listaProductos" style="display:none;"></div>
                     </div>
                     <div class="col-sm-2">
-                        <input type="text" id="tip_imp_nom" class="form-control" disabled placeholder="Tipo impuesto">
+                        <input type="text" id="tipo_imp_nom" class="form-control" disabled placeholder="Tipo impuesto">
                         <input type="hidden" id="tipo_impuesto_id">
                     </div>
                     <div class="col-sm-2">
@@ -368,3 +368,4 @@
 </body>
 
 </html>
+

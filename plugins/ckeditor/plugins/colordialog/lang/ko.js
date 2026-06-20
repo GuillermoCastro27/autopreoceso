@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("colordialog","ko",{clear:"비우기",highlight:"강조",options:"색상 옵션",selected:"선택된 색상",title:"색상 선택"});
+CKEDITOR.plugins.setLang("colordialog","ko",{clear:"ë¹„ìš°ê¸°",highlight:"ê°•ì¡°",options:"ìƒ‰ìƒ ì˜µì…˜",selected:"ì„ íƒëœ ìƒ‰ìƒ",title:"ìƒ‰ìƒ ì„ íƒ"});

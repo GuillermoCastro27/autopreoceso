@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("print","th",{toolbar:"สั่งพิมพ์"});
+CKEDITOR.plugins.setLang("print","th",{toolbar:"à¸ªà¸±à¹ˆà¸‡à¸žà¸´à¸¡à¸žà¹Œ"});

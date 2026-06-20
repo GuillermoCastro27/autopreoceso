@@ -274,3 +274,4 @@ tinymce.PluginManager.add('template', function(editor) {
 		});
 	});
 });
+

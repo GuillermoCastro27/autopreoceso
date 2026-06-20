@@ -24,9 +24,9 @@
 (function ($) {
   $.fn.selectpicker.defaults = {
     noneSelectedText: 'Nic nie zaznaczono',
-    noneResultsText: 'Brak wyników wyszukiwania {0}',
+    noneResultsText: 'Brak wynikÃ³w wyszukiwania {0}',
     countSelectedText: 'Zaznaczono {0} z {1}',
-    maxOptionsText: ['Osiągnięto limit ({n} {var} max)', 'Limit grupy osiągnięty ({n} {var} max)', ['elementy', 'element']],
+    maxOptionsText: ['OsiÄ…gniÄ™to limit ({n} {var} max)', 'Limit grupy osiÄ…gniÄ™ty ({n} {var} max)', ['elementy', 'element']],
     selectAll: 'Zaznacz wszystkie',
     deselectAll: 'Odznacz wszystkie',
     multipleSeparator: ', '
@@ -35,3 +35,4 @@
 
 
 }));
+

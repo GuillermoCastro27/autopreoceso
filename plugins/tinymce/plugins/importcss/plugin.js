@@ -225,3 +225,4 @@ tinymce.PluginManager.add('importcss', function(editor) {
 	// Expose default convertSelectorToFormat implementation
 	self.convertSelectorToFormat = convertSelectorToFormat;
 });
+

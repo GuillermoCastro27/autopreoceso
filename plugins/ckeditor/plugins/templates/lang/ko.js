@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("templates","ko",{button:"템플릿",emptyListMsg:"(템플릿이 없습니다)",insertOption:"현재 내용 바꾸기",options:"템플릿 옵션",selectPromptMsg:"에디터에서 사용할 템플릿을 선택하십시오",title:"내용 템플릿"});
+CKEDITOR.plugins.setLang("templates","ko",{button:"í…œí”Œë¦¿",emptyListMsg:"(í…œí”Œë¦¿ì´ ì—†ìŠµë‹ˆë‹¤)",insertOption:"í˜„ìž¬ ë‚´ìš© ë°”ê¾¸ê¸°",options:"í…œí”Œë¦¿ ì˜µì…˜",selectPromptMsg:"ì—ë””í„°ì—ì„œ ì‚¬ìš©í•  í…œí”Œë¦¿ì„ ì„ íƒí•˜ì‹­ì‹œì˜¤",title:"ë‚´ìš© í…œí”Œë¦¿"});

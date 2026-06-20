@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("iframe","ug",{border:"كاندۇك گىرۋەكلىرىنى كۆرسەت",noUrl:"كاندۇكنىڭ ئادرېسى(Url)نى كىرگۈزۈڭ",scrolling:"دومىلىما سۈرگۈچكە يول قوي",title:"IFrame خاسلىق",toolbar:"IFrame "});
+CKEDITOR.plugins.setLang("iframe","ug",{border:"ÙƒØ§Ù†Ø¯Û‡Ùƒ Ú¯Ù‰Ø±Û‹Û•ÙƒÙ„Ù‰Ø±Ù‰Ù†Ù‰ ÙƒÛ†Ø±Ø³Û•Øª",noUrl:"ÙƒØ§Ù†Ø¯Û‡ÙƒÙ†Ù‰Ú­ Ø¦Ø§Ø¯Ø±ÛØ³Ù‰(Url)Ù†Ù‰ ÙƒÙ‰Ø±Ú¯ÛˆØ²ÛˆÚ­",scrolling:"Ø¯ÙˆÙ…Ù‰Ù„Ù‰Ù…Ø§ Ø³ÛˆØ±Ú¯ÛˆÚ†ÙƒÛ• ÙŠÙˆÙ„ Ù‚ÙˆÙŠ",title:"IFrame Ø®Ø§Ø³Ù„Ù‰Ù‚",toolbar:"IFrame "});

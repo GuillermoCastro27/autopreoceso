@@ -95,3 +95,4 @@
     $.fn.lightGallery.modules.fullscreen = Fullscreen;
 
 })(jQuery, window, document);
+

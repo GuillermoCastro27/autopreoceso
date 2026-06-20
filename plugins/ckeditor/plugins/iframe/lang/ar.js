@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("iframe","ar",{border:"إظهار حدود الإطار",noUrl:"فضلا أكتب رابط الـ iframe",scrolling:"تفعيل أشرطة الإنتقال",title:"خصائص iframe",toolbar:"iframe"});
+CKEDITOR.plugins.setLang("iframe","ar",{border:"Ø¥Ø¸Ù‡Ø§Ø± Ø­Ø¯ÙˆØ¯ Ø§Ù„Ø¥Ø·Ø§Ø±",noUrl:"ÙØ¶Ù„Ø§ Ø£ÙƒØªØ¨ Ø±Ø§Ø¨Ø· Ø§Ù„Ù€ iframe",scrolling:"ØªÙØ¹ÙŠÙ„ Ø£Ø´Ø±Ø·Ø© Ø§Ù„Ø¥Ù†ØªÙ‚Ø§Ù„",title:"Ø®ØµØ§Ø¦Øµ iframe",toolbar:"iframe"});

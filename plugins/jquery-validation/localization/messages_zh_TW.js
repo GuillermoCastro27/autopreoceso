@@ -10,27 +10,27 @@
 
 /*
  * Translated default messages for the jQuery validation plugin.
- * Locale: ZH (Chinese; 中文 (Zhōngwén), 汉语, 漢語)
+ * Locale: ZH (Chinese; ä¸­æ–‡ (ZhÅngwÃ©n), æ±‰è¯­, æ¼¢èªž)
  * Region: TW (Taiwan)
  */
 $.extend( $.validator.messages, {
-	required: "必須填寫",
-	remote: "請修正此欄位",
-	email: "請輸入有效的電子郵件",
-	url: "請輸入有效的網址",
-	date: "請輸入有效的日期",
-	dateISO: "請輸入有效的日期 (YYYY-MM-DD)",
-	number: "請輸入正確的數值",
-	digits: "只可輸入數字",
-	creditcard: "請輸入有效的信用卡號碼",
-	equalTo: "請重複輸入一次",
-	extension: "請輸入有效的後綴",
-	maxlength: $.validator.format( "最多 {0} 個字" ),
-	minlength: $.validator.format( "最少 {0} 個字" ),
-	rangelength: $.validator.format( "請輸入長度為 {0} 至 {1} 之間的字串" ),
-	range: $.validator.format( "請輸入 {0} 至 {1} 之間的數值" ),
-	max: $.validator.format( "請輸入不大於 {0} 的數值" ),
-	min: $.validator.format( "請輸入不小於 {0} 的數值" )
+	required: "å¿…é ˆå¡«å¯«",
+	remote: "è«‹ä¿®æ­£æ­¤æ¬„ä½",
+	email: "è«‹è¼¸å…¥æœ‰æ•ˆçš„é›»å­éƒµä»¶",
+	url: "è«‹è¼¸å…¥æœ‰æ•ˆçš„ç¶²å€",
+	date: "è«‹è¼¸å…¥æœ‰æ•ˆçš„æ—¥æœŸ",
+	dateISO: "è«‹è¼¸å…¥æœ‰æ•ˆçš„æ—¥æœŸ (YYYY-MM-DD)",
+	number: "è«‹è¼¸å…¥æ­£ç¢ºçš„æ•¸å€¼",
+	digits: "åªå¯è¼¸å…¥æ•¸å­—",
+	creditcard: "è«‹è¼¸å…¥æœ‰æ•ˆçš„ä¿¡ç”¨å¡è™Ÿç¢¼",
+	equalTo: "è«‹é‡è¤‡è¼¸å…¥ä¸€æ¬¡",
+	extension: "è«‹è¼¸å…¥æœ‰æ•ˆçš„å¾Œç¶´",
+	maxlength: $.validator.format( "æœ€å¤š {0} å€‹å­—" ),
+	minlength: $.validator.format( "æœ€å°‘ {0} å€‹å­—" ),
+	rangelength: $.validator.format( "è«‹è¼¸å…¥é•·åº¦ç‚º {0} è‡³ {1} ä¹‹é–“çš„å­—ä¸²" ),
+	range: $.validator.format( "è«‹è¼¸å…¥ {0} è‡³ {1} ä¹‹é–“çš„æ•¸å€¼" ),
+	max: $.validator.format( "è«‹è¼¸å…¥ä¸å¤§æ–¼ {0} çš„æ•¸å€¼" ),
+	min: $.validator.format( "è«‹è¼¸å…¥ä¸å°æ–¼ {0} çš„æ•¸å€¼" )
 } );
 
 }));

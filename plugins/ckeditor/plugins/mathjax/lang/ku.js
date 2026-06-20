@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("mathjax","ku",{title:"بیرکاری لە TeX",button:"بیرکاری",dialogInput:"TeXەکەت لێرە بنووسە",docUrl:"http://en.wikibooks.org/wiki/LaTeX/Mathematics",docLabel:"بەڵگەنامەکردنی TeX",loading:"بارکردن...",pathName:"بیرکاری"});
+CKEDITOR.plugins.setLang("mathjax","ku",{title:"Ø¨ÛŒØ±Ú©Ø§Ø±ÛŒ Ù„Û• TeX",button:"Ø¨ÛŒØ±Ú©Ø§Ø±ÛŒ",dialogInput:"TeXÛ•Ú©Û•Øª Ù„ÛŽØ±Û• Ø¨Ù†ÙˆÙˆØ³Û•",docUrl:"http://en.wikibooks.org/wiki/LaTeX/Mathematics",docLabel:"Ø¨Û•ÚµÚ¯Û•Ù†Ø§Ù…Û•Ú©Ø±Ø¯Ù†ÛŒ TeX",loading:"Ø¨Ø§Ø±Ú©Ø±Ø¯Ù†...",pathName:"Ø¨ÛŒØ±Ú©Ø§Ø±ÛŒ"});

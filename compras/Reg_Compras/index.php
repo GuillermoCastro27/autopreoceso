@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -116,10 +116,8 @@
 
                 <div class="col-sm-2">
                     <label class="field-label">Fecha Emisión</label>
-                    <input type="text" id="comp_fecha_emision" class="form-control" disabled
-                           placeholder="DD/MM/YYYY" maxlength="10"
-                           oninput="mascararFechaComp(this); validarFechaEmisionComp();">
-                    <small id="avisoFechaEmisionComp" style="color:#e74c3c;display:none;"></small>
+                    <input type="text" id="comp_fecha_emision" class="datepicker-emision form-control" disabled
+                           placeholder="DD/MM/YYYY" readonly>
                 </div>
             </div>
         </div>
@@ -336,3 +334,4 @@ window.onload = function () {
 
 </body>
 </html>
+

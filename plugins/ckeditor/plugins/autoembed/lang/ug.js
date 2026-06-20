@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("autoembed","ug",{embeddingInProgress:"سىڭدۈرۈلگەن چاپلانغان URL نى سىناۋاتىدۇ…",embeddingFailed:"بۇ URL نى ئۆزلۈكىدىن سىڭدۈرەلمەيدۇ."});
+CKEDITOR.plugins.setLang("autoembed","ug",{embeddingInProgress:"Ø³Ù‰Ú­Ø¯ÛˆØ±ÛˆÙ„Ú¯Û•Ù† Ú†Ø§Ù¾Ù„Ø§Ù†ØºØ§Ù† URL Ù†Ù‰ Ø³Ù‰Ù†Ø§Û‹Ø§ØªÙ‰Ø¯Û‡â€¦",embeddingFailed:"Ø¨Û‡ URL Ù†Ù‰ Ø¦Û†Ø²Ù„ÛˆÙƒÙ‰Ø¯Ù‰Ù† Ø³Ù‰Ú­Ø¯ÛˆØ±Û•Ù„Ù…Û•ÙŠØ¯Û‡."});

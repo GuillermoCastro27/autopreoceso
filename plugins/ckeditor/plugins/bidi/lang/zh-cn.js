@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("bidi","zh-cn",{ltr:"文字方向为从左至右",rtl:"文字方向为从右至左"});
+CKEDITOR.plugins.setLang("bidi","zh-cn",{ltr:"æ–‡å­—æ–¹å‘ä¸ºä»Žå·¦è‡³å³",rtl:"æ–‡å­—æ–¹å‘ä¸ºä»Žå³è‡³å·¦"});

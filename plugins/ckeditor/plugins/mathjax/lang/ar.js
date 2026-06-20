@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("mathjax","ar",{title:"الرياصيات في Tex",button:"رياضيات",dialogInput:"أكتب Tex خاصتك هنا",docUrl:"http://en.wikibooks.org/wiki/LaTeX/Mathematics",docLabel:"وثائق Tex",loading:"جاري التحميل...",pathName:"رياضيات"});
+CKEDITOR.plugins.setLang("mathjax","ar",{title:"Ø§Ù„Ø±ÙŠØ§ØµÙŠØ§Øª ÙÙŠ Tex",button:"Ø±ÙŠØ§Ø¶ÙŠØ§Øª",dialogInput:"Ø£ÙƒØªØ¨ Tex Ø®Ø§ØµØªÙƒ Ù‡Ù†Ø§",docUrl:"http://en.wikibooks.org/wiki/LaTeX/Mathematics",docLabel:"ÙˆØ«Ø§Ø¦Ù‚ Tex",loading:"Ø¬Ø§Ø±ÙŠ Ø§Ù„ØªØ­Ù…ÙŠÙ„...",pathName:"Ø±ÙŠØ§Ø¶ÙŠØ§Øª"});

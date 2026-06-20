@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("templates","zh",{button:"範本",emptyListMsg:"(尚未定義任何範本)",insertOption:"替代實際內容",options:"範本選項",selectPromptMsg:"請選擇要在編輯器中開啟的範本。",title:"內容範本"});
+CKEDITOR.plugins.setLang("templates","zh",{button:"ç¯„æœ¬",emptyListMsg:"(å°šæœªå®šç¾©ä»»ä½•ç¯„æœ¬)",insertOption:"æ›¿ä»£å¯¦éš›å…§å®¹",options:"ç¯„æœ¬é¸é …",selectPromptMsg:"è«‹é¸æ“‡è¦åœ¨ç·¨è¼¯å™¨ä¸­é–‹å•Ÿçš„ç¯„æœ¬ã€‚",title:"å…§å®¹ç¯„æœ¬"});

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("font","ar",{fontSize:{label:"حجم الخط",voiceLabel:"حجم الخط",panelTitle:"حجم الخط"},label:"خط",panelTitle:"حجم الخط",voiceLabel:"حجم الخط"});
+CKEDITOR.plugins.setLang("font","ar",{fontSize:{label:"Ø­Ø¬Ù… Ø§Ù„Ø®Ø·",voiceLabel:"Ø­Ø¬Ù… Ø§Ù„Ø®Ø·",panelTitle:"Ø­Ø¬Ù… Ø§Ù„Ø®Ø·"},label:"Ø®Ø·",panelTitle:"Ø­Ø¬Ù… Ø§Ù„Ø®Ø·",voiceLabel:"Ø­Ø¬Ù… Ø§Ù„Ø®Ø·"});

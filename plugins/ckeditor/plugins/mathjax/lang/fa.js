@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("mathjax","fa",{title:"ریاضیات در تک",button:"ریاضی",dialogInput:"فرمول خود را اینجا بنویسید",docUrl:"http://en.wikibooks.org/wiki/LaTeX/Mathematics",docLabel:"مستندسازی فرمول نویسی",loading:"بارگیری",pathName:"ریاضی"});
+CKEDITOR.plugins.setLang("mathjax","fa",{title:"Ø±ÛŒØ§Ø¶ÛŒØ§Øª Ø¯Ø± ØªÚ©",button:"Ø±ÛŒØ§Ø¶ÛŒ",dialogInput:"ÙØ±Ù…ÙˆÙ„ Ø®ÙˆØ¯ Ø±Ø§ Ø§ÛŒÙ†Ø¬Ø§ Ø¨Ù†ÙˆÛŒØ³ÛŒØ¯",docUrl:"http://en.wikibooks.org/wiki/LaTeX/Mathematics",docLabel:"Ù…Ø³ØªÙ†Ø¯Ø³Ø§Ø²ÛŒ ÙØ±Ù…ÙˆÙ„ Ù†ÙˆÛŒØ³ÛŒ",loading:"Ø¨Ø§Ø±Ú¯ÛŒØ±ÛŒ",pathName:"Ø±ÛŒØ§Ø¶ÛŒ"});

@@ -1,1 +1,1 @@
-CKEDITOR.plugins.setLang("smiley","gu",{options:"સમ્ય્લી વિકલ્પો",title:"સ્માઇલી  પસંદ કરો",toolbar:"સ્માઇલી"});
+CKEDITOR.plugins.setLang("smiley","gu",{options:"àª¸àª®à«àª¯à«àª²à«€ àªµàª¿àª•àª²à«àªªà«‹",title:"àª¸à«àª®àª¾àª‡àª²à«€  àªªàª¸àª‚àª¦ àª•àª°à«‹",toolbar:"àª¸à«àª®àª¾àª‡àª²à«€"});
