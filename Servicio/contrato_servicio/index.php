@@ -289,7 +289,7 @@
                 <th>Cantidad</th>
                 <th>Cantidad Disponible</th>
                 <th>Costo</th>
-                <th>Tipo impuesto</th>
+                <th>Marca</th><th>Modelo</th><th>Depósito</th><th>Tipo impuesto</th>
                 <th>Sub Total</th>
                 <th>IVA</th>
             </tr>

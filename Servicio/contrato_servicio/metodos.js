@@ -721,6 +721,9 @@ function parseNumero(str) {
 }
 
 function agregarDetalle() {
+    mmLimpiar();
+    $('#deposito_id_det').html('<option value="">-- Depósito --</option>');
+    cargarDepositosDet(null);
     $("#txtOperacionDetalle").val(1);
     $("#item_descripcion").removeAttr("disabled");
     $("#tipo_imp_nom").attr("disabled","true");
@@ -736,6 +739,9 @@ function agregarDetalle() {
 }
 
 function editarDetalle() {
+    mmCargarMarcas($('#item_id').val(), null);
+    $('#marca_det_mm, #modelo_det_mm').removeAttr('disabled');
+    cargarDepositosDet($('#deposito_id_det').val());
     $("#txtOperacionDetalle").val(2);
     $("#item_descripcion").removeAttr("disabled");
     $("#tipo_imp_nom").attr("disabled","true");
@@ -759,6 +765,8 @@ function eliminarDetalle() {
     $("#btnCancelarDetalle").attr("style","display:inline");
 }
 function cancelarDetalle() {
+    $('#deposito_id_det').html('<option value="">-- Depósito --</option>').prop('disabled', true);
+    mmLimpiar();
     $("#btnAgregarDetalle").attr("style","display:inline");
     $("#btnEditarDetalle").attr("style","display:inline");
     $("#btnEliminarDetalle").attr("style","display:inline");
@@ -824,7 +832,10 @@ function grabarDetalle() {
             "tipo_impuesto_id":              $("#tipo_impuesto_id").val(),
             "contrato_serv_det_cantidad":    $("#contrato_serv_det_cantidad").val(),
             "contrato_serv_det_costo":       $("#contrato_serv_det_costo").val(),
-            "contrato_serv_det_cantidad_stock": $("#contrato_serv_det_cantidad_stock").val()
+            "contrato_serv_det_cantidad_stock": $("#contrato_serv_det_cantidad_stock").val(),
+            "marca_id":    _mmMarcaId  ? parseInt(_mmMarcaId)  : null,
+            "modelo_id":   _mmModeloId ? parseInt(_mmModeloId) : null,
+            "deposito_id": $("#deposito_id_det").val() || null
         }
     })
     .done(function(respuesta) {
@@ -838,6 +849,19 @@ function grabarDetalle() {
     });
 }
 
+
+function cargarDepositosDet(selectedId) {
+    var sucId = $('#sucursal_id').val();
+    var sel   = $('#deposito_id_det');
+    if (!sucId) { sel.html('<option value="">-- Depósito --</option>'); return; }
+    $.get(getUrl() + 'deposito/read-by-sucursal/' + sucId, function(data) {
+        var opts = '<option value="">-- Depósito --</option>';
+        data.forEach(function(d) {
+            opts += '<option value="' + d.id + '"' + (d.id == selectedId ? ' selected' : '') + '>' + d.dep_nombre + '</option>';
+        });
+        sel.html(opts).removeAttr('disabled');
+    });
+}
 function buscarProductos(){
     $.ajax({
         url: getUrl()+"items/buscar",
@@ -936,12 +960,19 @@ function listarDetalles() {
                     + rs.contrato_serv_det_cantidad_stock + ", "
                     + costo + ", "
                     + rs.tipo_impuesto_id + ", '"
-                    + rs.tipo_imp_nom + "'"
+                    + rs.tipo_imp_nom + "', "
+                    + (rs.marca_id  || 0) + ", "
+                    + (rs.modelo_id || 0) + ", "
+                    + (rs.deposito_id || 0) + ",'"
+                    + (rs.dep_nombre || '').replace(/'/g,"\\'") + "'"
                     + ");\">";
 
                 lista += "<td>" + rs.item_id + "</td>";
                 lista += "<td>" + rs.item_descripcion + "</td>";
+                lista += "<td>" + (rs.mar_nom   || '-') + "</td>";
+                lista += "<td>" + (rs.modelo_nom || '-') + "</td>";
                 lista += "<td class='text-right'>" + cantidad + "</td>";
+                lista += "<td>" + (rs.dep_nombre || '-') + "</td>";
                 lista += "<td class='text-right'>" + rs.contrato_serv_det_cantidad_stock + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(costo) + "</td>";
                 lista += "<td>" + rs.tipo_imp_nom + "</td>";
@@ -975,7 +1006,7 @@ function listarDetalles() {
     });
 }
 
-function seleccionSolicitudDet(item_id, item_descripcion, contrato_serv_det_cantidad, contrato_serv_det_cantidad_stock, contrato_serv_det_costo, tipo_impuesto_id, tipo_imp_nom) {
+function seleccionSolicitudDet(item_id, item_descripcion, contrato_serv_det_cantidad, contrato_serv_det_cantidad_stock, contrato_serv_det_costo, tipo_impuesto_id, tipo_imp_nom, marca_id, modelo_id, deposito_id, dep_nombre) {
     $("#original_item_id").val(item_id);
     $("#item_id").val(item_id);
     $("#item_descripcion").val(item_descripcion);
@@ -997,8 +1028,15 @@ function seleccionSolicitudDet(item_id, item_descripcion, contrato_serv_det_cant
     $("#subtotal").val(formatearNumero(subtotal));
     $("#iva").val(formatearNumero(iva));
 
+    mmAutocompletar(item_id, marca_id, modelo_id);
+    var $dep = $('#deposito_id_det');
+    if (deposito_id && dep_nombre) {
+        $dep.html('<option value="' + deposito_id + '" selected>' + dep_nombre + '</option>').prop('disabled', true);
+    } else {
+        $dep.html('<option value="">-- Depósito --</option>').prop('disabled', true);
+    }
     $(".form-line").attr("class","form-line focused");
-} 
+}
 function buscarEmpresas() {
     $.ajax({
         url:getUrl() + "empresa/read",

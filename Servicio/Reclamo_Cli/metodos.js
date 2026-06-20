@@ -439,6 +439,7 @@ function eliminarDetalle(){
 }
 
 function cancelarDetalle() {
+    $('#deposito_id_det').html('<option value="">-- Depósito --</option>').prop('disabled', true);
     $("#txtOperacionDetalle").val(0);
     $("#item_id").val("");
     $("#original_item_id").val("");
@@ -451,6 +452,8 @@ function cancelarDetalle() {
     $("#subtotal").val("");
     $("#iva").val("");
     mmLimpiar();
+    $('#deposito_id_det').html('<option value="">-- Depósito --</option>');
+    cargarDepositosDet(null);
 
     $("#btnAgregarDetalle, #btnEditarDetalle, #btnEliminarDetalle").attr("style", "display:inline");
     $("#btnGrabarDetalle, #btnCancelarDetalle").attr("style", "display:none");
@@ -489,6 +492,19 @@ function grabarDetalle(){
     });
 }
 
+
+function cargarDepositosDet(selectedId) {
+    var sucId = $('#sucursal_id').val();
+    var sel   = $('#deposito_id_det');
+    if (!sucId) { sel.html('<option value="">-- Depósito --</option>'); return; }
+    $.get(getUrl() + 'deposito/read-by-sucursal/' + sucId, function(data) {
+        var opts = '<option value="">-- Depósito --</option>';
+        data.forEach(function(d) {
+            opts += '<option value="' + d.id + '"' + (d.id == selectedId ? ' selected' : '') + '>' + d.dep_nombre + '</option>';
+        });
+        sel.html(opts).removeAttr('disabled');
+    });
+}
 function buscarProductos(){
     $.ajax({
         url: getUrl() + "items/buscarItem",
@@ -581,7 +597,11 @@ function listarDetalles() {
                     + rs.tipo_impuesto_id + ",'"
                     + (rs.tipo_imp_nom || '') + "',"
                     + (rs.marca_id || 0) + ","
-                    + (rs.modelo_id || 0) + ");\">";
+                    + (rs.modelo_id || 0) + ","
+                    + (rs.deposito_id || 0) + ",'"
+                    + (rs.dep_nombre || '').replace(/'/g, "\\'")
+                    + "'"
+                    + ");\">";
 
                 lista += "<td>" + rs.item_id + "</td>";
                 lista += "<td>" + (rs.item_descripcion || '') + "</td>";
@@ -591,6 +611,7 @@ function listarDetalles() {
                 lista += "<td>" + (rs.tipo_imp_nom || '') + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(iva) + "</td>";
+                lista += "<td>" + (rs.dep_nombre || '-') + "</td>";
                 lista += "<td>" + (rs.mar_nom || '-') + "</td>";
                 lista += "<td>" + (rs.modelo_nom || '-') + "</td>";
                 lista += "</tr>";
@@ -621,7 +642,7 @@ function listarDetalles() {
     });
 }
 
-function seleccionReclamoDet(item_id, item_descripcion, rec_cli_det_cantidad, rec_cli_det_cantidad_stock, rec_cli_det_costo, tipo_impuesto_id, tipo_imp_nom, marca_id, modelo_id) {
+function seleccionReclamoDet(item_id, item_descripcion, rec_cli_det_cantidad, rec_cli_det_cantidad_stock, rec_cli_det_costo, tipo_impuesto_id, tipo_imp_nom, marca_id, modelo_id, deposito_id, dep_nombre) {
     $("#original_item_id").val(item_id);
     $("#item_id").val(item_id);
     $("#item_descripcion").val(item_descripcion);
@@ -640,6 +661,12 @@ function seleccionReclamoDet(item_id, item_descripcion, rec_cli_det_cantidad, re
     $("#iva").val(formatearNumero(iva));
 
     mmAutocompletar(item_id, marca_id, modelo_id);
+    var $dep = $('#deposito_id_det');
+    if (deposito_id && dep_nombre) {
+        $dep.html('<option value="' + deposito_id + '" selected>' + dep_nombre + '</option>').prop('disabled', true);
+    } else {
+        $dep.html('<option value="">-- Depósito --</option>').prop('disabled', true);
+    }
 
     $(".form-line").attr("class","form-line focused");
 }

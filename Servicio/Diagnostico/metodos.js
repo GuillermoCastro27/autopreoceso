@@ -649,6 +649,8 @@ function parseNumero(str) {
 
 function agregarDetalle() {
     mmLimpiar();
+    $('#deposito_id_det').html('<option value="">-- Depósito --</option>');
+    cargarDepositosDet(null);
     $("#txtOperacionDetalle").val(1);
     $("#item_id").val('');
     $("#item_descripcion").val('').removeAttr("disabled");
@@ -669,12 +671,14 @@ function editarDetalle() {
     $("#diag_det_cantidad").removeAttr("disabled");
     $("#diag_det_costo").attr("disabled","true");
     $("#marca_det_mm, #modelo_det_mm").removeAttr("disabled");
+    cargarDepositosDet($('#deposito_id_det').val());
 
     $("#btnAgregarDetalle, #btnEditarDetalle, #btnEliminarDetalle").hide();
     $("#btnGrabarDetalle").show();
 }
 
 function cancelarDetalle() {
+    $('#deposito_id_det').html('<option value="">-- Depósito --</option>').prop('disabled', true);
     mmLimpiar();
     $("#txtOperacionDetalle").val(0);
     $("#item_id").val('');
@@ -744,13 +748,27 @@ function grabarDetalle(){
             "diag_det_costo":        $("#diag_det_costo").val(),
             "diag_det_cantidad_stock":$("#diag_det_cantidad_stock").val(),
             "marca_id":              _mmMarcaId  ? parseInt(_mmMarcaId)  : null,
-            "modelo_id":             _mmModeloId ? parseInt(_mmModeloId) : null
+            "modelo_id":             _mmModeloId ? parseInt(_mmModeloId) : null,
+            "deposito_id":             $("#deposito_id_det").val() || null
         }
     })
     .done(function() { cancelarDetalle(); listarDetalles(); })
     .fail(function(xhr) { mostrarErrores(xhr); });
 }
 
+
+function cargarDepositosDet(selectedId) {
+    var sucId = $('#sucursal_id').val();
+    var sel   = $('#deposito_id_det');
+    if (!sucId) { sel.html('<option value="">-- Depósito --</option>'); return; }
+    $.get(getUrl() + 'deposito/read-by-sucursal/' + sucId, function(data) {
+        var opts = '<option value="">-- Depósito --</option>';
+        data.forEach(function(d) {
+            opts += '<option value="' + d.id + '"' + (d.id == selectedId ? ' selected' : '') + '>' + d.dep_nombre + '</option>';
+        });
+        sel.html(opts).removeAttr('disabled');
+    });
+}
 function buscarProductos(){
     $.ajax({
         url: getUrl()+"items/buscarItem",
@@ -836,13 +854,16 @@ function listarDetalles() {
                     + rs.tipo_impuesto_id + ", '"
                     + rs.tipo_imp_nom + "', "
                     + (rs.marca_id  || 0) + ", "
-                    + (rs.modelo_id || 0)
+                    + (rs.modelo_id || 0) + ", "
+                    + (rs.deposito_id || 0) + ",'"
+                    + (rs.dep_nombre || '').replace(/'/g,"\\'") + "'"
                     + ");\">";
 
                 lista += "<td>" + rs.item_descripcion + "</td>";
                 lista += "<td>" + (rs.mar_nom   || '-') + "</td>";
                 lista += "<td>" + (rs.modelo_nom || '-') + "</td>";
                 lista += "<td class='text-right'>" + cantidad + "</td>";
+                lista += "<td>" + (rs.dep_nombre || '-') + "</td>";
                 lista += "<td class='text-right'>" + rs.diag_det_cantidad_stock + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(costo) + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>";
@@ -873,7 +894,7 @@ function listarDetalles() {
     .fail(function(xhr) { mostrarErrores(xhr); });
 }
 
-function seleccionRecepcionDet(item_id, item_descripcion, diag_det_cantidad, diag_det_cantidad_stock, diag_det_costo, tipo_impuesto_id, tipo_imp_nom, marca_id, modelo_id) {
+function seleccionRecepcionDet(item_id, item_descripcion, diag_det_cantidad, diag_det_cantidad_stock, diag_det_costo, tipo_impuesto_id, tipo_imp_nom, marca_id, modelo_id, deposito_id, dep_nombre) {
     $("#original_item_id").val(item_id);
     $("#item_id").val(item_id);
     $("#item_descripcion").val(item_descripcion);
@@ -884,6 +905,12 @@ function seleccionRecepcionDet(item_id, item_descripcion, diag_det_cantidad, dia
     $("#tipo_imp_nom").val(tipo_imp_nom);
 
     mmAutocompletar(item_id, marca_id, modelo_id);
+    var $dep = $('#deposito_id_det');
+    if (deposito_id && dep_nombre) {
+        $dep.html('<option value="' + deposito_id + '" selected>' + dep_nombre + '</option>').prop('disabled', true);
+    } else {
+        $dep.html('<option value="">-- Depósito --</option>').prop('disabled', true);
+    }
     $(".form-line").addClass("focused");
 }
 function cargarFuncionarioIdLogueado() {

@@ -229,6 +229,11 @@
                             <option value="">-- Modelo --</option>
                         </select>
                     </div>
+        <div class="col-sm-3">
+            <select class="form-control" id="deposito_id_det" disabled>
+                <option value="">-- Depósito --</option>
+            </select>
+        </div>
                     <div class="col-sm-2" style="margin-top:5px;">
                         <button type="button" id="btnAgregarDetalle" class="btn btn-success btn-sm waves-effect" onclick="agregarDetalle();">
                             <i class="material-icons">add</i>
@@ -261,7 +266,7 @@
                             <th>Tipo impuesto</th>
                             <th class="text-right">Sub Total</th>
                             <th class="text-right">IVA</th>
-                            <th>Marca</th>
+                            <th>Depósito</th><th>Marca</th>
                             <th>Modelo</th>
                         </tr>
                     </thead>

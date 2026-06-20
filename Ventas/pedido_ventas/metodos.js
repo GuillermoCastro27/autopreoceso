@@ -386,9 +386,8 @@ function seleccionPedidoVenta(
     $("#clientes_id").val(clientes_id);
 
     $("#emp_razon_social").val(emp_razon_social);
-    // Sucursal no se auto-rellena — el usuario debe seleccionarla manualmente
-    $("#sucursal_id").val('');
-    $("#suc_razon_social").val('');
+    $("#sucursal_id").val(sucursal_id);
+    $("#suc_razon_social").val(suc_razon_social);
 
     $("#cli_nombre").val(cli_nombre);
     $("#cli_apellido").val(cli_apellido);
@@ -419,8 +418,6 @@ function seleccionPedidoVenta(
         $("#btnEliminar").removeAttr("disabled");
         $("#btnConfirmar").removeAttr("disabled");
         $("#formDetalles").show();
-        $("#suc_razon_social").removeAttr("disabled");
-        buscarSucursal();
     } else if (ped_ven_estado === "CONFIRMADO") {
         $("#btnEliminar").removeAttr("disabled");
     } else if (ped_ven_estado === "PROCESADO") {

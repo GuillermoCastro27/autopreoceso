@@ -275,6 +275,11 @@
                 </select>
             </div>
             <div class="col-sm-3" style="margin-top:10px;">
+                <select class="form-control" id="deposito_id_det" disabled>
+                    <option value="">-- Depósito --</option>
+                </select>
+            </div>
+            <div class="col-sm-3" style="margin-top:10px;">
                 <div class="icon-button-demo">
                     <button type="button" id="btnAgregarDetalle" class="btn btn-success waves-effect" onclick="agregarDetalle();">
                         <i class="material-icons">add</i>
@@ -301,7 +306,7 @@
                         <th>Modelo</th>
                         <th>Cantidad</th>
                         <th>Stock</th>
-                        <th>Costo</th>
+                        <th>Costo</th><th>Depósito</th>
                         <th>Sub Total</th>
                         <th>Desc %</th>
                         <th>Modo Promoción</th>

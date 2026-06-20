@@ -250,7 +250,7 @@
                         <th>Cantidad</th>
                         <th>Stock</th>
                         <th>Precio</th>
-                        <th>Sub Total</th>
+                        <th>Depósito</th><th>Sub Total</th>
                         <th>IVA</th>
                     </tr>
                 </thead>

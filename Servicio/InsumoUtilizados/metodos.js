@@ -374,6 +374,8 @@ function mostrarBotonesDet(modo) {
 
 function agregarDet() {
     cancelarDet();
+    $('#deposito_id_det').html('<option value="">-- Depósito --</option>');
+    cargarDepositosDet(null);
     $('#txtOperacionDet').val(1);
     $('#buscar_item').removeAttr('disabled');
     $('#ins_det_cantidad, #ins_det_costo').removeAttr('disabled');
@@ -389,6 +391,7 @@ function editarDet() {
     } else {
         $('#marca_det_mm, #modelo_det_mm').removeAttr('disabled');
     }
+    cargarDepositosDet($('#deposito_id_det').val());
     mostrarBotonesDet('grabar');
 }
 
@@ -415,6 +418,7 @@ function eliminarDet() {
 }
 
 function cancelarDet() {
+    $('#deposito_id_det').html('<option value="">-- Depósito --</option>').prop('disabled', true);
     if (typeof mmLimpiar === 'function') mmLimpiar();
     $('#txtOperacionDet').val(0);
     $('#det_id').val('');
@@ -459,7 +463,8 @@ function grabarDet() {
             ins_det_cantidad: cantidad,
             ins_det_costo:    costo,
             marca_id:  (typeof _mmMarcaId  !== 'undefined' && _mmMarcaId)  ? parseInt(_mmMarcaId)  : null,
-            modelo_id: (typeof _mmModeloId !== 'undefined' && _mmModeloId) ? parseInt(_mmModeloId) : null
+            modelo_id: (typeof _mmModeloId !== 'undefined' && _mmModeloId) ? parseInt(_mmModeloId) : null,
+            deposito_id: $('#deposito_id_det').val() || null
         }
     })
     .done(function(res) {
@@ -495,7 +500,9 @@ function listarDetalle() {
                 ins_det_cantidad:rs.ins_det_cantidad,
                 ins_det_costo:   rs.ins_det_costo,
                 marca_id:        rs.marca_id  || 0,
-                modelo_id:       rs.modelo_id || 0
+                modelo_id:       rs.modelo_id || 0,
+                deposito_id:     rs.deposito_id || 0,
+                dep_nombre:      rs.dep_nombre || ''
             }).replace(/'/g, "&#39;");
 
             lista += '<tr class="det-row" style="cursor:pointer;" data-det=\'' + det + '\'>';
@@ -503,6 +510,7 @@ function listarDetalle() {
             lista += '<td>' + (rs.item_descripcion || '') + '</td>';
             lista += '<td>' + (rs.mar_nom || '-') + '</td>';
             lista += '<td>' + (rs.modelo_nom || '-') + '</td>';
+            lista += '<td>' + (rs.dep_nombre || '-') + '</td>';
             lista += '<td>' + (rs.tipo_imp_nom || '-') + '</td>';
             lista += '<td class="text-right">' + formatearNumero(rs.ins_det_cantidad) + '</td>';
             lista += '<td class="text-right">' + formatearNumero(rs.ins_det_costo) + '</td>';
@@ -534,10 +542,29 @@ $(document).on('click', '.det-row', function() {
     $('#ins_det_cantidad').val(d.ins_det_cantidad);
     $('#ins_det_costo').val(d.ins_det_costo);
     if (typeof mmAutocompletar === 'function') mmAutocompletar(d.item_id, d.marca_id, d.modelo_id);
+    var $dep2 = $('#deposito_id_det');
+    if (d.deposito_id && d.dep_nombre) {
+        $dep2.html('<option value="' + d.deposito_id + '" selected>' + d.dep_nombre + '</option>').prop('disabled', true);
+    } else {
+        $dep2.html('<option value="">-- Depósito --</option>').prop('disabled', true);
+    }
     $(".form-line").addClass("focused");
 });
 
 // ─── BUSCAR ÍTEM ─────────────────────────────────────────────────────────────
+
+function cargarDepositosDet(selectedId) {
+    var sucId = $('#sucursal_id').val();
+    var sel   = $('#deposito_id_det');
+    if (!sucId) { sel.html('<option value="">-- Depósito --</option>'); return; }
+    $.get(getUrl() + 'deposito/read-by-sucursal/' + sucId, function(data) {
+        var opts = '<option value="">-- Depósito --</option>';
+        data.forEach(function(d) {
+            opts += '<option value="' + d.id + '"' + (d.id == selectedId ? ' selected' : '') + '>' + d.dep_nombre + '</option>';
+        });
+        sel.html(opts).removeAttr('disabled');
+    });
+}
 function buscarItem() {
     var q = $.trim($('#buscar_item').val());
     if (q.length < 2) { $('#listaItems').html('').hide(); return; }

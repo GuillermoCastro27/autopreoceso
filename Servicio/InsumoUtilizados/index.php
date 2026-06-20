@@ -197,6 +197,12 @@
                     <option value="">-- Modelo --</option>
                 </select>
             </div>
+        <div class="col-sm-3">
+            <label style="font-size:12px;color:#636e72;">Depósito</label>
+            <select class="form-control" id="deposito_id_det" disabled>
+                <option value="">-- Depósito --</option>
+            </select>
+        </div>
         </div>
 
         <div class="btn-toolbar-left" style="margin-top:10px;">
@@ -225,7 +231,7 @@
                 <tr>
                     <th>Código</th>
                     <th>Ítem</th>
-                    <th>Marca</th>
+                    <th>Depósito</th><th>Marca</th>
                     <th>Modelo</th>
                     <th>Impuesto</th>
                     <th class="text-right">Cantidad</th>

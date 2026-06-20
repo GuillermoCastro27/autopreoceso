@@ -223,7 +223,7 @@
                         <th>Cantidad</th>
                         <th>Costo</th>
                         <th>Marca</th>
-                        <th>Modelo</th>
+                        <th>Modelo</th><th>Depósito</th>
                     </tr>
                 </thead>
                 <tbody id="tableDetalle"></tbody>
