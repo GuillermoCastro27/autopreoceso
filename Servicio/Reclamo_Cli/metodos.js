@@ -507,10 +507,10 @@ function cargarDepositosDet(selectedId) {
 }
 function buscarProductos(){
     $.ajax({
-        url: getUrl() + "items/buscarItem",
+        url: getUrl() + "items/buscar",
         method: "POST",
         dataType: "json",
-        data: { "item_descripcion": $("#item_descripcion").val() }
+        data: { "item_descripcion": $("#item_descripcion").val(), "deposito_id": $("#deposito_id_det").val() || null }
     })
     .done(function(resultado){
         const esc = s => (s || '').toString().replace(/'/g, "\\'");

@@ -848,7 +848,8 @@ function buscarProductos(){
         dataType: "json",
         data: {
             "item_descripcion": $("#item_descripcion").val(),
-            "tipo_descripcion": "PRODUCTO"
+            "tipo_descripcion": "PRODUCTO",
+            "deposito_id": $("#deposito_id_det").val() || null
         }
     })
     .done(function(resultado){

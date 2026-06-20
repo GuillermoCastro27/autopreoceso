@@ -573,7 +573,7 @@ function buscarItem() {
             url: getUrl() + 'items/buscar',
             method: 'POST',
             headers: { Authorization: 'Bearer ' + getToken() },
-            data: { item_descripcion: q }
+            data: { item_descripcion: q, deposito_id: $('#deposito_id_det').val() || null }
         })
         .done(function(data) {
             var lista = "<ul class='list-group'>";
