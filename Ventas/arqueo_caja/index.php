@@ -124,10 +124,12 @@
 
                 <div class="col-sm-2">
                     <label class="field-label">Tipo Arqueo</label>
-                    <select id="tipo_arqueo" class="form-control" disabled>
+                    <select id="tipo_arqueo" class="form-control ms" disabled>
                         <option value="EFECTIVO">EFECTIVO</option>
                         <option value="CHEQUE">CHEQUE</option>
                         <option value="TARJETA">TARJETA</option>
+                        <option value="TRANSFERENCIA">TRANSFERENCIA</option>
+                        <option value="QR">QR</option>
                         <option value="TOTAL">TOTAL</option>
                     </select>
                 </div>
@@ -143,30 +145,32 @@
 
                 <div class="col-sm-4">
                     <label class="field-label">Total Efectivo</label>
-                    <input type="text" id="total_efectivo"
-                           class="form-control" disabled
-                           placeholder="Total Efectivo">
+                    <input type="text" id="total_efectivo" class="form-control" disabled placeholder="Total Efectivo">
                 </div>
 
                 <div class="col-sm-4">
                     <label class="field-label">Total Cheque</label>
-                    <input type="text" id="total_cheque"
-                           class="form-control" disabled
-                           placeholder="Total Cheque">
+                    <input type="text" id="total_cheque" class="form-control" disabled placeholder="Total Cheque">
                 </div>
 
                 <div class="col-sm-4">
                     <label class="field-label">Total Tarjeta</label>
-                    <input type="text" id="total_tarjeta"
-                           class="form-control" disabled
-                           placeholder="Total Tarjeta">
+                    <input type="text" id="total_tarjeta" class="form-control" disabled placeholder="Total Tarjeta">
                 </div>
 
-                <div class="col-sm-3" style="margin-top:10px;">
+                <div class="col-sm-4" style="margin-top:10px;">
+                    <label class="field-label">Total Transferencia</label>
+                    <input type="text" id="total_transferencia" class="form-control" disabled placeholder="Total Transferencia">
+                </div>
+
+                <div class="col-sm-4" style="margin-top:10px;">
+                    <label class="field-label">Total QR</label>
+                    <input type="text" id="total_qr" class="form-control" disabled placeholder="Total QR">
+                </div>
+
+                <div class="col-sm-4" style="margin-top:10px;">
                     <label class="field-label">Total General</label>
-                    <input type="text" id="total_general"
-                           class="form-control" disabled
-                           placeholder="Total General">
+                    <input type="text" id="total_general" class="form-control" disabled placeholder="Total General">
                 </div>
 
             </div>

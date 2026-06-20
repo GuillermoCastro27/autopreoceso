@@ -154,6 +154,8 @@ function listar() {
                         ${rs.total_efectivo},
                         ${rs.total_cheque},
                         ${rs.total_tarjeta},
+                        ${rs.total_transferencia},
+                        ${rs.total_qr},
                         ${rs.total_general}
                     )">
                     <td>${rs.id}</td>
@@ -184,6 +186,8 @@ function seleccionArqueo(
     total_efectivo,
     total_cheque,
     total_tarjeta,
+    total_transferencia,
+    total_qr,
     total_general
 ) {
     $("#id").val(id);
@@ -196,6 +200,8 @@ function seleccionArqueo(
     $("#total_efectivo").val(formatearNumero(total_efectivo));
     $("#total_cheque").val(formatearNumero(total_cheque));
     $("#total_tarjeta").val(formatearNumero(total_tarjeta));
+    $("#total_transferencia").val(formatearNumero(total_transferencia));
+    $("#total_qr").val(formatearNumero(total_qr));
     $("#total_general").val(formatearNumero(total_general));
     // =========================
     // VISTA
