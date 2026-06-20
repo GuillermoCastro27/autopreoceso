@@ -430,6 +430,10 @@ function agregarDetalle() {
 
 function editarDetalle() {
     $("#txtOperacionDetalle").val(2);
+    if (!$("#item_id").val()) {
+        swal("Aviso", "Seleccione un ítem de la tabla para editar.", "warning");
+        return;
+    }
     $("#item_descripcion").removeAttr("disabled");
     $("#tipo_imp_nom").attr("disabled","true");
     $("#soli_det_cantidad_stock").attr("disabled","true");
@@ -617,12 +621,12 @@ function listarDetalles() {
 
                 lista += "<tr class='item-list' onclick=\"seleccionSolicitudDet("
                     + rs.item_id + ", '"
-                    + rs.item_descripcion + "', "
+                    + (rs.item_descripcion || '').replace(/'/g,"\\'") + "', "
                     + cantidad + ", "
                     + rs.soli_det_cantidad_stock + ", "
                     + costo + ", "
                     + rs.tipo_impuesto_id + ", '"
-                    + rs.tipo_imp_nom + "', "
+                    + (rs.tipo_imp_nom || '').replace(/'/g,"\\'") + "', "
                     + (rs.marca_id  || 0) + ", "
                     + (rs.modelo_id || 0) + ", "
                     + (rs.deposito_id || 0) + ",'"

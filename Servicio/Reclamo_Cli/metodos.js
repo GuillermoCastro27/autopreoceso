@@ -407,6 +407,10 @@ function agregarDetalle() {
 
 function editarDetalle() {
     $("#txtOperacionDetalle").val(2);
+    if (!$("#item_id").val()) {
+        swal("Aviso", "Seleccione un ítem de la tabla para editar.", "warning");
+        return;
+    }
     $("#item_descripcion").removeAttr("disabled");
     $("#rec_cli_det_cantidad").removeAttr("disabled");
 
@@ -521,7 +525,7 @@ function buscarProductos(){
                 + esc(rs.item_descripcion) + "',"
                 + rs.tipo_impuesto_id + ",'"
                 + rs.item_costo + "','"
-                + rs.tipo_imp_nom + "',"
+                + (rs.tipo_imp_nom || '').replace(/'/g, "\\'") + "',"
                 + rs.tipo_imp_tasa + ","
                 + (rs.cantidad_disponible || 0) + ")\">"
                 + esc(rs.item_descripcion) + " (Stock: " + (rs.cantidad_disponible || 0) + ")</li>";
@@ -595,7 +599,7 @@ function listarDetalles() {
                     + (rs.rec_cli_det_cantidad_stock || 0) + ","
                     + costo + ","
                     + rs.tipo_impuesto_id + ",'"
-                    + (rs.tipo_imp_nom || '') + "',"
+                    + (rs.tipo_imp_nom || '').replace(/'/g, "\\'") + "',"
                     + (rs.marca_id || 0) + ","
                     + (rs.modelo_id || 0) + ","
                     + (rs.deposito_id || 0) + ",'"
