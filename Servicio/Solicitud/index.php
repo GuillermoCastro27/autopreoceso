@@ -167,81 +167,77 @@
 
     <div class="body">
 
+        <input type="hidden" id="txtOperacionDetalle" value="0">
+        <input type="hidden" id="tipo_impuesto_id">
+        <input type="hidden" id="original_item_id">
+
         <!-- ===== FORMULARIO DETALLE ===== -->
-        <div class="row clearfix" id="formDetalles">
+        <div id="formDetalles">
+            <div class="section-box">
+                <div class="section-title">Agregar / Editar Detalle</div>
 
-            <input type="hidden" id="txtOperacionDetalle" value="0">
-            <input type="hidden" id="tipo_impuesto_id">
-            <input type="hidden" id="original_item_id">
+                <!-- FILA 1: Código → Producto → Stock → Cantidad -->
+                <div class="row clearfix">
+                    <div class="col-sm-2">
+                        <label class="field-label">Código</label>
+                        <input type="text" id="item_id" class="form-control" disabled placeholder="Código">
+                    </div>
 
-            <!-- Código -->
-            <div class="col-sm-2">
-                <input type="text" id="item_id" class="form-control" disabled placeholder="Código">
+                    <div class="col-sm-5" style="position:relative;">
+                        <label class="field-label">Producto</label>
+                        <input type="text" id="item_descripcion" class="form-control" disabled
+                               onkeyup="buscarProductos();" placeholder="Producto">
+                        <div id="listaProductos" style="display:none;"></div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <label class="field-label">Stock</label>
+                        <input type="text" id="soli_det_cantidad_stock" class="form-control" disabled placeholder="Stock">
+                    </div>
+
+                    <div class="col-sm-3">
+                        <label class="field-label">Cantidad</label>
+                        <input type="text" id="soli_det_cantidad" class="form-control" disabled placeholder="Cantidad">
+                    </div>
+                </div>
+
+                <!-- FILA 2: Precio → Marca → Modelo → Depósito -->
+                <div class="row clearfix" style="margin-top:10px;">
+                    <div class="col-sm-3">
+                        <label class="field-label">Precio</label>
+                        <input type="text" id="soli_det_costo" class="form-control" disabled placeholder="Precio">
+                    </div>
+
+                    <div class="col-sm-3">
+                        <label class="field-label">Marca</label>
+                        <select class="form-control ms" id="marca_det_mm" disabled>
+                            <option value="">-- Marca --</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <label class="field-label">Modelo</label>
+                        <select class="form-control ms" id="modelo_det_mm" disabled>
+                            <option value="">-- Modelo --</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <label class="field-label">Depósito</label>
+                        <select class="form-control ms" id="deposito_id_det" disabled>
+                            <option value="">-- Depósito --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- BOTONES -->
+                <div class="btn-toolbar-left" style="margin-top:24px;">
+                    <button id="btnAgregarDetalle"  class="btn btn-success waves-effect" onclick="agregarDetalle();"><i class="material-icons">add</i></button>
+                    <button id="btnEditarDetalle"   class="btn btn-warning waves-effect" onclick="editarDetalle();"><i class="material-icons">mode_edit</i></button>
+                    <button id="btnEliminarDetalle" class="btn btn-danger  waves-effect" onclick="eliminarDetalle();"><i class="material-icons">clear</i></button>
+                    <button id="btnGrabarDetalle"   class="btn btn-default waves-effect" onclick="grabarDetalle();" style="display:none;"><i class="material-icons">save</i></button>
+                </div>
             </div>
-
-            <!-- Producto -->
-            <div class="col-sm-6">
-                <input type="text" id="item_descripcion" class="form-control" disabled
-                       onkeyup="buscarProductos();" placeholder="Producto">
-                <div id="listaProductos" style="display:none;"></div>
-            </div>
-
-            <!-- Stock -->
-            <div class="col-sm-2">
-                <input type="text" id="soli_det_cantidad_stock" class="form-control" disabled placeholder="Stock">
-            </div>
-
-            <!-- Cantidad -->
-            <div class="col-sm-2">
-                <input type="text" id="soli_det_cantidad" class="form-control" disabled placeholder="Cantidad">
-            </div>
-
-            <!-- Precio -->
-            <div class="col-sm-2" style="margin-top:10px">
-                <input type="text" id="soli_det_costo" class="form-control" disabled placeholder="Precio">
-            </div>
-
-            <!-- Marca -->
-            <div class="col-sm-2" style="margin-top:10px">
-                <select class="form-control" id="marca_det_mm" disabled>
-                    <option value="">-- Marca --</option>
-                </select>
-            </div>
-
-            <!-- Modelo -->
-            <div class="col-sm-2" style="margin-top:10px">
-                <select class="form-control" id="modelo_det_mm" disabled>
-                    <option value="">-- Modelo --</option>
-                </select>
-            </div>
-
-            <!-- Depósito -->
-            <div class="col-sm-2" style="margin-top:10px">
-                <select class="form-control" id="deposito_id_det" disabled>
-                    <option value="">-- Depósito --</option>
-                </select>
-            </div>
-
-            <!-- Botones -->
-            <div class="col-sm-4" style="margin-top:10px">
-                <button id="btnAgregarDetalle" class="btn btn-success waves-effect" onclick="agregarDetalle();">
-                    <i class="material-icons">add</i>
-                </button>
-
-                <button id="btnEditarDetalle" class="btn btn-warning waves-effect" onclick="editarDetalle();">
-                    <i class="material-icons">mode_edit</i>
-                </button>
-
-                <button id="btnEliminarDetalle" class="btn btn-danger waves-effect" onclick="eliminarDetalle();">
-                    <i class="material-icons">clear</i>
-                </button>
-
-                <button id="btnGrabarDetalle" class="btn btn-default waves-effect"
-                        onclick="grabarDetalle();" style="display:none;">
-                    <i class="material-icons">save</i>
-                </button>
-            </div>
-
         </div>
 
         <hr>

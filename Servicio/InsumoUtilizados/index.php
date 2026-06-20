@@ -187,19 +187,19 @@
         <div class="row clearfix" style="margin-top:8px;">
             <div class="col-sm-3">
                 <label style="font-size:12px;color:#636e72;">Marca</label>
-                <select id="marca_det_mm" class="form-control" disabled>
+                <select id="marca_det_mm" class="form-control ms" disabled>
                     <option value="">-- Marca --</option>
                 </select>
             </div>
             <div class="col-sm-3">
                 <label style="font-size:12px;color:#636e72;">Modelo</label>
-                <select id="modelo_det_mm" class="form-control" disabled>
+                <select id="modelo_det_mm" class="form-control ms" disabled>
                     <option value="">-- Modelo --</option>
                 </select>
             </div>
         <div class="col-sm-3">
             <label style="font-size:12px;color:#636e72;">Depósito</label>
-            <select class="form-control" id="deposito_id_det" disabled>
+            <select class="form-control ms" id="deposito_id_det" disabled>
                 <option value="">-- Depósito --</option>
             </select>
         </div>

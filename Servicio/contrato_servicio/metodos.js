@@ -969,12 +969,12 @@ function listarDetalles() {
 
                 lista += "<td>" + rs.item_id + "</td>";
                 lista += "<td>" + rs.item_descripcion + "</td>";
-                lista += "<td>" + (rs.mar_nom   || '-') + "</td>";
-                lista += "<td>" + (rs.modelo_nom || '-') + "</td>";
                 lista += "<td class='text-right'>" + cantidad + "</td>";
-                lista += "<td>" + (rs.dep_nombre || '-') + "</td>";
                 lista += "<td class='text-right'>" + rs.contrato_serv_det_cantidad_stock + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(costo) + "</td>";
+                lista += "<td>" + (rs.mar_nom   || '-') + "</td>";
+                lista += "<td>" + (rs.modelo_nom || '-') + "</td>";
+                lista += "<td>" + (rs.dep_nombre || '-') + "</td>";
                 lista += "<td>" + rs.tipo_imp_nom + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(iva) + "</td>";

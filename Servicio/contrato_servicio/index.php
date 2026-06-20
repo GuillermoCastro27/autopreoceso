@@ -271,19 +271,19 @@
         </div>
         <!-- Marca -->
         <div class="col-sm-2" style="margin-top:10px;">
-            <select class="form-control" id="marca_det_mm" disabled>
+            <select class="form-control ms" id="marca_det_mm" disabled>
                 <option value="">-- Marca --</option>
             </select>
         </div>
         <!-- Modelo -->
         <div class="col-sm-2" style="margin-top:10px;">
-            <select class="form-control" id="modelo_det_mm" disabled>
+            <select class="form-control ms" id="modelo_det_mm" disabled>
                 <option value="">-- Modelo --</option>
             </select>
         </div>
         <!-- Depósito -->
         <div class="col-sm-2" style="margin-top:10px;">
-            <select class="form-control" id="deposito_id_det" disabled>
+            <select class="form-control ms" id="deposito_id_det" disabled>
                 <option value="">-- Depósito --</option>
             </select>
         </div>

@@ -265,17 +265,17 @@
                 <input type="text" id="pres_serv_det_costo" class="form-control" disabled placeholder="Costo">
             </div>
             <div class="col-sm-2" style="margin-top:10px;">
-                <select class="form-control" id="marca_det_mm" disabled>
+                <select class="form-control ms" id="marca_det_mm" disabled>
                     <option value="">-- Marca --</option>
                 </select>
             </div>
             <div class="col-sm-2" style="margin-top:10px;">
-                <select class="form-control" id="modelo_det_mm" disabled>
+                <select class="form-control ms" id="modelo_det_mm" disabled>
                     <option value="">-- Modelo --</option>
                 </select>
             </div>
             <div class="col-sm-3" style="margin-top:10px;">
-                <select class="form-control" id="deposito_id_det" disabled>
+                <select class="form-control ms" id="deposito_id_det" disabled>
                     <option value="">-- Depósito --</option>
                 </select>
             </div>

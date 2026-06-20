@@ -508,9 +508,9 @@ function listarDetalle() {
             lista += '<tr class="det-row" style="cursor:pointer;" data-det=\'' + det + '\'>';
             lista += '<td>' + rs.item_id + '</td>';
             lista += '<td>' + (rs.item_descripcion || '') + '</td>';
+            lista += '<td>' + (rs.dep_nombre || '-') + '</td>';
             lista += '<td>' + (rs.mar_nom || '-') + '</td>';
             lista += '<td>' + (rs.modelo_nom || '-') + '</td>';
-            lista += '<td>' + (rs.dep_nombre || '-') + '</td>';
             lista += '<td>' + (rs.tipo_imp_nom || '-') + '</td>';
             lista += '<td class="text-right">' + formatearNumero(rs.ins_det_cantidad) + '</td>';
             lista += '<td class="text-right">' + formatearNumero(rs.ins_det_costo) + '</td>';

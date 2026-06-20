@@ -220,17 +220,17 @@
                         <input type="text" id="iva" class="form-control" disabled placeholder="IVA">
                     </div>
                     <div class="col-sm-3">
-                        <select id="marca_det_mm" class="form-control" onchange="mmCambioMarca(this.value);">
+                        <select id="marca_det_mm" class="form-control ms" onchange="mmCambioMarca(this.value);">
                             <option value="">-- Marca --</option>
                         </select>
                     </div>
                     <div class="col-sm-3">
-                        <select id="modelo_det_mm" class="form-control">
+                        <select id="modelo_det_mm" class="form-control ms">
                             <option value="">-- Modelo --</option>
                         </select>
                     </div>
         <div class="col-sm-3">
-            <select class="form-control" id="deposito_id_det" disabled>
+            <select class="form-control ms" id="deposito_id_det" disabled>
                 <option value="">-- Depósito --</option>
             </select>
         </div>

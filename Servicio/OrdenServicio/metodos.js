@@ -595,9 +595,9 @@ function listarDetalles(){
                 <td>${rs.item_descripcion || ''}</td>
                 <td>${rs.orden_serv_det_cantidad}</td>
                 <td>${rs.orden_serv_det_costo}</td>
-                <td>${rs.dep_nombre || '-'}</td>
                 <td>${rs.mar_nom || '-'}</td>
                 <td>${rs.modelo_nom || '-'}</td>
+                <td>${rs.dep_nombre || '-'}</td>
             </tr>`;
             cantidadDetalle++;
         }

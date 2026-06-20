@@ -965,9 +965,9 @@ function listarDetalles() {
                         <td>${rs.mar_nom   || '-'}</td>
                         <td>${rs.modelo_nom || '-'}</td>
                         <td class='text-right'>${cantidad}</td>
-                        <td>${rs.dep_nombre || '-'}</td>
                         <td class='text-right'>${rs.pres_serv_det_cantidad_stock}</td>
                         <td class='text-right'>${formatearNumero(costo)}</td>
+                        <td>${rs.dep_nombre || '-'}</td>
                         <td class='text-right'>${formatearNumero(subtotal)}</td>
                         <td class='text-right'>${descPct}%</td>
                         <td>${promoModo}</td>

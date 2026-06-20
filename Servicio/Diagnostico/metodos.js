@@ -863,9 +863,9 @@ function listarDetalles() {
                 lista += "<td>" + (rs.mar_nom   || '-') + "</td>";
                 lista += "<td>" + (rs.modelo_nom || '-') + "</td>";
                 lista += "<td class='text-right'>" + cantidad + "</td>";
-                lista += "<td>" + (rs.dep_nombre || '-') + "</td>";
                 lista += "<td class='text-right'>" + rs.diag_det_cantidad_stock + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(costo) + "</td>";
+                lista += "<td>" + (rs.dep_nombre || '-') + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(iva) + "</td>";
                 lista += "</tr>";
