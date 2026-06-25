@@ -128,8 +128,6 @@
                         <option value="EFECTIVO">EFECTIVO</option>
                         <option value="CHEQUE">CHEQUE</option>
                         <option value="TARJETA">TARJETA</option>
-                        <option value="TRANSFERENCIA">TRANSFERENCIA</option>
-                        <option value="QR">QR</option>
                         <option value="TOTAL">TOTAL</option>
                     </select>
                 </div>
@@ -159,16 +157,6 @@
                 </div>
 
                 <div class="col-sm-4" style="margin-top:10px;">
-                    <label class="field-label">Total Transferencia</label>
-                    <input type="text" id="total_transferencia" class="form-control" disabled placeholder="Total Transferencia">
-                </div>
-
-                <div class="col-sm-4" style="margin-top:10px;">
-                    <label class="field-label">Total QR</label>
-                    <input type="text" id="total_qr" class="form-control" disabled placeholder="Total QR">
-                </div>
-
-                <div class="col-sm-4" style="margin-top:10px;">
                     <label class="field-label">Total General</label>
                     <input type="text" id="total_general" class="form-control" disabled placeholder="Total General">
                 </div>
@@ -184,11 +172,7 @@
             </button>
 
             <button id="btnEliminar" class="btn btn-danger" onclick="eliminar();" disabled>
-                <i class="material-icons">delete</i> Anular
-            </button>
-
-            <button id="btnConfirmar" class="btn btn-success" onclick="confirmar();" disabled>
-                <i class="material-icons">check_circle</i> Confirmar
+                <i class="material-icons">delete</i> Eliminar
             </button>
 
             <button id="btnGrabar" class="btn btn-default" onclick="confirmarOperacion();" disabled>
@@ -218,7 +202,7 @@
                                             <th>Sucursal</th>
                                             <th>Fecha</th>
                                             <th>Caja</th>
-                                            <th>Estado</th>
+                                            <th>Tipo</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableBody">
@@ -231,7 +215,7 @@
                                             <th>Sucursal</th>
                                             <th>Fecha</th>
                                             <th>Caja</th>
-                                            <th>Estado</th>
+                                            <th>Tipo</th>
                                         </tr>
                                     </tfoot>    
                                 </table>

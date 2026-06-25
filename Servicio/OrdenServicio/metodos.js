@@ -219,7 +219,8 @@ function listar() {
                 '${esc(rs.modelo_nom)}',
                 '${esc(rs.equipo_nombre)}',
                 '${esc(rs.equipo_descripcion)}',
-                '${esc(rs.equipo_categoria)}'
+                '${esc(rs.equipo_categoria)}',
+                ${rs.tip_serv_precio || 0}
             )">
                 <td>${rs.id || ""}</td>
                 <td>${rs.emp_razon_social || ""}</td>
@@ -257,7 +258,8 @@ function seleccionOrdenServicio(
     tip_veh_nombre, tip_veh_capacidad,
     tip_veh_combustible, tip_veh_categoria,
     mar_nom, modelo_nom,
-    equipo_nombre, equipo_descripcion, equipo_categoria
+    equipo_nombre, equipo_descripcion, equipo_categoria,
+    tip_serv_precio
 ) {
     // 🧩 IDs principales
     $("#id").val(id);
@@ -302,6 +304,7 @@ function seleccionOrdenServicio(
     $("#equipo_nombre").val(equipo_nombre);
     $("#equipo_descripcion").val(equipo_descripcion);
     $("#equipo_categoria").val(equipo_categoria);
+    $("#tip_serv_precio").val(Number(tip_serv_precio || 0).toLocaleString('es-PY', {minimumFractionDigits: 0, maximumFractionDigits: 0}));
 
     // 📋 Observaciones, estado, tipo y encargado
     $("#ord_serv_observaciones").val(observaciones);

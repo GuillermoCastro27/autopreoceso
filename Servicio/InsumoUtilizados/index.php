@@ -68,6 +68,13 @@
                            placeholder="AAAA-MM-DD">
                 </div>
             </div>
+            <div class="col-sm-4">
+                <label style="font-size:12px;color:#636e72;">Observaciones</label>
+                <div class="form-line">
+                    <input type="text" id="ins_cab_observaciones" class="form-control" disabled
+                           placeholder="Observaciones" maxlength="500">
+                </div>
+            </div>
         </div>
     </div>
 

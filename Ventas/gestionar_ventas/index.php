@@ -325,7 +325,7 @@
             </button>
 
             <button id="btnConfirmar" class="btn btn-success" onclick="confirmar();" disabled>
-                <i class="material-icons">check_circle</i> Recibido
+                <i class="material-icons">check_circle</i> Confirmar
             </button>
 
             <button id="btnGrabar" class="btn btn-default" onclick="confirmarOperacion();" disabled>

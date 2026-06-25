@@ -259,7 +259,8 @@ function listar() {
                 + esc(rs.funcionario || '') + "', '"
                 + esc(rs.contrato_representante || '') + "', '"
                 + esc(rs.contrato_numero || '') + "', "
-                + (rs.orden_serv_cab_id || 0) + ")\">";
+                + (rs.orden_serv_cab_id || 0) + ","
+                + (rs.tip_serv_precio || 0) + ")\">";
 
                 lista += `<td>${rs.id}</td>`;                    // Código
                 lista += `<td>${rs.emp_razon_social}</td>`;     // Empresa
@@ -293,7 +294,8 @@ function seleccionContratoServicio(
     contrato_objeto, contrato_alcance, contrato_responsabilidad,
     contrato_garantia, contrato_limitacion, contrato_fuerza_mayor,
     contrato_jurisdiccion, contrato_observacion, contrato_estado, encargado,
-    contrato_representante, contrato_numero, orden_serv_cab_id
+    contrato_representante, contrato_numero, orden_serv_cab_id,
+    tip_serv_precio
 ) {
 
     $("#id").val(id);
@@ -350,6 +352,7 @@ function seleccionContratoServicio(
     $("#contrato_representante").val(contrato_representante || '');
     $("#contrato_numero").val(contrato_numero || '');
     $("#orden_serv_cab_id").val(orden_serv_cab_id || '');
+    $("#tip_serv_precio").val(tip_serv_precio || 0);
     if (orden_serv_cab_id) {
         $("#orden_texto").val('ORDEN Nº: ' + String(orden_serv_cab_id).padStart(7, '0'));
     } else {
@@ -905,9 +908,12 @@ function seleccionProducto(item_id, item_descripcion, tipo_impuesto_id, item_cos
     $("#contrato_serv_det_costo").val(item_costo); // <- Asignar el costo al campo del detalle
     $("#tipo_impuesto_id").val(tipo_impuesto_id);
     $("#tipo_imp_nom").val(tipo_imp_nom);
-    
+
     // Asignar cantidad disponible al campo correspondiente
     $("#contrato_serv_det_cantidad_stock").val(cantidad_disponible);
+
+    // Cargar marcas del ítem seleccionado y habilitar el select
+    mmCargarMarcas(item_id, null);
 
     // Cálculo de subtotal y total con impuesto (opcional)
     const cantidad = parseFloat($("#contrato_serv_det_cantidad").val()) || 0;
@@ -930,6 +936,7 @@ function listarDetalles() {
     var TotalGral  = 0;
     var TotalIva10 = 0;
     var TotalIva5  = 0;
+    let precioMO = parseFloat($("#tip_serv_precio").val()) || 0;
 
     $.ajax({
         url: getUrl() + "contratoservdet/read/" + $("#id").val(),
@@ -983,6 +990,7 @@ function listarDetalles() {
                 lista += "<td>" + rs.tipo_imp_nom + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(subtotal) + "</td>";
                 lista += "<td class='text-right'>" + formatearNumero(iva) + "</td>";
+                lista += "<td class='text-right'>" + formatearNumero(precioMO) + "</td>";
                 lista += "</tr>";
 
                 cantidadDetalle++;
@@ -991,13 +999,18 @@ function listarDetalles() {
 
             $("#tableDetalle").html(lista);
         } else {
-            $("#tableDetalle").html("<tr><td colspan='8' class='text-center'>No se encontraron detalles.</td></tr>");
+            $("#tableDetalle").html("<tr><td colspan='12' class='text-center'>No se encontraron detalles.</td></tr>");
         }
 
+        let ivaMO = precioMO > 0 ? Math.round(precioMO / 11) : 0;
+        TotalIva10 += ivaMO;
+        let totalSinIVA = TotalGral + precioMO;
+
+        $("#txtManoObra").text(formatearNumero(precioMO));
         $("#txtIva10").text(formatearNumero(TotalIva10));
         $("#txtIva5").text(formatearNumero(TotalIva5));
         $("#txtTotalConImpuesto").text(formatearNumero(TotalIva10 + TotalIva5));
-        $("#txtTotalGral").text(formatearNumero(TotalGral));
+        $("#txtTotalGral").text(formatearNumero(totalSinIVA));
 
         // Activar o desactivar Confirmar
        if ($("#contrato_estado").val() === "PENDIENTE" && cantidadDetalle > 0) {

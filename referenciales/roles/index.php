@@ -49,6 +49,7 @@
     <div class="body">
 
         <input type="hidden" value="0" id="txtOperacion"/>
+        <input type="hidden" value="" id="pref_estado"/>
 
         <!-- DATOS DE CAJA -->
         <div class="section-box">
@@ -81,8 +82,8 @@
                 <i class="material-icons">edit</i> Modificar
             </button>
 
-            <button id="btnEliminar" class="btn btn-danger waves-effect" onclick="eliminar();" disabled>
-                <i class="material-icons">delete</i> Eliminar
+            <button id="btnEstado" class="btn btn-danger waves-effect" onclick="confirmarCambioEstado();" disabled>
+                <i class="material-icons">block</i> <span id="lblEstado">Desactivar</span>
             </button>
 
             <button id="btnGrabar" class="btn btn-default waves-effect" onclick="confirmarOperacion();" disabled>
@@ -114,6 +115,7 @@
                         <th>Código</th>
                         <th>Nombre</th>
                         <th>Abreviatura</th>
+                        <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
@@ -122,6 +124,7 @@
                         <th>Código</th>
                         <th>Nombre</th>
                         <th>Abreviatura</th>
+                        <th>Estado</th>
                     </tr>
                 </tfoot>
             </table>

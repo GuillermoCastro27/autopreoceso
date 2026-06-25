@@ -84,6 +84,10 @@
             <label class="field-label">Observaciones</label>
             <input type="text" id="ord_serv_observaciones" class="form-control" disabled placeholder="Observaciones">
         </div>
+        <div class="col-sm-2" style="margin-top:10px;">
+            <label class="field-label">Mano de Obra</label>
+            <input type="text" id="tip_serv_precio" class="form-control" disabled placeholder="Mano de Obra">
+        </div>
     </div>
     </div>
 

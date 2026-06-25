@@ -108,6 +108,7 @@
             <label class="field-label">Tipo de Servicio</label>
             <input type="text" id="tipo_serv_nombre" class="form-control" disabled onkeyup="buscarTipoServicio();" placeholder="Tipo de Servicio">
             <input type="hidden" id="tipo_servicio_id">
+            <input type="hidden" id="tip_serv_precio">
             <div id="listaTipoServ" style="display:none;"></div>
         </div>
         <div class="col-sm-4">
@@ -311,24 +312,29 @@
                 <th>Marca</th><th>Modelo</th><th>Depósito</th><th>Tipo impuesto</th>
                 <th>Sub Total</th>
                 <th>IVA</th>
+                <th>Mano de Obra</th>
             </tr>
         </thead>
         <tbody id="tableDetalle"></tbody>
         <tfoot>
             <tr>
-                <th colspan="7" class="text-right">IVA 10%</th>
+                <th colspan="11" class="text-right">Mano de Obra</th>
+                <th class="text-right" id="txtManoObra">0</th>
+            </tr>
+            <tr>
+                <th colspan="11" class="text-right">IVA 10%</th>
                 <th class="text-right" id="txtIva10">0</th>
             </tr>
             <tr>
-                <th colspan="7" class="text-right">IVA 5%</th>
+                <th colspan="11" class="text-right">IVA 5%</th>
                 <th class="text-right" id="txtIva5">0</th>
             </tr>
             <tr>
-                <th colspan="7" class="text-right">Total IVA</th>
+                <th colspan="11" class="text-right">Total IVA</th>
                 <th class="text-right" id="txtTotalConImpuesto">0</th>
             </tr>
             <tr>
-                <th colspan="7" class="text-right" style="font-weight:bold;">Total Comprobante</th>
+                <th colspan="11" class="text-right" style="font-weight:bold;">Total Comprobante</th>
                 <th class="text-right" id="txtTotalGral" style="font-weight:bold;">0</th>
             </tr>
         </tfoot>

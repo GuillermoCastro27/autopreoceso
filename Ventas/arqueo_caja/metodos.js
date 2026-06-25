@@ -65,9 +65,7 @@ function generar_arqueo() {
     // Empresa normalmente ya viene cargada
     $("#emp_razon_social").attr("disabled", true);
     // Botones
-    $("#btnApertura").attr("disabled", true);   // Generar
-    $("#btnEliminar").attr("disabled", true);   // Anular
-    $("#btnConfirmar").attr("disabled", true);  // Confirmar
+    $("#btnApertura, #btnEliminar").attr("disabled", true);
 
     $("#btnGrabar").removeAttr("disabled");
     $("#btnCancelar").removeAttr("disabled");
@@ -77,42 +75,41 @@ function generar_arqueo() {
     $("#registros").hide();
 }
 function eliminar() {
-
-    $("#txtOperacion").val(2);
-
-    $("#btnApertura").attr("disabled", true);
-    $("#btnConfirmar").attr("disabled", true);
-
-    $("#btnGrabar").removeAttr("disabled");
-    $("#btnCancelar").removeAttr("disabled");
-}
-function confirmar() {
-
-    $("#txtOperacion").val(3);
-
-    $("#btnApertura").attr("disabled", true);
-    $("#btnEliminar").attr("disabled", true);
-
-    $("#btnGrabar").removeAttr("disabled");
-    $("#btnCancelar").removeAttr("disabled");
+    const id = $("#id").val();
+    if (!id || id === "0") {
+        swal("Aviso", "Seleccione un arqueo para eliminar.", "warning");
+        return;
+    }
+    swal({
+        title: "ELIMINAR ARQUEO",
+        text: "¿DESEA ELIMINAR EL ARQUEO SELECCIONADO?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#e53935",
+        confirmButtonText: "SI",
+        cancelButtonText: "NO",
+        closeOnConfirm: false
+    }, function () {
+        $.ajax({
+            url: getUrl() + "arqueo_caja/eliminar/" + id,
+            method: "DELETE",
+            dataType: "json"
+        })
+        .done(function (r) {
+            swal({ title: "Respuesta", text: r.mensaje, type: r.tipo }, function () {
+                location.reload(true);
+            });
+        })
+        .fail(function () {
+            swal("Error", "No se pudo eliminar el arqueo.", "error");
+        });
+    });
 }
 
 function confirmarOperacion() {
-    var oper = parseInt($("#txtOperacion").val());
-    var titulo = "GENERAR ARQUEO";
-    var pregunta = "¿DESEA GENERAR EL ARQUEO?";
-
-    if(oper===2){
-        titulo = "ANULAR";
-        pregunta = "¿DESEA ANULAR EL REGISTRO SELECCIONADO?";
-    }
-    if(oper===3){
-        titulo = "CONFIRMAR";
-        pregunta="¿DESEA CONFIRMAR EL REGISTRO SELECCIONADO?";
-    }
     swal({
-        title: titulo,
-        text: pregunta,
+        title: "GENERAR ARQUEO",
+        text: "¿DESEA GENERAR EL ARQUEO?",
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#458E49",
@@ -150,12 +147,9 @@ function listar() {
                         '${rs.arqueo_fecha}',
                         '${rs.caja_descripcion}',
                         '${rs.tipo_arqueo}',
-                        '${rs.estado}',
                         ${rs.total_efectivo},
                         ${rs.total_cheque},
                         ${rs.total_tarjeta},
-                        ${rs.total_transferencia},
-                        ${rs.total_qr},
                         ${rs.total_general}
                     )">
                     <td>${rs.id}</td>
@@ -163,7 +157,7 @@ function listar() {
                     <td>${rs.suc_razon_social}</td>
                     <td>${rs.arqueo_fecha}</td>
                     <td>${rs.caja_descripcion}</td>
-                    <td>${rs.estado}</td>
+                    <td>${rs.tipo_arqueo}</td>
                 </tr>
             `;
         }
@@ -182,12 +176,9 @@ function seleccionArqueo(
     arqueo_fecha,
     caja_descripcion,
     tipo_arqueo,
-    estado,
     total_efectivo,
     total_cheque,
     total_tarjeta,
-    total_transferencia,
-    total_qr,
     total_general
 ) {
     $("#id").val(id);
@@ -200,39 +191,13 @@ function seleccionArqueo(
     $("#total_efectivo").val(formatearNumero(total_efectivo));
     $("#total_cheque").val(formatearNumero(total_cheque));
     $("#total_tarjeta").val(formatearNumero(total_tarjeta));
-    $("#total_transferencia").val(formatearNumero(total_transferencia));
-    $("#total_qr").val(formatearNumero(total_qr));
     $("#total_general").val(formatearNumero(total_general));
-    // =========================
-    // VISTA
-    // =========================
+
     $("#registros").hide();
     $(".form-line").addClass("focused");
 
-    // =========================
-    // BOTONES (reset)
-    // =========================
-    $("#btnApertura, #btnConfirmar, #btnEliminar, #btnGrabar")
-        .attr("disabled", true);
-
-    $("#btnCancelar").removeAttr("disabled");
-
-    // =========================
-    // REGLAS POR ESTADO
-    // =========================
-    if (estado === "PENDIENTE") {
-
-        $("#btnConfirmar").removeAttr("disabled");
-        $("#btnEliminar").removeAttr("disabled");
-
-    } else if (estado === "CONFIRMADO") {
-
-        // solo consulta, todo bloqueado
-
-    } else if (estado === "ANULADO") {
-
-        // solo consulta, todo bloqueado
-    }
+    $("#btnApertura, #btnGrabar").attr("disabled", true);
+    $("#btnEliminar, #btnCancelar").removeAttr("disabled");
 }
 
 function formatearNumero(n) {
@@ -396,38 +361,6 @@ function grabar() {
             arqueo_fecha: fecha
         };
 
-    }
-
-    // =========================
-    // 🔴 ANULAR ARQUEO
-    // =========================
-    if (oper === 2) {
-
-        let id = $("#id").val();
-
-        if (!id || id === "0") {
-            swal("Error", "No hay un arqueo seleccionado.", "error");
-            return;
-        }
-
-        endpoint = "arqueo_caja/anular/" + id;
-        metodo   = "PUT";
-    }
-
-    // =========================
-    // 🔵 CONFIRMAR ARQUEO
-    // =========================
-    if (oper === 3) {
-
-        let id = $("#id").val();
-
-        if (!id || id === "0") {
-            swal("Error", "No hay un arqueo seleccionado.", "error");
-            return;
-        }
-
-        endpoint = "arqueo_caja/confirmar/" + id;
-        metodo   = "PUT";
     }
 
     if (endpoint === "") {

@@ -115,7 +115,6 @@ function cierre(){
     $("#cierre_suc_razon_social, #cierre_fecha_apertura").val("");
     $("#cierre_monto_apertura").val("");
     $("#cierre_sistema_efectivo_neto, #cierre_sistema_tarjeta, #cierre_sistema_cheque").val("");
-    $("#cierre_sistema_transferencia, #cierre_sistema_qr").val("");
     $("#cierre_efectivo_esperado, #cierre_efectivo_fisico, #cierre_diferencia, #cierre_total_sistema").val("");
     $("#cierre_diferencia").css("background", "").css("color", "");
 
@@ -162,7 +161,6 @@ function seleccionarCajaCierre(apertura_id) {
         $("#cierre_suc_razon_social, #cierre_fecha_apertura").val("");
         $("#cierre_monto_apertura").val("");
         $("#cierre_sistema_efectivo_neto, #cierre_sistema_tarjeta, #cierre_sistema_cheque").val("");
-        $("#cierre_sistema_transferencia, #cierre_sistema_qr").val("");
         $("#cierre_efectivo_esperado, #cierre_efectivo_fisico, #cierre_diferencia, #cierre_total_sistema").val("");
         $("#btnGrabar").attr("disabled", true);
         return;
@@ -181,15 +179,11 @@ function seleccionarCajaCierre(apertura_id) {
         $("#cierre_sistema_efectivo_neto").val(formatearNumero(r.sistema_efectivo_neto));
         $("#cierre_sistema_tarjeta").val(formatearNumero(r.sistema_tarjeta));
         $("#cierre_sistema_cheque").val(formatearNumero(r.sistema_cheque));
-        $("#cierre_sistema_transferencia").val(formatearNumero(r.sistema_transferencia));
-        $("#cierre_sistema_qr").val(formatearNumero(r.sistema_qr));
         $("#cierre_efectivo_esperado").val(formatearNumero(r.efectivo_esperado));
 
         var totalSistema = r.efectivo_esperado
                          + r.sistema_tarjeta
-                         + r.sistema_cheque
-                         + r.sistema_transferencia
-                         + r.sistema_qr;
+                         + r.sistema_cheque;
         $("#cierre_total_sistema").val(formatearNumero(totalSistema));
 
         // Limpiar efectivo físico y diferencia
@@ -302,9 +296,7 @@ function listar(){
                 ${rs.monto_apertura},
                 ${rs.monto_efectivo_cierre},
                 ${rs.monto_tarjeta_cierre},
-                ${rs.monto_cheque_cierre},
-                ${rs.monto_transferencia_cierre},
-                ${rs.monto_qr_cierre}
+                ${rs.monto_cheque_cierre}
             )">`;
 
             lista += `<td>${rs.id}</td>`;
@@ -334,9 +326,7 @@ function seleccionAperturaCaja(
     monto_apertura,
     monto_efectivo_cierre,
     monto_tarjeta_cierre,
-    monto_cheque_cierre,
-    monto_transferencia_cierre,
-    monto_qr_cierre
+    monto_cheque_cierre
 ){
     $("#id").val(id);
     $("#emp_razon_social").val(emp_razon_social);
@@ -349,8 +339,6 @@ function seleccionAperturaCaja(
     $("#monto_efectivo_cierre").val(monto_efectivo_cierre || 0);
     $("#monto_tarjeta_cierre").val(monto_tarjeta_cierre || 0);
     $("#monto_cheque_cierre").val(monto_cheque_cierre || 0);
-    $("#monto_transferencia_cierre").val(monto_transferencia_cierre || 0);
-    $("#monto_qr_cierre").val(monto_qr_cierre || 0);
 
     // Ocultar panel de cierre interactivo, mostrar sección de datos
     $("#panelCierre").hide();
@@ -370,8 +358,7 @@ function seleccionAperturaCaja(
         $("#btnEliminar").removeAttr("disabled");
         $("#btnCierre").removeAttr("disabled");
 
-        $("#fecha_cierre, #monto_efectivo_cierre, #monto_tarjeta_cierre").val("");
-        $("#monto_cheque_cierre, #monto_transferencia_cierre, #monto_qr_cierre, #monto_cierre").val("");
+        $("#fecha_cierre, #monto_efectivo_cierre, #monto_tarjeta_cierre, #monto_cheque_cierre, #monto_cierre").val("");
 
     } else if (estado === "CERRADA") {
         calcularMontoCierre();
@@ -408,13 +395,11 @@ function cargarDiferenciaCierre(apertura_id) {
     });
 }
 function calcularMontoCierre() {
-    var efectivo      = parseFloat($("#monto_efectivo_cierre").val()) || 0;
-    var tarjeta       = parseFloat($("#monto_tarjeta_cierre").val()) || 0;
-    var cheque        = parseFloat($("#monto_cheque_cierre").val()) || 0;
-    var transferencia = parseFloat($("#monto_transferencia_cierre").val()) || 0;
-    var qr            = parseFloat($("#monto_qr_cierre").val()) || 0;
+    var efectivo = parseFloat($("#monto_efectivo_cierre").val()) || 0;
+    var tarjeta  = parseFloat($("#monto_tarjeta_cierre").val()) || 0;
+    var cheque   = parseFloat($("#monto_cheque_cierre").val()) || 0;
 
-    var total = efectivo + tarjeta + cheque + transferencia + qr;
+    var total = efectivo + tarjeta + cheque;
     $("#monto_cierre").val(formatearNumero(total));
 }
 

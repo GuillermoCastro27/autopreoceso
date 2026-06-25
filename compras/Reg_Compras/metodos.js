@@ -79,6 +79,7 @@ function agregar() {
     $("#comp_estado").removeAttr("disabled");
     $("#comp_cant_cuota").attr("disabled", "true");
     $("#comp_timbrado").removeAttr("disabled");
+    $("#comp_timbrado_vence").removeAttr("disabled");
     $("#comp_nro_factura").removeAttr("disabled");
     $("#comp_fecha_emision").removeAttr("disabled");
     $("#ordencompra").removeAttr("disabled");
@@ -106,6 +107,7 @@ function editar() {
     $("#comp_estado").removeAttr("disabled");
     $("#comp_cant_cuota").attr("disabled", "true");
     $("#comp_timbrado").removeAttr("disabled");
+    $("#comp_timbrado_vence").removeAttr("disabled");
     $("#comp_nro_factura").removeAttr("disabled");
     $("#comp_fecha_emision").removeAttr("disabled");
     $("#ordencompra").removeAttr("disabled");
@@ -208,12 +210,12 @@ function listar() {
     .done(function(resultado) {
         var lista = "";
         for (rs of resultado) {
-            lista += "<tr class=\"item-list\" onclick=\"seleccionCompra(" + rs.id + "," + rs.proveedor_id + "," + rs.empresa_id + "," + rs.sucursal_id + "," + rs.orden_compra_cab_id + ",'" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.ordencompra + "','" + rs.comp_intervalo_fecha_vence + "','" + rs.comp_fecha + "','" + rs.comp_estado + "','" + rs.comp_cant_cuota + "','" + rs.encargado + "','" + rs.prov_razonsocial + "','" + rs.prov_ruc + "','" + rs.prov_telefono + "','" + rs.prov_correo + "','" + rs.condicion_pago + "','" + (rs.comp_timbrado || '') + "','" + (rs.comp_nro_factura || '') + "','" + (rs.comp_fecha_emision || '') + "');\">";
+            lista += "<tr class=\"item-list\" onclick=\"seleccionCompra(" + rs.id + "," + rs.proveedor_id + "," + rs.empresa_id + "," + rs.sucursal_id + "," + rs.orden_compra_cab_id + ",'" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.ordencompra + "','" + rs.comp_intervalo_fecha_vence + "','" + (rs.comp_fecha_display || rs.comp_fecha) + "','" + rs.comp_estado + "','" + rs.comp_cant_cuota + "','" + rs.encargado + "','" + rs.prov_razonsocial + "','" + rs.prov_ruc + "','" + rs.prov_telefono + "','" + rs.prov_correo + "','" + rs.condicion_pago + "','" + (rs.comp_timbrado || '') + "','" + (rs.comp_nro_factura || '') + "','" + (rs.comp_fecha_emision || '') + "','" + (rs.comp_timbrado_vence || '') + "');\">";
             lista += "<td>" + rs.id + "</td>";
             lista += "<td>" + (rs.comp_nro_factura || '-') + "</td>";
             lista += "<td>" + (rs.comp_timbrado || '-') + "</td>";
             lista += "<td>" + rs.comp_intervalo_fecha_vence + "</td>";
-            lista += "<td>" + rs.comp_fecha + "</td>";
+            lista += "<td>" + (rs.comp_fecha_display || rs.comp_fecha) + "</td>";
             lista += "<td>" + rs.ordencompra + "</td>";
             lista += "<td>" + (rs.funcionario || rs.name || rs.encargado || '-') + "</td>";
             lista += "<td>" + rs.comp_cant_cuota + "</td>";
@@ -229,7 +231,7 @@ function listar() {
 }
 
 // Rellena el formulario con los datos de un pedido seleccionado.
-function seleccionCompra(id_compra_cab, proveedor_id, empresa_id, sucursal_id, orden_compra_cab_id, emp_razon_social, suc_razon_social, ordencompra, comp_intervalo_fecha_vence, comp_fecha, comp_estado, comp_cant_cuota, encargado, prov_razonsocial, prov_ruc, prov_telefono, prov_correo, condicion_pago, comp_timbrado, comp_nro_factura, comp_fecha_emision) {
+function seleccionCompra(id_compra_cab, proveedor_id, empresa_id, sucursal_id, orden_compra_cab_id, emp_razon_social, suc_razon_social, ordencompra, comp_intervalo_fecha_vence, comp_fecha, comp_estado, comp_cant_cuota, encargado, prov_razonsocial, prov_ruc, prov_telefono, prov_correo, condicion_pago, comp_timbrado, comp_nro_factura, comp_fecha_emision, comp_timbrado_vence) {
     $("#id").val(id_compra_cab);
     $("#proveedor_id").val(proveedor_id);
     $("#empresa_id").val(empresa_id);
@@ -249,6 +251,7 @@ function seleccionCompra(id_compra_cab, proveedor_id, empresa_id, sucursal_id, o
     $("#prov_correo").val(prov_correo);
     $("#condicion_pago").val(condicion_pago);
     $("#comp_timbrado").val(comp_timbrado);
+    $("#comp_timbrado_vence").val(comp_timbrado_vence || '');
     $("#comp_nro_factura").val(comp_nro_factura || '');
     $("#comp_fecha_emision").val(comp_fecha_emision || '');
 
@@ -304,7 +307,7 @@ function mostrarErrores(xhr) {
     swal({ title: titulo, text: msg, type: xhr.status === 422 ? 'warning' : 'error' });
 }
 
-var FMT_COMP = 'YYYY-MM-DD HH:mm:ss';
+var FMT_COMP = 'DD/MM/YYYY HH:mm';
 
 // ─── VALIDACIONES EN TIEMPO REAL ─────────────────────────────────────────────
 function validarFechaComp() {
@@ -503,6 +506,7 @@ function grabar() {
     var condicion = $('#condicion_pago').val();
     var fechaEmision = $.trim($('#comp_fecha_emision').val());
     var nroFactura = $.trim($('#comp_nro_factura').val());
+    var timbradoVence = $.trim($('#comp_timbrado_vence').val());
 
     if (estado !== 'ANULADO' && estado !== 'RECIBIDO') {
         // Fecha de la compra (debe ser hoy)
@@ -547,6 +551,28 @@ function grabar() {
         // Número de factura: si tiene valor, validar formato
         if (nroFactura && !/^\d{3}-\d{3}-\d{7}$/.test(nroFactura))
             errores.push('El Nro. de Factura debe tener el formato 000-000-0000000.');
+
+        // Fecha de vencimiento del timbrado
+        var compTimbrado = $.trim($('#comp_timbrado').val());
+        if (compTimbrado && !timbradoVence) {
+            errores.push('La fecha de vencimiento del timbrado es obligatoria cuando se ingresa un timbrado.');
+        } else if (timbradoVence) {
+            var mTimbVence = moment(timbradoVence, 'DD/MM/YYYY', true);
+            if (!mTimbVence.isValid()) {
+                errores.push('La fecha de vencimiento del timbrado tiene formato inválido. Use DD/MM/YYYY.');
+            } else {
+                var anioActual = moment().year();
+                if (mTimbVence.year() < anioActual - 1)
+                    errores.push('La fecha de vencimiento del timbrado no puede ser de hace más de un año (' + (anioActual - 1) + ' mínimo).');
+                if (fechaEmision) {
+                    var mEmis = moment(fechaEmision, 'DD/MM/YYYY', true);
+                    if (mEmis.isValid() && mTimbVence.isBefore(mEmis, 'day'))
+                        errores.push('La fecha de vencimiento del timbrado no puede ser anterior a la fecha de emisión.');
+                    if (mEmis.isValid() && mTimbVence.isAfter(mEmis.clone().add(1, 'year'), 'day'))
+                        errores.push('El timbrado no puede vencer más de 1 año después de la fecha de emisión.');
+                }
+            }
+        }
     }
 
     if (errores.length > 0) {
@@ -561,11 +587,17 @@ function grabar() {
         data: {
             'id': $("#id").val(),
             'comp_intervalo_fecha_vence': $("#comp_intervalo_fecha_vence").val(),
-            'comp_fecha': $("#comp_fecha").val(),
+            'comp_fecha': (function(){
+                var v = $.trim($("#comp_fecha").val());
+                var m = moment(v, 'DD/MM/YYYY HH:mm', true);
+                return m.isValid() ? m.format('YYYY-MM-DD HH:mm:ss') : v;
+            })(),
             'comp_estado': estado,
             'comp_cant_cuota': $("#comp_cant_cuota").val(),
             'condicion_pago': $("#condicion_pago").val(),
             'comp_timbrado': $("#comp_timbrado").val(),
+            'comp_timbrado_vence': timbradoVence
+                ? moment(timbradoVence, 'DD/MM/YYYY').format('YYYY-MM-DD') : null,
             'comp_nro_factura': nroFactura || null,
             'comp_fecha_emision': fechaEmision
                 ? moment(fechaEmision, 'DD/MM/YYYY').format('YYYY-MM-DD') : null,
@@ -592,6 +624,7 @@ function grabar() {
                 } else {
                     $("#comp_fecha").attr("disabled", true);
                     $("#comp_timbrado").attr("disabled", true);
+                    $("#comp_timbrado_vence").attr("disabled", true);
                     $("#comp_nro_factura").attr("disabled", true);
                     $("#comp_fecha_emision").attr("disabled", true);
                     $("#ordencompra").attr("disabled", true);
@@ -689,7 +722,7 @@ function cargarFuncionarioIdLogueado() {
 // Inicializa el campo de fecha
 function campoFecha(){
     $('.datetimepicker').bootstrapMaterialDatePicker({
-        format: 'YYYY-MM-DD HH:mm:ss',
+        format: 'DD/MM/YYYY HH:mm',
         clearButton: true,
         weekStart: 1
     });
@@ -700,6 +733,13 @@ function campoFecha(){
         clearButton: true,
         weekStart:   1,
         maxDate:     new Date()
+    });
+    // Vencimiento timbrado: DD/MM/YYYY, sin restricción de fecha máxima (puede ser futuro)
+    $('#comp_timbrado_vence').bootstrapMaterialDatePicker({
+        format:      'DD/MM/YYYY',
+        time:        false,
+        clearButton: true,
+        weekStart:   1
     });
     $('#comp_fecha').on('change', function() { validarFechaComp(); });
     $('#comp_intervalo_fecha_vence').on('change', function() { validarIFVComp(); });

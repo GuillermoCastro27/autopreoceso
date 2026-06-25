@@ -507,10 +507,8 @@
         var detalles        = data.detalles        || [];
         var cuotas          = data.cuotas          || [];
         var resumenCredito  = data.resumen_credito || null;
-        var tarjetas        = data.tarjeta         || [];
-        var cheques         = data.cheque          || [];
-        var transferencias  = data.transferencias  || [];
-        var qrs             = data.qrs             || [];
+        var tarjetas        = data.tarjeta || [];
+        var cheques         = data.cheque  || [];
 
         // Empresa
         document.getElementById('empNombre').textContent    = cab.emp_razon_social || 'AutoProcesos';
@@ -629,11 +627,9 @@
 
         // ── MEDIOS DE PAGO (compartido) ──────────────
         var medios = '';
-        var montoEfectivo  = parseFloat(cab.monto_efectivo) || 0;
-        var totalTarjetas  = 0;
-        var totalCheques   = 0;
-        var totalTransf    = 0;
-        var totalQrs       = 0;
+        var montoEfectivo = parseFloat(cab.monto_efectivo) || 0;
+        var totalTarjetas = 0;
+        var totalCheques  = 0;
         if (montoEfectivo > 0) {
             medios += '<div class="medio"><h5>Efectivo</h5>'
                 + '<div class="monto">' + fmt(montoEfectivo) + '</div></div>';
@@ -656,31 +652,12 @@
                     + '</div>';
             }
         });
-        transferencias.forEach(function(t) {
-            if (parseFloat(t.monto_transferencia) > 0) {
-                totalTransf += parseFloat(t.monto_transferencia);
-                medios += '<div class="medio"><h5>Transferencia</h5>'
-                    + '<div class="monto">' + fmt(t.monto_transferencia) + '</div>'
-                    + (t.banco_entidad  ? '<small>' + t.banco_entidad + '</small>' : '')
-                    + (t.nro_referencia ? '<small>Ref: ' + t.nro_referencia + '</small>' : '')
-                    + '</div>';
-            }
-        });
-        qrs.forEach(function(q) {
-            if (parseFloat(q.monto_qr) > 0) {
-                totalQrs += parseFloat(q.monto_qr);
-                medios += '<div class="medio"><h5>QR</h5>'
-                    + '<div class="monto">' + fmt(q.monto_qr) + '</div>'
-                    + (q.nro_referencia ? '<small>Ref: ' + q.nro_referencia + '</small>' : '')
-                    + '</div>';
-            }
-        });
         document.getElementById('divMedios').innerHTML = medios ||
             '<p style="color:#aaa;font-size:12px;">Sin detalle de medios de pago</p>';
         document.getElementById('totalCobrado').textContent = fmt(cab.cobro_importe);
 
         // Vuelto: exceso de efectivo sobre lo que le corresponde cubrir al efectivo
-        var porteEfectivo = Math.max(parseFloat(cab.cobro_importe) - totalTarjetas - totalCheques - totalTransf - totalQrs, 0);
+        var porteEfectivo = Math.max(parseFloat(cab.cobro_importe) - totalTarjetas - totalCheques, 0);
         var vuelto = Math.max(montoEfectivo - porteEfectivo, 0);
         document.getElementById('spanVuelto').textContent = fmt(vuelto) + ' Gs.';
         document.getElementById('boxVuelto').style.display = vuelto > 0 ? '' : '';

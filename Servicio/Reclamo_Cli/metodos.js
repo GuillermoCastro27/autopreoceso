@@ -38,7 +38,6 @@ function agregar(){
     $("#rec_cli_cab_prioridad").removeAttr("disabled");
     $("#suc_razon_social").removeAttr("disabled");
     $("#cli_nombre").removeAttr("disabled");
-    $("#nro_venta_display").removeAttr("disabled");
     $("#emp_razon_social").attr("disabled","true");
     buscarEmpresas();
 
@@ -61,11 +60,13 @@ function editar(){
     $("#rec_cli_cab_fecha_inicio").removeAttr("disabled");
     $("#rec_cli_cab_fecha_fin").removeAttr("disabled");
     $("#rec_cli_cab_observacion").removeAttr("disabled");
-    $("#nro_venta_display").removeAttr("disabled");
     $("#rec_cli_cab_prioridad").attr("disabled","true");
     $("#emp_razon_social").attr("disabled","true");
     $("#suc_razon_social").attr("disabled","true");
     $("#cli_nombre").attr("disabled","true");
+    $("#panelBuscarVenta").show();
+    $(".col-accion-venta").show();
+    listarVentasReclamo();
 
     $("#btnAgregar").attr("disabled","true");
     $("#btnEditar").attr("disabled","true");
@@ -225,9 +226,6 @@ function seleccionReclamo(
     $("#rec_cli_cab_observacion").val(rec_cli_cab_observacion);
 
     $("#venta_cab_id").val(venta_cab_id || "");
-    $("#nro_venta_display").val(venta_cab_id ? '#' + String(venta_cab_id).padStart(7,'0') : "");
-    $("#venta_fecha_display").val(venta_fecha || "");
-
     $("#encargado").val(encargado || '');
 
     $("#registros").hide();
@@ -238,6 +236,7 @@ function seleccionReclamo(
         .prop("disabled", true);
     $("#btnCancelar").prop("disabled", false);
 
+    listarVentasReclamo();
     listarDetalles();
 
     if (estado === "PENDIENTE") {
@@ -349,6 +348,9 @@ function grabar() {
                     location.reload(true);
                 } else {
                     $("#formDetalles").show();
+                    $("#panelBuscarVenta").show();
+                    $(".col-accion-venta").show();
+                    listarVentasReclamo();
                 }
             }
         });
@@ -754,7 +756,48 @@ function seleccionSucursal(sucursal_id, suc_razon_social){
     $("#listaSucursal").html("").attr("style","display:none;");
 }
 
-function buscarVenta() {
+function listarVentasReclamo() {
+    var reclamoId = $("#id").val();
+    if (!reclamoId || reclamoId == 0) {
+        $("#tableVentasReclamo").html("<tr><td colspan='5' class='text-center' style='color:#aaa;'>Sin ventas vinculadas</td></tr>");
+        return;
+    }
+    var enEdicion = $("#panelBuscarVenta").is(":visible");
+    $.ajax({
+        url: getUrl() + "reclamocliventa/read/" + reclamoId,
+        method: "GET",
+        dataType: "json"
+    })
+    .done(function(resultado) {
+        if (!resultado.length) {
+            var cols = enEdicion ? 5 : 4;
+            $("#tableVentasReclamo").html("<tr><td colspan='" + cols + "' class='text-center' style='color:#aaa;'>Sin ventas vinculadas</td></tr>");
+            return;
+        }
+        var filas = "";
+        for (var i = 0; i < resultado.length; i++) {
+            var rs = resultado[i];
+            var nro = "#" + String(rs.ventas_cab_id).padStart(7, '0');
+            var cliente = (rs.cli_nombre || '') + ' ' + (rs.cli_apellido || '');
+            var total = formatearNumero(rs.vent_total || 0);
+            filas += "<tr>";
+            filas += "<td>" + nro + "</td>";
+            filas += "<td>" + (rs.vent_fecha || '') + "</td>";
+            filas += "<td>" + cliente + "</td>";
+            filas += "<td class='text-right'>" + total + "</td>";
+            if (enEdicion) {
+                filas += "<td class='text-center'>"
+                    + "<button type='button' class='btn btn-danger btn-xs waves-effect' onclick='quitarVentaReclamo(" + rs.ventas_cab_id + ");'>"
+                    + "<i class='material-icons' style='font-size:16px;'>clear</i></button></td>";
+            }
+            filas += "</tr>";
+        }
+        $("#tableVentasReclamo").html(filas);
+    })
+    .fail(function(xhr) { mostrarErrores(xhr); });
+}
+
+function buscarVentaReclamo() {
     var texto = $("#nro_venta_display").val().trim();
     if (texto.length < 1) {
         $("#listaVentas").html("").hide();
@@ -774,26 +817,69 @@ function buscarVenta() {
         const esc = s => (s || '').toString().replace(/'/g, "\\'");
         var lista = "<ul class='list-group'>";
         for (let rs of resultado) {
-            lista += "<li class='list-group-item' onclick=\"seleccionVenta("
+            lista += "<li class='list-group-item' onclick=\"agregarVentaReclamo("
                 + rs.ventas_cab_id + ",'"
                 + esc(rs.vent_fecha) + "','"
-                + esc((rs.cli_nombre || '') + " " + (rs.cli_apellido || '')) + "')\">"
-                + "#" + String(rs.ventas_cab_id).padStart(7,'0')
+                + esc((rs.cli_nombre || '') + ' ' + (rs.cli_apellido || '')) + "')\">"
+                + "#" + String(rs.ventas_cab_id).padStart(7, '0')
                 + " — " + esc(rs.cli_nombre || '') + " " + esc(rs.cli_apellido || '')
                 + " (" + (rs.vent_fecha || '') + ")</li>";
         }
         lista += "</ul>";
-        $("#listaVentas").html(lista).css({ display:"block", position:"absolute", zIndex:2000 });
+        $("#listaVentas").html(lista).show();
     })
     .fail(function(xhr) { mostrarErrores(xhr); });
 }
 
-function seleccionVenta(venta_cab_id, vent_fecha, clienteNombre) {
-    $("#venta_cab_id").val(venta_cab_id);
-    $("#nro_venta_display").val("#" + String(venta_cab_id).padStart(7,'0') + " — " + clienteNombre);
-    $("#venta_fecha_display").val(vent_fecha);
+function agregarVentaReclamo(ventas_cab_id, vent_fecha, clienteNombre) {
+    $("#nro_venta_display").val("");
     $("#listaVentas").html("").hide();
-    $(".form-line").addClass("focused");
+    var reclamoId = $("#id").val();
+    if (!reclamoId || reclamoId == 0) {
+        swal("Aviso", "Debe guardar el reclamo antes de vincular ventas.", "warning");
+        return;
+    }
+    $.ajax({
+        url: getUrl() + "reclamocliventa/create",
+        method: "POST",
+        dataType: "json",
+        data: {
+            reclamo_cli_cab_id: reclamoId,
+            ventas_cab_id:      ventas_cab_id
+        }
+    })
+    .done(function(resultado) {
+        if (resultado.tipo === 'success') {
+            listarVentasReclamo();
+        } else {
+            swal("Aviso", resultado.mensaje, resultado.tipo);
+        }
+    })
+    .fail(function(xhr) { mostrarErrores(xhr); });
+}
+
+function quitarVentaReclamo(ventas_cab_id) {
+    var reclamoId = $("#id").val();
+    swal({
+        title: "Quitar venta",
+        text: "¿Desea desvincular la venta #" + String(ventas_cab_id).padStart(7, '0') + " de este reclamo?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d9534f",
+        confirmButtonText: "Sí, quitar",
+        cancelButtonText: "Cancelar"
+    }, function(confirmado) {
+        if (!confirmado) return;
+        $.ajax({
+            url: getUrl() + "reclamocliventa/delete/" + reclamoId + "/" + ventas_cab_id,
+            method: "DELETE",
+            dataType: "json"
+        })
+        .done(function(resultado) {
+            listarVentasReclamo();
+        })
+        .fail(function(xhr) { mostrarErrores(xhr); });
+    });
 }
 
 function cargarFuncionarioIdLogueado() {

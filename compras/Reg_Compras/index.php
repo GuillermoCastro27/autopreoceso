@@ -119,6 +119,13 @@
                     <input type="text" id="comp_fecha_emision" class="datepicker-emision form-control" disabled
                            placeholder="DD/MM/YYYY" readonly>
                 </div>
+
+                <div class="col-sm-2">
+                    <label class="field-label">Venc. Timbrado</label>
+                    <input type="text" id="comp_timbrado_vence" class="form-control" disabled
+                           placeholder="DD/MM/YYYY">
+                    <small id="avisoTimbradoVence" style="color:#e74c3c;display:none;"></small>
+                </div>
             </div>
         </div>
 

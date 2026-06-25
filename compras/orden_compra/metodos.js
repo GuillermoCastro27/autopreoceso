@@ -379,6 +379,7 @@ function seleccionOrdenCompra(id_orde_compra_cab, proveedor_id, empresa_id, sucu
     }
 
     $(".form-line").attr("class","form-line focused");
+    controlarCamposPago();
 }
 
 // Realiza operaciones de creación, edición, anulacion y confirmación de un pedido
@@ -408,8 +409,7 @@ function grabar() {
     var pedidoId      = origen === 'pedido'      ? $("#pedido_id").val()      : null;
     var proveedorId   = $("#proveedor_id").val();
     var intervaloFechaVence = $("#ord_comp_intervalo_fecha_vence").val();
-    var formattedIntervaloFechaVence = $("#ord_comp_intervalo_fecha_vence").is(':disabled') ? null : intervaloFechaVence;
-    if (condicionPago === 'CONTADO') formattedIntervaloFechaVence = null;
+    var formattedIntervaloFechaVence = condicionPago === 'CONTADO' ? null : intervaloFechaVence;
 
     // ── Validaciones agrupadas ──────────────────────────────────────────────
     var errores = [];

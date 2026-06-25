@@ -164,20 +164,6 @@
                 </div>
 
                 <div class="col-sm-4" style="margin-top:10px;">
-                    <label class="field-label">Total Transferencia</label>
-                    <input type="text" id="monto_transferencia_cierre"
-                           class="form-control" disabled
-                           placeholder="Total Transferencia">
-                </div>
-
-                <div class="col-sm-4" style="margin-top:10px;">
-                    <label class="field-label">Total QR</label>
-                    <input type="text" id="monto_qr_cierre"
-                           class="form-control" disabled
-                           placeholder="Total QR">
-                </div>
-
-                <div class="col-sm-4" style="margin-top:10px;">
                     <label class="field-label">Monto Total Cierre</label>
                     <input type="text" id="monto_cierre"
                            class="form-control" disabled
@@ -253,14 +239,6 @@
                 <div class="col-sm-2">
                     <label class="field-label">Sistema: Cheque</label>
                     <input type="text" id="cierre_sistema_cheque" class="form-control" disabled>
-                </div>
-                <div class="col-sm-2" style="margin-top:10px;">
-                    <label class="field-label">Sistema: Transferencia</label>
-                    <input type="text" id="cierre_sistema_transferencia" class="form-control" disabled>
-                </div>
-                <div class="col-sm-2" style="margin-top:10px;">
-                    <label class="field-label">Sistema: QR</label>
-                    <input type="text" id="cierre_sistema_qr" class="form-control" disabled>
                 </div>
             </div>
 

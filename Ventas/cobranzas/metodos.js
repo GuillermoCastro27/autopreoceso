@@ -100,16 +100,10 @@ function agregar() {
     $("#forma_cobro").val("");
     $("#cardTarjeta").hide();
     $("#cardCheque").hide();
-    $("#cardTransferencia").hide();
-    $("#cardQr").hide();
     $("#tablaTarjetas").empty();
     $("#tablaCheques").empty();
-    $("#tablaTransferencias").empty();
-    $("#tablaQrs").empty();
     $("#btnAgregarTarjeta").prop("disabled", true);
     $("#btnAgregarCheque").prop("disabled",  true);
-    $("#btnAgregarTransferencia").prop("disabled", true);
-    $("#btnAgregarQr").prop("disabled", true);
 
     // Efectivo deshabilitado hasta que marque el checkbox
     $("#monto_efectivo").prop("disabled", true).val("");
@@ -312,11 +306,8 @@ function calcularVuelto() {
 
     var totalTarj  = colectarTarjetas().reduce(function(s,t){ return s + (parseFloat(t.monto_tarjeta)||0); }, 0);
     var totalCheq  = colectarCheques().reduce(function(s,c){ return s + (parseFloat(c.monto_cheque)||0); }, 0);
-    var totalTrans = colectarTransferencias().reduce(function(s,t){ return s + (parseFloat(t.monto_transferencia)||0); }, 0);
-    var totalQr    = colectarQrs().reduce(function(s,q){ return s + (parseFloat(q.monto_qr)||0); }, 0);
-
     // Cuánto debe cubrir el efectivo = lo que no cubren los otros medios
-    var porteEfectivo = Math.max(importeCobro - totalTarj - totalCheq - totalTrans - totalQr, 0);
+    var porteEfectivo = Math.max(importeCobro - totalTarj - totalCheq, 0);
     var vuelto = montoEfectivo - porteEfectivo;
 
     $("#vuelto").val(vuelto > 0 ? formatearNumero(vuelto) : "0,00");
@@ -490,14 +481,10 @@ function seleccionCobro(
     $(".fc-chk").closest("label").css("cursor", "not-allowed");
     $("#cardTarjeta").hide();
     $("#cardCheque").hide();
-    $("#cardTransferencia").hide();
-    $("#cardQr").hide();
 
     // Limpiar tablas
     $("#tablaTarjetas").empty();
     $("#tablaCheques").empty();
-    $("#tablaTransferencias").empty();
-    $("#tablaQrs").empty();
 
     // UI – modo consulta (deshabilitar todo primero)
     $("input, select").prop("disabled", true);
@@ -692,7 +679,7 @@ $(document).ready(function () {
     $("#monto_efectivo").on("input", calcularVuelto);
 
     // Recalcular vuelto cuando cambian montos de cualquier medio
-    $(document).on("input", ".monto_tarjeta, .monto_cheque, .monto_transferencia, .monto_qr", calcularVuelto);
+    $(document).on("input", ".monto_tarjeta, .monto_cheque", calcularVuelto);
 
     // ============================
     // RE-CALCULAR SI CAMBIA IMPORTE
@@ -820,8 +807,6 @@ function cargarFormasCobro() {
             if (desc.includes("EFECTIVO"))      formaCobro_mapa["EFECTIVO"]      = id;
             if (desc.includes("TARJETA"))       formaCobro_mapa["TARJETA"]       = id;
             if (desc.includes("CHEQUE"))        formaCobro_mapa["CHEQUE"]        = id;
-            if (desc.includes("TRANSFERENCIA")) formaCobro_mapa["TRANSFERENCIA"] = id;
-            if (desc.includes("QR"))            formaCobro_mapa["QR"]            = id;
         }
     });
 }
@@ -831,9 +816,6 @@ function onFormaCobroChange() {
     var chkEfe   = $("#chkEfectivo").is(":checked");
     var chkTarj  = $("#chkTarjeta").is(":checked");
     var chkCheq  = $("#chkCheque").is(":checked");
-    var chkTrans = $("#chkTransferencia").is(":checked");
-    var chkQr    = $("#chkQr").is(":checked");
-
     // Efectivo
     if (chkEfe) {
         $("#monto_efectivo").prop("disabled", false);
@@ -863,36 +845,12 @@ function onFormaCobroChange() {
         $("#btnAgregarCheque").prop("disabled", true);
     }
 
-    // Transferencia
-    if (chkTrans) {
-        $("#cardTransferencia").show();
-        $("#btnAgregarTransferencia").prop("disabled", false);
-        if ($("#tablaTransferencias tr").length === 0) agregarFilaTransferencia();
-    } else {
-        $("#cardTransferencia").hide();
-        $("#tablaTransferencias").empty();
-        $("#btnAgregarTransferencia").prop("disabled", true);
-    }
-
-    // QR
-    if (chkQr) {
-        $("#cardQr").show();
-        $("#btnAgregarQr").prop("disabled", false);
-        if ($("#tablaQrs tr").length === 0) agregarFilaQr();
-    } else {
-        $("#cardQr").hide();
-        $("#tablaQrs").empty();
-        $("#btnAgregarQr").prop("disabled", true);
-    }
-
     // Actualizar forma_cobro_id (primer método seleccionado)
     var primero = null;
     var labels  = [];
-    if (chkEfe)   { labels.push("Efectivo");      if (!primero) primero = "EFECTIVO"; }
-    if (chkTarj)  { labels.push("Tarjeta");       if (!primero) primero = "TARJETA"; }
-    if (chkCheq)  { labels.push("Cheque");        if (!primero) primero = "CHEQUE"; }
-    if (chkTrans) { labels.push("Transferencia"); if (!primero) primero = "TRANSFERENCIA"; }
-    if (chkQr)    { labels.push("QR");            if (!primero) primero = "QR"; }
+    if (chkEfe)  { labels.push("Efectivo"); if (!primero) primero = "EFECTIVO"; }
+    if (chkTarj) { labels.push("Tarjeta");  if (!primero) primero = "TARJETA"; }
+    if (chkCheq) { labels.push("Cheque");   if (!primero) primero = "CHEQUE"; }
 
     $("#forma_cobro_id").val(primero ? (formaCobro_mapa[primero] || "") : "");
     $("#forma_cobro").val(labels.join(", "));
@@ -1477,14 +1435,10 @@ function grabar() {
     var montoEfectivo = parseFloat($("#monto_efectivo").val()) || 0;
     var tarjetas      = colectarTarjetas();
     var cheques       = colectarCheques();
-    var transferencias = colectarTransferencias();
-    var qrs           = colectarQrs();
 
-    var totalTarjetas      = tarjetas.reduce(function(s,t){ return s + (parseFloat(t.monto_tarjeta)||0); }, 0);
-    var totalCheques       = cheques.reduce(function(s,c){ return s + (parseFloat(c.monto_cheque)||0); }, 0);
-    var totalTransferencias = transferencias.reduce(function(s,t){ return s + (parseFloat(t.monto_transferencia)||0); }, 0);
-    var totalQrs           = qrs.reduce(function(s,q){ return s + (parseFloat(q.monto_qr)||0); }, 0);
-    var totalMedios        = montoEfectivo + totalTarjetas + totalCheques + totalTransferencias + totalQrs;
+    var totalTarjetas = tarjetas.reduce(function(s,t){ return s + (parseFloat(t.monto_tarjeta)||0); }, 0);
+    var totalCheques  = cheques.reduce(function(s,c){ return s + (parseFloat(c.monto_cheque)||0); }, 0);
+    var totalMedios   = montoEfectivo + totalTarjetas + totalCheques;
 
     if (importeCobro <= 0) {
         swal("Error", "Debe seleccionar al menos una cuota a cobrar.", "error");
@@ -1498,7 +1452,7 @@ function grabar() {
         swal("Error", "Debe seleccionar al menos una forma de cobro.", "error");
         return;
     }
-    var totalDigital = totalTarjetas + totalCheques + totalTransferencias + totalQrs;
+    var totalDigital = totalTarjetas + totalCheques;
     if (totalDigital > importeCobro + 0.01) {
         swal("Error",
             "La suma de los medios de cobro (" + formatearNumero(totalDigital) + ") " +
@@ -1530,8 +1484,6 @@ function grabar() {
         monto_efectivo:  montoEfectivo > 0 ? montoEfectivo : null,
         tarjetas:        JSON.stringify(tarjetas),
         cheques:         JSON.stringify(cheques),
-        transferencias:  JSON.stringify(transferencias),
-        qrs:             JSON.stringify(qrs),
     };
 
     // ===============================
@@ -1949,53 +1901,6 @@ function eliminarFilaCheque(btn) {
 }
 
 // ================================================================
-// TABLAS DINÁMICAS — TRANSFERENCIAS
-// ================================================================
-function crearFilaTransferencia(data) {
-    data = data || {};
-    var disabled = ($("#txtOperacion").val() == 0) ? 'disabled' : '';
-    return '<tr>' +
-        '<td><input type="text" class="form-control form-control-sm banco_entidad_trans" value="' + (data.banco_entidad||'') + '" placeholder="Banco / Entidad" ' + disabled + '></td>' +
-        '<td><input type="text" class="form-control form-control-sm nro_ref_trans" value="' + (data.nro_referencia||'') + '" placeholder="Nro. Referencia" ' + disabled + '></td>' +
-        '<td><input type="number" class="form-control form-control-sm monto_transferencia" value="' + (data.monto_transferencia||'') + '" placeholder="0" ' + disabled + '></td>' +
-        '<td><button type="button" class="btn btn-danger btn-xs" onclick="eliminarFilaTransferencia(this);" ' + disabled + '><i class="material-icons" style="font-size:14px;">delete</i></button></td>' +
-    '</tr>';
-}
-
-function agregarFilaTransferencia() {
-    $("#tablaTransferencias").append(crearFilaTransferencia({}));
-    $("#tablaTransferencias tr:last input, #tablaTransferencias tr:last button").prop('disabled', false);
-}
-
-function eliminarFilaTransferencia(btn) {
-    $(btn).closest('tr').remove();
-    calcularVuelto();
-}
-
-// ================================================================
-// TABLAS DINÁMICAS — QR
-// ================================================================
-function crearFilaQr(data) {
-    data = data || {};
-    var disabled = ($("#txtOperacion").val() == 0) ? 'disabled' : '';
-    return '<tr>' +
-        '<td><input type="text" class="form-control form-control-sm nro_ref_qr" value="' + (data.nro_referencia||'') + '" placeholder="Nro. Referencia" ' + disabled + '></td>' +
-        '<td><input type="number" class="form-control form-control-sm monto_qr" value="' + (data.monto_qr||'') + '" placeholder="0" ' + disabled + '></td>' +
-        '<td><button type="button" class="btn btn-danger btn-xs" onclick="eliminarFilaQr(this);" ' + disabled + '><i class="material-icons" style="font-size:14px;">delete</i></button></td>' +
-    '</tr>';
-}
-
-function agregarFilaQr() {
-    $("#tablaQrs").append(crearFilaQr({}));
-    $("#tablaQrs tr:last input, #tablaQrs tr:last button").prop('disabled', false);
-}
-
-function eliminarFilaQr(btn) {
-    $(btn).closest('tr').remove();
-    calcularVuelto();
-}
-
-// ================================================================
 // AUTOCOMPLETE POR FILA — TARJETA
 // ================================================================
 function buscarEETarjetaFila(input) {
@@ -2147,36 +2052,6 @@ function colectarCheques() {
     return arr;
 }
 
-function colectarTransferencias() {
-    var arr = [];
-    $("#tablaTransferencias tr").each(function() {
-        var $r = $(this);
-        var monto = parseFloat($r.find('.monto_transferencia').val()) || 0;
-        if (monto > 0) {
-            arr.push({
-                monto_transferencia: monto,
-                banco_entidad:       $r.find('.banco_entidad_trans').val() || null,
-                nro_referencia:      $r.find('.nro_ref_trans').val()       || null,
-            });
-        }
-    });
-    return arr;
-}
-
-function colectarQrs() {
-    var arr = [];
-    $("#tablaQrs tr").each(function() {
-        var $r = $(this);
-        var monto = parseFloat($r.find('.monto_qr').val()) || 0;
-        if (monto > 0) {
-            arr.push({
-                monto_qr:       monto,
-                nro_referencia: $r.find('.nro_ref_qr').val() || null,
-            });
-        }
-    });
-    return arr;
-}
 
 // ================================================================
 // CARGA UNIFICADA AL SELECCIONAR UN COBRO
@@ -2214,32 +2089,6 @@ function cargarDetalleCobro(id) {
             $("#cardCheque").show();
         } else {
             $("#cardCheque").hide();
-        }
-
-        /* ===== TRANSFERENCIAS ===== */
-        $("#tablaTransferencias").empty();
-        (resp.transferencias || []).forEach(function(tr) {
-            $("#tablaTransferencias").append(crearFilaTransferencia(tr));
-        });
-        var hayTransferencias = (resp.transferencias || []).length > 0;
-        if (hayTransferencias) {
-            $("#chkTransferencia").prop("checked", true);
-            $("#cardTransferencia").show();
-        } else {
-            $("#cardTransferencia").hide();
-        }
-
-        /* ===== QRs ===== */
-        $("#tablaQrs").empty();
-        (resp.qrs || []).forEach(function(qr) {
-            $("#tablaQrs").append(crearFilaQr(qr));
-        });
-        var hayQrs = (resp.qrs || []).length > 0;
-        if (hayQrs) {
-            $("#chkQr").prop("checked", true);
-            $("#cardQr").show();
-        } else {
-            $("#cardQr").hide();
         }
 
         /* ===== ÍTEMS / DETALLES ===== */

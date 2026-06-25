@@ -1,8 +1,28 @@
 // Lista los registros de pedidos utilizando DataTables
 // Cargar funcionario_id del usuario logueado
+var _notaRows = {};
+
 cargarFuncionarioIdLogueado();
 listar();
 campoFecha();
+
+$(document).on('click', '.item-list', function() {
+    var id = $(this).attr('data-nota-id');
+    var d = _notaRows[id];
+    if (!d) return;
+    seleccionNotaComp(
+        d.id, d.proveedor_id, d.empresa_id, d.sucursal_id, d.compra_cab_id,
+        d.emp_razon_social||'', d.suc_razon_social||'', d.compra||'',
+        d.nota_comp_intervalo_fecha_vence||'', d.nota_comp_fecha||'',
+        d.nota_comp_estado||'', d.nota_comp_cant_cuota||'', d.nota_comp_tipo||'',
+        d.nota_comp_observaciones||'', d.funcionario||'', d.prov_razonsocial||'',
+        d.prov_ruc||'', d.prov_telefono||'', d.prov_correo||'',
+        d.nota_comp_condicion_pago||'', d.nota_comp_timbrado||'', d.comp_timbrado||'',
+        d.nota_comp_nro_nota||'', d.comp_nro_factura||'',
+        d.nota_comp_afecta_stock ? 1 : 0,
+        d.nota_comp_motivo||'', d.nota_comp_timbrado_vence||''
+    );
+});
 
 var listaDepositos = [];
 function cargarDepositos() {
@@ -94,7 +114,9 @@ function agregar() {
     $("#suc_razon_social").attr("disabled", "true");
     $("#nota_comp_tipo").removeAttr("disabled");
     $("#nota_comp_observaciones").removeAttr("disabled");
+    $("#nota_comp_motivo").removeAttr("disabled");
     $("#nota_comp_timbrado").removeAttr("disabled");
+    $("#nota_comp_timbrado_vence").removeAttr("disabled");
     $("#nota_comp_nro_nota").removeAttr("disabled");
     // Habilitar toggle y resetear a Sí (default)
     $('#btnAfectaSi, #btnAfectaNo').removeAttr('disabled');
@@ -124,7 +146,9 @@ function editar(){
     $("#suc_razon_social").attr("disabled", "true");
     $("#nota_comp_tipo").removeAttr("disabled");
     $("#nota_comp_observaciones").removeAttr("disabled");
+    $("#nota_comp_motivo").removeAttr("disabled");
     $("#nota_comp_timbrado").removeAttr("disabled");
+    $("#nota_comp_timbrado_vence").removeAttr("disabled");
     $("#nota_comp_nro_nota").removeAttr("disabled");
     $('#btnAfectaSi, #btnAfectaNo').removeAttr('disabled');
 
@@ -211,17 +235,20 @@ function listar() {
     })
     .done(function(resultado) {
         var lista = "";
+        _notaRows = {};
         for (rs of resultado) {
-            lista += "<tr class=\"item-list\" onclick=\"seleccionNotaComp(" + rs.id + "," + rs.proveedor_id + "," + rs.empresa_id + "," + rs.sucursal_id + "," + rs.compra_cab_id + ",'" + rs.emp_razon_social + "','" + rs.suc_razon_social + "','" + rs.compra + "','" + rs.nota_comp_intervalo_fecha_vence + "','" + rs.nota_comp_fecha + "','" + rs.nota_comp_estado + "','" + rs.nota_comp_cant_cuota + "','" + rs.nota_comp_tipo + "','" + rs.nota_comp_observaciones + "','" + rs.encargado + "','" + rs.prov_razonsocial + "','" + rs.prov_ruc + "','" + rs.prov_telefono + "','" + rs.prov_correo + "','" + rs.nota_comp_condicion_pago + "','" + (rs.nota_comp_timbrado||'') + "','" + (rs.comp_timbrado||'') + "','" + (rs.nota_comp_nro_nota||'') + "','" + (rs.comp_nro_factura||'') + "'," + (rs.nota_comp_afecta_stock ? 1 : 0) + ")\">";
+            _notaRows[rs.id] = rs;
+            lista += '<tr class="item-list" data-nota-id="' + rs.id + '">';
             lista += "<td>" + rs.id + "</td>";  // Código de la orden de compra
             lista += "<td>" + rs.nota_comp_intervalo_fecha_vence + "</td>";  // Intervalo de fecha de vencimiento
             lista += "<td>" + rs.nota_comp_fecha + "</td>";  // Fecha
             lista += "<td>" + rs.compra + "</td>";  // Compra
             lista += "<td>" + (rs.funcionario || rs.name || rs.encargado || '-') + "</td>";  // Encargado
             lista += "<td>" + rs.nota_comp_cant_cuota + "</td>";  // Cantidad de cuota
-            lista += "<td>" + rs.nota_comp_tipo + "</td>";  // Cantidad de cuota
-            lista += "<td>" + rs.nota_comp_observaciones + "</td>";  // Cantidad de cuota
-            lista += "<td>" + rs.nota_comp_estado + "</td>";  // Estado
+            lista += "<td>" + rs.nota_comp_tipo + "</td>";
+            lista += "<td>" + (rs.nota_comp_motivo || '-') + "</td>";
+            lista += "<td>" + (rs.nota_comp_observaciones || '-') + "</td>";
+            lista += "<td>" + rs.nota_comp_estado + "</td>";
             lista += "</tr>";
         }
         $("#tableBody").html(lista);
@@ -231,7 +258,7 @@ function listar() {
 }
 
 // Rellena el formulario con los datos de un pedido seleccionado.
-function seleccionNotaComp(id_nota_compra_cab, proveedor_id, empresa_id, sucursal_id, compra_cab_id, emp_razon_social, suc_razon_social, compra_cab, nota_comp_intervalo_fecha_vence, nota_comp_fecha, nota_comp_estado, nota_comp_cant_cuota, nota_comp_tipo, nota_comp_observaciones, encargado, prov_razonsocial, prov_ruc, prov_telefono, prov_correo, nota_comp_condicion_pago, nota_comp_timbrado, comp_timbrado, nota_comp_nro_nota, comp_nro_factura, nota_comp_afecta_stock) {
+function seleccionNotaComp(id_nota_compra_cab, proveedor_id, empresa_id, sucursal_id, compra_cab_id, emp_razon_social, suc_razon_social, compra_cab, nota_comp_intervalo_fecha_vence, nota_comp_fecha, nota_comp_estado, nota_comp_cant_cuota, nota_comp_tipo, nota_comp_observaciones, encargado, prov_razonsocial, prov_ruc, prov_telefono, prov_correo, nota_comp_condicion_pago, nota_comp_timbrado, comp_timbrado, nota_comp_nro_nota, comp_nro_factura, nota_comp_afecta_stock, nota_comp_motivo, nota_comp_timbrado_vence) {
     // Asigna los valores al formulario
     $("#id").val(id_nota_compra_cab);
     $("#empresa_id").val(empresa_id);
@@ -243,6 +270,7 @@ function seleccionNotaComp(id_nota_compra_cab, proveedor_id, empresa_id, sucursa
     $("#nota_comp_cant_cuota").val(nota_comp_cant_cuota);
     $("#nota_comp_tipo").val(nota_comp_tipo);
     $("#nota_comp_observaciones").val(nota_comp_observaciones);
+    $("#nota_comp_motivo").val(nota_comp_motivo || '');
     $("#emp_razon_social").val(emp_razon_social);
     $("#suc_razon_social").val(suc_razon_social);
     $("#compra_cab").val(compra_cab);
@@ -253,6 +281,7 @@ function seleccionNotaComp(id_nota_compra_cab, proveedor_id, empresa_id, sucursa
     $("#prov_correo").val(prov_correo);
     $("#encargado").val(encargado);
     $("#nota_comp_timbrado").val(nota_comp_timbrado || '');
+    $("#nota_comp_timbrado_vence").val(nota_comp_timbrado_vence || '');
     $("#nota_comp_nro_nota").val(nota_comp_nro_nota || '');
     $("#comp_timbrado").val(comp_timbrado || '');
     $("#comp_nro_factura").val(comp_nro_factura || '');
@@ -323,12 +352,11 @@ function grabar() {
     var condicionPago = $("#nota_comp_condicion_pago").val();
 
     // Obtener y formatear la fecha de vencimiento
-    var intervaloFechaVence = $("#nota_comp_intervalo_fecha_vence").val();
-    var formattedIntervaloFechaVence = $("#nota_comp_intervalo_fecha_vence").is(':disabled') ? null : intervaloFechaVence;
-
-    // Si la condición de pago es CONTADO, se envía null en lugar de una fecha
-    if (condicionPago === 'CONTADO') {
-        formattedIntervaloFechaVence = null;
+    var intervaloFechaVence = $.trim($("#nota_comp_intervalo_fecha_vence").val());
+    var formattedIntervaloFechaVence = null;
+    if (condicionPago !== 'CONTADO' && !$("#nota_comp_intervalo_fecha_vence").is(':disabled') && intervaloFechaVence) {
+        var mIFV = moment(intervaloFechaVence, 'DD/MM/YYYY HH:mm', true);
+        formattedIntervaloFechaVence = mIFV.isValid() ? mIFV.format('YYYY-MM-DD HH:mm:ss') : intervaloFechaVence;
     }
 
     // ── Validaciones agrupadas ──────────────────────────────────────────────
@@ -345,8 +373,22 @@ function grabar() {
             errores.push('La fecha debe ser la de hoy (' + moment().format('DD/MM/YYYY') + ').');
     }
 
-    if (!$('#nota_comp_observaciones').val().trim()) errores.push('Las observaciones son obligatorias.');
-    if (!$('#nota_comp_tipo').val())                 errores.push('Seleccione el tipo de nota (Crédito/Débito).');
+    if (!$('#nota_comp_motivo').val().trim()) errores.push('El motivo de la nota es obligatorio.');
+    if (!$('#nota_comp_tipo').val())          errores.push('Seleccione el tipo de nota (Crédito/Débito).');
+
+    // Vencimiento timbrado
+    var timbradoNota      = $.trim($('#nota_comp_timbrado').val());
+    var timbradoVenceNota = $.trim($('#nota_comp_timbrado_vence').val());
+    if (timbradoNota && !timbradoVenceNota) {
+        errores.push('La fecha de vencimiento del timbrado es obligatoria cuando se ingresa un timbrado.');
+    } else if (timbradoVenceNota) {
+        var mTV = moment(timbradoVenceNota, 'DD/MM/YYYY', true);
+        if (!mTV.isValid()) {
+            errores.push('La fecha de vencimiento del timbrado tiene formato inválido. Use DD/MM/YYYY.');
+        } else if (mTV.isBefore(moment(), 'day')) {
+            errores.push('La fecha de vencimiento del timbrado no puede ser anterior a hoy.');
+        }
+    }
     if (!$('#compra_cab_id').val() || $('#compra_cab_id').val() == '0')
         errores.push('Debe seleccionar la compra relacionada.');
 
@@ -367,12 +409,19 @@ function grabar() {
         data: {
             'id': $("#id").val(),
             'nota_comp_intervalo_fecha_vence': formattedIntervaloFechaVence,
-            'nota_comp_fecha': $("#nota_comp_fecha").val(),
+            'nota_comp_fecha': (function(){
+                var v = $.trim($("#nota_comp_fecha").val());
+                var m = moment(v, 'DD/MM/YYYY HH:mm', true);
+                return m.isValid() ? m.format('YYYY-MM-DD HH:mm:ss') : v;
+            })(),
             'nota_comp_cant_cuota': condicionPago === 'CONTADO' ? null : $("#nota_comp_cant_cuota").val(),
             'nota_comp_tipo': $("#nota_comp_tipo").val(),
             'nota_comp_afecta_stock':   $('#nota_comp_afecta_stock').val() === '1' ? 1 : 0,
-            'nota_comp_observaciones': $("#nota_comp_observaciones").val(),
+            'nota_comp_observaciones': $("#nota_comp_observaciones").val() || null,
+            'nota_comp_motivo': $("#nota_comp_motivo").val(),
             'nota_comp_timbrado': $("#nota_comp_timbrado").val() || null,
+            'nota_comp_timbrado_vence': timbradoVenceNota
+                ? moment(timbradoVenceNota, 'DD/MM/YYYY').format('YYYY-MM-DD') : null,
             'nota_comp_nro_nota': $("#nota_comp_nro_nota").val() || null,
             'funcionario_id': $("#funcionario_id").val(),
             'compra_cab_id': $("#compra_cab_id").val(),
@@ -424,7 +473,7 @@ function mostrarErrores(xhr) {
     swal({ title: titulo, text: msg, type: xhr.status === 422 ? 'warning' : 'error' });
 }
 
-var FMT_NOTA = 'YYYY-MM-DD HH:mm:ss';
+var FMT_NOTA = 'DD/MM/YYYY HH:mm';
 
 function validarFechaNota() {
     var val = $('#nota_comp_fecha').val().trim();
@@ -444,9 +493,12 @@ function validarFechaNota() {
 
 function campoFecha() {
     $('.datetimepicker').bootstrapMaterialDatePicker({
-        format: 'YYYY-MM-DD HH:mm:ss',
+        format: 'DD/MM/YYYY HH:mm',
         clearButton: true,
         weekStart: 1
+    });
+    $('#nota_comp_timbrado_vence').bootstrapMaterialDatePicker({
+        format: 'DD/MM/YYYY', time: false, clearButton: true, weekStart: 1
     });
     $('#nota_comp_fecha').on('change', function() { validarFechaNota(); });
 }
@@ -628,9 +680,9 @@ function buscarProductos() {
             resultado.forEach(function(rs) {
                 var stock = rs.cantidad_disponible || 0;
                 lista += '<li class="list-group-item" onclick="seleccionProducto('
-                    + rs.item_id + ",'" + rs.item_descripcion + "',"
+                    + rs.item_id + ",'" + _esc(rs.item_descripcion) + "',"
                     + rs.tipo_impuesto_id + ",'" + (rs.item_costo||0) + "','"
-                    + (rs.tipo_imp_nom||'') + "'," + (rs.tipo_imp_tasa||0) + ',' + stock + ')">'
+                    + _esc(rs.tipo_imp_nom||'') + "'," + (rs.tipo_imp_tasa||0) + ',' + stock + ')">'
                     + rs.item_descripcion
                     + ' <span class="badge" style="background:#3b82f6;color:#fff;">Stock: ' + stock + '</span>'
                     + '</li>';
@@ -683,7 +735,7 @@ function seleccionTipoImpuestos(id,tipo_imp_nom,tipo_imp_tasa){
 }
 
 function _esc(s) {
-    return (s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    return (s || '').replace(/\\/g, '\\\\').replace(/\r/g, '\\r').replace(/\n/g, '\\n').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 }
 
 function listarDetalles() {
@@ -822,19 +874,19 @@ function buscarCompra() {
                 + rs.compra_cab_id + ", "
                 + rs.empresa_id + ", "
                 + rs.sucursal_id + ", '"
-                + rs.compra + "', "
+                + _esc(rs.compra||'') + "', "
                 + rs.proveedor_id + ", '"
-                + rs.emp_razon_social + "','"
-                + rs.suc_razon_social + "','"
-                + rs.prov_razonsocial + "', '"
-                + rs.prov_ruc + "', '"
-                + rs.prov_telefono + "', '"
-                + rs.prov_correo + "', '"
-                + rs.comp_intervalo_fecha_vence + "', '"
-                + rs.comp_cant_cuota + "', '"
-                + rs.condicion_pago + "', '"
-                + (rs.comp_timbrado||'') + "','"
-                + (rs.comp_nro_factura||'') + "')\">"
+                + _esc(rs.emp_razon_social||'') + "','"
+                + _esc(rs.suc_razon_social||'') + "','"
+                + _esc(rs.prov_razonsocial||'') + "', '"
+                + _esc(rs.prov_ruc||'') + "', '"
+                + _esc(rs.prov_telefono||'') + "', '"
+                + _esc(rs.prov_correo||'') + "', '"
+                + _esc(rs.comp_intervalo_fecha_vence||'') + "', '"
+                + _esc(rs.comp_cant_cuota||'') + "', '"
+                + _esc(rs.condicion_pago||'') + "', '"
+                + _esc(rs.comp_timbrado||'') + "','"
+                + _esc(rs.comp_nro_factura||'') + "')\">"
                 + rs.compra + "</li>";   
         }
 
@@ -912,7 +964,7 @@ function buscarSucursal(){
     .done(function(resultado){
         var lista = "<ul class=\"list-group\">";
         for(rs of resultado){
-            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.id+",'"+rs.suc_razon_social+"','"+rs.suc_direccion+"','"+rs.suc_telefono+"','"+rs.suc_correo+"');\">"+rs.suc_razon_social+"</li>";
+            lista += "<li class=\"list-group-item\" onclick=\"seleccionSucursal("+rs.id+",'"+_esc(rs.suc_razon_social||'')+"','"+_esc(rs.suc_direccion||'')+"','"+_esc(rs.suc_telefono||'')+"','"+_esc(rs.suc_correo||'')+"');\">"+rs.suc_razon_social+"</li>";
         }
         lista += "</ul>";
         $("#listaSucursal").html(lista);

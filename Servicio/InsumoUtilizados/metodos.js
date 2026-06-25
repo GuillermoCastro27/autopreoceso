@@ -86,6 +86,7 @@ function listar() {
                 id:                     rs.id,
                 orden_serv_cab_id:      rs.orden_serv_cab_id,
                 ins_cab_fecha_registro: rs.ins_cab_fecha_registro || '',
+                ins_cab_observaciones:  rs.ins_cab_observaciones  || '',
                 ins_cab_estado:         rs.ins_cab_estado || '',
                 empresa_id:             rs.empresa_id,
                 emp_razon_social:       rs.emp_razon_social || '',
@@ -140,6 +141,7 @@ function seleccionCab(d) {
     $('#buscar_os').val('OS Nº ' + String(d.orden_serv_cab_id).padStart(7, '0'));
     $('#ord_serv_fecha').val(d.ord_serv_fecha);
     $('#ins_cab_fecha_registro').val(d.ins_cab_fecha_registro);
+    $('#ins_cab_observaciones').val(d.ins_cab_observaciones);
     $('#emp_razon_social').val(d.emp_razon_social);
     $('#suc_razon_social').val(d.suc_razon_social);
     $('#ord_cliente').val((d.cli_nombre || '') + ' ' + (d.cli_apellido || ''));
@@ -178,6 +180,7 @@ function agregar() {
     $('#ord_cliente, #ord_equipo, #ord_marca, #ord_modelo, #ord_num_chasis').val('');
     $('#buscar_os').val('').prop('disabled', false);
     $('#ins_cab_fecha_registro').val('').prop('disabled', false);
+    $('#ins_cab_observaciones').val('').prop('disabled', false);
 
     $('#btnAgregar, #btnEditar, #btnAnular, #btnConfirmar').prop('disabled', true);
     $('#btnGrabar, #btnCancelar').prop('disabled', false);
@@ -194,6 +197,7 @@ function editar() {
     }
     $('#txtOperacion').val(2);
     $('#ins_cab_fecha_registro').prop('disabled', false);
+    $('#ins_cab_observaciones').prop('disabled', false);
     $('#btnAgregar, #btnEditar, #btnAnular, #btnConfirmar').prop('disabled', true);
     $('#btnGrabar, #btnCancelar').prop('disabled', false);
     $(".form-line").addClass("focused");
@@ -271,7 +275,8 @@ function grabar() {
         headers: { Authorization: 'Bearer ' + getToken() },
         data: {
             orden_serv_cab_id:      $('#orden_serv_cab_id').val(),
-            ins_cab_fecha_registro: $('#ins_cab_fecha_registro').val()
+            ins_cab_fecha_registro: $('#ins_cab_fecha_registro').val(),
+            ins_cab_observaciones:  $('#ins_cab_observaciones').val()
         }
     })
     .done(function(res) {
@@ -282,7 +287,7 @@ function grabar() {
                     $('#ins_cab_id_display').val(res.registro.id);
                     $('#ins_cab_estado').val('PENDIENTE');
                 }
-                $('#buscar_os, #ins_cab_fecha_registro').prop('disabled', true);
+                $('#buscar_os, #ins_cab_fecha_registro, #ins_cab_observaciones').prop('disabled', true);
                 $('#cardDetalle').show();
                 $('#cardRegistros').hide();
                 $('#formDetalle').show();

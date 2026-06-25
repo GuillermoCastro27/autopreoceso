@@ -197,14 +197,6 @@
             <input type="checkbox" id="chkCheque" class="fc-chk" disabled onchange="onFormaCobroChange();">
             <i class="material-icons" style="font-size:18px;vertical-align:middle;color:#8e44ad;">receipt</i> Cheque
         </label>
-        <label style="font-weight:normal;margin:0;display:flex;align-items:center;gap:8px;font-size:14px;cursor:not-allowed;" id="lbl_chkTransferencia">
-            <input type="checkbox" id="chkTransferencia" class="fc-chk" disabled onchange="onFormaCobroChange();">
-            <i class="material-icons" style="font-size:18px;vertical-align:middle;color:#e67e22;">swap_horiz</i> Transferencia
-        </label>
-        <label style="font-weight:normal;margin:0;display:flex;align-items:center;gap:8px;font-size:14px;cursor:not-allowed;" id="lbl_chkQr">
-            <input type="checkbox" id="chkQr" class="fc-chk" disabled onchange="onFormaCobroChange();">
-            <i class="material-icons" style="font-size:18px;vertical-align:middle;color:#16a085;">qr_code_2</i> QR
-        </label>
     </div>
 </div>
 
@@ -325,58 +317,6 @@
     </div>
 </div>
 
-<!-- ================= COBROS CON TRANSFERENCIA ================= -->
-<div class="card card-industrial" id="cardTransferencia" style="margin-top:10px;display:none;">
-    <div class="header">
-        <h2><i class="material-icons">swap_horiz</i> Cobros por Transferencia</h2>
-    </div>
-    <div class="body">
-        <div class="table-responsive">
-            <table class="table table-bordered table-sm" style="font-size:13px;">
-                <thead>
-                    <tr>
-                        <th>Banco / Entidad</th>
-                        <th>Nro. Referencia</th>
-                        <th style="width:140px;">Monto</th>
-                        <th style="width:40px;"></th>
-                    </tr>
-                </thead>
-                <tbody id="tablaTransferencias"></tbody>
-            </table>
-        </div>
-        <div class="text-right">
-            <button id="btnAgregarTransferencia" class="btn btn-success btn-sm" onclick="agregarFilaTransferencia();" disabled>
-                <i class="material-icons" style="font-size:16px;vertical-align:middle;">add</i> Agregar Transferencia
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- ================= COBROS CON QR ================= -->
-<div class="card card-industrial" id="cardQr" style="margin-top:10px;display:none;">
-    <div class="header">
-        <h2><i class="material-icons">qr_code_2</i> Cobros por QR</h2>
-    </div>
-    <div class="body">
-        <div class="table-responsive">
-            <table class="table table-bordered table-sm" style="font-size:13px;">
-                <thead>
-                    <tr>
-                        <th>Nro. Referencia</th>
-                        <th style="width:140px;">Monto</th>
-                        <th style="width:40px;"></th>
-                    </tr>
-                </thead>
-                <tbody id="tablaQrs"></tbody>
-            </table>
-        </div>
-        <div class="text-right">
-            <button id="btnAgregarQr" class="btn btn-success btn-sm" onclick="agregarFilaQr();" disabled>
-                <i class="material-icons" style="font-size:16px;vertical-align:middle;">add</i> Agregar QR
-            </button>
-        </div>
-    </div>
-</div>
 
                                 <!-- ================= CUENTAS A COBRAR ================= -->
 <div class="row clearfix" id="panelCtasCobrar" style="display:none;">

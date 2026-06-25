@@ -138,6 +138,16 @@
                            placeholder="Observaciones">
                 </div>
             </div>
+
+            <!-- FILA 3 -->
+            <div class="row clearfix" style="margin-top:10px;">
+                <div class="col-sm-12">
+                    <label class="field-label">Motivo <span style="color:#e74c3c;">*</span></label>
+                    <input type="text" id="nota_comp_motivo" class="form-control" disabled
+                           placeholder="Describa el motivo de la nota de compra" maxlength="300">
+                    <small id="avisoMotivo" style="color:#e74c3c;display:none;"></small>
+                </div>
+            </div>
         </div>
 
         <!-- REFERENCIAS -->
@@ -185,13 +195,20 @@
                            placeholder="Nro. Factura de la Compra">
                 </div>
 
-                <div class="col-sm-3" style="margin-top:10px;">
+                <div class="col-sm-2" style="margin-top:10px;">
                     <label class="field-label">Timbrado Nota</label>
                     <input type="text" id="nota_comp_timbrado" class="form-control" disabled
                            placeholder="Timbrado de la Nota" maxlength="20">
                 </div>
 
-                <div class="col-sm-3" style="margin-top:10px;">
+                <div class="col-sm-2" style="margin-top:10px;">
+                    <label class="field-label">Venc. Timbrado</label>
+                    <input type="text" id="nota_comp_timbrado_vence" class="form-control" disabled
+                           placeholder="DD/MM/YYYY">
+                    <small id="avisoTimbradoVenceNota" style="color:#e74c3c;display:none;"></small>
+                </div>
+
+                <div class="col-sm-2" style="margin-top:10px;">
                     <label class="field-label">Nro. Nota</label>
                     <input type="text" id="nota_comp_nro_nota" class="form-control" disabled
                            placeholder="000-000-0000000" maxlength="15"
@@ -365,6 +382,7 @@
                     <th>Encargado</th>
                     <th>Cuotas</th>
                     <th>Tipo</th>
+                    <th>Motivo</th>
                     <th>Obs.</th>
                     <th>Estado</th>
                 </tr>
@@ -403,7 +421,7 @@
 <script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js"></script>
 <script src="../../js/marcaModelo.js"></script>
-<script src="metodos.js?v=5"></script>
+<script src="metodos.js"></script>
 
 </body>
 </html>

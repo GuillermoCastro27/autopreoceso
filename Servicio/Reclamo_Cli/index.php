@@ -93,25 +93,41 @@
                 </div>
             </div>
 
-            <!-- ================= VENTA VINCULADA ================= -->
+            <!-- ================= VENTAS VINCULADAS ================= -->
             <div class="section-box">
-                <div class="section-title">Venta / Recibo Vinculado <small style="font-weight:normal;">(opcional)</small></div>
-                <div class="row clearfix">
-                    <div class="col-sm-2">
-                        <label class="field-label">Buscar Venta</label>
-                        <input type="text" id="nro_venta_display" class="form-control" disabled onkeyup="buscarVenta();" placeholder="Buscar N° venta o cliente">
-                        <input type="hidden" id="venta_cab_id">
-                        <div id="listaVentas" style="display:none;"></div>
-                    </div>
-                    <div class="col-sm-2">
-                        <label class="field-label">Fecha Venta</label>
-                        <input type="text" id="venta_fecha_display" class="form-control" disabled placeholder="Fecha venta">
-                    </div>
-                    <div class="col-sm-3">
+                <div class="section-title">Ventas / Recibos Vinculados <small style="font-weight:normal;">(opcional)</small></div>
+                <div class="row clearfix" style="margin-bottom:8px;">
+                    <div class="col-sm-4">
                         <label class="field-label">Encargado</label>
                         <input type="text" id="encargado" class="form-control" disabled placeholder="Encargado">
                     </div>
                 </div>
+                <div id="panelBuscarVenta" style="display:none; margin-bottom:8px;">
+                    <div class="row clearfix">
+                        <div class="col-sm-6" style="position:relative;">
+                            <label class="field-label">Buscar y agregar venta</label>
+                            <input type="text" id="nro_venta_display" class="form-control" placeholder="N° venta o nombre de cliente..." onkeyup="buscarVentaReclamo();">
+                            <div id="listaVentas" style="display:none; position:absolute; z-index:2000; width:420px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th>N° Venta</th>
+                                <th>Fecha</th>
+                                <th>Cliente</th>
+                                <th class="text-right">Total</th>
+                                <th class="col-accion-venta" style="display:none; text-align:center; width:70px;">Quitar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableVentasReclamo">
+                            <tr><td colspan="5" class="text-center" style="color:#aaa;">Sin ventas vinculadas</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <input type="hidden" id="venta_cab_id">
             </div>
 
             <!-- ================= CLIENTE ================= -->
