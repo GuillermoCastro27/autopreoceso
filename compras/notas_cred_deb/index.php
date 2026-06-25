@@ -421,7 +421,7 @@
 <script src="../../js/demo.js"></script>
 <script src="../../js/ruta.js"></script>
 <script src="../../js/marcaModelo.js"></script>
-<script src="metodos.js"></script>
+<script src="metodos.js?v=3"></script>
 
 </body>
 </html>

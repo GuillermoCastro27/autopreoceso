@@ -1,6 +1,5 @@
-// Lista los registros de pedidos utilizando DataTables
-// Cargar funcionario_id del usuario logueado
 var _notaRows = {};
+var _detRows  = {};
 
 cargarFuncionarioIdLogueado();
 listar();
@@ -21,6 +20,20 @@ $(document).on('click', '.item-list', function() {
         d.nota_comp_nro_nota||'', d.comp_nro_factura||'',
         d.nota_comp_afecta_stock ? 1 : 0,
         d.nota_comp_motivo||'', d.nota_comp_timbrado_vence||''
+    );
+});
+
+$(document).on('click', '.nota-det-item', function() {
+    var idx = $(this).attr('data-det-id');
+    var r = _detRows[idx];
+    if (!r) return;
+    var _modNom = r.modelo_nom ? r.modelo_nom + (r.modelo_año ? ' (' + r.modelo_año + ')' : '') : '';
+    seleccionDetalle(
+        r.item_id, r.tipo_impuesto_id, r.item_descripcion||'', r.tipo_imp_nom||'',
+        r.notas_comp_det_cantidad||0, r.notas_comp_det_costo||0,
+        r.deposito_id||0, r.stock_disponible||0,
+        r.marca_id||0, r.modelo_id||0,
+        r.dep_nombre||'', r.mar_nom||'', _modNom
     );
 });
 
@@ -747,8 +760,9 @@ function listarDetalles() {
     .done(function(resultado) {
         var lista = '';
         var TotalGral = 0, TotalIva10 = 0, TotalIva5 = 0, cantidadDetalle = 0;
+        _detRows = {};
 
-        resultado.forEach(function(rs) {
+        resultado.forEach(function(rs, idx) {
             var cantidad = rs.notas_comp_det_cantidad || 0;
             var costo    = rs.notas_comp_det_costo    || 0;
             var subtotal = cantidad * costo;
@@ -764,15 +778,8 @@ function listarDetalles() {
                 TotalIva10 += iva;
             }
 
-            var _modNomNota = rs.modelo_nom ? rs.modelo_nom + (rs.modelo_año ? ' (' + rs.modelo_año + ')' : '') : '';
-            lista += '<tr class="item-list" onclick="seleccionDetalle('
-                + rs.item_id + ',' + rs.tipo_impuesto_id + ",'"
-                + _esc(rs.item_descripcion) + "','" + _esc(rs.tipo_imp_nom||'') + "',"
-                + cantidad + ',' + costo + ',' + (rs.deposito_id||0) + ',' + (rs.stock_disponible||0) + ','
-                + (rs.marca_id||0) + ',' + (rs.modelo_id||0) + ",'"
-                + _esc(rs.dep_nombre||'') + "','"
-                + _esc(rs.mar_nom||'') + "','"
-                + _esc(_modNomNota) + ')">';
+            _detRows[idx] = rs;
+            lista += '<tr class="nota-det-item" data-det-id="' + idx + '">';
             lista += '<td>' + rs.item_id + '</td>';
             lista += '<td>' + rs.item_descripcion + '</td>';
             lista += '<td>' + (rs.mar_nom||'-') + '</td>';
@@ -863,7 +870,7 @@ function buscarCompra() {
         dataType: "json",
         data: {
             "funcionario_id": $("#funcionario_id").val(),   // Obtener user_id del input correspondiente
-            "name": $("#compra").val()        // Obtener el nombre de la compra
+            "name": $("#compra_cab").val()        // Obtener el nombre de la compra
         }
     })
     .done(function(resultado) {
